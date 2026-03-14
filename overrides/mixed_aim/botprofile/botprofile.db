@@ -91,6 +91,7 @@ Template SniperPro
 		WeaponPreference = ak47
 		WeaponPreference = aug
 		WeaponPreference = sg556
+        WeaponPreference = deagle
 		WeaponPreference = famas
 		WeaponPreference = galilar
 		WeaponPreference = p90
@@ -138,7 +139,9 @@ Template SniperPure
 		WeaponPreference = awp
         WeaponPreference = ssg08
         WeaponPreference = ak47
-        WeaponPreference = fiveseven
+        WeaponPreference = deagle
+        WeaponPreference = p250
+		WeaponPreference = fiveseven
         WeaponPreference = tec9
         WeaponPreference = aug
         WeaponPreference = sg556
@@ -146,7 +149,6 @@ Template SniperPure
         WeaponPreference = p90
         WeaponPreference = mac10
         WeaponPreference = mp9
-        WeaponPreference = p250
         WeaponPreference = elite
 End
 
@@ -184,9 +186,9 @@ End
 Template Fastshot
 		WeaponPreference = awp
         WeaponPreference = ssg08
+        WeaponPreference = deagle
         WeaponPreference = xm1014
         WeaponPreference = nova
-        WeaponPreference = deagle
         WeaponPreference = ak47
         WeaponPreference = aug
         WeaponPreference = sg556
@@ -5402,4 +5404,3 @@ RankDuelist+SniperPure+ScoperPersonality "DeepSight"
 End
 RankRifler+Rusher+RusherPersonality "RushFlux"
 End
-
