@@ -18,6 +18,8 @@ Aims to enhance your experience when playing against bots offline or with friend
 
 1. Download the latest **CS2BotImprover.zip** in Releases and unzip it
 
+   (If you run a dedicated server that is not only for bot matches, please download **CS2BotImprover_rules_unchanged.zip**)
+
 <img width="405" height="256" alt="snap_1" src="https://github.com/user-attachments/assets/ae2be90e-6742-4f1f-8e0c-096b728d5dbd" />
 
 2. Open the root of CS2 and navigate to `game/csgo` directory
@@ -87,6 +89,8 @@ Bot would buy as usual
 
 To add pro teams to your match, copy from Commands.txt and paste them to your game console. You can also add new teams in this format.
 
+For example, if you wanna add Vit to CT, copy the commands below.
+
 <img width="301" height="237" alt="snap_5" src="https://github.com/user-attachments/assets/a895f3a6-58f8-47dc-b6f5-b60c1b32fecd" />
 
 ### Knives
@@ -100,11 +104,17 @@ Input this command after a match begins
 
 ## FAQ
 
+### How to toggle between high and medium difficulties
+
+1. Open the root of CS2 and navigate to `game/csgo/overrides` directory  
+2. Open the `medium_difficulty` for medium or the `mixed_aim` for high  
+3. Copy `botprofile.vpk` and paste it into `game/csgo/overrides` before launching the game
+
 ### How to play online matches normally
 
-1. Open the root of CS2 and navigate to `game/csgo/backup/Online` directory
-2. Copy `gameinfo.gi` and paste it to `game/csgo` directory (Replace the file in the destination)
-3. Delete `-insecure` in your launch options
+1. Open the root of CS2 and navigate to `game/csgo/backup/Online` directory  
+2. Copy `gameinfo.gi` and paste it to `game/csgo` directory (Replace the file in the destination)  
+3. Delete `-insecure` in your launch options  
 
 After modification, if you wanna **play with bots again**, navigate to `game/csgo/backup/WithBots` directory, replace the file as above and add the launch option
 
@@ -113,14 +123,14 @@ After modification, if you wanna **play with bots again**, navigate to `game/csg
 1. Start a bot match and input the required commands. Then type `status` in the console  
 <img width="597" height="141" alt="snap_6" src="https://github.com/user-attachments/assets/792c4b4f-1d56-4a39-9186-b301cbff1846" />
 
-2. Copy the text after `steamid:`, add `connect ` before it
+2. Copy the text after `steamid:`, add `connect ` before it (don’t forget the space between them)  
 3. Send the full command to your friends and have them paste it into their consoles
 
 ### How to change bot combat style to match the selected mode better
 
-1. Open the root of CS2 and navigate to `game/csgo/overrides` directory
-2. Open one of the folders which matches your selected aim mode
-3. Copy `botprofile.vpk` and paste it into `game/csgo/overrides` before starting the game
+1. Open the root of CS2 and navigate to `game/csgo/overrides` directory  
+2. Open one of the folders which matches your selected aim or game mode  
+3. Copy `botprofile.vpk` and paste it into `game/csgo/overrides` before launching the game
 
 ### How to run the plugin well on workshop maps
 
