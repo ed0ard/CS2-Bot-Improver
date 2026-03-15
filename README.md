@@ -137,6 +137,10 @@ After modification, if you wanna **play with bots again**, navigate to `game/csg
 Add `-disable_workshop_command_filtering` to your launch options
 
 ## Credits
+[metamod-source](https://github.com/alliedmodders/metamod-source)  
+[CounterStrikeSharp](https://github.com/roflmuffin/CounterStrikeSharp)  
+[CS2-Bullseye-Bot](https://github.com/ed0ard/CS2-Bullseye-Bot)  
+[CS2_ExecAfter_No_Admin](https://github.com/ed0ard/CS2_ExecAfter_No_Admin) forked from [kus](https://github.com/kus)  
 
 ## License
 GPL-3.0
