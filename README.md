@@ -1,5 +1,5 @@
 # CS2-Bot-Improver
-CS2-Bot-Improver is a plugin for Counter Strike 2 that improves bots' aim, navigation, personalities, strategies and so on.
+CS2-Bot-Improver is a plugin for Counter-Strike 2 that improves bots' aim, navigation, personalities, strategies, etc.
 
 Aims to enhance your experience when playing against bots offline or with friends. It can be installed on both clients and servers.
 
