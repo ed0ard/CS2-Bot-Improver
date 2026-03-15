@@ -9,10 +9,11 @@ Aims to enhance your experience when playing against bots offline or with friend
 
 1. Make bots aim better
 2. Alleviate bot stuck issues
-3. Change bot names to pro and random players. (the characteristics of each pro player are set according to stats from [HLTV](https://www.hltv.org/))
-4. Remove the prefix from bot names
-5. Tweak game rules to make them more friendly to bots and refine bot behaviors
-6. Add some commands to make the game more fun
+3. Assign each bot their own agent model, music kit and avatar
+4. Change bot names to pro and random players. (the characteristics of each pro player are set according to stats from [HLTV](https://www.hltv.org/))
+5. Remove the prefix from bot names
+6. Tweak game rules to make them more friendly to bots and refine bot behaviors
+7. Add some commands to make the game more fun
 
 ## Installation
 
