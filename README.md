@@ -1,5 +1,5 @@
 # CS2-Bot-Improver
-CS2-Bot-Improver is a plugin for CS2 (Counter Strike 2) that improves bots' aim, navigation, personalities and so on.
+CS2-Bot-Improver is a plugin for Counter Strike 2 that improves bots' aim, navigation, personalities, strategies and so on.
 
 Aims to enhance your experience when playing against bots offline or with friends. It can be installed on both clients and servers.
 
@@ -11,10 +11,11 @@ Aims to enhance your experience when playing against bots offline or with friend
 2. Alleviate bot stuck issues
 3. Assign each bot their own agent model, music kit and avatar
 4. Refine bot behavior, allowing them to spam smokes and anti-flash
-5. Change bot names to pro and random players. (the characteristics of each pro player are set according to stats from [HLTV](https://www.hltv.org/))
-6. Remove the prefix from bot names
-7. Tweak game rules to make them more friendly to bots
-8. Add some commands to make the game more fun
+5. Make bots smarter and more organized
+6. Change bot names to pro and random players. (the characteristics of each pro player are set according to stats from [HLTV](https://www.hltv.org/))
+7. Remove the prefix from bot names
+8. Tweak game rules to make them more friendly to bots
+9. Add some commands to make the game more fun
 
 ## Installation
 
@@ -143,8 +144,9 @@ Add `-disable_workshop_command_filtering` to your launch options
 [CounterStrikeSharp](https://github.com/roflmuffin/CounterStrikeSharp)  
 [CS2-Bullseye-Bot](https://github.com/ed0ard/CS2-Bullseye-Bot)  
 [CS2_ExecAfter_No_Admin](https://github.com/ed0ard/CS2_ExecAfter_No_Admin) forked from [kus](https://github.com/kus)  
-[CS2-Bot-Randomizer](https://github.com/ed0ard/CS2-Bot-Randomizer)
-[CS2-Smarter-Bot](https://github.com/ed0ard/CS2-Smarter-Bot)
+[CS2-Bot-Randomizer](https://github.com/ed0ard/CS2-Bot-Randomizer)  
+[CS2-Smarter-Bot](https://github.com/ed0ard/CS2-Smarter-Bot)  
+[CS2-BotAI](https://github.com/ed0ard/CS2-BotAI) forked from [Austin](https://github.com/Austinbots)  
 
 ## License
 GPL-3.0
