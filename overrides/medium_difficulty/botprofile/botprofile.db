@@ -102,7 +102,6 @@ Template SniperPro
 		WeaponPreference = tec9
 		WeaponPreference = fiveseven
 		WeaponPreference = p250
-		WeaponPreference = elite
 End
 
 Template RiflePro
