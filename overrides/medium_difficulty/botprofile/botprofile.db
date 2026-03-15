@@ -31,12 +31,12 @@ Default
         Difficulty = NORMAL
         VoicePitch = 100
         Skin = 0
-	LookAngleMaxAccelNormal = 2000.0
-	LookAngleStiffnessNormal = 300.0
-	LookAngleDampingNormal = 50.0
-	LookAngleMaxAccelAttacking = 5000.0
-	LookAngleStiffnessAttacking = 500.0
-	LookAngleDampingAttacking = 30.0
+LookAngleMaxAccelNormal = 2000.0
+LookAngleStiffnessNormal = 300.0
+LookAngleDampingNormal = 50.0
+LookAngleMaxAccelAttacking = 5000.0
+LookAngleStiffnessAttacking = 500.0
+LookAngleDampingAttacking = 30.0
 End
 
 //----------------------------------------------------------------------------
@@ -2639,6 +2639,7 @@ End
 ProPrecise+SniperPro+SniperPersonality "icyvl0ne"
 	VoicePitch = 94
         Skill = 100
+End
 ProSteady+RiflePro+RiflePersonality "wetfy"
 	VoicePitch = 80
 End
