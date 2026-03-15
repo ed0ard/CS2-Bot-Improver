@@ -10,10 +10,11 @@ Aims to enhance your experience when playing against bots offline or with friend
 1. Make bots aim better
 2. Alleviate bot stuck issues
 3. Assign each bot their own agent model, music kit and avatar
-4. Change bot names to pro and random players. (the characteristics of each pro player are set according to stats from [HLTV](https://www.hltv.org/))
-5. Remove the prefix from bot names
-6. Tweak game rules to make them more friendly to bots and refine bot behaviors
-7. Add some commands to make the game more fun
+4. Refine bot behavior, allowing them to spam smokes and anti-flash
+5. Change bot names to pro and random players. (the characteristics of each pro player are set according to stats from [HLTV](https://www.hltv.org/))
+6. Remove the prefix from bot names
+7. Tweak game rules to make them more friendly to bots
+8. Add some commands to make the game more fun
 
 ## Installation
 
@@ -142,6 +143,8 @@ Add `-disable_workshop_command_filtering` to your launch options
 [CounterStrikeSharp](https://github.com/roflmuffin/CounterStrikeSharp)  
 [CS2-Bullseye-Bot](https://github.com/ed0ard/CS2-Bullseye-Bot)  
 [CS2_ExecAfter_No_Admin](https://github.com/ed0ard/CS2_ExecAfter_No_Admin) forked from [kus](https://github.com/kus)  
+[CS2-Bot-Randomizer](https://github.com/ed0ard/CS2-Bot-Randomizer)
+[CS2-Smarter-Bot](https://github.com/ed0ard/CS2-Smarter-Bot)
 
 ## License
 GPL-3.0
