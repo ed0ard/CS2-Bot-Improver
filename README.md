@@ -90,7 +90,7 @@ Bot would buy as usual
 
 ### Teams
 
-To add pro teams to your match, copy from Commands.txt and paste them to your game console. You can also add new teams in this format.
+To add pro teams to your match, copy from [Commands.txt](https://github.com/ed0ard/CS2-Bot-Improver/blob/main/Commands.txt) and paste them to your game console. You can also add new teams in this format.
 
 For example, if you wanna add Vit to CT, copy the commands below.
 
