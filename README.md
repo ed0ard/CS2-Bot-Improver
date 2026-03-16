@@ -19,7 +19,7 @@ Aims to enhance your experience when playing against bots offline or with friend
 
 ## Installation
 
-1. Download the latest **CS2BotImprover.zip** in Releases and unzip it
+1. Download the latest **CS2BotImprover.zip** in [Releases](https://github.com/ed0ard/CS2-Bot-Improver/releases) and unzip it
 
    (If you run a dedicated server that is not only for bot matches, please download **CS2BotImprover_rules_unchanged.zip**)
 
