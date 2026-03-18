@@ -9,13 +9,13 @@ bot_aim_mixed
 
 ADD TEAMS
 
-1.Team Vitality
+1. Team Vitality
 
 bot_add_ct "apEX";bot_add_ct "ZywOo";bot_add_ct "ropz";bot_add_ct "mezii";bot_add_ct "flameZ";mp_teamlogo_1 vita;mp_teamname_1 Team Vitality
 
 bot_add_t "apEX";bot_add_t "ZywOo";bot_add_t "ropz";bot_add_t "mezii";bot_add_t "flameZ";mp_teamlogo_2 vita;mp_teamname_2 Team Vitality
 
-2.FURIA Esports
+2. FURIA Esports
 
 bot_add_ct "yuurih";bot_add_ct "FalleN";bot_add_ct "KSCERATO";bot_add_ct "YEKINDAR";bot_add_ct "molodoy";mp_teamlogo_1 furi;mp_teamname_1 FURIA Esports
 
@@ -235,6 +235,12 @@ bot_add_t "Summer";bot_add_t "ChildKing";bot_add_t "TiGeR";bot_add_t "L1haNg";bo
 bot_add_ct "cadiaN";bot_add_ct "spooke";bot_add_ct "arrozd0ce";bot_add_ct "adamb";bot_add_ct "FL4MUS";mp_teamlogo_1 og;mp_teamname_1 OG
 
 bot_add_t "cadiaN";bot_add_t "spooke";bot_add_t "arrozd0ce";bot_add_t "adamb";bot_add_t "FL4MUS";mp_teamlogo_2 og;mp_teamname_2 OG
+
+39. 100 Thieves
+
+bot_add_ct "Ag1l";bot_add_ct "dev1ce";bot_add_ct "poiii";bot_add_ct "sirah";bot_add_ct "rain";mp_teamlogo_1 thv;mp_teamname_1 100 Thieves
+
+bot_add_t "Ag1l";bot_add_t "dev1ce";bot_add_t "poiii";bot_add_t "sirah";bot_add_t "rain";mp_teamlogo_2 thv;mp_teamname_2 100 Thieves
 
 COORDINATED BUY
 
