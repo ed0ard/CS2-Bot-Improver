@@ -10,7 +10,7 @@ namespace BotState;
 public class BotState : BasePlugin
 {
     public override string ModuleName        => "Smarter-Bot";
-    public override string ModuleVersion     => "1.3.1";
+    public override string ModuleVersion     => "1.3.2";
     public override string ModuleAuthor      => "ed0ard";
     public override string ModuleDescription => "Make bots smarter";
 
@@ -141,9 +141,6 @@ public class BotState : BasePlugin
 
             ref bool allowActive = ref bot.AllowActive;
             allowActive = true;
-
-            ref bool botAllowActive = ref pawn.BotAllowActive;
-            botAllowActive = true;
 
             ref bool isSleeping = ref bot.IsSleeping;
             isSleeping = false;
