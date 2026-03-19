@@ -3,6 +3,7 @@ using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Core.Attributes;
 using CounterStrikeSharp.API.Modules.Cvars;
+using CounterStrikeSharp.API.Modules.Utils;
 using System;
 
 namespace BotState;
@@ -10,7 +11,7 @@ namespace BotState;
 public class BotState : BasePlugin
 {
     public override string ModuleName        => "Smarter-Bot";
-    public override string ModuleVersion     => "1.3.2";
+    public override string ModuleVersion     => "1.3.3";
     public override string ModuleAuthor      => "ed0ard";
     public override string ModuleDescription => "Make bots smarter";
 
@@ -20,7 +21,7 @@ public class BotState : BasePlugin
 
     private bool _isExpanded = false;
     private ConVar? _smokeConVar;
-    
+
     private readonly Random _random = new Random();
 
     public override void Load(bool hotReload)
@@ -96,7 +97,7 @@ public class BotState : BasePlugin
                 flashMaxAlpha = 0f;   
             }
         }
-
+        
         return HookResult.Continue;
     }
 //---------------------------------------------------------------------------------------
@@ -119,7 +120,7 @@ public class BotState : BasePlugin
     [GameEventHandler]
     public HookResult OnRoundFreezeEnd(EventRoundFreezeEnd @event, GameEventInfo info)
     {
-        foreach (var player in Utilities.GetPlayers())
+        foreach (var player in Utilities.FindAllEntitiesByDesignerName<CCSPlayerController>("cs_player_controller"))
         {
             if (!player.IsValid || !player.IsBot) continue;
             ApplyBotState(player);
@@ -129,27 +130,36 @@ public class BotState : BasePlugin
 
     private void OnTick()
     {
-        foreach (var player in Utilities.GetPlayers())
+        foreach (var player in Utilities.FindAllEntitiesByDesignerName<CCSPlayerController>("cs_player_controller"))
         {
-            if (!player.IsValid || !player.IsBot) continue;
-            
+            if (!player.IsValid || !player.IsBot)
+                continue;
+
             var pawn = player.PlayerPawn.Value;
-            if (pawn == null || !pawn.IsValid) continue;
+            if (pawn == null || !pawn.IsValid) 
+                continue;
 
             var bot = pawn.Bot;
-            if (bot == null) continue;
-
-            ref bool allowActive = ref bot.AllowActive;
-            allowActive = true;
+            if (bot == null) 
+                continue;
 
             ref bool isSleeping = ref bot.IsSleeping;
             isSleeping = false;
 
             ref bool isStuck = ref bot.IsStuck;
-            isStuck = false;
+            if (isStuck)
+            {
+                isStuck = false;
+            }
 
-            ref float idleTimeSinceLastAction = ref pawn.IdleTimeSinceLastAction;
-            idleTimeSinceLastAction = 0f;
+            ref bool allowActive = ref bot.AllowActive;
+            allowActive = true;
+            
+            ref float fireWeaponTimestamp = ref bot.FireWeaponTimestamp;
+            fireWeaponTimestamp = 0.0f;
+
+            ref float duration = ref bot.IgnoreEnemiesTimer.Duration;
+            duration = 0.0f;
         }
     }
 
