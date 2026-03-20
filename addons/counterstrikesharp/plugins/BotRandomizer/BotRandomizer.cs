@@ -9,7 +9,7 @@ namespace BotRandomizer;
 public class BotRandomizerPlugin : BasePlugin
 {
     public override string ModuleName        => "BotRandomizer";
-    public override string ModuleVersion     => "1.0.3";
+    public override string ModuleVersion     => "1.0.4";
     public override string ModuleAuthor      => "ed0ard";
     public override string ModuleDescription => "Randomize agent model and music kit for bots";
 
@@ -171,7 +171,12 @@ public class BotRandomizerPlugin : BasePlugin
         Server.NextFrame(() =>
         {
             if (pawn == null || !pawn.IsValid) return;
+
             pawn.SetModel(assignedModel);
+
+            Utilities.SetStateChanged(pawn, "CBaseEntity", "m_CBodyComponent");
+            pawn.AcceptInput("Skin", pawn, pawn, "0");
+
             var c = pawn.Render;
             pawn.Render = Color.FromArgb(255, c.R, c.G, c.B);
             Utilities.SetStateChanged(pawn, "CBaseModelEntity", "m_clrRender");
