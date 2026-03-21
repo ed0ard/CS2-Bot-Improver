@@ -146,12 +146,6 @@ public class BotState : BasePlugin
             ref bool isSleeping = ref bot.IsSleeping;
             isSleeping = false;
 
-            ref bool isStuck = ref bot.IsStuck;
-            if (isStuck)
-            {
-                isStuck = false;
-            }
-
             ref bool allowActive = ref bot.AllowActive;
             allowActive = true;
             
