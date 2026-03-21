@@ -120,6 +120,16 @@ public class BotAI : BasePlugin
 
         RegisterEventHandler<EventRoundStart>((@event, info) =>
         {
+            if (IsRestrictedGameMode())
+            {
+                Logger.LogInformation($"[Check_1C] Current game mode is restricted, skip loading patch.");
+                if (_check1cActive)
+                {
+                    RemoveCheck1cPatch();
+                }
+                return HookResult.Continue;
+            }
+
             if (IsFirstRoundOfHalf())
             {
                 if (!_check1cActive)
@@ -190,7 +200,17 @@ public class BotAI : BasePlugin
         Logger.LogInformation("All patches restored.");
     }
 
-    //
+    private bool IsRestrictedGameMode()
+    {
+        int gameType = ConVar.Find("game_type")?.GetPrimitiveValue<int>() ?? 0;
+        int gameMode = ConVar.Find("game_mode")?.GetPrimitiveValue<int>() ?? 0;
+
+        bool isDeathmatch = (gameType == 1 && gameMode == 2);
+        bool isArmsRace   = (gameType == 1 && gameMode == 0);
+
+        return isDeathmatch || isArmsRace;
+    }
+
     private bool IsFirstRoundOfHalf()
     {
         try
