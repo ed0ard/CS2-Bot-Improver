@@ -148,6 +148,7 @@ Add `-disable_workshop_command_filtering` to your launch options
 [CS2-Bot-Randomizer](https://github.com/ed0ard/CS2-Bot-Randomizer)  
 [CS2-Smarter-Bot](https://github.com/ed0ard/CS2-Smarter-Bot)  
 [CS2-BotAI](https://github.com/ed0ard/CS2-BotAI) forked from [Austin](https://github.com/Austinbots)  
+[CS2-BotAI-for-Linux](https://github.com/Austinbots/CS2-BotAI)
 
 ## License
 GPL-3.0
