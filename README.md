@@ -7,7 +7,7 @@ Aims to enhance your experience when playing against bots offline or with friend
 
 ## Features
 
-1. Make bots aim better
+1. Make bots aim better and more human-like
 2. Alleviate bot stuck issues
 3. Assign each bot their own agent model, music kit and avatar
 4. Refine bot behavior, allowing them to spam smokes and anti-flash
