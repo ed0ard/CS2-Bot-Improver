@@ -23,7 +23,7 @@ public static class BotOffsets
 public class BotAI : BasePlugin
 {
     public override string ModuleName        => "Patches - Bot AI";
-    public override string ModuleVersion     => "1.5";
+    public override string ModuleVersion     => "1.5.1";
     public override string ModuleAuthor      => "Austin (updated by ed0ard)";
     public override string ModuleDescription =>
         "Bot AI patches: spawn, safe-check, knife suppression, unrestricted weapon buying";
@@ -120,6 +120,15 @@ public class BotAI : BasePlugin
 
         RegisterEventHandler<EventRoundStart>((@event, info) =>
         {
+            ConVar? botLoadout = ConVar.Find("bot_loadout");
+            if (botLoadout != null && !string.IsNullOrEmpty(botLoadout.StringValue))
+            {
+                if (_check1cActive)
+                    RemoveCheck1cPatch();
+
+                return HookResult.Continue;
+            }
+            
             if (IsRestrictedGameMode())
             {
                 Logger.LogInformation($"[Check_1C] Current game mode is restricted, skip loading patch.");
