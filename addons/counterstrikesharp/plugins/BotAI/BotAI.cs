@@ -23,7 +23,7 @@ public static class BotOffsets
 public class BotAI : BasePlugin
 {
     public override string ModuleName        => "Patches - Bot AI";
-    public override string ModuleVersion     => "1.5.1";
+    public override string ModuleVersion     => "1.5.2";
     public override string ModuleAuthor      => "Austin (updated by ed0ard)";
     public override string ModuleDescription =>
         "Bot AI patches: spawn, safe-check, knife suppression, unrestricted weapon buying";
@@ -60,7 +60,7 @@ public class BotAI : BasePlugin
         ),
 
 
-        // EscapeFromBombState::OnEnter tail-call jmp → ret
+        // EscapeFromBombState::OnEnter tail-call jmp → ret (prevents crash)
         ["EscapeFromBomb_OnEnter_NoEquipKnife"] = (
             signature:        "48 83 C4 20 5B E9 BB 50 F9 FF",
             patch:            "C3 90 90 90 90",
@@ -93,15 +93,26 @@ public class BotAI : BasePlugin
             patchOffset:      0
         ),
 
-
         ["Check_1C_SkipSavingMoneyFlag"] = (
-            // BotBuyWeapon @ 0x18031bf4a
-            // cmp byte [BuyState+0x18], 0; je 0x18031bfae
-            // je → jmp
             signature:        "80 79 18 00 74 62 48 8B",
             patch:            "EB 62",
             expectedOriginal: "74 62",
             patchOffset:      4
+        ),
+
+
+        ["InvestigateNoise_SkipSelfDefenseCheck"] = (
+            signature:        "83 BB 08 63 00 00 02 74 1E",
+            patch:            "90 90",
+            expectedOriginal: "74 1E",
+            patchOffset:      7    // RVA 0x318ed6
+        ),
+
+        ["InvestigateNoise_SkipIsInCombatCheck"] = (
+            signature:        "84 C0 74 27 83 BB 08 63 00 00 02",
+            patch:            "90 90",
+            expectedOriginal: "74 27",
+            patchOffset:      2    // RVA 0x318ecd
         ),
     };
 
