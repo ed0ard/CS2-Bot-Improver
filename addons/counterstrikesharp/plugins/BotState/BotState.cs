@@ -11,7 +11,7 @@ namespace BotState;
 public class BotState : BasePlugin
 {
     public override string ModuleName        => "Smarter-Bot";
-    public override string ModuleVersion     => "1.4.0";
+    public override string ModuleVersion     => "1.4.1";
     public override string ModuleAuthor      => "ed0ard";
     public override string ModuleDescription => "Make bots smarter";
 
@@ -158,6 +158,27 @@ public class BotState : BasePlugin
 
             ref float duration = ref bot.IgnoreEnemiesTimer.Duration;
             duration = 0.0f;
+
+            ref bool isStuck = ref bot.IsStuck;
+            if (isStuck)
+            {
+                ref bool isRunning = ref bot.IsRunning;
+                isRunning = true;
+
+                ref float jumpTimestamp = ref bot.JumpTimestamp;
+                jumpTimestamp = 0.0f;
+
+                CountdownTimer stuckJumpTimer = bot.StuckJumpTimer;
+
+                ref float stuckduration = ref stuckJumpTimer.Duration;
+                stuckduration = 0.0f;
+
+                ref float stucktimestamp = ref stuckJumpTimer.Timestamp;
+                stucktimestamp = Server.CurrentTime;
+
+                ref float stucktimescale = ref stuckJumpTimer.Timescale;
+                stucktimescale = 1.0f;
+            }
         }
     }
 
