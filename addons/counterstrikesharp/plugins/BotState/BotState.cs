@@ -11,7 +11,7 @@ namespace BotState;
 public class BotState : BasePlugin
 {
     public override string ModuleName        => "Smarter-Bot";
-    public override string ModuleVersion     => "1.4.1";
+    public override string ModuleVersion     => "1.5.0";
     public override string ModuleAuthor      => "ed0ard";
     public override string ModuleDescription => "Make bots smarter";
 
@@ -23,6 +23,10 @@ public class BotState : BasePlugin
     private ConVar? _smokeConVar;
 
     private readonly Random _random = new Random();
+
+    private readonly Dictionary<int, bool> _prevIsAttacking = new();
+    private readonly Dictionary<int, bool> _prevInAir       = new();
+    private readonly Dictionary<int, float> _ladderExitTime = new();
 
     public override void Load(bool hotReload)
     {
@@ -144,6 +148,8 @@ public class BotState : BasePlugin
             if (bot == null) 
                 continue;
 
+            int idx = (int)player.Index;
+
             ref bool isSleeping = ref bot.IsSleeping;
             isSleeping = false;
 
@@ -158,6 +164,71 @@ public class BotState : BasePlugin
 
             ref float duration = ref bot.IgnoreEnemiesTimer.Duration;
             duration = 0.0f;
+  
+            // Random combat crouch
+            bool curIsAttacking = bot.IsAttacking;
+            _prevIsAttacking.TryGetValue(idx, out bool prevIsAttacking);
+            if (curIsAttacking && !prevIsAttacking)
+            {
+                ref bool isCrouching = ref bot.IsCrouching;
+                isCrouching = _random.NextDouble() < 0.4;
+
+                CountdownTimer sneakTimer = bot.SneakTimer;
+
+                ref float sneakduration = ref sneakTimer.Duration;
+                sneakduration = 0.0f;
+
+                ref float sneaktimestamp = ref sneakTimer.Timestamp;
+                sneaktimestamp = 0.0f;
+
+                ref float sneaktimescale = ref sneakTimer.Timescale;
+                sneaktimescale = 1.0f;
+            }
+            _prevIsAttacking[idx] = curIsAttacking;
+
+            var moveServices = pawn.MovementServices as CCSPlayer_MovementServices;
+            var ladderNormal = moveServices?.LadderNormal;
+
+            bool nearLadder = pawn.MoveType == MoveType_t.MOVETYPE_LADDER
+                        || (ladderNormal != null
+                            && (ladderNormal.X != 0f || ladderNormal.Y != 0f || ladderNormal.Z != 0f));
+
+            if (nearLadder) _ladderExitTime[idx] = Server.CurrentTime;
+
+            bool inLadderCooldown = nearLadder
+                || (_ladderExitTime.TryGetValue(idx, out float exitTime)
+                    && Server.CurrentTime - exitTime < 5.0f);
+
+            bool inAir = !inLadderCooldown
+                    && (pawn.GroundEntity == null || !pawn.GroundEntity.IsValid);
+
+            if (inAir)
+            {
+                ref bool isCrouching = ref bot.IsCrouching;
+                isCrouching = true;
+
+                var angles = pawn.EyeAngles;
+                float yaw = angles.Y * MathF.PI / 180f;
+                float fwdX = MathF.Cos(yaw);
+                float fwdY = MathF.Sin(yaw);
+
+                float currentFwd = pawn.AbsVelocity.X * fwdX + pawn.AbsVelocity.Y * fwdY;
+                const float targetFwd = 200f;
+                if (currentFwd < targetFwd)
+                {
+                    float boost = targetFwd - currentFwd;
+                    pawn.AbsVelocity.X += fwdX * boost;
+                    pawn.AbsVelocity.Y += fwdY * boost;
+                }
+            }
+
+            _prevInAir.TryGetValue(idx, out bool prevInAir);
+            if (prevInAir && !inAir)
+            {
+                ref bool isCrouching = ref bot.IsCrouching;
+                isCrouching = false;
+            }
+            _prevInAir[idx] = inAir;
 
             ref bool isStuck = ref bot.IsStuck;
             if (isStuck)
