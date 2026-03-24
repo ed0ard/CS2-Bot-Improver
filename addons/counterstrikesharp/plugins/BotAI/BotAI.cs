@@ -23,10 +23,10 @@ public static class BotOffsets
 public class BotAI : BasePlugin
 {
     public override string ModuleName        => "Patches - Bot AI";
-    public override string ModuleVersion     => "1.5.2";
+    public override string ModuleVersion     => "1.5.3";
     public override string ModuleAuthor      => "Austin (updated by ed0ard)";
     public override string ModuleDescription =>
-        "Bot AI patches: spawn, safe-check, knife suppression, unrestricted weapon buying";
+        "Improve and fix bots' behavior comprehensively";
 
     private readonly List<PatchInfo> _appliedPatches = [];
 
@@ -113,6 +113,20 @@ public class BotAI : BasePlugin
             patch:            "90 90",
             expectedOriginal: "74 27",
             patchOffset:      2    // RVA 0x318ecd
+        ),
+
+        ["PlantBombLookAtPriorityLow"] = (
+            signature:        "41 B9 02 00 00 00 C6 44 24 38 00 F3 0F 10 0D",
+            patch:            "41 B9 00 00 00 00",
+            expectedOriginal: "41 B9 02 00 00 00",
+            patchOffset:      0    // VA 0x18031ae2c
+        ),
+
+        ["DefuseBombLookAtPriorityLow"] = (
+            signature:        "41 B9 02 00 00 00 C6 44 24 38 00 4C 8B C7",
+            patch:            "41 B9 00 00 00 00",
+            expectedOriginal: "41 B9 02 00 00 00",
+            patchOffset:      0    // VA 0x18031cce6
         ),
     };
 
