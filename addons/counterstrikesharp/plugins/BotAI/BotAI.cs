@@ -23,7 +23,7 @@ public static class BotOffsets
 public class BotAI : BasePlugin
 {
     public override string ModuleName        => "Patches - Bot AI";
-    public override string ModuleVersion     => "1.5.3";
+    public override string ModuleVersion     => "1.5.4";
     public override string ModuleAuthor      => "Austin (updated by ed0ard)";
     public override string ModuleDescription =>
         "Improve and fix bots' behavior comprehensively";
@@ -127,6 +127,63 @@ public class BotAI : BasePlugin
             patch:            "41 B9 00 00 00 00",
             expectedOriginal: "41 B9 02 00 00 00",
             patchOffset:      0    // VA 0x18031cce6
+        ),
+
+
+        ["SprayAllDistances_FireDecision1"] = (
+            signature:        "F3 0F 10 87 A0 00 00 00 0F 2F C7 76 12 48 8B 05",
+            patch:            "90 90",
+            expectedOriginal: "76 12",
+            patchOffset:      11    // RVA 0x2f0d53
+        ),
+
+        ["SprayAllDistances_FireDecision2"] = (
+            signature:        "0F 2F 40 30 76 05 40 B5 01 EB 03 40 32 ED",
+            patch:            "90 90",
+            expectedOriginal: "76 05",
+            patchOffset:      4    // RVA 0x2f0d60
+        ),
+
+        ["AttackState_SkipFireRateCheck"] = (
+            signature:        "0F 2F 8B AC 00 00 00 0F 82",
+            patch:            "90 90 90 90 90 90",
+            expectedOriginal: "0F 82 87 00 00 00",
+            patchOffset:      7    // VA 0x1802f22a0
+        ),
+
+        ["AttackSkipViewSteadyCheck"] = (
+            signature:        "0F 2F C1 0F 86 94 00 00 00 0F 2F 8B",
+            patch:            "90 90 90 90 90 90",
+            expectedOriginal: "0F 86 94 00 00 00",
+            patchOffset:      3    // RVA 0x2f2293
+        ),
+
+        ["SprayAllDistances_ja1"] = (
+            signature:        "0F 2F F9 F3 44 0F 10 15 ? ? ? ? 77 22",
+            patch:            "90 90",
+            expectedOriginal: "77 22",
+            patchOffset:      12
+        ),
+
+        ["SprayAllDistances_ja2"] = (
+            signature:        "F3 0F 10 4C AB 7C 44 0F 28 C8 0F 2F F9 77 21",
+            patch:            "90 90",
+            expectedOriginal: "77 21",
+            patchOffset:      13
+        ),
+
+        ["SprayAllDistances_ja3"] = (
+            signature:        "0F 2F FA 77 17 48 8B CF E8",
+            patch:            "90 90",
+            expectedOriginal: "77 17",
+            patchOffset:      3
+        ),
+
+        ["SprayAllDistances_ja4"] = (
+            signature:        "0F 10 94 AB 80 00 00 00 0F 2F FA 77 13 48",
+            patch:            "90 90",
+            expectedOriginal: "77 13",
+            patchOffset:      11
         ),
     };
 
