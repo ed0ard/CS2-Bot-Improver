@@ -1,5 +1,5 @@
 # CS2-Bot-Improver
-CS2-Bot-Improver is a plugin for Counter-Strike 2 that improves bots' aim, navigation, personalities, strategies, etc.
+CS2-Bot-Improver is a plugin for Counter-Strike 2 that improves bots' aim, movement, personalities, strategies, etc.
 
 Aims to enhance your experience when playing against bots offline or with friends. It can be installed on both clients and servers.
 
@@ -9,14 +9,15 @@ Aims to enhance your experience when playing against bots offline or with friend
 
 1. Make bots aim better and more human-like
 2. Alleviate bot stuck issues
-3. Assign each bot their own agent model, music kit and avatar
-4. Refine bot behavior, allowing them to spam smokes and anti-flash
-5. Make bots smarter and more organized
-6. Change bot names to pro and random players. (the characteristics of each pro player are set according to stats from [HLTV](https://www.hltv.org/))
-7. Reomve the restriction that prevents bots from buying in pistol rounds and overtime
-8. Remove the prefix from bot names
-9. Tweak game rules to make them more friendly to bots
-10. Add some commands to make the game more fun
+3. Improve bots' movement
+4. Assign each bot their own agent model, music kit and avatar
+5. Refine bot behavior, allowing them to spam smokes and anti-flash
+6. Make bots smarter and more organized
+7. Change bot names to pro and random players. (the characteristics of each pro player are set according to stats from [HLTV](https://www.hltv.org/))
+8. Reomve the restriction that prevents bots from buying in pistol rounds and overtime
+9. Remove the prefix from bot names
+10. Tweak game rules to make them more friendly to bots
+11. Add some commands to make the game more fun
 
 ## Installation
 
