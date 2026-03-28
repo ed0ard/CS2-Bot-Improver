@@ -107,7 +107,7 @@ public class BotState : BasePlugin
                     && p.OriginalControllerOfCurrentPawn.Value.Handle == player.Handle);
             if (isTakenOver) return HookResult.Continue;
 
-        bool isImmune = _random.NextDouble() <= 0.7;
+        bool isImmune = _random.NextDouble() <= 0.6;
         
         if (isImmune)
         {
