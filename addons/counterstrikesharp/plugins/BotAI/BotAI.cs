@@ -23,7 +23,7 @@ public static class BotOffsets
 public class BotAI : BasePlugin
 {
     public override string ModuleName        => "Patches - Bot AI";
-    public override string ModuleVersion     => "1.5.4";
+    public override string ModuleVersion     => "1.6.0";
     public override string ModuleAuthor      => "Austin (updated by ed0ard)";
     public override string ModuleDescription =>
         "Improve and fix bots' behavior comprehensively";
@@ -115,6 +115,7 @@ public class BotAI : BasePlugin
             patchOffset:      2    // RVA 0x318ecd
         ),
 
+
         ["PlantBombLookAtPriorityLow"] = (
             signature:        "41 B9 02 00 00 00 C6 44 24 38 00 F3 0F 10 0D",
             patch:            "41 B9 00 00 00 00",
@@ -184,6 +185,71 @@ public class BotAI : BasePlugin
             patch:            "90 90",
             expectedOriginal: "77 13",
             patchOffset:      11
+        ),
+
+
+        ["AttackState_DodgeDuringReload"] = (
+            signature:        "E9 ? ? ? ? 0F 2F BB A4 00 00 00 76 74",
+            patch:            "EB 74",
+            expectedOriginal: "76 74",
+            patchOffset:      12    // BLOCK_TIMER_A jbe→jmp
+        ),
+
+        ["SniperCrouchDodge_jb"] = (
+            signature:        "0F 2F BB A4 00 00 00 0F 28 7C 24 30 76 74",
+            patch:            "90 90",
+            expectedOriginal: "76 74",
+            patchOffset:      12    // BLOCK_TIMER_B NOP jbe → DODGE_B (RVA 0x2f2420)
+        ),
+
+        ["LowSKill_JumpChance0"] = (
+            signature:        "0F 2F 05 65 D5 23 01 76 11",
+            patch:            "EB 40",
+            expectedOriginal: "76 11",
+            patchOffset:      7    // RVA 0x2f4587: jbe +11 → jmp +40 to non-jump 
+        ),
+
+        // NOP the JLE that guards the sharp-turn escape block
+        ["StuckCheck_SkipEscapeDirection"] = (
+            signature:    "0F 8E 96 00 00 00 E8 5A AC B5 00 48 85 C0",
+            patch:        "90 90 90 90 90 90",
+            expectedOriginal: "0F 8E 96 00 00 00",
+            patchOffset:  0    // RVA 0x2d21b7
+        ),
+
+        ["AllSkill_DodgeChance100_OnOutnumberedOrSniper"] = (
+            signature:        "0F 28 F0 F3 0F 59 35 30 B5 22 01 76 14",
+            patch:            "90 90",
+            expectedOriginal: "76 14",
+            patchOffset:      11   // RVA 0x319d73: jbe +14 → NOP
+        ),
+
+        ["DodgeChance_Flat80"] = (
+            signature:        "0F 28 F0 F3 0F 59 35 30 B5 22 01 76 14",
+            patch:            "10",
+            expectedOriginal: "59",
+            patchOffset:      5    // RVA 0x319d66: MULSS(59) → MOVSS(10)
+        ),
+
+        ["AllSkill_KeepMoving_WhenSeeSniper"] = (
+            signature:        "0F 2F 05 9F 5F 26 01 76 0D 80 BF AC 05 00 00 00 0F 85",
+            patch:            "90 90",
+            expectedOriginal: "76 0D",
+            patchOffset:      7    // RVA 0x2cbb4d: jbe +0D → NOP
+        ),
+
+        ["AttackState_CanStrafe_jne"] = (
+            signature:        "E8 B2 1C 00 00 84 C0 74 7B",
+            patch:            "90 90",
+            expectedOriginal: "74 7B",
+            patchOffset:      7    // RVA 0x2f22b0
+        ),
+
+        ["SniperDodge_SkipIsSniper_DodgeA"] = (
+            signature:        "84 F6 75 6A 48 8B 05",
+            patch:            "90 90",
+            expectedOriginal: "75 6A",
+            patchOffset:      2    // RVA 0x2f23a8：DODGE_A IsSniper jne+6A → NOP
         ),
     };
 
