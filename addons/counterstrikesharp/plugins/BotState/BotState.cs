@@ -11,7 +11,7 @@ namespace BotState;
 public class BotState : BasePlugin
 {
     public override string ModuleName        => "Smarter-Bot";
-    public override string ModuleVersion     => "1.6.0";
+    public override string ModuleVersion     => "1.6.1";
     public override string ModuleAuthor      => "ed0ard";
     public override string ModuleDescription => "Make bots smarter";
 
@@ -24,10 +24,10 @@ public class BotState : BasePlugin
 
     private readonly Random _random = new Random();
 
-    private readonly Dictionary<int, bool> _prevIsAttacking = new();
     private readonly Dictionary<int, bool> _prevInAir       = new();
     private readonly Dictionary<int, float> _ladderExitTime = new();
     private readonly Dictionary<int, float> _lastLateralDir = new();
+    private readonly Dictionary<int, float> _doorEventCooldown = new();
 
     private readonly Dictionary<int, float>  _airEnterTime    = new();
     private readonly Dictionary<int, bool>   _airBoostBlocked = new();
@@ -43,11 +43,6 @@ public class BotState : BasePlugin
     private readonly Dictionary<int, float>  _condCBoostTime  = new();
     private readonly Dictionary<int, bool>   _condCArmed      = new();
     private readonly Dictionary<int, bool>   _condCDone       = new();
-
-    private readonly HashSet<int> _hasFiredThisAttack = new();
-    private readonly Dictionary<int, float> _awpBoostUntil    = new();
-    private readonly Dictionary<int, float> _awpBoostDirX     = new();
-    private readonly Dictionary<int, float> _awpBoostDirY     = new();
 //---------------------------------------------------------------------------------------
     public override void Load(bool hotReload)
     {
@@ -58,6 +53,8 @@ public class BotState : BasePlugin
         RegisterEventHandler<EventPlayerBlind>(OnPlayerBlind);
         RegisterEventHandler<EventBombPlanted>(OnBombPlanted);
         RegisterEventHandler<EventBombBegindefuse>(OnBombBeginDefuse);
+        RegisterEventHandler<EventDoorOpen>(OnDoorOpen);
+        RegisterEventHandler<EventDoorClose>(OnDoorClose);
         RegisterEventHandler<EventWeaponFire>(OnWeaponFire);
         RegisterListener<Listeners.OnTick>(OnTick);
     }
@@ -104,6 +101,12 @@ public class BotState : BasePlugin
         if (player is null || !player.IsValid || !player.IsBot)
             return HookResult.Continue;
 
+        bool isTakenOver = Utilities.GetPlayers()
+                .Any(p => p.IsValid
+                    && p.OriginalControllerOfCurrentPawn?.Value != null
+                    && p.OriginalControllerOfCurrentPawn.Value.Handle == player.Handle);
+            if (isTakenOver) return HookResult.Continue;
+
         bool isImmune = _random.NextDouble() <= 0.7;
         
         if (isImmune)
@@ -148,6 +151,7 @@ public class BotState : BasePlugin
     [GameEventHandler]
     public HookResult OnRoundFreezeEnd(EventRoundFreezeEnd @event, GameEventInfo info)
     {
+        _isFreezeTime = false;
         foreach (var player in Utilities.FindAllEntitiesByDesignerName<CCSPlayerController>("cs_player_controller"))
         {
             if (!player.IsValid || !player.IsBot) continue;
@@ -170,9 +174,17 @@ public class BotState : BasePlugin
             var bot = pawn.Bot;
             if (bot == null) 
                 continue;
+            // In case the bot has been taken over
+            bool isTakenOver = Utilities.GetPlayers()
+                .Any(p => p.IsValid
+                    && p.OriginalControllerOfCurrentPawn?.Value != null
+                    && p.OriginalControllerOfCurrentPawn.Value.Handle == player.Handle);
+            if (isTakenOver) continue;
 
             int idx = (int)player.Index;
             float now = Server.CurrentTime;
+            // Door Stuck Fix
+            bool inDoorCooldown = _doorEventCooldown.TryGetValue(idx, out float doorCooldownEnd) && now < doorCooldownEnd;
 
             ref bool isSleeping = ref bot.IsSleeping;
             isSleeping = false;
@@ -183,47 +195,39 @@ public class BotState : BasePlugin
             ref bool isRapidFiring = ref bot.IsRapidFiring;
             isRapidFiring = true;
 
+            ref float peripheralTimestamp = ref bot.PeripheralTimestamp;
+            peripheralTimestamp = 0.0f;
+
             ref float fireWeaponTimestamp = ref bot.FireWeaponTimestamp;
             fireWeaponTimestamp = 0.0f;
+            // Never ignore enemies
+            CountdownTimer ignoreEnemiesTimer = bot.IgnoreEnemiesTimer;
 
-            ref float duration = ref bot.IgnoreEnemiesTimer.Duration;
-            duration = 0.0f;
+            ref float ignoreEnemiesduration = ref ignoreEnemiesTimer.Duration;
+            ignoreEnemiesduration = 0.0f;
+
+            ref float ignoreEnemiestimestamp = ref ignoreEnemiesTimer.Timestamp;
+            ignoreEnemiestimestamp = 0.0f;
+
+            ref float ignoreEnemiestimescale = ref ignoreEnemiesTimer.Timescale;
+            ignoreEnemiestimescale = 1.0f;
+            // Never lookat (panic)
+            CountdownTimer panicTimer = bot.PanicTimer;
+
+            ref float panicduration = ref panicTimer.Duration;
+            panicduration = 0.0f;
+
+            ref float panictimestamp = ref panicTimer.Timestamp;
+            panictimestamp = 0.0f;
+
+            ref float panictimescale = ref panicTimer.Timescale;
+            panictimescale = 1.0f;
   
-            // Random combat crouch
+            // Sniper Peek
             bool curIsAttacking = bot.IsAttacking;
-            _prevIsAttacking.TryGetValue(idx, out bool prevIsAttacking);
 
-            if (!curIsAttacking && prevIsAttacking)
-                _hasFiredThisAttack.Remove(idx);
-            
-            bool justFired = curIsAttacking && _hasFiredThisAttack.Contains(idx)
-                          && !prevIsAttacking == false;
-
-            if (justFired && !_prevIsAttacking.GetValueOrDefault(idx))
-                justFired = false;
-                
-            bool fireEdge = curIsAttacking && _hasFiredThisAttack.Remove(idx);
-
-            if (fireEdge && !_isFreezeTime)
+            if (curIsAttacking && !_isFreezeTime)
             {
-                bool isDefusing = pawn.IsDefusing;
-                if (!isDefusing)
-                {
-                    ref bool isCrouching = ref bot.IsCrouching;
-                    isCrouching = _random.NextDouble() < 0.25;
-
-                    CountdownTimer sneakTimer = bot.SneakTimer;
-
-                    ref float sneakduration = ref sneakTimer.Duration;
-                    sneakduration = 0.0f;
-
-                    ref float sneaktimestamp = ref sneakTimer.Timestamp;
-                    sneaktimestamp = 0.0f;
-
-                    ref float sneaktimescale = ref sneakTimer.Timescale;
-                    sneaktimescale = 1.0f;
-                }
-                // Sniper Peek
                 string? wpn = pawn.WeaponServices?.ActiveWeapon?.Value?.DesignerName;
                 if (wpn == "weapon_awp" || wpn == "weapon_ssg08")
                 {
@@ -232,8 +236,8 @@ public class BotState : BasePlugin
                     {
                         float yawS = pawn.EyeAngles.Y * MathF.PI / 180f;
                         float rx   = -MathF.Sin(yawS), ry = MathF.Cos(yawS);
-                        float injX = rx * (-lastDir) * 200f;
-                        float injY = ry * (-lastDir) * 200f;
+                        float injX = rx * (-lastDir) * 250f;
+                        float injY = ry * (-lastDir) * 250f;
                         pawn.AbsVelocity.X += injX;
                         pawn.AbsVelocity.Y += injY;
                     }
@@ -252,7 +256,6 @@ public class BotState : BasePlugin
                     _lastLateralDir[idx] = newDir;
                 }
             }
-            _prevIsAttacking[idx] = curIsAttacking;
 
             // Ladder Stuck Issue Fix
             var moveServices = pawn.MovementServices as CCSPlayer_MovementServices;
@@ -272,6 +275,12 @@ public class BotState : BasePlugin
                     && (pawn.GroundEntity == null || !pawn.GroundEntity.IsValid);
 
             _prevInAir.TryGetValue(idx, out bool prevInAir);
+            // Door Stuck Issue Fix
+            if (inDoorCooldown)
+            {
+                _prevInAir[idx] = inAir;
+                continue;
+            }
             // Jump Crouch Forward
             if (inAir)
             {
@@ -325,7 +334,7 @@ public class BotState : BasePlugin
                             isCrouching = true;
                         }
 
-                        const float targetFwd = 200f;
+                        const float targetFwd = 180f;
                         if (currentFwd < targetFwd)
                         {
                             float boost = targetFwd - currentFwd;
@@ -354,7 +363,7 @@ public class BotState : BasePlugin
                         pawn.AbsVelocity.X * pawn.AbsVelocity.X +
                         pawn.AbsVelocity.Y * pawn.AbsVelocity.Y);
 
-                    if (condCElapsed >= 4.0f && spd2D <= 0f)
+                    if (condCElapsed >= 4.0f && spd2D <= 5f)
                     {
                         _condCDone[idx]  = true;
                         _condCArmed[idx] = false;
@@ -378,7 +387,6 @@ public class BotState : BasePlugin
                     }
                 }
             }
-
             // Normal Un-Stuck Process
             ref bool isStuck = ref bot.IsStuck;
             if (isStuck)
@@ -443,9 +451,6 @@ public class BotState : BasePlugin
                     pawn.AbsVelocity.X = MathF.Cos(backYaw) * 100f;
                     pawn.AbsVelocity.Y = MathF.Sin(backYaw) * 100f;
 
-                    if (!_isFreezeTime && !pawn.IsDefusing)
-                        bot.IsCrouching = true;
-
                     // Reset
                     _stuckStartTime[idx] = now;
                     _stuckStartPos[idx]  = new Vector(curPos.X, curPos.Y, curPos.Z);
@@ -467,21 +472,56 @@ public class BotState : BasePlugin
     private HookResult OnRoundStart(EventRoundStart @event, GameEventInfo info)
     {
         _isFreezeTime = true;
-        _hasFiredThisAttack.Clear();
+        return HookResult.Continue;
+    }
+
+    private HookResult OnDoorOpen(EventDoorOpen @event, GameEventInfo info)
+    {
+        var player = @event.Userid;
+        if (player == null || !player.IsValid || !player.IsBot) return HookResult.Continue;
+    
+        int idx = (int)player.Index;
+        _doorEventCooldown[idx] = Server.CurrentTime + 1.0f;
+        return HookResult.Continue;
+    }
+
+    private HookResult OnDoorClose(EventDoorClose @event, GameEventInfo info)
+    {
+        var player = @event.Userid;
+        if (player == null || !player.IsValid || !player.IsBot) return HookResult.Continue;
+    
+        int idx = (int)player.Index;
+        _doorEventCooldown[idx] = Server.CurrentTime + 1.0f;
         return HookResult.Continue;
     }
 
     private HookResult OnWeaponFire(EventWeaponFire @event, GameEventInfo info)
     {
         var shooter = @event.Userid;
-        
         if (shooter == null || !shooter.IsValid || !shooter.IsBot) return HookResult.Continue;
 
         int idx = (int)shooter.Index;
-        var bot = shooter.PlayerPawn?.Value?.Bot;
+        var pawn = shooter.PlayerPawn?.Value;
+        if (pawn == null || !pawn.IsValid) return HookResult.Continue;
+    
+        var bot = pawn.Bot;
+        if (bot == null) return HookResult.Continue;
 
-        if (bot != null && bot.IsAttacking)
-            _hasFiredThisAttack.Add(idx);
+        if (_isFreezeTime || pawn.IsDefusing || !bot.IsAttacking) return HookResult.Continue;
+        // Random combat crouch
+        ref bool isCrouching = ref bot.IsCrouching;
+        isCrouching = _random.NextDouble() < 0.25;
+
+        CountdownTimer sneakTimer = bot.SneakTimer;
+
+        ref float sneakduration = ref sneakTimer.Duration;
+        sneakduration = 0.0f;
+
+        ref float sneaktimestamp = ref sneakTimer.Timestamp;
+        sneaktimestamp = 0.0f;
+
+        ref float sneaktimescale = ref sneakTimer.Timescale;
+        sneaktimescale = 1.0f;
 
         return HookResult.Continue;
     }
@@ -500,6 +540,12 @@ public class BotState : BasePlugin
             var bot = pawn.Bot;
             if (bot == null)
                 continue;
+
+            bool isTakenOver = Utilities.GetPlayers()
+                .Any(p => p.IsValid
+                    && p.OriginalControllerOfCurrentPawn?.Value != null
+                    && p.OriginalControllerOfCurrentPawn.Value.Handle == player.Handle);
+            if (isTakenOver) continue;
 
             CountdownTimer hurryTimer = bot.HurryTimer;
 
@@ -530,6 +576,12 @@ public class BotState : BasePlugin
 
         var bot = pawn.Bot;
         if (bot == null) return HookResult.Continue;
+
+        bool isTakenOver = Utilities.GetPlayers()
+                .Any(p => p.IsValid
+                    && p.OriginalControllerOfCurrentPawn?.Value != null
+                    && p.OriginalControllerOfCurrentPawn.Value.Handle == player.Handle);
+            if (isTakenOver) return HookResult.Continue;
 
         bool hasLivingEnemies = Utilities
             .FindAllEntitiesByDesignerName<CCSPlayerController>("cs_player_controller")
@@ -584,4 +636,5 @@ public class BotState : BasePlugin
         ref bool hasVisitedEnemySpawn = ref bot.HasVisitedEnemySpawn;
         hasVisitedEnemySpawn = true;
     }
+}
 //---------------------------------------------------------------------------------------
