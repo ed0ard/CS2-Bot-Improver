@@ -10,14 +10,15 @@ Aims to enhance your experience when playing against bots offline or with friend
 1. Make bots aim better and more human-like
 2. Alleviate bot stuck issues
 3. Improve bots' movement
-4. Assign each bot their own agent model, music kit and avatar
-5. Refine bot behavior, allowing them to spam smokes and anti-flash
-6. Make bots smarter and more organized
-7. Change bot names to pro and random players. (the characteristics of each pro player are set according to stats from [HLTV](https://www.hltv.org/))
-8. Reomve the restriction that prevents bots from buying in pistol rounds and overtime
-9. Remove the prefix from bot names
-10. Tweak game rules to make them more friendly to bots
-11. Add some commands to make the game more fun
+4. Allow bots to buy everything and overhaul their economy management
+5. Assign each bot their own agent model, music kit and avatar
+6. Refine bot behavior, allowing them to spam smokes and anti-flash
+7. Make bots smarter and more organized
+8. Change bot names to pro and random players. (the characteristics of each pro player are set according to stats from [HLTV](https://www.hltv.org/))
+9. Reomve the restriction that prevents bots from buying in pistol rounds and overtime
+10. Remove the prefix from bot names
+11. Tweak game rules to make them more friendly to bots
+12. Add some commands to make the game more fun
 
 ## Installation
 
@@ -149,7 +150,8 @@ Add `-disable_workshop_command_filtering` to your launch options
 [CS2-Bot-Randomizer](https://github.com/ed0ard/CS2-Bot-Randomizer)  
 [CS2-Smarter-Bot](https://github.com/ed0ard/CS2-Smarter-Bot)  
 [CS2-BotAI](https://github.com/ed0ard/CS2-BotAI) forked from [Austin](https://github.com/Austinbots)  
-[CS2-BotAI-for-Linux](https://github.com/Austinbots/CS2-BotAI)
+[CS2-BotAI-for-Linux](https://github.com/Austinbots/CS2-BotAI)  
+[CS2-Bot-Buy](https://github.com/ed0ard/CS2-Bot-Buy)
 
 ## License
 GPL-3.0
