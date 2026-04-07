@@ -242,6 +242,12 @@ bot_add_ct "Ag1l";bot_add_ct "dev1ce";bot_add_ct "poiii";bot_add_ct "sirah";bot_
 
 bot_add_t "Ag1l";bot_add_t "dev1ce";bot_add_t "poiii";bot_add_t "sirah";bot_add_t "rain";mp_teamlogo_2 thv;mp_teamname_2 100 Thieves
 
+40. BIG
+
+bot_add_ct "tabseN";bot_add_ct "JDC";bot_add_ct "faveN";bot_add_ct "blameF";bot_add_ct "gr1ks";mp_teamlogo_1 big;mp_teamname_1 BIG
+
+bot_add_t "tabseN";bot_add_t "JDC";bot_add_t "faveN";bot_add_t "blameF";bot_add_t "gr1ks";mp_teamlogo_2 big;mp_teamname_2 BIG
+
 COORDINATED BUY
 
 elite
