@@ -15,10 +15,9 @@ Aims to enhance your experience when playing against bots offline or with friend
 6. Refine bot behavior, allowing them to spam smokes and anti-flash
 7. Make bots smarter and more organized
 8. Change bot names to pro and random players. (the characteristics of each pro player are set according to stats from [HLTV](https://www.hltv.org/))
-9. Reomve the restriction that prevents bots from buying in pistol rounds and overtime
-10. Remove the prefix from bot names
-11. Tweak game rules to make them more friendly to bots
-12. Add some commands to make the game more fun
+9. Remove the prefix from bot names
+10. Tweak game rules to make them more friendly to bots
+11. Add some commands to make the game more fun
 
 ## Installation
 
