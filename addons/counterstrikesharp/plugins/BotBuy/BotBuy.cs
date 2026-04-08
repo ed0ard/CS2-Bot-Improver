@@ -1,4 +1,4 @@
-﻿using CounterStrikeSharp.API;
+using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Modules.Utils;
@@ -12,7 +12,7 @@ namespace BotBuyPatch;
 public sealed class BotBuyPatch : BasePlugin
 {
     public override string ModuleName        => "BotBuyPatch";
-    public override string ModuleVersion     => "1.0.1";
+    public override string ModuleVersion     => "1.0.2";
     public override string ModuleAuthor      => "ed0ard";
     public override string ModuleDescription => "Enable bots to take more buy options";
 
@@ -153,10 +153,10 @@ public sealed class BotBuyPatch : BasePlugin
             var copyPlayer = player;
             float rand = Random.Shared.NextSingle();
 
-            if (rand < 0.10f)
+            if (rand < 0.06f)
             {
             }
-            else if (rand < 0.55f)
+            else if (rand < 0.53f)
             {
                 AddTimer(0.4f, () =>
                 {
@@ -323,16 +323,24 @@ public sealed class BotBuyPatch : BasePlugin
             {
                 foreach (var p in allPlayers)
                 {
-                    if (!p.IsValid) continue;
+                    if (!p.IsValid || p.PlayerPawn.Value == null) continue;
 
+                    var pawn = p.PlayerPawn.Value;
                     var (_, _, prevArmor) = PreviousInventory(p);
-                    int currentArmor = p.PawnArmor;
 
-                    if (prevArmor > 40 && prevArmor <= 99 && currentArmor > 99)
+                    if (pawn.ItemServices == null || pawn.ItemServices.Handle == nint.Zero)
+                    continue;
+                    var itemServices = new CCSPlayer_ItemServices(pawn.ItemServices.Handle);
+
+                    int currentArmor = pawn.ArmorValue;
+
+                    if (prevArmor > 40 && prevArmor <= 99 && currentArmor > 99 && itemServices.HasHelmet)
                     {
                         Refund(p, "item_assaultsuit");
-                        p.PawnArmor = prevArmor;
-                        Utilities.SetStateChanged(p, "CCSPlayerController", "m_iPawnArmor");
+                        p.GiveNamedItem("item_assaultsuit");
+                        ref int armorValue = ref pawn.ArmorValue;
+                        armorValue = prevArmor;
+                        Utilities.SetStateChanged(pawn, "CCSPlayerPawn", "m_ArmorValue");
                     }
                 }
             }
