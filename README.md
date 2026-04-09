@@ -7,17 +7,17 @@ Aims to enhance your experience when playing against bots offline or with friend
 
 ## Features
 
-1. Make bots aim better and more human-like
-2. Alleviate bot stuck issues
-3. Improve bots' movement
-4. Allow bots to buy everything and overhaul their economy management
-5. Assign each bot their own agent model, music kit and avatar
-6. Refine bot behavior, allowing them to spam smokes and anti-flash
-7. Make bots smarter and more organized
-8. Change bot names to pro and random players. (the characteristics of each pro player are set according to stats from [HLTV](https://www.hltv.org/))
-9. Remove the prefix from bot names
-10. Tweak game rules to make them more friendly to bots
-11. Add some commands to make the game more fun
+1. Makes bots aim better and more human-like
+2. Fixes most bot stuck issues
+3. Improves bots' movement
+4. Allows bots to buy everything and overhauls their economy management
+5. Assigns each bot their own agent model, music kit and avatar
+6. Refines bot behavior, allowing them to spray, flick, spam smokes and anti-flash
+7. Makes bots smarter and more organized
+8. Changes bot names to pro and random players. (the characteristics of each pro player are based on stats from [HLTV](https://www.hltv.org/))
+9. Removes the prefix from bot names
+10. Tweaks game rules to make them more friendly to bots
+11. Adds some commands to make the game more fun
 
 ## Installation
 
