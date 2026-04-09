@@ -23,18 +23,17 @@ public static class BotOffsets
 public class BotAI : BasePlugin
 {
     public override string ModuleName        => "Patches - Bot AI";
-    public override string ModuleVersion     => "1.6.2";
+    public override string ModuleVersion     => "1.6.3";
     public override string ModuleAuthor      => "Austin (updated by ed0ard)";
     public override string ModuleDescription =>
         "Improve and fix bots' behavior comprehensively";
 
     private readonly List<PatchInfo> _appliedPatches = [];
 
-    private bool _check1cActive = false;
-
     private readonly Dictionary<string, (string signature, string patch, string expectedOriginal, int patchOffset)>
         _patchDefinitions = new()
     {
+
         // Force HasVisitedEnemySpawn = 1 so bots don't revisit enemy spawn
         ["HasVisitedEnemySpawn"] = (
             signature:        "40 88 B7 20 05 00 00",
@@ -82,22 +81,6 @@ public class BotAI : BasePlugin
             patch:            "90 90 90 90 90",
             expectedOriginal: "E8 D1 4F F9 FF",
             patchOffset:      14
-        ),
-
-
-        // Remove total buy-attempt cap (was 5, raised to 127)
-        ["BotBuy_RemoveAttemptLimit"] = (
-            signature:        "83 F9 05 0F 8E 8E 02 00 00",
-            patch:            "83 F9 7F",
-            expectedOriginal: "83 F9 05",
-            patchOffset:      0
-        ),
-
-        ["Check_1C_SkipSavingMoneyFlag"] = (
-            signature:        "80 79 18 00 74 62 48 8B",
-            patch:            "EB 62",
-            expectedOriginal: "74 62",
-            patchOffset:      4
         ),
 
 
@@ -212,36 +195,28 @@ public class BotAI : BasePlugin
         ),
 
         ["LowSKill_JumpChance0"] = (
-            signature:        "0F 2F 05 65 D5 23 01 76 11",
+            signature:        "0F 2F 05 75 E4 23 01 76 11",
             patch:            "EB 40",
             expectedOriginal: "76 11",
             patchOffset:      7    // RVA 0x2f4587: jbe +11 → jmp +40 to non-jump 
         ),
 
-        // NOP the JLE that guards the sharp-turn escape block
-        ["StuckCheck_SkipEscapeDirection"] = (
-            signature:    "0F 8E 96 00 00 00 E8 5A AC B5 00 48 85 C0",
-            patch:        "90 90 90 90 90 90",
-            expectedOriginal: "0F 8E 96 00 00 00",
-            patchOffset:  0    // RVA 0x2d21b7
-        ),
-
         ["AllSkill_DodgeChance100_OnOutnumberedOrSniper"] = (
-            signature:        "0F 28 F0 F3 0F 59 35 30 B5 22 01 76 14",
+            signature:        "0F 28 F0 F3 0F 59 35 60 C4 22 01 76 14",
             patch:            "90 90",
             expectedOriginal: "76 14",
             patchOffset:      11   // RVA 0x319d73: jbe +14 → NOP
         ),
 
         ["DodgeChance_Flat80"] = (
-            signature:        "0F 28 F0 F3 0F 59 35 30 B5 22 01 76 14",
+            signature:        "0F 28 F0 F3 0F 59 35 60 C4 22 01 76 14",
             patch:            "10",
             expectedOriginal: "59",
             patchOffset:      5    // RVA 0x319d66: MULSS(59) → MOVSS(10)
         ),
 
         ["AllSkill_KeepMoving_WhenSeeSniper"] = (
-            signature:        "0F 2F 05 9F 5F 26 01 76 0D 80 BF AC 05 00 00 00 0F 85",
+            signature:        "0F 2F 05 AF 6E 26 01 76 0D 80 BF AC 05 00 00 00 0F 85",
             patch:            "90 90",
             expectedOriginal: "76 0D",
             patchOffset:      7    // RVA 0x2cbb4d: jbe +0D → NOP
@@ -262,75 +237,15 @@ public class BotAI : BasePlugin
         ),
     };
 
-    private const string Check1cName = "Check_1C_SkipSavingMoneyFlag";
-
     public override void Load(bool hotReload)
     {
         Logger.LogInformation("Bot AI Patches loading...");
 
         foreach (var name in _patchDefinitions.Keys)
         {
-            if (name == Check1cName) continue;
             if (ApplyPatch(name)) Logger.LogInformation($"{name}: applied.");
             else                  Logger.LogError($"{name}: FAILED.");
         }
-
-        RegisterEventHandler<EventRoundStart>((@event, info) =>
-        {
-            ConVar? botLoadout = ConVar.Find("bot_loadout");
-            if (botLoadout != null && !string.IsNullOrEmpty(botLoadout.StringValue))
-            {
-                if (_check1cActive)
-                    RemoveCheck1cPatch();
-
-                return HookResult.Continue;
-            }
-            
-            if (IsRestrictedGameMode())
-            {
-                Logger.LogInformation($"[Check_1C] Current game mode is restricted, skip loading patch.");
-                if (_check1cActive)
-                {
-                    RemoveCheck1cPatch();
-                }
-                return HookResult.Continue;
-            }
-
-            if (IsFirstRoundOfHalf())
-            {
-                if (!_check1cActive)
-                {
-                    if (ApplyPatch(Check1cName))
-                    {
-                        _check1cActive = true;
-                        Logger.LogInformation($"{Check1cName}: applied (first round of half).");
-                    }
-                    else
-                    {
-                        Logger.LogError($"{Check1cName}: FAILED to apply on first round of half.");
-                    }
-                }
-            }
-            else
-            {
-                if (_check1cActive)
-                {
-                    RemoveCheck1cPatch();
-                    Logger.LogInformation($"{Check1cName}: not first round of half, skipped/removed.");
-                }
-            }
-            return HookResult.Continue;
-        });
-
-        RegisterEventHandler<EventRoundFreezeEnd>((@event, info) =>
-        {
-            if (_check1cActive)
-            {
-                RemoveCheck1cPatch();
-                Logger.LogInformation($"{Check1cName}: freezetime ended, patch removed.");
-            }
-            return HookResult.Continue;
-        });
 
         RegisterEventHandler<EventPlayerSpawn>((@event, info) =>
         {
@@ -353,85 +268,15 @@ public class BotAI : BasePlugin
             return HookResult.Continue;
         });
 
-        Logger.LogInformation($"Applied {_appliedPatches.Count}/{_patchDefinitions.Count - 1} persistent patches (Check_1C managed dynamically).");
+        Logger.LogInformation($"Applied {_appliedPatches.Count}/{_patchDefinitions.Count} patches.");
     }
 
     public override void Unload(bool hotReload)
     {
         Logger.LogInformation("Bot AI Patches unloading...");
-
         foreach (var patch in _appliedPatches) RestorePatch(patch);
         _appliedPatches.Clear();
-        _check1cActive = false;
         Logger.LogInformation("All patches restored.");
-    }
-
-    private bool IsRestrictedGameMode()
-    {
-        int gameType = ConVar.Find("game_type")?.GetPrimitiveValue<int>() ?? 0;
-        int gameMode = ConVar.Find("game_mode")?.GetPrimitiveValue<int>() ?? 0;
-
-        bool isDeathmatch = (gameType == 1 && gameMode == 2);
-        bool isArmsRace   = (gameType == 1 && gameMode == 0);
-
-        return isDeathmatch || isArmsRace;
-    }
-
-    private bool IsFirstRoundOfHalf()
-    {
-        try
-        {
-            var gameRules = Utilities
-                .FindAllEntitiesByDesignerName<CCSGameRulesProxy>("cs_gamerules")
-                .FirstOrDefault()?.GameRules;
-
-            if (gameRules == null) return false;
-
-            int played      = gameRules.TotalRoundsPlayed;
-            int maxRounds   = ConVar.Find("mp_maxrounds")?.GetPrimitiveValue<int>() ?? 24;
-            int otMaxRounds = ConVar.Find("mp_overtime_maxrounds")?.GetPrimitiveValue<int>() ?? 6;
-
-            if (maxRounds   <= 0) maxRounds   = 24;
-            if (otMaxRounds <= 0) otMaxRounds = 6;
-
-            int halfLength   = maxRounds   / 2;
-            int otHalfLength = otMaxRounds / 2;
-
-            if (played == 0 || played == halfLength)
-            {
-                Logger.LogInformation($"[Check_1C] Regular match first round of half detected (played={played}).");
-                return true;
-            }
-
-            if (played >= maxRounds)
-            {
-                int otPlayed = played - maxRounds;
-                int posInOT  = otPlayed % otMaxRounds;
-
-                if (posInOT == 0 || posInOT == otHalfLength)
-                {
-                    Logger.LogInformation($"[Check_1C] Overtime first round of half detected (played={played}, posInOT={posInOT}).");
-                    return true;
-                }
-            }
-
-            return false;
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError($"IsFirstRoundOfHalf: {ex.Message}");
-            return false;
-        }
-    }
-
-    private void RemoveCheck1cPatch()
-    {
-        var patch = _appliedPatches.FirstOrDefault(p => p.Name == Check1cName);
-        if (patch == null) return;
-
-        RestorePatch(patch);
-        _appliedPatches.Remove(patch);
-        _check1cActive = false;
     }
 
     // ── Patch machinery ───────────────────────────────────────────────────────
