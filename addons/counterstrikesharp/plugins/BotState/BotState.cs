@@ -4,6 +4,7 @@ using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Core.Attributes;
 using CounterStrikeSharp.API.Modules.Cvars;
 using CounterStrikeSharp.API.Modules.Utils;
+using CounterStrikeSharp.API.Modules.Memory;
 using System;
 
 namespace BotState;
@@ -11,7 +12,7 @@ namespace BotState;
 public class BotState : BasePlugin
 {
     public override string ModuleName        => "Smarter-Bot";
-    public override string ModuleVersion     => "1.6.1";
+    public override string ModuleVersion     => "1.6.6";
     public override string ModuleAuthor      => "ed0ard";
     public override string ModuleDescription => "Make bots smarter";
 
@@ -25,24 +26,22 @@ public class BotState : BasePlugin
     private readonly Random _random = new Random();
 
     private readonly Dictionary<int, bool> _prevInAir       = new();
+    private readonly Dictionary<int, float> _lastForwardDir = new();
     private readonly Dictionary<int, float> _ladderExitTime = new();
     private readonly Dictionary<int, float> _lastLateralDir = new();
     private readonly Dictionary<int, float> _doorEventCooldown = new();
-
-    private readonly Dictionary<int, float>  _airEnterTime    = new();
-    private readonly Dictionary<int, bool>   _airBoostBlocked = new();
-    private readonly Dictionary<int, bool>  _airHadValidSpeed = new();
 
     private readonly Dictionary<int, float>  _stuckStartTime  = new();
     private readonly Dictionary<int, Vector> _stuckStartPos   = new();
     private readonly Dictionary<int, bool>   _stuckJumpDone   = new();
     private readonly Dictionary<int, int>    _stuckJumpCount  = new();
     private readonly Dictionary<int, float>  _stuckMaxSpeed   = new();
+    private readonly Dictionary<int, float> _idleStartTime  = new();
+    private readonly Dictionary<int, float> _lastRepathTime = new();
     private bool _isFreezeTime = false;
 
-    private readonly Dictionary<int, float>  _condCBoostTime  = new();
-    private readonly Dictionary<int, bool>   _condCArmed      = new();
-    private readonly Dictionary<int, bool>   _condCDone       = new();
+    private readonly HashSet<int> _hasFiredThisAttack = new();
+    private readonly Dictionary<int, bool> _prevIsAttacking = new();
 //---------------------------------------------------------------------------------------
     public override void Load(bool hotReload)
     {
@@ -100,12 +99,10 @@ public class BotState : BasePlugin
 
         if (player is null || !player.IsValid || !player.IsBot)
             return HookResult.Continue;
-
-        bool isTakenOver = Utilities.GetPlayers()
-                .Any(p => p.IsValid
-                    && p.OriginalControllerOfCurrentPawn?.Value != null
-                    && p.OriginalControllerOfCurrentPawn.Value.Handle == player.Handle);
-            if (isTakenOver) return HookResult.Continue;
+        // In case the bot has been taken over
+        bool isTakenOver = player.HasBeenControlledByPlayerThisRound;
+        if (isTakenOver)
+            return HookResult.Continue;
 
         bool isImmune = _random.NextDouble() <= 0.6;
         
@@ -175,10 +172,7 @@ public class BotState : BasePlugin
             if (bot == null) 
                 continue;
             // In case the bot has been taken over
-            bool isTakenOver = Utilities.GetPlayers()
-                .Any(p => p.IsValid
-                    && p.OriginalControllerOfCurrentPawn?.Value != null
-                    && p.OriginalControllerOfCurrentPawn.Value.Handle == player.Handle);
+            bool isTakenOver = player.HasBeenControlledByPlayerThisRound;
             if (isTakenOver) continue;
 
             int idx = (int)player.Index;
@@ -200,6 +194,16 @@ public class BotState : BasePlugin
 
             ref float fireWeaponTimestamp = ref bot.FireWeaponTimestamp;
             fireWeaponTimestamp = 0.0f;
+            // Alert
+            CountdownTimer alertTimer = bot.AlertTimer;
+            ref float alertduration = ref alertTimer.Duration;
+            alertduration = 600.0f;
+
+            ref float alerttimestamp = ref alertTimer.Timestamp;
+            alerttimestamp = now + alertduration;
+
+            ref float alerttimescale = ref alertTimer.Timescale;
+            alerttimescale = 1.0f;
             // Never ignore enemies
             CountdownTimer ignoreEnemiesTimer = bot.IgnoreEnemiesTimer;
 
@@ -211,6 +215,9 @@ public class BotState : BasePlugin
 
             ref float ignoreEnemiestimescale = ref ignoreEnemiesTimer.Timescale;
             ignoreEnemiestimescale = 1.0f;
+
+            ref float currentEnemyAcquireTimestamp = ref bot.CurrentEnemyAcquireTimestamp;
+            currentEnemyAcquireTimestamp = 0.0f;
             // Never lookat (panic)
             CountdownTimer panicTimer = bot.PanicTimer;
 
@@ -222,11 +229,39 @@ public class BotState : BasePlugin
 
             ref float panictimescale = ref panicTimer.Timescale;
             panictimescale = 1.0f;
-  
+            // Always dodge
+            ref bool isEnemySniperVisible = ref bot.IsEnemySniperVisible;
+            isEnemySniperVisible = true;
+
+            CountdownTimer sawEnemySniperTimer = bot.SawEnemySniperTimer;
+            
+            ref float sawEnemySniperduration = ref sawEnemySniperTimer.Duration;
+            sawEnemySniperduration = 600.0f;
+            
+            ref float sawEnemySniperTimestamp = ref sawEnemySniperTimer.Timestamp;
+            sawEnemySniperTimestamp = now + sawEnemySniperduration;
+            
+            ref float sawEnemySniperTimescale = ref sawEnemySniperTimer.Timescale;
+            sawEnemySniperTimescale = 1.0f;
+            // Teammate Stuck Fix
+            ref bool IsWaitingBehindFriend = ref bot.IsWaitingBehindFriend;
+            IsWaitingBehindFriend = false;
+
+            CountdownTimer politeTimer = bot.PoliteTimer;
+
+            ref float politeTimerDuration = ref politeTimer.Duration;
+            politeTimerDuration = 0.0f;
+
+            ref float politeTimerTimestamp = ref politeTimer.Timestamp;
+            politeTimerTimestamp = 0.0f;
+
+            ref float politeTimerTimescale = ref politeTimer.Timescale;
+            politeTimerTimescale = 1.0f;
+
             // Sniper Peek
             bool curIsAttacking = bot.IsAttacking;
 
-            if (curIsAttacking && !_isFreezeTime)
+            if (curIsAttacking && !_isFreezeTime && _hasFiredThisAttack.Remove(idx))
             {
                 string? wpn = pawn.WeaponServices?.ActiveWeapon?.Value?.DesignerName;
                 if (wpn == "weapon_awp" || wpn == "weapon_ssg08")
@@ -243,9 +278,36 @@ public class BotState : BasePlugin
                     }
                 }
             }
+            // Avoid Confusion
+            if (curIsAttacking)
+            {
+                ref bool eyeAnglesUnderPathFinderControl = ref bot.EyeAnglesUnderPathFinderControl;
+                eyeAnglesUnderPathFinderControl = false;
+
+                ref float inhibitLookAroundTimestamp = ref bot.InhibitLookAroundTimestamp;
+                inhibitLookAroundTimestamp = 0f;
+            }
+            //Test Alert! Can cause crash when bot_debug 1 !
+            ref bool isEnemyVisible = ref bot.IsEnemyVisible;
+            ref bool isAimingAtEnemy = ref bot.IsAimingAtEnemy;
+            if (isAimingAtEnemy && !curIsAttacking && isEnemyVisible)
+            {
+                bot.IsAttacking = true;
+            }
+            // Cancel Crouch After Attack
+            if (_prevIsAttacking.TryGetValue(idx, out bool prevAttack))
+            {
+                if (prevAttack == true && curIsAttacking == false)
+                {
+                    ref bool isCrouching = ref bot.IsCrouching;
+                    isCrouching = false;
+                }
+            }
+            _prevIsAttacking[idx] = curIsAttacking;
 
             if (!curIsAttacking)
             {
+                _hasFiredThisAttack.Remove(idx);
                 float yawL2 = pawn.EyeAngles.Y * MathF.PI / 180f;
                 float latX  = -MathF.Sin(yawL2), latY = MathF.Cos(yawL2);
                 float latSpd = pawn.AbsVelocity.X * latX + pawn.AbsVelocity.Y * latY;
@@ -281,65 +343,62 @@ public class BotState : BasePlugin
                 _prevInAir[idx] = inAir;
                 continue;
             }
-            // Jump Crouch Forward
+            // Jump Crouch Forward/Backward
+            var angles = pawn.EyeAngles;
+            float yawDir = angles.Y * MathF.PI / 180f;
+            float fwdX = MathF.Cos(yawDir);
+            float fwdY = MathF.Sin(yawDir);
+            float currentFwd = pawn.AbsVelocity.X * fwdX + pawn.AbsVelocity.Y * fwdY;
+
+            if (currentFwd >= 20f || currentFwd <= -20f)
+            {
+                _lastForwardDir[idx] = currentFwd > 0f ? 1f : -1f;
+            }
+
             if (inAir)
             {
-                if (!prevInAir)
+                if (!_isFreezeTime && !pawn.IsDefusing)
                 {
-                    _airEnterTime[idx]     = now;
-                    _airBoostBlocked[idx]  = false;
-                    _airHadValidSpeed[idx] = false;
+                    ref bool isCrouching = ref bot.IsCrouching;
+                    isCrouching = true;
                 }
-
-                _airBoostBlocked.TryGetValue(idx,  out bool blocked);
-                _airEnterTime.TryGetValue(idx,     out float enterTime);
-                _airHadValidSpeed.TryGetValue(idx, out bool hadValid);
-
-                if (!blocked)
+                if (!curIsAttacking)// Avoid Jump and Gun
                 {
-                    var angles = pawn.EyeAngles;
-                    float yaw  = angles.Y * MathF.PI / 180f;
-                    float fwdX = MathF.Cos(yaw);
-                    float fwdY = MathF.Sin(yaw);
-                    float currentFwd = pawn.AbsVelocity.X * fwdX + pawn.AbsVelocity.Y * fwdY;
-
-                    if (currentFwd > 0f)
-                        _airHadValidSpeed[idx] = hadValid = true;
-
-                    if (!hadValid && now - enterTime >= 1.0f)
+                    float targetSpeed;
+                    if (currentFwd <= -20f)
                     {
-                        _airBoostBlocked[idx] = blocked = true;
-
-                        int jumpCount = _stuckJumpCount.GetValueOrDefault(idx);
-                        _stuckJumpCount[idx] = jumpCount + 1;
-                        float sideSign  = (jumpCount % 2 == 0) ? 1f : -1f;
-                        float offsetRad = 15f * MathF.PI / 180f * sideSign;
-                        float backYaw   = yaw + MathF.PI + offsetRad;
-
-                        pawn.AbsVelocity.X = MathF.Cos(backYaw) * 100f;
-                        pawn.AbsVelocity.Y = MathF.Sin(backYaw) * 100f;
-                        if (!_isFreezeTime && !pawn.IsDefusing)
-                            bot.IsCrouching = true;
-                        // Record
-                        _condCBoostTime[idx] = now;
-                        _condCArmed[idx]     = true;
-                        _condCDone[idx]      = false;
+                        targetSpeed = -215f;
                     }
-
-                    if (!blocked)
+                    else if (currentFwd >= 20f)
                     {
-                        if (!_isFreezeTime && !pawn.IsDefusing)
+                        targetSpeed = 215f;
+                    }
+                    else
+                    {
+                        float lastDir = _lastForwardDir.TryGetValue(idx, out float dir) ? dir : 1f;
+                        targetSpeed = lastDir > 0f ? 215f : -215f;
+                    }
+                    const float accel = 12f;
+                    const float tickInterval = 0.015625f;
+                    float delta = targetSpeed - currentFwd;
+                    if (targetSpeed > 0)
+                    {
+                        if (delta > 0)
                         {
-                            ref bool isCrouching = ref bot.IsCrouching;
-                            isCrouching = true;
-                        }
+                            float addSpeed = delta * accel * tickInterval;
 
-                        const float targetFwd = 180f;
-                        if (currentFwd < targetFwd)
+                            pawn.AbsVelocity.X += fwdX * addSpeed;
+                            pawn.AbsVelocity.Y += fwdY * addSpeed;
+                        }
+                    }
+                    else
+                    {
+                        if (delta < 0)
                         {
-                            float boost = targetFwd - currentFwd;
-                            pawn.AbsVelocity.X += fwdX * boost;
-                            pawn.AbsVelocity.Y += fwdY * boost;
+                            float addSpeed = delta * accel * tickInterval;
+
+                            pawn.AbsVelocity.X += fwdX * addSpeed;
+                            pawn.AbsVelocity.Y += fwdY * addSpeed;
                         }
                     }
                 }
@@ -351,42 +410,7 @@ public class BotState : BasePlugin
                 isCrouching = false;
             }
             _prevInAir[idx] = inAir;
-            // Face-the-wall Check
-            if (_condCArmed.GetValueOrDefault(idx) && !_condCDone.GetValueOrDefault(idx))
-            {
-                _condCBoostTime.TryGetValue(idx, out float boostT);
-                float condCElapsed = now - boostT;
 
-                if (condCElapsed >= 1.0f)
-                {
-                    float spd2D = MathF.Sqrt(
-                        pawn.AbsVelocity.X * pawn.AbsVelocity.X +
-                        pawn.AbsVelocity.Y * pawn.AbsVelocity.Y);
-
-                    if (condCElapsed >= 4.0f && spd2D <= 5f)
-                    {
-                        _condCDone[idx]  = true;
-                        _condCArmed[idx] = false;
-
-                        int jumpCount = _stuckJumpCount.GetValueOrDefault(idx);
-                        _stuckJumpCount[idx] = jumpCount + 1;
-                        float sideSign  = (jumpCount % 2 == 0) ? 1f : -1f;
-                        float offsetRad = 15f * MathF.PI / 180f * sideSign;
-                        float baseYaw   = pawn.EyeAngles.Y * MathF.PI / 180f;
-                        float backYaw   = baseYaw + MathF.PI + offsetRad;
-
-                        pawn.AbsVelocity.X = MathF.Cos(backYaw) * 100f;
-                        pawn.AbsVelocity.Y = MathF.Sin(backYaw) * 100f;
-                        if (!_isFreezeTime && !pawn.IsDefusing)
-                            bot.IsCrouching = true;
-                    }
-                    else if (spd2D > 0f)
-                    {
-                        _condCArmed[idx] = false;
-                        _condCDone[idx]  = false;
-                    }
-                }
-            }
             // Normal Un-Stuck Process
             ref bool isStuck = ref bot.IsStuck;
             if (isStuck)
@@ -444,18 +468,28 @@ public class BotState : BasePlugin
                     _stuckJumpCount[idx] = jumpCount + 1;
 
                     float sideSign  = (jumpCount % 2 == 0) ? 1f : -1f;
-                    float offsetRad = 15f * MathF.PI / 180f * sideSign;
+                    float offsetRad = 30f * MathF.PI / 180f * sideSign;
                     float baseYaw   = pawn.EyeAngles.Y * MathF.PI / 180f;
                     float backYaw   = baseYaw + MathF.PI + offsetRad;
 
                     pawn.AbsVelocity.X = MathF.Cos(backYaw) * 100f;
                     pawn.AbsVelocity.Y = MathF.Sin(backYaw) * 100f;
 
+                    CountdownTimer repathTimer = bot.RepathTimer;
+
+                    ref float repathduration = ref repathTimer.Duration;
+                    repathduration = 0.0f;
+                    
+                    ref float repathtimestamp = ref repathTimer.Timestamp;
+                    repathtimestamp = Server.CurrentTime;
+
+                    ref float repathtimescale = ref repathTimer.Timescale;
+                    repathtimescale = 1.0f;
+
                     // Reset
                     _stuckStartTime[idx] = now;
                     _stuckStartPos[idx]  = new Vector(curPos.X, curPos.Y, curPos.Z);
                     _stuckMaxSpeed[idx]  = 0f;
-                    _stuckJumpDone[idx]  = false;
                 }
             }
             else
@@ -465,6 +499,63 @@ public class BotState : BasePlugin
                 _stuckStartPos.Remove(idx);
                 _stuckJumpDone.Remove(idx);
                 _stuckMaxSpeed.Remove(idx);
+
+                // Idle repath: if speed < 5 for 5s, force a repath
+                float speed2DIdle = MathF.Sqrt(
+                    pawn.AbsVelocity.X * pawn.AbsVelocity.X +
+                    pawn.AbsVelocity.Y * pawn.AbsVelocity.Y);
+
+                if (speed2DIdle < 5f)
+                {
+                    if (!_idleStartTime.ContainsKey(idx))
+                        _idleStartTime[idx] = now;
+
+                    float idleElapsed = now - _idleStartTime[idx];
+                    float lastRepath  = _lastRepathTime.GetValueOrDefault(idx, -999f);
+
+                    if (idleElapsed >= 5f && now - lastRepath >= 5f && !curIsAttacking && !pawn.IsDefusing)
+                    {
+                        _lastRepathTime[idx] = now;
+
+                        CountdownTimer repathTimer = bot.RepathTimer;
+
+                        ref float repathduration = ref repathTimer.Duration;
+                        repathduration = 0.0f;
+
+                        ref float repathtimestamp = ref repathTimer.Timestamp;
+                        repathtimestamp = Server.CurrentTime;
+
+                        ref float repathtimescale = ref repathTimer.Timescale;
+                        repathtimescale = 1.0f;
+                    }
+                }
+                else
+                {
+                    _idleStartTime.Remove(idx);
+                }
+            }
+            //Inferno Sewer Stuck Fix
+            if (pawn.AbsOrigin != null)
+            {
+                Vector pos = pawn.AbsOrigin;
+                bool isInferno = string.Equals(Server.MapName, "de_inferno", StringComparison.OrdinalIgnoreCase);
+                float dx = pos.X - 285f;
+                float dy = pos.Y - 450f;
+                float dist = MathF.Sqrt(dx * dx + dy * dy);
+
+                if (isInferno && dist < 50f)
+                {
+                    CountdownTimer repathTimer = bot.RepathTimer;
+
+                    ref float repathduration = ref repathTimer.Duration;
+                    repathduration = 0.0f;
+                    
+                    ref float repathtimestamp = ref repathTimer.Timestamp;
+                    repathtimestamp = Server.CurrentTime;
+
+                    ref float repathtimescale = ref repathTimer.Timescale;
+                    repathtimescale = 1.0f;
+                }
             }
         }
     }
@@ -506,11 +597,44 @@ public class BotState : BasePlugin
     
         var bot = pawn.Bot;
         if (bot == null) return HookResult.Continue;
+        // Sniper Peek
+        _hasFiredThisAttack.Add(idx);
 
         if (_isFreezeTime || pawn.IsDefusing || !bot.IsAttacking) return HookResult.Continue;
         // Random combat crouch
+        double crouchChance = 0.0;
+        string? wpn = pawn.WeaponServices?.ActiveWeapon?.Value?.DesignerName;
+        if (wpn != null)
+        {
+            if (wpn is "weapon_glock" or "weapon_hkp2000" or "weapon_p250" or "weapon_fiveseven")
+                crouchChance = 0.20;
+
+            else if (wpn is "weapon_usp_silencer" or "weapon_deagle")
+                crouchChance = 0.30;
+
+            else if (wpn is "weapon_elite" or "weapon_tec9" or "weapon_cz75a" or "weapon_revolver"
+                    or "weapon_scar20" or "weapon_g3sg1")
+                crouchChance = 0.10;
+
+            else if (wpn is "weapon_mac10" or "weapon_mp9" or "weapon_bizon")
+                crouchChance = 0.03;
+
+            else if (wpn is "weapon_mp5sd" or "weapon_ump45" or "weapon_p90"
+                    or "weapon_nova" or "weapon_xm1014" or "weapon_sawedoff" or "weapon_mag7"
+                    or "weapon_ssg08" or "weapon_awp")
+                crouchChance = 0.05;
+
+            else if (wpn is "weapon_galilar" or "weapon_ak47" or "weapon_sg556"
+                    or "weapon_famas" or "weapon_m4a1" or "weapon_m4a1_silencer" or "weapon_aug"
+                    or "weapon_m249")
+                crouchChance = 0.50;
+
+            else if (wpn == "weapon_negev")
+                crouchChance = 0.90;
+        }
+
         ref bool isCrouching = ref bot.IsCrouching;
-        isCrouching = _random.NextDouble() < 0.25;
+        isCrouching = _random.NextDouble() < crouchChance;
 
         CountdownTimer sneakTimer = bot.SneakTimer;
 
@@ -541,10 +665,7 @@ public class BotState : BasePlugin
             if (bot == null)
                 continue;
 
-            bool isTakenOver = Utilities.GetPlayers()
-                .Any(p => p.IsValid
-                    && p.OriginalControllerOfCurrentPawn?.Value != null
-                    && p.OriginalControllerOfCurrentPawn.Value.Handle == player.Handle);
+            bool isTakenOver = player.HasBeenControlledByPlayerThisRound;
             if (isTakenOver) continue;
 
             CountdownTimer hurryTimer = bot.HurryTimer;
@@ -553,7 +674,7 @@ public class BotState : BasePlugin
             duration = 40.0f;
 
             ref float timestamp = ref hurryTimer.Timestamp;
-            timestamp = Server.CurrentTime;
+            timestamp = Server.CurrentTime + duration;
 
             ref float timescale = ref hurryTimer.Timescale;
             timescale = 1.0f;
@@ -577,11 +698,8 @@ public class BotState : BasePlugin
         var bot = pawn.Bot;
         if (bot == null) return HookResult.Continue;
 
-        bool isTakenOver = Utilities.GetPlayers()
-                .Any(p => p.IsValid
-                    && p.OriginalControllerOfCurrentPawn?.Value != null
-                    && p.OriginalControllerOfCurrentPawn.Value.Handle == player.Handle);
-            if (isTakenOver) return HookResult.Continue;
+        bool isTakenOver = player.HasBeenControlledByPlayerThisRound;
+        if (isTakenOver) return HookResult.Continue;
 
         bool hasLivingEnemies = Utilities
             .FindAllEntitiesByDesignerName<CCSPlayerController>("cs_player_controller")
@@ -620,6 +738,9 @@ public class BotState : BasePlugin
 
         ref int checkedHidingSpotCount = ref bot.CheckedHidingSpotCount;
         checkedHidingSpotCount = 0;
+
+        ref float lookAroundStateTimestamp = ref bot.LookAroundStateTimestamp;
+        lookAroundStateTimestamp = 0f;
     }
 //---------------------------------------------------------------------------------------
     private static void ApplyBotState(CCSPlayerController player)
@@ -635,6 +756,22 @@ public class BotState : BasePlugin
 
         ref bool hasVisitedEnemySpawn = ref bot.HasVisitedEnemySpawn;
         hasVisitedEnemySpawn = true;
+    }
+//---------------------------------------------------------------------------------------
+    private bool IsReloading(CCSPlayerController player)
+    {
+        if (player == null || !player.IsValid)
+            return false;
+
+        var pawn = player.PlayerPawn?.Value;
+        if (pawn == null || !pawn.IsValid)
+            return false;
+
+        var activeWeapon = pawn.WeaponServices?.ActiveWeapon?.Value;
+        if (activeWeapon == null || !activeWeapon.IsValid)
+            return false;
+
+        return Schema.GetRef<bool>(activeWeapon.Handle, "CCSWeaponBase", "m_bInReload");
     }
 }
 //---------------------------------------------------------------------------------------
