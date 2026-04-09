@@ -29,12 +29,12 @@ Default
         Difficulty = NORMAL
         VoicePitch = 100
         Skin = 0
-        LookAngleMaxAccelNormal = 2000.0
-        LookAngleStiffnessNormal = 100.0
-        LookAngleDampingNormal = 25.0
-        LookAngleMaxAccelAttacking = 3000.0
-        LookAngleStiffnessAttacking = 150.0
-        LookAngleDampingAttacking = 30.0
+		LookAngleMaxAccelNormal = 2000.0
+    	LookAngleStiffnessNormal = 100.0
+    	LookAngleDampingNormal = 25.0
+    	LookAngleMaxAccelAttacking = 3000.0
+    	LookAngleStiffnessAttacking = 150.0
+    	LookAngleDampingAttacking = 30.0
 End
 
 //----------------------------------------------------------------------------
@@ -900,7 +900,7 @@ ProPrecise+SniperPro+SniperPersonality "kristou"
 	VoicePitch = 83
 End
 
-ProSteady+RiflePro+RiflePersonality "Anlelele"
+ProSteady+RiflePro+RiflePersonality "Anelele"
 	VoicePitch = 85
 End
 
@@ -4074,6 +4074,12 @@ ProSteady+RiflePro+RiflePersonality "chengking"
 End
 ProFast+RiflePro+RiflePersonality "arrozd0ce"
 	VoicePitch = 104
+End
+ProSteady+Duelist+FastshotPersonality "misutaaa"
+	VoicePitch = 91
+End
+ProSteady+RiflePro+RiflePersonality "x9"
+	VoicePitch = 92
 End
 
 //----------------------------------------------------------------------------
