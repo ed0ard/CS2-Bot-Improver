@@ -12,7 +12,7 @@ namespace BotBuyPatch;
 public sealed class BotBuyPatch : BasePlugin
 {
     public override string ModuleName        => "BotBuyPatch";
-    public override string ModuleVersion     => "1.0.3";
+    public override string ModuleVersion     => "1.0.4";
     public override string ModuleAuthor      => "ed0ard";
     public override string ModuleDescription => "Enable bots to take more buy options";
 
@@ -220,6 +220,7 @@ public sealed class BotBuyPatch : BasePlugin
         // Swap SSG08
         AddTimer(0.4f, () =>
         {
+            if (ConVar.Find("sv_gravity")?.GetPrimitiveValue<float>() == 230f) return;
             foreach (var p in allPlayers)
             {
                 var pawn = p.PlayerPawn.Value;
