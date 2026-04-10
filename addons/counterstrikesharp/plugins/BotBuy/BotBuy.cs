@@ -12,7 +12,7 @@ namespace BotBuyPatch;
 public sealed class BotBuyPatch : BasePlugin
 {
     public override string ModuleName        => "BotBuyPatch";
-    public override string ModuleVersion     => "1.0.2";
+    public override string ModuleVersion     => "1.0.3";
     public override string ModuleAuthor      => "ed0ard";
     public override string ModuleDescription => "Enable bots to take more buy options";
 
@@ -87,8 +87,8 @@ public sealed class BotBuyPatch : BasePlugin
         }
         // Drop Weapons
         _poorPlayersByTeam.Clear();
-        var poorCT = allPlayers.Where(p => p.Team == CsTeam.CounterTerrorist && p.InGameMoneyServices?.Account < 2800).ToList();
-        var poorT = allPlayers.Where(p => p.Team == CsTeam.Terrorist && p.InGameMoneyServices?.Account < 2800).ToList();
+        var poorCT = allPlayers.Where(p => p.IsValid && p.Team == CsTeam.CounterTerrorist && p.InGameMoneyServices?.Account < 2800).ToList();
+        var poorT = allPlayers.Where(p => p.IsValid && p.Team == CsTeam.Terrorist && p.InGameMoneyServices?.Account < 2800).ToList();
         _poorPlayersByTeam[CsTeam.CounterTerrorist] = poorCT;
         _poorPlayersByTeam[CsTeam.Terrorist] = poorT;
 
@@ -98,7 +98,7 @@ public sealed class BotBuyPatch : BasePlugin
             return HookResult.Continue;
         }
         // Swap HKP2000
-        foreach (var player in allPlayers.Where(p => p.IsBot))
+        foreach (var player in allPlayers.Where(p => p.IsValid && p.IsBot))
         {
             // Swap HKP2000
             if (Random.Shared.NextSingle() < 0.8f)
@@ -148,7 +148,7 @@ public sealed class BotBuyPatch : BasePlugin
             }
         });
         // Swap AUG
-        foreach (var player in allPlayers.Where(p => p.IsBot))
+        foreach (var player in allPlayers.Where(p => p.IsValid && p.IsBot))
         {
             var copyPlayer = player;
             float rand = Random.Shared.NextSingle();
@@ -352,7 +352,7 @@ public sealed class BotBuyPatch : BasePlugin
             {
                 foreach (var p in allPlayers)
                 {
-                    if (p.InGameMoneyServices == null) continue;
+                    if (!p.IsValid || p.InGameMoneyServices == null) continue;
                     int money = p.InGameMoneyServices.Account;
                     float r = Random.Shared.NextSingle();
 
@@ -364,19 +364,19 @@ public sealed class BotBuyPatch : BasePlugin
                             if (r < 0.50f)  Buy(p, "item_kevlar");    // 50%
                             else if (r < 0.65f) { Swap(p, "weapon_usp_silencer", "weapon_elite"); Swap(p, "weapon_hkp2000", "weapon_elite"); } // 15%
                             else if (r < 0.75f) { Swap(p, "weapon_usp_silencer", "weapon_p250"); Swap(p, "weapon_hkp2000", "weapon_p250"); }   // 10%
-                            else if (r < 0.85f) { Swap(p, "weapon_usp_silencer", "weapon_deagle"); Swap(p, "weapon_hkp2000", "weapon_deagle"); } // 10%
-                            else if (r < 0.90f) { Swap(p, "weapon_usp_silencer", "weapon_cz75a"); Swap(p, "weapon_hkp2000", "weapon_cz75a"); }   // 5%
-                            else if (r < 0.97f) { Swap(p, "weapon_usp_silencer", "weapon_fiveseven"); Swap(p, "weapon_hkp2000", "weapon_fiveseven"); } //7%
-                            else if (r < 1.00f) { Swap(p, "weapon_usp_silencer", "weapon_revolver"); Swap(p, "weapon_hkp2000", "weapon_revolver"); } //3%
+                            else if (r < 0.83f) { Swap(p, "weapon_usp_silencer", "weapon_deagle"); Swap(p, "weapon_hkp2000", "weapon_deagle"); } // 8%
+                            else if (r < 0.91f) { Swap(p, "weapon_usp_silencer", "weapon_cz75a"); Swap(p, "weapon_hkp2000", "weapon_cz75a"); }   // 8%
+                            else if (r < 0.98f) { Swap(p, "weapon_usp_silencer", "weapon_fiveseven"); Swap(p, "weapon_hkp2000", "weapon_fiveseven"); } //7%
+                            else if (r < 1.00f) { Swap(p, "weapon_usp_silencer", "weapon_revolver"); Swap(p, "weapon_hkp2000", "weapon_revolver"); } //2%
                         }
                         else
                         {
                             if (r < 0.50f)  Buy(p, "item_kevlar");    // 50%
                             else if (r < 0.65f) Swap(p, "weapon_glock", "weapon_elite"); //15%
-                            else if (r < 0.75f) Swap(p, "weapon_glock", "weapon_p250");  //10%
-                            else if (r < 0.88f) Swap(p, "weapon_glock", "weapon_deagle");//13%
-                            else if (r < 0.90f) Swap(p, "weapon_glock", "weapon_revolver");//2%
-                            else if (r < 1.00f) Swap(p, "weapon_glock", "weapon_tec9");//10%
+                            else if (r < 0.77f) Swap(p, "weapon_glock", "weapon_p250");  //12%
+                            else if (r < 0.85f) Swap(p, "weapon_glock", "weapon_deagle");//8%
+                            else if (r < 0.87f) Swap(p, "weapon_glock", "weapon_revolver");//2%
+                            else if (r < 1.00f) Swap(p, "weapon_glock", "weapon_tec9");//13%
                         }
                     }
 
@@ -431,7 +431,7 @@ public sealed class BotBuyPatch : BasePlugin
                 if (!_poorPlayersByTeam.TryGetValue(team, out var poor))
                     poor = new List<CCSPlayerController>();
 
-                var richBots = allPlayers.Where(p => p.Team == team && p.IsBot && p.InGameMoneyServices?.Account >= 2900).ToList();
+                var richBots = allPlayers.Where(p => p.IsValid && p.Team == team && p.IsBot && p.InGameMoneyServices?.Account >= 2900).ToList();
 
                 if (poor.Count == 0 || richBots.Count == 0) continue;
                 int giveCount = Math.Min(poor.Count, richBots.Count);
@@ -455,7 +455,7 @@ public sealed class BotBuyPatch : BasePlugin
                         Utilities.SetStateChanged(rich, "CCSPlayerController", "m_pInGameMoneyServices");
                     }
 
-                    Server.PrintToChatAll($"{ChatColors.Green}{rich.PlayerName}{ChatColors.Yellow}: {poorPlayer.PlayerName}, I dropped a weapon forya");
+                    Server.PrintToChatAll($"{ChatColors.Green}{rich.PlayerName}{ChatColors.Yellow}: {poorPlayer.PlayerName}, I dropped a weapon for ya");
                 }
             }
         });
