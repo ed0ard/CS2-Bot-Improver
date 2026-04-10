@@ -23,7 +23,7 @@ public static class BotOffsets
 public class BotAI : BasePlugin
 {
     public override string ModuleName        => "Patches - Bot AI";
-    public override string ModuleVersion     => "1.6.3";
+    public override string ModuleVersion     => "1.6.4";
     public override string ModuleAuthor      => "Austin (updated by ed0ard)";
     public override string ModuleDescription =>
         "Improve and fix bots' behavior comprehensively";
@@ -234,6 +234,42 @@ public class BotAI : BasePlugin
             patch:            "90 90",
             expectedOriginal: "75 6A",
             patchOffset:      2    // RVA 0x2f23a8：DODGE_A IsSniper jne+6A → NOP
+        ),
+
+
+        ["Vision_AlwaysWatchApproachPoints"] = (
+            signature:        "80 BF B1 6C 00 00 00 75 25 0F 2F",
+            patch:            "EB 25",
+            expectedOriginal: "75 25",
+            patchOffset:      7    // VA 0x180319304: jne→jmp
+        ),
+
+        ["Vision_ApproachBody_SkipSkillCheck"] = (
+            signature:        "0F 2F C6 76 33 80 BF B1 6C 00 00 00 74 2A",
+            patch:            "90 90",
+            expectedOriginal: "76 33",
+            patchOffset:      3
+        ),
+
+        ["Vision_ApproachBody_SkipHidingSpotCheck"] = (
+            signature:        "0F 2F C6 76 33 80 BF B1 6C 00 00 00 74 2A",
+            patch:            "90 90",
+            expectedOriginal: "74 2A",
+            patchOffset:      12
+        ),
+
+        ["Vision_SkipIsMovingGate"] = (
+            signature:        "0F 2F 3D ? ? ? ? 77 0F 49 8B D6 48 8B CF E8",
+            patch:            "90 90",
+            expectedOriginal: "77 0F",//RVA 0x319306: ja → NOP
+            patchOffset:      7
+        ),
+
+        ["Vision_AlwaysEnterApproachBody"] = (
+            signature:        "84 C0 75 0D 48 C7 45 08 00 00 00 00 E9",
+            patch:            "EB 0D",
+            expectedOriginal: "75 0D",//RVA 0x31931c: jne → jmp
+            patchOffset:      2
         ),
     };
 
