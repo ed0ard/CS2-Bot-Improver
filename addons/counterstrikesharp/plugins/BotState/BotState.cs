@@ -12,7 +12,7 @@ namespace BotState;
 public class BotState : BasePlugin
 {
     public override string ModuleName        => "Smarter-Bot";
-    public override string ModuleVersion     => "1.6.6";
+    public override string ModuleVersion     => "1.6.7";
     public override string ModuleAuthor      => "ed0ard";
     public override string ModuleDescription => "Make bots smarter";
 
@@ -216,8 +216,6 @@ public class BotState : BasePlugin
             ref float ignoreEnemiestimescale = ref ignoreEnemiesTimer.Timescale;
             ignoreEnemiestimescale = 1.0f;
 
-            ref float currentEnemyAcquireTimestamp = ref bot.CurrentEnemyAcquireTimestamp;
-            currentEnemyAcquireTimestamp = 0.0f;
             // Never lookat (panic)
             CountdownTimer panicTimer = bot.PanicTimer;
 
@@ -275,6 +273,8 @@ public class BotState : BasePlugin
                         float injY = ry * (-lastDir) * 250f;
                         pawn.AbsVelocity.X += injX;
                         pawn.AbsVelocity.Y += injY;
+
+                        ResetLookAroundForBot(player);
                     }
                 }
             }
@@ -287,10 +287,11 @@ public class BotState : BasePlugin
                 ref float inhibitLookAroundTimestamp = ref bot.InhibitLookAroundTimestamp;
                 inhibitLookAroundTimestamp = 0f;
             }
-            //Test Alert! Can cause crash when bot_debug 1 !
             ref bool isEnemyVisible = ref bot.IsEnemyVisible;
+            isEnemyVisible = true;
+            //Test Alert! Can cause crash when bot_debug 1 !
             ref bool isAimingAtEnemy = ref bot.IsAimingAtEnemy;
-            if (isAimingAtEnemy && !curIsAttacking && isEnemyVisible)
+            if (isAimingAtEnemy && !curIsAttacking)
             {
                 bot.IsAttacking = true;
             }
@@ -527,6 +528,8 @@ public class BotState : BasePlugin
 
                         ref float repathtimescale = ref repathTimer.Timescale;
                         repathtimescale = 1.0f;
+
+                        ResetLookAroundForBot(player);
                     }
                 }
                 else
@@ -719,6 +722,8 @@ public class BotState : BasePlugin
                 pawn.AbsVelocity.X += rx * side * 150f;
                 pawn.AbsVelocity.Y += ry * side * 150f;
                 pawn.AbsVelocity.Z += 255f;
+
+                ResetLookAroundForBot(player);
             }
         }
 
