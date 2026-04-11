@@ -23,7 +23,7 @@ public static class BotOffsets
 public class BotAI : BasePlugin
 {
     public override string ModuleName        => "Patches - Bot AI";
-    public override string ModuleVersion     => "1.6.4";
+    public override string ModuleVersion     => "1.6.5";
     public override string ModuleAuthor      => "Austin (updated by ed0ard)";
     public override string ModuleDescription =>
         "Improve and fix bots' behavior comprehensively";
@@ -89,13 +89,6 @@ public class BotAI : BasePlugin
             patch:            "90 90",
             expectedOriginal: "74 1E",
             patchOffset:      7    // RVA 0x318ed6
-        ),
-
-        ["InvestigateNoise_SkipRecentEnemyCheck"] = (
-            signature:        "84 C0 74 33 48 8B CB",
-            patch:            "90 90",
-            expectedOriginal: "74 33",
-            patchOffset:      2    // RVA 0x318ec1
         ),
 
 
