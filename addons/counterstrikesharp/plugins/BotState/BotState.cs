@@ -536,7 +536,7 @@ public class BotState : BasePlugin
                 }
             }
             // pre-aim
-            if (!curIsAttacking && !isStuck && !nearLadder && !inDoorCooldown && !inAir && !isAimingAtEnemy && player.Team == CsTeam.CounterTerrorist)
+            if (!curIsAttacking && !isStuck && !nearLadder && !inDoorCooldown && !inAir && !isAimingAtEnemy)
             {
                 string? wpn = pawn.WeaponServices?.ActiveWeapon?.Value?.DesignerName;
                 if (wpn == "weapon_awp" || wpn == "weapon_ssg08")
