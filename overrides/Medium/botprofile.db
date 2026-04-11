@@ -1927,8 +1927,14 @@ End
 ProSlow+RiflePro+FreemanPersonality "AyeZ"
 	VoicePitch = 75
 End
-ProSlow+RiflePro+FreemanPersonality "Techno4K"
+ProSteady+RiflePro+FreemanPersonality "Techno4K"
 	VoicePitch = 74
+	LookAngleMaxAccelNormal = 5500.0
+	LookAngleStiffnessNormal = 1150.0
+	LookAngleDampingNormal = 100.0
+	LookAngleMaxAccelAttacking = 5500.0
+	LookAngleStiffnessAttacking = 1150.0
+	LookAngleDampingAttacking = 50.0
 End
 ProSlow+RiflePro+FreemanPersonality "bLitz"
 	VoicePitch = 73
@@ -1942,14 +1948,8 @@ ProTop+RiflePro+FreemanPersonality "Senzu"
     LookAngleStiffnessAttacking = 5200.0
     LookAngleDampingAttacking = 39.9
 End
-ProSteady+RiflePro+RiflePersonality "mzinho"
+ProSlow+RiflePro+RiflePersonality "mzinho"
 	VoicePitch = 84
-	LookAngleMaxAccelNormal = 5500.0
-	LookAngleStiffnessNormal = 1150.0
-	LookAngleDampingNormal = 100.0
-	LookAngleMaxAccelAttacking = 5500.0
-	LookAngleStiffnessAttacking = 1150.0
-	LookAngleDampingAttacking = 50.0
 End
 ProTop+SniperPro+SniperPersonality "910"
 	VoicePitch = 87
