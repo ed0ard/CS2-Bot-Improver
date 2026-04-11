@@ -12,7 +12,7 @@ namespace BotState;
 public class BotState : BasePlugin
 {
     public override string ModuleName        => "Smarter-Bot";
-    public override string ModuleVersion     => "1.6.7";
+    public override string ModuleVersion     => "1.6.8";
     public override string ModuleAuthor      => "ed0ard";
     public override string ModuleDescription => "Make bots smarter";
 
@@ -287,8 +287,6 @@ public class BotState : BasePlugin
                 ref float inhibitLookAroundTimestamp = ref bot.InhibitLookAroundTimestamp;
                 inhibitLookAroundTimestamp = 0f;
             }
-            ref bool isEnemyVisible = ref bot.IsEnemyVisible;
-            isEnemyVisible = true;
             //Test Alert! Can cause crash when bot_debug 1 !
             ref bool isAimingAtEnemy = ref bot.IsAimingAtEnemy;
             if (isAimingAtEnemy && !curIsAttacking)
@@ -535,6 +533,16 @@ public class BotState : BasePlugin
                 else
                 {
                     _idleStartTime.Remove(idx);
+                }
+            }
+            // pre-aim
+            if (!curIsAttacking && !isStuck && !nearLadder && !inDoorCooldown && !inAir && !isAimingAtEnemy && player.Team == CsTeam.CounterTerrorist)
+            {
+                string? wpn = pawn.WeaponServices?.ActiveWeapon?.Value?.DesignerName;
+                if (wpn == "weapon_awp" || wpn == "weapon_ssg08")
+                {
+                    ref bool isEnemyVisible = ref bot.IsEnemyVisible;
+                    isEnemyVisible = true;
                 }
             }
             //Inferno Sewer Stuck Fix
