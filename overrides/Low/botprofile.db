@@ -1003,7 +1003,7 @@ End
 ProSlow+RiflePro+FreemanPersonality "AyeZ"
 	VoicePitch = 75
 End
-ProSlow+RiflePro+FreemanPersonality "Techno4K"
+ProSteady+RiflePro+FreemanPersonality "Techno4K"
 	VoicePitch = 74
 End
 ProSlow+RiflePro+FreemanPersonality "bLitz"
@@ -1012,7 +1012,7 @@ End
 ProTop+RiflePro+FreemanPersonality "Senzu"
 	VoicePitch = 83
 End
-ProSteady+RiflePro+RiflePersonality "mzinho"
+ProSlow+RiflePro+RiflePersonality "mzinho"
 	VoicePitch = 84
 End
 ProTop+SniperPro+SniperPersonality "910"
