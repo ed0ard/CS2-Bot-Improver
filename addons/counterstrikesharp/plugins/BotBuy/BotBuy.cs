@@ -12,7 +12,7 @@ namespace BotBuyPatch;
 public sealed class BotBuyPatch : BasePlugin
 {
     public override string ModuleName        => "BotBuyPatch";
-    public override string ModuleVersion     => "1.0.4";
+    public override string ModuleVersion     => "1.0.5";
     public override string ModuleAuthor      => "ed0ard";
     public override string ModuleDescription => "Enable bots to take more buy options";
 
@@ -256,37 +256,40 @@ public sealed class BotBuyPatch : BasePlugin
         // Big Advantage
         AddTimer(0.5f, () =>
         {
-            foreach (var p in allPlayers)
+            if (!IsFirstRoundOfHalf())  
             {
-                if (p.InGameMoneyServices == null || p.InGameMoneyServices.Account < 5200)
-                    continue;
-
-                var pawn = p.PlayerPawn.Value;
-                if (pawn == null || !pawn.IsValid)
-                    continue;
-
-                var weaponServices = pawn.WeaponServices;
-                if (weaponServices == null)
-                    continue;
-
-                var activeWeapon = weaponServices.ActiveWeapon.Value;
-                if (activeWeapon == null)
-                    continue;
-
-                var currentWeapon = activeWeapon.DesignerName;
-                if (string.IsNullOrEmpty(currentWeapon))
-                    continue;
-
-                float roll = Random.Shared.NextSingle();
-
-                if (roll < 0.10f)
+                foreach (var p in allPlayers)
                 {
-                    string newGun = p.Team == CsTeam.CounterTerrorist ? "weapon_scar20" : "weapon_g3sg1";
-                    Swap(p, currentWeapon, newGun);
-                }
-                else if (roll < 0.14f)
-                {
-                    Swap(p, currentWeapon, "weapon_m249");
+                    if (p.InGameMoneyServices == null || p.InGameMoneyServices.Account < 5200)
+                        continue;
+
+                    var pawn = p.PlayerPawn.Value;
+                    if (pawn == null || !pawn.IsValid)
+                        continue;
+
+                    var weaponServices = pawn.WeaponServices;
+                    if (weaponServices == null)
+                        continue;
+
+                    var activeWeapon = weaponServices.ActiveWeapon.Value;
+                    if (activeWeapon == null)
+                        continue;
+
+                    var currentWeapon = activeWeapon.DesignerName;
+                    if (string.IsNullOrEmpty(currentWeapon))
+                        continue;
+
+                    float roll = Random.Shared.NextSingle();
+
+                    if (roll < 0.10f)
+                    {
+                        string newGun = p.Team == CsTeam.CounterTerrorist ? "weapon_scar20" : "weapon_g3sg1";
+                        Swap(p, currentWeapon, newGun);
+                    }
+                    else if (roll < 0.14f)
+                    {
+                        Swap(p, currentWeapon, "weapon_m249");
+                    }
                 }
             }
         });
@@ -417,7 +420,7 @@ public sealed class BotBuyPatch : BasePlugin
                         else
                         {
                             if (r < 0.70f)  Buy(p, "weapon_ak47");
-                            else if (r < 0.90f) Buy(p, "weapon_ak47");
+                            else if (r < 0.90f) Buy(p, "weapon_awp");
                             else if (r < 1.00f) Buy(p, "weapon_g3sg1");
                         }
                     }
@@ -427,36 +430,39 @@ public sealed class BotBuyPatch : BasePlugin
         // Drop Weapons
         AddTimer(3.0f, () =>
         {
-            foreach (var team in new[] { CsTeam.CounterTerrorist, CsTeam.Terrorist })
+            if (!IsFirstRoundOfHalf())  
             {
-                if (!_poorPlayersByTeam.TryGetValue(team, out var poor))
-                    poor = new List<CCSPlayerController>();
-
-                var richBots = allPlayers.Where(p => p.IsValid && p.Team == team && p.IsBot && p.InGameMoneyServices?.Account >= 2900).ToList();
-
-                if (poor.Count == 0 || richBots.Count == 0) continue;
-                int giveCount = Math.Min(poor.Count, richBots.Count);
-
-                var selectedPoor = poor.OrderBy(_ => Random.Shared.Next()).Take(giveCount).ToList();
-                var selectedRich = richBots.OrderBy(_ => Random.Shared.Next()).Take(giveCount).ToList();
-
-                for (int i = 0; i < giveCount; i++)
+                foreach (var team in new[] { CsTeam.CounterTerrorist, CsTeam.Terrorist })
                 {
-                    var rich = selectedRich[i];
-                    var poorPlayer = selectedPoor[i];
+                    if (!_poorPlayersByTeam.TryGetValue(team, out var poor))
+                        poor = new List<CCSPlayerController>();
 
-                    string gun = team == CsTeam.CounterTerrorist ? (Random.Shared.Next(2) == 0 ? "weapon_m4a1_silencer" : "weapon_m4a1") : "weapon_ak47";
-                    poorPlayer.GiveNamedItem(gun);
+                    var richBots = allPlayers.Where(p => p.IsValid && p.Team == team && p.IsBot && p.InGameMoneyServices?.Account >= 2900).ToList();
 
-                    int price = team == CsTeam.CounterTerrorist ? 2900 : 2700;
-                    if (rich.InGameMoneyServices != null)
+                    if (poor.Count == 0 || richBots.Count == 0) continue;
+                    int giveCount = Math.Min(poor.Count, richBots.Count);
+
+                    var selectedPoor = poor.OrderBy(_ => Random.Shared.Next()).Take(giveCount).ToList();
+                    var selectedRich = richBots.OrderBy(_ => Random.Shared.Next()).Take(giveCount).ToList();
+
+                    for (int i = 0; i < giveCount; i++)
                     {
-                        rich.InGameMoneyServices.Account -= price;
-                        if (rich.InGameMoneyServices.Account < 0) rich.InGameMoneyServices.Account = 0;
-                        Utilities.SetStateChanged(rich, "CCSPlayerController", "m_pInGameMoneyServices");
-                    }
+                        var rich = selectedRich[i];
+                        var poorPlayer = selectedPoor[i];
 
-                    Server.PrintToChatAll($"{ChatColors.Green}{rich.PlayerName}{ChatColors.Yellow}: {poorPlayer.PlayerName}, I dropped a weapon for ya");
+                        string gun = team == CsTeam.CounterTerrorist ? (Random.Shared.Next(2) == 0 ? "weapon_m4a1_silencer" : "weapon_m4a1") : "weapon_ak47";
+                        poorPlayer.GiveNamedItem(gun);
+
+                        int price = team == CsTeam.CounterTerrorist ? 2900 : 2700;
+                        if (rich.InGameMoneyServices != null)
+                        {
+                            rich.InGameMoneyServices.Account -= price;
+                            if (rich.InGameMoneyServices.Account < 0) rich.InGameMoneyServices.Account = 0;
+                            Utilities.SetStateChanged(rich, "CCSPlayerController", "m_pInGameMoneyServices");
+                        }
+
+                        Server.PrintToChatAll($"{ChatColors.Green}{rich.PlayerName}{ChatColors.Yellow}: {poorPlayer.PlayerName}, I dropped a weapon for ya");
+                    }
                 }
             }
         });
