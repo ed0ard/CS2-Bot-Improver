@@ -461,6 +461,9 @@ public class BotState : BasePlugin
 
                 if ((condA || condB) && !_stuckJumpDone.GetValueOrDefault(idx))
                 {
+                    ref bool isCrouching = ref bot.IsCrouching;
+                    isCrouching = false;
+
                     _stuckJumpDone[idx] = true;
 
                     int jumpCount = _stuckJumpCount.GetValueOrDefault(idx);
@@ -514,6 +517,9 @@ public class BotState : BasePlugin
 
                     if (idleElapsed >= 5f && now - lastRepath >= 5f && !curIsAttacking && !pawn.IsDefusing)
                     {
+                        ref bool isCrouching = ref bot.IsCrouching;
+                        isCrouching = false;
+
                         _lastRepathTime[idx] = now;
 
                         CountdownTimer repathTimer = bot.RepathTimer;
