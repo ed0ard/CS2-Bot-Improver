@@ -114,7 +114,7 @@ Input this command after a match begins
 ### How to change the difficulty level
 
 1. Open the root of CS2 and navigate to `game/csgo/overrides` directory  
-2. Open the `low` for easy difficulty, `medium` for a mixed difficulty based on HLTV stats (default), and `high` for extreme difficulty  
+2. Open the `Low` for easy difficulty, `Medium` for a mixed difficulty based on HLTV stats (default), and `High` for extreme difficulty  
 3. Copy `botprofile.vpk` and paste it into `game/csgo/overrides` before launching the game
 
 ### How to play online matches normally
