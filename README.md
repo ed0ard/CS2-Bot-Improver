@@ -24,6 +24,8 @@ Aims to enhance your experience when playing against bots offline or with friend
 1. Download the latest **CS2BotImprover.zip** in [Releases](https://github.com/ed0ard/CS2-Bot-Improver/releases) and unzip it
 
    (If you run a dedicated server that is not only for bot matches, please download **CS2BotImprover_rules_unchanged.zip**)
+    
+   (For Linux, please download **CS2BotImprover_for_Linux.zip**)
 
 <img width="405" height="256" alt="snap_1" src="https://github.com/user-attachments/assets/ae2be90e-6742-4f1f-8e0c-096b728d5dbd" />
 
@@ -109,10 +111,10 @@ Input this command after a match begins
 
 ## FAQ
 
-### How to toggle between high and medium difficulties
+### How to change the difficulty level
 
 1. Open the root of CS2 and navigate to `game/csgo/overrides` directory  
-2. Open the `medium_difficulty` for medium or the `mixed_aim` for high  
+2. Open the `low` for easy difficulty, `medium` for a mixed difficulty based on HLTV stats (default), and `high` for extreme difficulty  
 3. Copy `botprofile.vpk` and paste it into `game/csgo/overrides` before launching the game
 
 ### How to play online matches normally
@@ -130,12 +132,6 @@ After modification, if you wanna **play with bots again**, navigate to `game/csg
 
 2. Copy the text after `steamid:`, add `connect ` before it (don’t forget the space between them)  
 3. Send the full command to your friends and have them paste it into their consoles
-
-### How to change bot combat style to match the selected mode better
-
-1. Open the root of CS2 and navigate to `game/csgo/overrides` directory  
-2. Open one of the folders which matches your selected aim or game mode  
-3. Copy `botprofile.vpk` and paste it into `game/csgo/overrides` before launching the game
 
 ### How to run the plugin well on workshop maps
 
