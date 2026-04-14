@@ -23,7 +23,7 @@ public static class BotOffsets
 public class BotAI : BasePlugin
 {
     public override string ModuleName        => "Patches - Bot AI";
-    public override string ModuleVersion     => "1.6.5";
+    public override string ModuleVersion     => "1.6.6";
     public override string ModuleAuthor      => "Austin (updated by ed0ard)";
     public override string ModuleDescription =>
         "Improve and fix bots' behavior comprehensively";
@@ -143,6 +143,13 @@ public class BotAI : BasePlugin
             patchOffset:      8    // RVA 0x2f1c0c: je+15 → NOP (remove IsWaitingForZoom fire shortcut)
         ),
 
+        ["AttackState_SkipSniperSpreadCheck"] = (
+            signature:        "41 0F 28 C8 0F 57 C0 FF 15 ? ? ? ? F3 0F 10 0D ? ? ? ? 0F 2F C8 0F 86",
+            patch:            "90 90 90 90 90 90",
+            expectedOriginal: "0F 86 7B 04 00 00",
+            patchOffset:      24   // RVA 0x320153: NOP jbe+47B
+        ),
+
 
         ["SprayAllDistances_ja1"] = (
             signature:        "0F 2F F9 F3 44 0F 10 15 ? ? ? ? 77 22",
@@ -170,6 +177,13 @@ public class BotAI : BasePlugin
             patch:            "90 90",
             expectedOriginal: "77 13",
             patchOffset:      11
+        ),
+
+        ["AttackState_SprayRangeExtend"] = (
+            signature:        "44 0F 2F 0D ? ? ? ? 76 0A F3 0F 10 3D ? ? ? ? EB 08 F3 0F 10 3D",
+            patch:            "9F 6C 24 01",
+            expectedOriginal: "C5 01 25 01",
+            patchOffset:      14   // RVA 0x31dc55: movss xmm7
         ),
 
 
