@@ -541,16 +541,7 @@ public class BotState : BasePlugin
                     _idleStartTime.Remove(idx);
                 }
             }
-            // pre-aim
-            if (!curIsAttacking && !isStuck && !nearLadder && !inDoorCooldown && !inAir && !isAimingAtEnemy)
-            {
-                string? wpn = pawn.WeaponServices?.ActiveWeapon?.Value?.DesignerName;
-                if (wpn == "weapon_awp" || wpn == "weapon_ssg08")
-                {
-                    ref bool isEnemyVisible = ref bot.IsEnemyVisible;
-                    isEnemyVisible = true;
-                }
-            }
+
             //Inferno Sewer Stuck Fix
             if (pawn.AbsOrigin != null)
             {
