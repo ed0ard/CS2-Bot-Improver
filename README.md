@@ -137,6 +137,11 @@ After modification, if you wanna **play with bots again**, navigate to `game/csg
 
 Add `-disable_workshop_command_filtering` to your launch options
 
+### How to disable agent skins and music kits
+
+1. Open the root of CS2 and navigate to `game/csgo/addons/counterstrikesharp/plugins`  
+2. Rename the `BotRandomizer` folder to `BotRandomizer_disabled`
+
 ## Credits
 [metamod-source](https://github.com/alliedmodders/metamod-source)  
 [CounterStrikeSharp](https://github.com/roflmuffin/CounterStrikeSharp)  
