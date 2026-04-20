@@ -150,6 +150,35 @@ public sealed class BotBuyPatch : BasePlugin
                 }
             }
         });
+        // Don't buy if we have scar20/g3sg1
+        foreach (var player in allPlayers.Where(p => p.IsValid && p.IsBot))
+        {
+            var pawn = player.PlayerPawn.Value;
+            if (pawn == null || !pawn.IsValid || pawn.WeaponServices == null) continue;
+
+            var activeWeapon = pawn.WeaponServices.ActiveWeapon.Value;
+            if (activeWeapon == null) continue;
+
+            string initialGun = activeWeapon.DesignerName;
+            if (initialGun != "weapon_scar20" && initialGun != "weapon_g3sg1") continue;
+
+            var copyPlayer = player;
+            AddTimer(0.45f, () =>
+            {
+                if (!copyPlayer.IsValid) return;
+                var p2 = copyPlayer.PlayerPawn.Value;
+                if (p2 == null || !p2.IsValid || p2.WeaponServices == null) return;
+
+                var currentWeapon = p2.WeaponServices.ActiveWeapon.Value;
+                if (currentWeapon == null) return;
+
+                string currentGun = currentWeapon.DesignerName;
+                if (currentGun != "weapon_scar20" && currentGun != "weapon_g3sg1")
+                {
+                    Refund(copyPlayer, currentGun);
+                }
+            });
+        }
         // Swap AUG
         foreach (var player in allPlayers.Where(p => p.IsValid && p.IsBot))
         {
