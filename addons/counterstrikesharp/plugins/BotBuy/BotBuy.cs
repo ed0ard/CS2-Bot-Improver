@@ -12,7 +12,7 @@ namespace BotBuyPatch;
 public sealed class BotBuyPatch : BasePlugin
 {
     public override string ModuleName        => "BotBuyPatch";
-    public override string ModuleVersion     => "1.0.5";
+    public override string ModuleVersion     => "1.0.6";
     public override string ModuleAuthor      => "ed0ard";
     public override string ModuleDescription => "Enable bots to take more buy options";
 
@@ -63,6 +63,9 @@ public sealed class BotBuyPatch : BasePlugin
     [GameEventHandler]
     public HookResult OnRoundStart(EventRoundStart @event, GameEventInfo info)
     {
+        // Don't Buy on Aim_Rush
+        if (Server.MapName == "aim_rush") return HookResult.Continue;
+
         List<CCSPlayerController> allPlayers = new();
         List<CCSPlayerController> allCT = new();
         List<CCSPlayerController> allT = new();
@@ -436,32 +439,50 @@ public sealed class BotBuyPatch : BasePlugin
                 {
                     if (!_poorPlayersByTeam.TryGetValue(team, out var poor))
                         poor = new List<CCSPlayerController>();
+                    poor = poor.Where(p => p.IsValid && p.InGameMoneyServices != null).ToList();
 
                     var richBots = allPlayers.Where(p => p.IsValid && p.Team == team && p.IsBot && p.InGameMoneyServices?.Account >= 2900).ToList();
 
                     if (poor.Count == 0 || richBots.Count == 0) continue;
-                    int giveCount = Math.Min(poor.Count, richBots.Count);
 
-                    var selectedPoor = poor.OrderBy(_ => Random.Shared.Next()).Take(giveCount).ToList();
-                    var selectedRich = richBots.OrderBy(_ => Random.Shared.Next()).Take(giveCount).ToList();
+                    var giftedPoor = new HashSet<CCSPlayerController>();
 
-                    for (int i = 0; i < giveCount; i++)
+                    var shuffledPoor = poor.OrderBy(_ => Random.Shared.Next()).ToList();
+                    int poorIndex = 0;
+
+                    foreach (var rich in richBots)
                     {
-                        var rich = selectedRich[i];
-                        var poorPlayer = selectedPoor[i];
+                        if (poorIndex >= shuffledPoor.Count) break;
+                        if (rich.InGameMoneyServices == null) continue;
 
-                        string gun = team == CsTeam.CounterTerrorist ? (Random.Shared.Next(2) == 0 ? "weapon_m4a1_silencer" : "weapon_m4a1") : "weapon_ak47";
-                        poorPlayer.GiveNamedItem(gun);
-
+                        int richMoney = rich.InGameMoneyServices.Account;
                         int price = team == CsTeam.CounterTerrorist ? 2900 : 2700;
-                        if (rich.InGameMoneyServices != null)
+
+                        int maxGive = richMoney / price;
+                        if (maxGive > 3) maxGive = 3;
+                        if (maxGive <= 0) continue;
+
+                        int given = 0;
+                        while (given < maxGive && poorIndex < shuffledPoor.Count)
                         {
+                            var poorPlayer = shuffledPoor[poorIndex];
+                            poorIndex++;
+
+                            if (!poorPlayer.IsValid || giftedPoor.Contains(poorPlayer)) continue;
+
+                            string gun = team == CsTeam.CounterTerrorist
+                                ? (Random.Shared.Next(2) == 0 ? "weapon_m4a1_silencer" : "weapon_m4a1")
+                                : "weapon_ak47";
+                            poorPlayer.GiveNamedItem(gun);
+                            giftedPoor.Add(poorPlayer);
+
                             rich.InGameMoneyServices.Account -= price;
                             if (rich.InGameMoneyServices.Account < 0) rich.InGameMoneyServices.Account = 0;
                             Utilities.SetStateChanged(rich, "CCSPlayerController", "m_pInGameMoneyServices");
-                        }
 
-                        Server.PrintToChatAll($"{ChatColors.Green}{rich.PlayerName}{ChatColors.Yellow}: {poorPlayer.PlayerName}, I dropped a weapon for ya");
+                            Server.PrintToChatAll($"{ChatColors.Green}{rich.PlayerName}{ChatColors.Yellow}: {poorPlayer.PlayerName}, I dropped a weapon for ya");
+                            given++;
+                        }
                     }
                 }
             }
