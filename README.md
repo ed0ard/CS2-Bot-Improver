@@ -142,6 +142,10 @@ Add `-disable_workshop_command_filtering` to your launch options
 1. Open the root of CS2 and navigate to `game/csgo/addons/counterstrikesharp/plugins`  
 2. Rename the `BotRandomizer` folder to `BotRandomizer_disabled`
 
+### How to surf normally
+
+Run `sv_standable_normal 0.7` in your game console
+
 ## Credits
 [metamod-source](https://github.com/alliedmodders/metamod-source)  
 [CounterStrikeSharp](https://github.com/roflmuffin/CounterStrikeSharp)  
