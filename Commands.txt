@@ -1,5 +1,6 @@
 GAME MODE
-scouts
+scouts_on
+scouts_off
 
 BOT AIM STYLE
 
