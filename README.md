@@ -5,6 +5,8 @@ Aims to enhance your experience when playing against bots offline or with friend
 
 ## Your stars⭐ are my motivation to keep updating
 
+## The latest AG2 update has broken Metamod and CounterStrikeSharp. I will update my plugin after they get fixed.
+
 ## Features
 
 1. Makes bots aim better and more human-like
@@ -106,8 +108,9 @@ Point at the ground and press `\` on your keyboard to generate all kinds of kniv
 
 ### Flying Scoutsman
 
-`scouts`  
-Input this command after a match begins
+`scouts_on`  
+`scouts_off`  
+Input the command after a match begins to turn on/off Flying Scoutsman
 
 ## FAQ
 
