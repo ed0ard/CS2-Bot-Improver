@@ -23,7 +23,7 @@ public static class BotOffsets
 public class BotAI : BasePlugin
 {
     public override string ModuleName        => "Patches - Bot AI";
-    public override string ModuleVersion     => "1.6.6";
+    public override string ModuleVersion     => "1.6.7";
     public override string ModuleAuthor      => "K4ryuu & Austin (updated by ed0ard)";
     public override string ModuleDescription =>
         "Improve and fix bots' behavior comprehensively";
@@ -61,34 +61,34 @@ public class BotAI : BasePlugin
 
         // EscapeFromBombState::OnEnter tail-call jmp → ret (prevents crash)
         ["EscapeFromBomb_OnEnter_NoEquipKnife"] = (
-            signature:        "48 83 C4 20 5B E9 BB 50 F9 FF",
+            signature:        "C6 83 64 4F 00 00 00 C6 83 8C 4F 00 00 00 48 83 C4 20 5B E9",
             patch:            "C3 90 90 90 90",
-            expectedOriginal: "E9 BB 50 F9 FF",
-            patchOffset:      5
+            expectedOriginal: "E9 ? ? ? ?",
+            patchOffset:      19
         ),
 
         // EscapeFromBombState::OnUpdate call → NOP
         ["EscapeFromBomb_OnUpdate_NoEquipKnife"] = (
-            signature:        "75 0F 48 8B 5C 24 50 48 83 C4 40 5F E9 ? ? ? ? E8 E8 24 F9 FF",
+            signature:        "75 0F 48 8B 5C 24 50 48 83 C4 40 5F E9 ? ? ? ? E8 ? ? ? ?",
             patch:            "90 90 90 90 90",
-            expectedOriginal: "E8 E8 24 F9 FF",
+            expectedOriginal: "E8 ? ? ? ?",
             patchOffset:      17
         ),
 
         // EscapeFromFlamesState::OnEnter call → NOP
         ["EscapeFromFlames_OnEnter_NoEquipKnife"] = (
-            signature:        "40 88 BB 64 5F 00 00 40 88 BB 8C 5F 00 00 E8 D1 4F F9 FF",
+            signature:        "48 8B CB 40 88 BB 64 4F 00 00 40 88 BB 8C 4F 00 00 E8 ? ? ? ? F3 0F 10 0D",
             patch:            "90 90 90 90 90",
-            expectedOriginal: "E8 D1 4F F9 FF",
-            patchOffset:      14
+            expectedOriginal: "E8 ? ? ? ?",
+            patchOffset:      17
         ),
 
 
         ["InvestigateNoise_SkipSelfDefenseCheck"] = (
-            signature:        "83 BB 08 63 00 00 02 74 1E",
+            signature:        "83 BB 08 53 00 00 02 74 1E",
             patch:            "90 90",
             expectedOriginal: "74 1E",
-            patchOffset:      7    // RVA 0x318ed6
+            patchOffset:      7    // VA 0x180335696: je → NOP NOP
         ),
 
 
@@ -146,8 +146,8 @@ public class BotAI : BasePlugin
         ["AttackState_SkipSniperSpreadCheck"] = (
             signature:        "41 0F 28 C8 0F 57 C0 FF 15 ? ? ? ? F3 0F 10 0D ? ? ? ? 0F 2F C8 0F 86",
             patch:            "90 90 90 90 90 90",
-            expectedOriginal: "0F 86 7B 04 00 00",
-            patchOffset:      24   // RVA 0x320153: NOP jbe+47B
+            expectedOriginal: "0F 86 8A 04 00 00",
+            patchOffset:      24  // RVA 0x320153: NOP jbe+47B
         ),
 
 
@@ -180,10 +180,10 @@ public class BotAI : BasePlugin
         ),
 
         ["AttackState_SprayRangeExtend"] = (
-            signature:        "44 0F 2F 0D ? ? ? ? 76 0A F3 0F 10 3D ? ? ? ? EB 08 F3 0F 10 3D",
-            patch:            "9F 6C 24 01",
-            expectedOriginal: "C5 01 25 01",
-            patchOffset:      14   // RVA 0x31dc55: movss xmm7
+            signature:        "76 0B F3 44 0F 10 05 ? ? ? ? EB 09 F3 44 0F 10 05",
+            patch:            "6C 6D 29 01",
+            expectedOriginal: "? ? ? ?",
+            patchOffset:      7
         ),
 
 
@@ -202,38 +202,38 @@ public class BotAI : BasePlugin
         ),
 
         ["LowSKill_JumpChance0"] = (
-            signature:        "0F 2F 05 75 E4 23 01 76 11",
+            signature:        "FF 90 90 00 00 00 0F 2F 05 ? ? ? ? 76 11",
             patch:            "EB 40",
             expectedOriginal: "76 11",
-            patchOffset:      7    // RVA 0x2f4587: jbe +11 → jmp +40 to non-jump 
+            patchOffset:      13    // RVA 0x2f4587: jbe +11 → jmp +40 to non-jump 
         ),
 
         ["AllSkill_DodgeChance100_OnOutnumberedOrSniper"] = (
-            signature:        "0F 28 F0 F3 0F 59 35 60 C4 22 01 76 14",
+            signature:        "0F 28 F0 F3 0F 59 35 ? ? ? ? 76 15",
             patch:            "90 90",
-            expectedOriginal: "76 14",
+            expectedOriginal: "76 15",
             patchOffset:      11   // RVA 0x319d73: jbe +14 → NOP
         ),
 
         ["DodgeChance_Flat80"] = (
-            signature:        "0F 28 F0 F3 0F 59 35 60 C4 22 01 76 14",
+            signature:        "0F 28 F0 F3 0F 59 35 ? ? ? ? 76 15",
             patch:            "10",
             expectedOriginal: "59",
             patchOffset:      5    // RVA 0x319d66: MULSS(59) → MOVSS(10)
         ),
 
         ["AllSkill_KeepMoving_WhenSeeSniper"] = (
-            signature:        "0F 2F 05 AF 6E 26 01 76 0D 80 BF AC 05 00 00 00 0F 85",
+            signature:        "0F 2F 05 ? ? ? ? 76 0D 80 BF AC 05 00 00 00 0F 85",
             patch:            "90 90",
             expectedOriginal: "76 0D",
             patchOffset:      7    // RVA 0x2cbb4d: jbe +0D → NOP
         ),
 
         ["AttackState_CanStrafe_jne"] = (
-            signature:        "E8 B2 1C 00 00 84 C0 74 7B",
+            signature:        "48 8B CB E8 ? ? ? ? 84 C0 74 7B",
             patch:            "90 90",
             expectedOriginal: "74 7B",
-            patchOffset:      7    // RVA 0x2f22b0
+            patchOffset:      10    // RVA 0x2f22b0
         ),
 
         ["SniperDodge_SkipIsSniper_DodgeA"] = (
@@ -245,38 +245,38 @@ public class BotAI : BasePlugin
 
 
         ["Vision_AlwaysWatchApproachPoints"] = (
-            signature:        "80 BF B1 6C 00 00 00 75 25 0F 2F",
+            signature:        "80 BF B1 5C 00 00 00 75 25 0F 2F",
             patch:            "EB 25",
             expectedOriginal: "75 25",
             patchOffset:      7    // VA 0x180319304: jne→jmp
         ),
 
         ["Vision_ApproachBody_SkipSkillCheck"] = (
-            signature:        "0F 2F C6 76 33 80 BF B1 6C 00 00 00 74 2A",
+            signature:        "0F 2F C7 76 3B 80 BF B1 5C 00 00 00 74 32",
             patch:            "90 90",
-            expectedOriginal: "76 33",
+            expectedOriginal: "76 3B",
             patchOffset:      3
         ),
 
         ["Vision_ApproachBody_SkipHidingSpotCheck"] = (
-            signature:        "0F 2F C6 76 33 80 BF B1 6C 00 00 00 74 2A",
+            signature:        "0F 2F C7 76 3B 80 BF B1 5C 00 00 00 74 32",
             patch:            "90 90",
-            expectedOriginal: "74 2A",
+            expectedOriginal: "74 32",
             patchOffset:      12
         ),
 
         ["Vision_SkipIsMovingGate"] = (
-            signature:        "0F 2F 3D ? ? ? ? 77 0F 49 8B D6 48 8B CF E8",
+            signature:        "0F 2F 35 ? ? ? ? 77 0F 49 8B D7 48 8B CF E8",
             patch:            "90 90",
-            expectedOriginal: "77 0F",//RVA 0x319306: ja → NOP
-            patchOffset:      7
+            expectedOriginal: "77 0F",
+            patchOffset:      7    //RVA 0x319306: ja → NOP
         ),
 
         ["Vision_AlwaysEnterApproachBody"] = (
-            signature:        "84 C0 75 0D 48 C7 45 08 00 00 00 00 E9",
+            signature:        "84 C0 75 0D 49 C7 46 08 00 00 00 00 E9",
             patch:            "EB 0D",
-            expectedOriginal: "75 0D",//RVA 0x31931c: jne → jmp
-            patchOffset:      2
+            expectedOriginal: "75 0D",
+            patchOffset:      2    //RVA 0x31931c: jne → jmp
         ),
     };
 
