@@ -12,7 +12,7 @@ namespace BotState;
 public class BotState : BasePlugin
 {
     public override string ModuleName        => "Smarter-Bot";
-    public override string ModuleVersion     => "1.6.8";
+    public override string ModuleVersion     => "1.6.9";
     public override string ModuleAuthor      => "ed0ard";
     public override string ModuleDescription => "Make bots smarter";
 
@@ -259,7 +259,7 @@ public class BotState : BasePlugin
             // Sniper Peek
             bool curIsAttacking = bot.IsAttacking;
 
-            if (curIsAttacking && !_isFreezeTime && _hasFiredThisAttack.Remove(idx))
+            if (curIsAttacking && _hasFiredThisAttack.Remove(idx))
             {
                 string? wpn = pawn.WeaponServices?.ActiveWeapon?.Value?.DesignerName;
                 if (wpn == "weapon_awp" || wpn == "weapon_ssg08")
@@ -356,7 +356,7 @@ public class BotState : BasePlugin
 
             if (inAir)
             {
-                if (!_isFreezeTime && !pawn.IsDefusing)
+                if (!pawn.IsDefusing)
                 {
                     ref bool isCrouching = ref bot.IsCrouching;
                     isCrouching = true;
@@ -608,7 +608,7 @@ public class BotState : BasePlugin
         // Sniper Peek
         _hasFiredThisAttack.Add(idx);
 
-        if (_isFreezeTime || pawn.IsDefusing || !bot.IsAttacking) return HookResult.Continue;
+        if (pawn.IsDefusing || !bot.IsAttacking) return HookResult.Continue;
         // Random combat crouch
         double crouchChance = 0.0;
         string? wpn = pawn.WeaponServices?.ActiveWeapon?.Value?.DesignerName;
