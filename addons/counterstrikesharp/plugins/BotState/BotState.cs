@@ -12,7 +12,7 @@ namespace BotState;
 public class BotState : BasePlugin
 {
     public override string ModuleName        => "Smarter-Bot";
-    public override string ModuleVersion     => "1.6.9";
+    public override string ModuleVersion     => "1.6.10";
     public override string ModuleAuthor      => "ed0ard";
     public override string ModuleDescription => "Make bots smarter";
 
@@ -22,6 +22,9 @@ public class BotState : BasePlugin
 
     private bool _isExpanded = false;
     private ConVar? _smokeConVar;
+    private bool _isBombBeingDefused = false;
+    private bool _isDefuseExpanded = false;
+    private CounterStrikeSharp.API.Modules.Timers.Timer? _defuseExpandTimer = null;
 
     private readonly Random _random = new Random();
 
@@ -52,6 +55,9 @@ public class BotState : BasePlugin
         RegisterEventHandler<EventPlayerBlind>(OnPlayerBlind);
         RegisterEventHandler<EventBombPlanted>(OnBombPlanted);
         RegisterEventHandler<EventBombBegindefuse>(OnBombBeginDefuse);
+        RegisterEventHandler<EventBombAbortdefuse>(OnBombAbortDefuse);
+        RegisterEventHandler<EventBombDefused>(OnBombDefused);
+        RegisterEventHandler<EventBombExploded>(OnBombExploded);
         RegisterEventHandler<EventDoorOpen>(OnDoorOpen);
         RegisterEventHandler<EventDoorClose>(OnDoorClose);
         RegisterEventHandler<EventWeaponFire>(OnWeaponFire);
@@ -91,6 +97,58 @@ public class BotState : BasePlugin
     public override void Unload(bool hotReload)
     {
         SetSmokeLength(NormalValue);
+        _defuseExpandTimer?.Kill();
+    }
+    // Spam smoke when an enemy is defusing the bomb
+    private HookResult OnBombAbortDefuse(EventBombAbortdefuse @event, GameEventInfo info)
+    {
+        StopDefuseSmoke();
+        return HookResult.Continue;
+    }
+
+    private HookResult OnBombDefused(EventBombDefused @event, GameEventInfo info)
+    {
+        StopDefuseSmoke();
+        return HookResult.Continue;
+    }
+
+    private HookResult OnBombExploded(EventBombExploded @event, GameEventInfo info)
+    {
+        StopDefuseSmoke();
+        return HookResult.Continue;
+    }
+
+    private void StopDefuseSmoke()
+    {
+        _isBombBeingDefused = false;
+        _defuseExpandTimer?.Kill();
+        _defuseExpandTimer = null;
+        if (_isDefuseExpanded)
+        {
+            _isDefuseExpanded = false;
+            SetSmokeLength(NormalValue);
+        }
+    }
+
+    private void StartDefuseSmokeCycle()
+    {
+        if (_defuseExpandTimer != null) return;
+
+        _defuseExpandTimer = AddTimer(4.0f, () =>
+        {
+            _defuseExpandTimer = null;
+            if (!_isBombBeingDefused) return;
+
+            _isDefuseExpanded = true;
+            SetSmokeLength(ExpandedValue);
+
+            AddTimer(1.0f, () =>
+            {
+                _isDefuseExpanded = false;
+                SetSmokeLength(NormalValue);
+                if (_isBombBeingDefused) StartDefuseSmokeCycle();
+            });
+        });
     }
 //---------------------------------------------------------------------------------------
     private HookResult OnPlayerBlind(EventPlayerBlind @event, GameEventInfo info)
@@ -696,6 +754,8 @@ public class BotState : BasePlugin
     private HookResult OnBombBeginDefuse(EventBombBegindefuse @event, GameEventInfo info)
     {
         ResetLookAroundForBot(@event.Userid);
+        _isBombBeingDefused = true;
+        StartDefuseSmokeCycle();
 
         var player = @event.Userid;
         if (player == null || !player.IsValid || !player.IsBot) return HookResult.Continue;
@@ -717,7 +777,14 @@ public class BotState : BasePlugin
         // Fake Defuse
         if (hasLivingEnemies)
         {
-            if (_random.NextDouble() < 0.66)
+            // If we have a defuser, tend to defuse directly
+            var itemSvc = pawn.ItemServices?.Handle != nint.Zero
+                ? new CCSPlayer_ItemServices(pawn.ItemServices!.Handle)
+                : null;
+            bool hasDefuser = itemSvc?.HasDefuser ?? false;
+            double fakeChance = hasDefuser ? 0.10 : 0.66;
+
+            if (_random.NextDouble() < fakeChance)
             {
                 float yaw  = pawn.EyeAngles.Y * MathF.PI / 180f;
                 float rx   = -MathF.Sin(yaw);
