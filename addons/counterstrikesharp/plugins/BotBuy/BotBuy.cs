@@ -3,9 +3,12 @@ using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Modules.Utils;
 using CounterStrikeSharp.API.Modules.Cvars;
+using CounterStrikeSharp.API.Modules.Memory;
 using CounterStrikeSharp.API.Modules.Timers;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
+using CounterStrikeSharp.API.Modules.Memory.DynamicFunctions;
 
 namespace BotBuyPatch;
 
@@ -24,6 +27,10 @@ public sealed class BotBuyPatch : BasePlugin
     private Dictionary<int, List<string>> _prevWeapons = new();
     private Dictionary<int, int> _prevMoney = new();
     private Dictionary<int, int> _prevArmor = new();
+
+    public static readonly MemoryFunctionWithReturn<nint, string, CCSWeaponBaseVData> _findWeaponVDataByName =
+            new(GameData.GetSignature("FindWeaponVDataByName"));
+
 //----------------------------------------------------------------------------------------------
     [GameEventHandler]
     public HookResult OnPlayerConnectFull(EventPlayerConnectFull @event, GameEventInfo info)
@@ -74,7 +81,7 @@ public sealed class BotBuyPatch : BasePlugin
 
         foreach (var player in Utilities.FindAllEntitiesByDesignerName<CCSPlayerController>("cs_player_controller"))
         {
-            if (!player.IsValid) continue;  
+            if (!player.IsValid) continue;
             allPlayers.Add(player);
 
             if (player.Team == CsTeam.CounterTerrorist)
@@ -288,7 +295,7 @@ public sealed class BotBuyPatch : BasePlugin
         // Big Advantage
         AddTimer(0.5f, () =>
         {
-            if (!IsFirstRoundOfHalf())  
+            if (!IsFirstRoundOfHalf())
             {
                 foreach (var p in allPlayers)
                 {
@@ -355,7 +362,7 @@ public sealed class BotBuyPatch : BasePlugin
         // Don't buy Armor if it's above 40
         AddTimer(1.0f, () =>
         {
-            if (!IsFirstRoundOfHalf())  
+            if (!IsFirstRoundOfHalf())
             {
                 foreach (var p in allPlayers)
                 {
@@ -365,7 +372,7 @@ public sealed class BotBuyPatch : BasePlugin
                     var (_, _, prevArmor) = PreviousInventory(p);
 
                     if (pawn.ItemServices == null || pawn.ItemServices.Handle == nint.Zero)
-                    continue;
+                        continue;
                     var itemServices = new CCSPlayer_ItemServices(pawn.ItemServices.Handle);
 
                     int currentArmor = pawn.ArmorValue;
@@ -397,7 +404,7 @@ public sealed class BotBuyPatch : BasePlugin
                     {
                         if (p.Team == CsTeam.CounterTerrorist)
                         {
-                            if (r < 0.50f)  Buy(p, "item_kevlar");    // 50%
+                            if (r < 0.50f) Buy(p, "item_kevlar");    // 50%
                             else if (r < 0.65f) { Swap(p, "weapon_usp_silencer", "weapon_elite"); Swap(p, "weapon_hkp2000", "weapon_elite"); } // 15%
                             else if (r < 0.75f) { Swap(p, "weapon_usp_silencer", "weapon_p250"); Swap(p, "weapon_hkp2000", "weapon_p250"); }   // 10%
                             else if (r < 0.83f) { Swap(p, "weapon_usp_silencer", "weapon_deagle"); Swap(p, "weapon_hkp2000", "weapon_deagle"); } // 8%
@@ -407,7 +414,7 @@ public sealed class BotBuyPatch : BasePlugin
                         }
                         else
                         {
-                            if (r < 0.50f)  Buy(p, "item_kevlar");    // 50%
+                            if (r < 0.50f) Buy(p, "item_kevlar");    // 50%
                             else if (r < 0.65f) Swap(p, "weapon_glock", "weapon_elite"); //15%
                             else if (r < 0.77f) Swap(p, "weapon_glock", "weapon_p250");  //12%
                             else if (r < 0.85f) Swap(p, "weapon_glock", "weapon_deagle");//8%
@@ -421,7 +428,7 @@ public sealed class BotBuyPatch : BasePlugin
                     {
                         if (p.Team == CsTeam.CounterTerrorist)
                         {
-                            if (r < 0.20f)  { Swap(p, "weapon_usp_silencer", "weapon_elite"); Swap(p, "weapon_hkp2000", "weapon_elite"); } //20%
+                            if (r < 0.20f) { Swap(p, "weapon_usp_silencer", "weapon_elite"); Swap(p, "weapon_hkp2000", "weapon_elite"); } //20%
                             else if (r < 0.50f) { Swap(p, "weapon_usp_silencer", "weapon_deagle"); Swap(p, "weapon_hkp2000", "weapon_deagle"); } //30%
                             else if (r < 0.65f) { Swap(p, "weapon_usp_silencer", "weapon_cz75a"); Swap(p, "weapon_hkp2000", "weapon_cz75a"); } //15%
                             else if (r < 0.95f) { Swap(p, "weapon_usp_silencer", "weapon_fiveseven"); Swap(p, "weapon_hkp2000", "weapon_fiveseven"); } //30%
@@ -429,7 +436,7 @@ public sealed class BotBuyPatch : BasePlugin
                         }
                         else
                         {
-                            if (r < 0.20f)  Swap(p, "weapon_glock", "weapon_elite"); //20%
+                            if (r < 0.20f) Swap(p, "weapon_glock", "weapon_elite"); //20%
                             else if (r < 0.30f) Swap(p, "weapon_glock", "weapon_p250"); //10%
                             else if (r < 0.55f) Swap(p, "weapon_glock", "weapon_deagle");//25%
                             else if (r < 0.60f) Swap(p, "weapon_glock", "weapon_revolver");//5%
@@ -444,14 +451,14 @@ public sealed class BotBuyPatch : BasePlugin
 
                         if (p.Team == CsTeam.CounterTerrorist)
                         {
-                            if (r < 0.35f)  Buy(p, "weapon_m4a1");
+                            if (r < 0.35f) Buy(p, "weapon_m4a1");
                             else if (r < 0.70f) Buy(p, "weapon_m4a1_silencer");
                             else if (r < 0.90f) Buy(p, "weapon_awp");
                             else if (r < 1.00f) Buy(p, "weapon_scar20");
                         }
                         else
                         {
-                            if (r < 0.70f)  Buy(p, "weapon_ak47");
+                            if (r < 0.70f) Buy(p, "weapon_ak47");
                             else if (r < 0.90f) Buy(p, "weapon_awp");
                             else if (r < 1.00f) Buy(p, "weapon_g3sg1");
                         }
@@ -462,7 +469,7 @@ public sealed class BotBuyPatch : BasePlugin
         // Drop Weapons
         AddTimer(3.0f, () =>
         {
-            if (!IsFirstRoundOfHalf())  
+            if (!IsFirstRoundOfHalf())
             {
                 foreach (var team in new[] { CsTeam.CounterTerrorist, CsTeam.Terrorist })
                 {
@@ -541,7 +548,7 @@ public sealed class BotBuyPatch : BasePlugin
             if (bot == null)
                 continue;
 
-// Nothing here
+            // Nothing here
         }
         return HookResult.Continue;
     }
@@ -582,6 +589,62 @@ public sealed class BotBuyPatch : BasePlugin
     }
 
 //----------------------------------------------------------------------------------------------
+
+    private static CCSWeaponBaseVData FindWeaponVDataByName(string weaponName)
+    {
+        return _findWeaponVDataByName.Invoke(1, weaponName);
+    }
+
+    private static bool CanHandleWeaponForTeam(CCSPlayerController player, string itemName)
+    {
+        bool isCT = player.Team == CsTeam.CounterTerrorist;
+        bool isT = player.Team == CsTeam.Terrorist;
+
+        return itemName switch
+        {
+            "weapon_glock" => isT,
+            "weapon_hkp2000" => isCT,
+            "weapon_usp_silencer" => isCT,
+            "weapon_tec9" => isT,
+            "weapon_fiveseven" => isCT,
+            "weapon_mac10" => isT,
+            "weapon_mp9" => isCT,
+            "weapon_sawedoff" => isT,
+            "weapon_mag7" => isCT,
+            "weapon_galilar" => isT,
+            "weapon_ak47" => isT,
+            "weapon_sg556" => isT,
+            "weapon_famas" => isCT,
+            "weapon_m4a1" => isCT,
+            "weapon_m4a1_silencer" => isCT,
+            "weapon_aug" => isCT,
+            "weapon_scar20" => isCT,
+            "weapon_g3sg1" => isT,
+            "item_defuser" => isCT,
+
+            _ => true
+        };
+    }
+
+    private static bool TryGetWeaponPrice(string itemName, out int price)
+    {
+        switch (itemName) // IDK why FindWeaponVDataByName can't handle item prices
+        {
+            case "item_kevlar": price = 650; return true;
+            case "item_assaultsuit": price = 1000; return true;
+            case "item_defuser": price = 400; return true;
+        }
+
+        price = 0;
+
+        CCSWeaponBaseVData weaponVData = FindWeaponVDataByName(itemName);
+        if (weaponVData == null)
+            return false;
+
+        price = weaponVData.Price;
+        return price >= 0;
+    }
+
     private bool Buy(CCSPlayerController player, string itemName)
     {
         if (!player.IsValid || !player.IsBot || player.InGameMoneyServices == null)
@@ -592,65 +655,20 @@ public sealed class BotBuyPatch : BasePlugin
             return false;
 
         int money = player.InGameMoneyServices.Account;
-        bool isCT = player.Team == CsTeam.CounterTerrorist;
-        bool isT = player.Team == CsTeam.Terrorist;
-        int price = 0;
-        bool canBuy = true;
-        int armor = pawn.ArmorValue;
+        int price;
 
-        switch (itemName)
+        if (itemName == "item_assaultsuit")
         {
-            case "item_kevlar":              price = 650; break;
-            case "item_assaultsuit":         price = armor > 99 ? 350 : 1000; break;
-
-            case "item_defuser":             price = 400; canBuy = isCT; break;
-            case "weapon_taser":             price = 200; break;
-
-            case "weapon_glock":             canBuy = isT; break;
-            case "weapon_hkp2000":           canBuy = isCT; break;
-            case "weapon_usp_silencer":      canBuy = isCT; break;
-            case "weapon_elite":             price = 300;  break;
-            case "weapon_p250":              price = 300;  break;
-            case "weapon_tec9":              price = 500;  canBuy = isT; break;
-            case "weapon_fiveseven":         price = 500;  canBuy = isCT; break;
-            case "weapon_deagle":            price = 700;  break;
-            case "weapon_cz75a":             price = 500;  break;
-            case "weapon_revolver":          price = 600;  break;
-
-            case "weapon_mac10":             price = 1050; canBuy = isT; break;
-            case "weapon_mp9":               price = 1250; canBuy = isCT; break;
-            case "weapon_mp7":               price = 1500; break;
-            case "weapon_mp5sd":             price = 1500; break;
-            case "weapon_ump45":             price = 1200; break;
-            case "weapon_bizon":             price = 1400; break;   
-            case "weapon_p90":               price = 2350; break;
-
-            case "weapon_nova":              price = 1050; break;
-            case "weapon_xm1014":           price = 2000; break;
-            case "weapon_sawedoff":          price = 1100; canBuy = isT; break;
-            case "weapon_mag7":              price = 1300; canBuy = isCT; break;
-
-            case "weapon_galilar":           price = 1800; canBuy = isT; break;
-            case "weapon_ak47":              price = 2700; canBuy = isT; break;
-            case "weapon_sg556":             price = 3000; canBuy = isT; break;
-            case "weapon_famas":             price = 1950; canBuy = isCT; break;
-            case "weapon_m4a1":              price = 2900; canBuy = isCT; break;
-            case "weapon_m4a1_silencer":     price = 2900; canBuy = isCT; break;
-            case "weapon_aug":               price = 3300; canBuy = isCT; break;
-
-            case "weapon_ssg08":             price = 1700; break;
-            case "weapon_awp":               price = 4750; break;
-            case "weapon_scar20":            price = 5000; canBuy = isCT; break;
-            case "weapon_g3sg1":             price = 5000; canBuy = isT; break;
-
-            case "weapon_negev":             price = 1700; break;
-            case "weapon_m249":              price = 5200; break;
-
-            default: canBuy = false; break;
+            price = pawn.ArmorValue > 99 ? 350 : 1000;
         }
+        else
+        {
+            if (!CanHandleWeaponForTeam(player, itemName))
+                return false;
 
-        if (!canBuy)
-            return false;
+            if (!TryGetWeaponPrice(itemName, out price))
+                return false;
+        }
 
         if (money < price)
             return false;
@@ -666,7 +684,7 @@ public sealed class BotBuyPatch : BasePlugin
     private bool Refund(CCSPlayerController player, string itemName)
     {
         if (!player.IsValid || !player.IsBot || player.InGameMoneyServices == null)
-        return false;
+            return false;
 
         var pawn = player.PlayerPawn.Value;
         if (pawn == null || !pawn.IsValid)
@@ -676,9 +694,7 @@ public sealed class BotBuyPatch : BasePlugin
             return false;
 
         bool hasItem = false;
-        int price = 0;
-        bool isCT = player.Team == CsTeam.CounterTerrorist;
-        bool isT = player.Team == CsTeam.Terrorist;
+        int price;
 
         if (itemName.StartsWith("weapon_"))
         {
@@ -693,61 +709,12 @@ public sealed class BotBuyPatch : BasePlugin
         if (!hasItem)
             return false;
 
-        bool canRefund = true;
-
-        switch (itemName)
-        {
-            case "item_kevlar":              price = 650; break;
-            case "item_assaultsuit":         price = 1000; break;
-
-            case "weapon_taser":             price = 200; break;
-
-            case "weapon_glock":             canRefund = isT; break;
-            case "weapon_hkp2000":           canRefund = isCT; break;
-            case "weapon_usp_silencer":      canRefund = isCT; break;
-            case "weapon_elite":             price = 300;  break;
-            case "weapon_p250":              price = 300;  break;
-            case "weapon_tec9":              price = 500;  canRefund = isT; break;
-            case "weapon_fiveseven":         price = 500;  canRefund = isCT; break;
-            case "weapon_deagle":            price = 700;  break;
-            case "weapon_cz75a":             price = 500;  break;
-            case "weapon_revolver":          price = 600;  break;
-
-            case "weapon_mac10":             price = 1050; canRefund = isT; break;
-            case "weapon_mp9":               price = 1250; canRefund = isCT; break;
-            case "weapon_mp7":               price = 1500; break;
-            case "weapon_mp5sd":             price = 1500; break;
-            case "weapon_ump45":             price = 1200; break;
-            case "weapon_bizon":             price = 1400; break;
-            case "weapon_p90":               price = 2350; break;
-
-            case "weapon_nova":              price = 1050; break;
-            case "weapon_xm1014":            price = 2000; break;
-            case "weapon_sawedoff":          price = 1100; canRefund = isT; break;
-            case "weapon_mag7":              price = 1300; canRefund = isCT; break;
-
-            case "weapon_galilar":           price = 1800; canRefund = isT; break;
-            case "weapon_ak47":              price = 2700; canRefund = isT; break;
-            case "weapon_sg556":             price = 3000; canRefund = isT; break;
-            case "weapon_famas":             price = 1950; canRefund = isCT; break;
-            case "weapon_m4a1":              price = 2900; canRefund = isCT; break;
-            case "weapon_m4a1_silencer":     price = 2900; canRefund = isCT; break;
-            case "weapon_aug":               price = 3300; canRefund = isCT; break;
-
-            case "weapon_ssg08":             price = 1700; break;
-            case "weapon_awp":               price = 4750; break;
-            case "weapon_scar20":            price = 5000; canRefund = isCT; break;
-            case "weapon_g3sg1":             price = 5000; canRefund = isT; break;
-
-            case "weapon_negev":             price = 1700; break;
-            case "weapon_m249":              price = 5200; break;
-
-            default: return false;
-        }
-
-        if (!canRefund)
+        if (!CanHandleWeaponForTeam(player, itemName))
             return false;
-        
+
+        if (!TryGetWeaponPrice(itemName, out price))
+            return false;
+
         if (itemName.StartsWith("weapon_"))
         {
             player.RemoveItemByDesignerName(itemName);
@@ -766,7 +733,7 @@ public sealed class BotBuyPatch : BasePlugin
 
     private bool CanRefund(CCSPlayerController player, string itemName)
     {
-        if (IsFirstRoundOfHalf()) 
+        if (IsFirstRoundOfHalf())
             return true;
 
         if (!player.IsValid || !player.IsBot)

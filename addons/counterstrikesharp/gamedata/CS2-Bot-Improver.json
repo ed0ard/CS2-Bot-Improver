@@ -1,0 +1,10 @@
+{
+  "FindWeaponVDataByName": {
+    "signatures": {
+      "library": "server",
+      "linux": "48 85 F6 0F 84 ? ? ? ? 55 48 89 E5 41 57 41 56 41 55 49 89 F5 41 54 53 48 81 EC ? ? ? ? 80 3E ? 75 ? 31 C0 48 81 C4 ? ? ? ? 5B 41 5C 41 5D 41 5E 41 5F 5D C3 0F 1F 80 ? ? ? ? 4C 8D A5",
+      "windows": "48 89 5C 24 ? 57 48 83 EC ? 33 FF 4C 8B CA 8B D9"
+    },
+    "Credits": "https://github.com/Kxnrl/modsharp-public/blob/4035866575b86e618c867914521d8f5d9d60601d/.asset/gamedata/server.games.jsonc#L663C6-L663C27"
+  }
+}
