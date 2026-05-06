@@ -12,12 +12,12 @@ namespace BotState;
 public class BotState : BasePlugin
 {
     public override string ModuleName        => "Smarter-Bot";
-    public override string ModuleVersion     => "1.6.10";
+    public override string ModuleVersion     => "1.6.11";
     public override string ModuleAuthor      => "ed0ard";
     public override string ModuleDescription => "Make bots smarter";
 
     private const float ExpandedValue = 4000f;
-    private const float NormalValue   = 100f;
+    private const float NormalValue   = 50f;
     private const float RestoreDelay  = 1.0f;
 
     private bool _isExpanded = false;
