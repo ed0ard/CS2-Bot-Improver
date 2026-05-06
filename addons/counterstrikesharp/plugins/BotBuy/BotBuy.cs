@@ -12,7 +12,7 @@ namespace BotBuyPatch;
 public sealed class BotBuyPatch : BasePlugin
 {
     public override string ModuleName        => "BotBuyPatch";
-    public override string ModuleVersion     => "1.0.6";
+    public override string ModuleVersion     => "1.0.7";
     public override string ModuleAuthor      => "ed0ard";
     public override string ModuleDescription => "Enable bots to take more buy options";
 
@@ -163,7 +163,7 @@ public sealed class BotBuyPatch : BasePlugin
             if (initialGun != "weapon_scar20" && initialGun != "weapon_g3sg1") continue;
 
             var copyPlayer = player;
-            AddTimer(0.45f, () =>
+            AddTimer(0.5f, () =>
             {
                 if (!copyPlayer.IsValid) return;
                 var p2 = copyPlayer.PlayerPawn.Value;
@@ -286,7 +286,7 @@ public sealed class BotBuyPatch : BasePlugin
             }
         });
         // Big Advantage
-        AddTimer(0.5f, () =>
+        AddTimer(0.6f, () =>
         {
             if (!IsFirstRoundOfHalf())  
             {
@@ -526,6 +526,16 @@ public sealed class BotBuyPatch : BasePlugin
         if (botLoadout != null && !string.IsNullOrEmpty(botLoadout.StringValue))
         {
             return HookResult.Continue;
+        }
+
+        // Don't save money in the last round of each half
+        var ecoLimitCvar = ConVar.Find("bot_eco_limit");
+        if (ecoLimitCvar != null)
+        {
+            if (IsSecondToLastRoundOfHalf())
+                Server.ExecuteCommand("bot_eco_limit 0");
+            else
+                Server.ExecuteCommand("bot_eco_limit 2800");
         }
 
         foreach (var player in Utilities.FindAllEntitiesByDesignerName<CCSPlayerController>("cs_player_controller"))
@@ -827,6 +837,27 @@ public sealed class BotBuyPatch : BasePlugin
         {
             return false;
         }
+    }
+
+    private bool IsSecondToLastRoundOfHalf()
+    {
+        try
+        {
+            var gameRules = Utilities
+                .FindAllEntitiesByDesignerName<CCSGameRulesProxy>("cs_gamerules")
+                .FirstOrDefault()?.GameRules;
+
+            if (gameRules == null)
+                return false;
+
+            int played = gameRules.TotalRoundsPlayed;
+            int maxRounds = ConVar.Find("mp_maxrounds")?.GetPrimitiveValue<int>() ?? 24;
+            if (maxRounds <= 0) maxRounds = 24;
+            int half = maxRounds / 2;
+
+            return played == half - 2 || played == maxRounds - 2;
+        }
+        catch { return false; }
     }
 
     private int GetBotIndex(CCSPlayerController player)
