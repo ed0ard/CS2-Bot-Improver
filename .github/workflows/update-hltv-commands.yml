@@ -66,6 +66,8 @@ jobs:
           body: |
             Updates Commands.txt team entries from the current HLTV team ranking.
 
+            This keeps the existing 40 teams, team names, logo aliases, and command order intact.
+
             Source: https://www.hltv.org/ranking/teams
           branch: bot/update-hltv-commands
           delete-branch: true

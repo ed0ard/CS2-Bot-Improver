@@ -18,6 +18,15 @@ TEAM_BLOCK_END = "COORDINATED BUY"
 @dataclass(frozen=True)
 class Team:
     rank: int
+    heading: str
+    name: str
+    players: tuple[str, ...]
+    logo: str
+
+
+@dataclass(frozen=True)
+class ExistingTeam:
+    heading: str
     name: str
     players: tuple[str, ...]
     logo: str
@@ -37,8 +46,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--max-teams",
         type=int,
-        default=0,
-        help="Maximum number of ranked teams to write; 0 writes every team found",
+        default=40,
+        help="Maximum number of ranked teams to write",
     )
     parser.add_argument(
         "--headless",
@@ -51,6 +60,12 @@ def parse_args() -> argparse.Namespace:
 
 def normalize_text(value: str) -> str:
     return re.sub(r"\s+", " ", value).strip()
+
+
+def team_key(team_name: str) -> str:
+    value = team_name.lower().replace("&", "and")
+    value = re.sub(r"\besports\b|\bgaming\b|\bteam\b|\bclan\b", "", value)
+    return re.sub(r"[^a-z0-9]", "", value)
 
 
 def logo_code(team_name: str) -> str:
@@ -74,7 +89,7 @@ def scrape_teams(
     proxy: str | None,
     max_teams: int,
     headless: bool,
-    logo_overrides: dict[str, str],
+    existing_teams: dict[str, ExistingTeam],
 ) -> list[Team]:
     launch_options = {
         "headless": headless,
@@ -110,26 +125,32 @@ def scrape_teams(
             """,
         )
 
-    parsed: list[Team] = []
+    scraped_by_key: dict[str, tuple[str, ...]] = {}
     for item in teams:
-        rank = extract_rank(item.get("text", ""))
         name = normalize_text(item.get("name", ""))
         players = tuple(normalize_text(player) for player in item.get("players", [])[:5])
-        if rank is None or not name or len(players) < 5:
+        if not name or len(players) < 5:
             continue
+        scraped_by_key[team_key(name)] = players
+
+    parsed: list[Team] = []
+    for index, existing in enumerate(list(existing_teams.values())[:max_teams], start=1):
+        scraped_players = scraped_by_key.get(team_key(existing.name))
+        ordered_players = (
+            align_players(existing.players, scraped_players)
+            if scraped_players
+            else existing.players
+        )
         parsed.append(
             Team(
-                rank=rank,
-                name=name,
-                players=players,
-                logo=logo_overrides.get(name.lower(), logo_code(name)),
+                rank=index,
+                heading=existing.heading,
+                name=existing.name,
+                players=ordered_players,
+                logo=existing.logo,
             )
         )
-
-    parsed.sort(key=lambda team: team.rank)
-    if max_teams > 0:
-        return parsed[:max_teams]
-    return parsed
+    return parsed[:max_teams]
 
 
 def command_line(side: str, team: Team, team_slot: int) -> str:
@@ -143,7 +164,7 @@ def render_teams(teams: Iterable[Team]) -> list[str]:
     for index, team in enumerate(teams, start=1):
         lines.extend(
             [
-                f"{index}. {team.name}",
+                team.heading or f"{index}. {team.name}",
                 "",
                 command_line("ct", team, 1),
                 "",
@@ -166,13 +187,50 @@ def replace_team_block(commands_path: Path, teams: list[Team]) -> None:
     commands_path.write_text("\n".join(updated) + "\n", encoding="utf-8")
 
 
-def existing_logo_codes(commands_path: Path) -> dict[str, str]:
-    logos: dict[str, str] = {}
+def player_key(player_name: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", player_name.lower())
+
+
+def align_players(existing_players: tuple[str, ...], scraped_players: tuple[str, ...]) -> tuple[str, ...]:
+    remaining = list(scraped_players)
+    aligned: list[str] = []
+    for old_player in existing_players:
+        old_key = player_key(old_player)
+        exact_index = next(
+            (index for index, player in enumerate(remaining) if player_key(player) == old_key),
+            None,
+        )
+        if exact_index is not None:
+            aligned.append(remaining.pop(exact_index))
+        elif remaining:
+            aligned.append(remaining.pop(0))
+
+    aligned.extend(remaining)
+    return tuple(aligned[:5])
+
+
+def existing_teams(commands_path: Path) -> dict[str, ExistingTeam]:
+    teams: dict[str, ExistingTeam] = {}
+    heading = ""
     for line in commands_path.read_text(encoding="utf-8").splitlines():
-        match = re.search(r"mp_teamlogo_[12]\s+(\S+);mp_teamname_[12]\s+(.+)$", line)
-        if match:
-            logos[match.group(2).strip().lower()] = match.group(1).strip()
-    return logos
+        if re.match(r"^\d+\.\s*\S", line):
+            heading = line
+            continue
+
+        if not line.startswith("bot_add_ct "):
+            continue
+
+        player_matches = re.findall(r'bot_add_ct "([^"]+)"', line)
+        team_match = re.search(r"mp_teamlogo_1\s+(\S+);mp_teamname_1\s+(.+)$", line)
+        if player_matches and team_match:
+            name = team_match.group(2).strip()
+            teams[team_key(name)] = ExistingTeam(
+                heading=heading,
+                name=name,
+                players=tuple(player_matches[:5]),
+                logo=team_match.group(1).strip(),
+            )
+    return teams
 
 
 def main() -> int:
@@ -183,7 +241,7 @@ def main() -> int:
         args.proxy,
         args.max_teams,
         args.headless,
-        existing_logo_codes(commands_path),
+        existing_teams(commands_path),
     )
     if not teams:
         print("No teams were scraped from HLTV.", file=sys.stderr)
