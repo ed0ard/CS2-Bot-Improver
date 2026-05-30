@@ -79,7 +79,7 @@ def scrape_teams(
     launch_options = {
         "headless": headless,
         "humanize": True,
-        "block_images": True,
+        "block_images": False,
         "block_webrtc": True,
         "locale": "en-US",
         "os": ["windows", "macos", "linux"],
