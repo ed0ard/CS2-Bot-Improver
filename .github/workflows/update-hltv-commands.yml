@@ -1,0 +1,71 @@
+name: Update HLTV Commands
+
+on:
+  workflow_dispatch:
+    inputs:
+      proxy:
+        description: "Optional dynamic-proxy endpoint, e.g. http://127.0.0.1:17285"
+        required: false
+        type: string
+  schedule:
+    - cron: "24 4 * * 1"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-commands:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python -m camoufox fetch
+
+      - name: Start dynamic proxy when needed
+        env:
+          HLTV_PROXY: ${{ inputs.proxy || secrets.HLTV_PROXY }}
+        run: |
+          if [ -n "$HLTV_PROXY" ]; then
+            echo "Using supplied proxy endpoint."
+            exit 0
+          fi
+
+          curl -L -o dynamic-proxy https://github.com/kbykb/dynamic-proxy/releases/latest/download/dynamic-proxy-linux-amd64
+          chmod +x dynamic-proxy
+          cp .github/dynamic-proxy-config.yaml config.yaml
+          ./dynamic-proxy > dynamic-proxy.log 2>&1 &
+          sleep 30
+
+      - name: Update Commands.txt from HLTV
+        env:
+          HLTV_PROXY: ${{ inputs.proxy || secrets.HLTV_PROXY }}
+        run: |
+          if [ -n "$HLTV_PROXY" ]; then
+            python scripts/update_hltv_commands.py --proxy "$HLTV_PROXY"
+          else
+            python scripts/update_hltv_commands.py --proxy http://127.0.0.1:17285
+          fi
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Update HLTV team commands
+          title: Update HLTV team commands
+          body: |
+            Updates Commands.txt team entries from the current HLTV team ranking.
+
+            Source: https://www.hltv.org/ranking/teams
+          branch: bot/update-hltv-commands
+          delete-branch: true

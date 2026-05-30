@@ -1,0 +1,16 @@
+proxy_list_urls:
+  - "https://raw.githubusercontent.com/r00tee/Proxy-List/main/Socks5.txt"
+  - "https://raw.githubusercontent.com/ClearProxy/checked-proxy-list/main/socks5/raw/all.txt"
+
+health_check_concurrency: 200
+update_interval_minutes: 10
+
+health_check:
+  total_timeout_seconds: 8
+  tls_handshake_threshold_seconds: 5
+
+ports:
+  socks5_strict: ":17283"
+  socks5_relaxed: ":17284"
+  http_strict: ":17285"
+  http_relaxed: ":17286"

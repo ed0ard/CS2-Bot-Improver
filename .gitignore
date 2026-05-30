@@ -1,0 +1,5 @@
+__pycache__/
+*.py[cod]
+dynamic-proxy
+dynamic-proxy.exe
+dynamic-proxy.log
