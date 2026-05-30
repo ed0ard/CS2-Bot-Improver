@@ -7,19 +7,35 @@ on:
         description: "Optional dynamic-proxy endpoint, e.g. http://127.0.0.1:17285"
         required: false
         type: string
+      upstream_repository:
+        description: "Repository to open the PR against"
+        required: true
+        default: "ed0ard/CS2-Bot-Improver"
+        type: string
+      upstream_branch:
+        description: "Base branch in the upstream repository"
+        required: true
+        default: "main"
+        type: string
   schedule:
     - cron: "24 4 * * 1"
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
   update-commands:
     runs-on: ubuntu-latest
+    env:
+      PR_BRANCH: bot/update-hltv-commands
+      PR_TITLE: Update HLTV team commands
+      UPSTREAM_REPOSITORY: ${{ inputs.upstream_repository || 'ed0ard/CS2-Bot-Improver' }}
+      UPSTREAM_BRANCH: ${{ inputs.upstream_branch || 'main' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -57,17 +73,63 @@ jobs:
             python scripts/update_hltv_commands.py --proxy http://127.0.0.1:17285
           fi
 
-      - name: Create pull request
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: Update HLTV team commands
-          title: Update HLTV team commands
-          body: |
-            Updates Commands.txt team entries from the current HLTV team ranking.
+      - name: Stop when Commands.txt is unchanged
+        id: changes
+        run: |
+          if git diff --quiet -- Commands.txt; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Commands.txt is already up to date."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
 
-            This keeps the existing 40 teams, team names, logo aliases, and command order intact.
+      - name: Commit and push update branch to fork
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+        run: |
+          if [ -z "$BOT_TOKEN" ]; then
+            echo "BOT_TOKEN is required to push the bot branch and open the upstream PR." >&2
+            exit 1
+          fi
 
-            Source: https://www.hltv.org/ranking/teams
-          branch: bot/update-hltv-commands
-          delete-branch: true
+          git config user.name "hltv-commands-bot"
+          git config user.email "hltv-commands-bot@users.noreply.github.com"
+          git checkout -B "$PR_BRANCH"
+          git add Commands.txt
+          git commit -m "Update HLTV team commands"
+          git push --force-with-lease "https://x-access-token:${BOT_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$PR_BRANCH"
+
+      - name: Open upstream pull request
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.BOT_TOKEN }}
+        run: |
+          PR_BODY=$(cat <<'EOF'
+          Updates Commands.txt team entries from the current HLTV team ranking.
+
+          This keeps the existing 40 teams, team names, logo aliases, and command order intact.
+
+          Source: https://www.hltv.org/ranking/teams
+          EOF
+          )
+
+          PR_URL=$(gh pr list \
+            --repo "$UPSTREAM_REPOSITORY" \
+            --head "${GITHUB_REPOSITORY_OWNER}:${PR_BRANCH}" \
+            --state open \
+            --json url \
+            --jq '.[0].url')
+
+          if [ -n "$PR_URL" ]; then
+            gh pr edit "$PR_URL" \
+              --title "$PR_TITLE" \
+              --body "$PR_BODY"
+          else
+            gh pr create \
+              --repo "$UPSTREAM_REPOSITORY" \
+              --head "${GITHUB_REPOSITORY_OWNER}:${PR_BRANCH}" \
+              --base "$UPSTREAM_BRANCH" \
+              --title "$PR_TITLE" \
+              --body "$PR_BODY"
+          fi

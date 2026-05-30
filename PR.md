@@ -2,8 +2,9 @@ Title: Add HLTV Commands update bot
 
 ## Summary
 - Add a Camoufox-based updater that scrapes HLTV team rankings and refreshes the existing 40 teams in `Commands.txt`.
-- Add a scheduled and manually triggered GitHub Actions workflow that runs the updater and opens a PR when commands change.
+- Add a scheduled and manually triggered GitHub Actions workflow that runs from a fork and opens a PR against `ed0ard/CS2-Bot-Improver` when commands change.
 - Add dynamic-proxy configuration so the workflow can route Camoufox through a rotating local proxy, while still allowing `HLTV_PROXY` override.
+- Add `BOT_SETUP.md` with token and fork setup instructions.
 
 ## Test
 - `python -m py_compile scripts/update_hltv_commands.py`
