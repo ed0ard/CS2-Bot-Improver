@@ -69,6 +69,11 @@ public class ProImitator : BasePlugin
     private readonly Dictionary<int, float> _lastWeaponSwitchAt = new();
     private const float WeaponSwitchCooldownSec = 0.5f;
 
+    // Shared RNG for probability-gated traits (e.g. CounterStrafeChance).
+    // We don't seed it explicitly — System.Random's time-based seed is fine
+    // for "did the human pro mis-time their counter-strafe this round" rolls.
+    private readonly Random _rng = new();
+
     // CounterStrafes state. The pro behavior we're simulating: bot rushes,
     // first sees an enemy (IsAimingAtEnemy transitions false -> true), then
     // we kill its lateral velocity for ~120ms so the first tap lands with
@@ -372,25 +377,28 @@ public class ProImitator : BasePlugin
             checkedHidingSpotCount = 0;
         }
 
-        if (prof.CounterStrafes)
+        if (prof.CounterStrafeChance > 0f)
         {
             // Engagement-onset velocity kill. The pro tap-shot rhythm:
             //   rush -> see enemy -> *brief stop* -> first tap (accurate) -> resume
             //
-            // We detect the false->true edge of IsAimingAtEnemy and schedule
-            // ~120ms of zeroed lateral velocity. During that window, even if
-            // the bot's pathfinder is still trying to push forward, the
-            // velocity write each tick keeps it pinned in place.
+            // We detect the false->true edge of IsAimingAtEnemy. On the edge
+            // we roll a die against CounterStrafeChance; on a success we
+            // schedule ~120ms of zeroed lateral velocity. Probability < 1.0
+            // is what keeps the bot reading as a human: even top pros
+            // mis-time their counter-strafe sometimes, and a bot that does
+            // it perfectly every single engagement reads as aimbot.
             //
-            // Once the window expires, normal movement resumes — so this
-            // doesn't turn donk into a stationary turret in a sustained
-            // spray, just gives him the iconic mid-rush counter-strafe stop
-            // on EVERY new engagement.
+            // Once the window expires, normal movement resumes — sustained
+            // spray fights still see the bot strafing.
             bool isAimingAtEnemy = bot.IsAimingAtEnemy;
             bool wasAiming = _wasAimingAtEnemy.GetValueOrDefault(player.Slot, false);
 
             if (isAimingAtEnemy && !wasAiming)
-                _counterStrafeUntil[player.Slot] = now + CounterStrafeDurationSec;
+            {
+                if (_rng.NextDouble() <= prof.CounterStrafeChance)
+                    _counterStrafeUntil[player.Slot] = now + CounterStrafeDurationSec;
+            }
 
             if (_counterStrafeUntil.TryGetValue(player.Slot, out float until) && now < until)
             {
@@ -564,10 +572,14 @@ public sealed class ProProfile
     // pair with a coordinated BotBuy of `ak47` / `m4a1` / `aug` etc.
     public bool RifleOnly            { get; set; } = false;
 
-    // Counter-strafe at engagement onset. When the bot first sees an enemy
-    // (IsAimingAtEnemy transitions false->true), zero its lateral velocity
-    // for ~120ms so the first tap-shot lands with full standing-still
-    // accuracy. Pro-rusher signature; without this the bot run-and-guns and
-    // ALWAYS sprays which is visually wrong.
-    public bool CounterStrafes       { get; set; } = false;
+    // Counter-strafe at engagement onset, gated by probability so the bot
+    // doesn't read as aimbot. On the false->true edge of IsAimingAtEnemy
+    // we roll a die against this chance; on a success we zero lateral
+    // velocity for ~120ms (CounterStrafeDurationSec in ProImitator.cs).
+    //
+    // 0.0 = never counter-strafe (run-and-gun all engagements).
+    // 1.0 = always counter-strafe (perfect, reads as aimbot).
+    // 0.7 ~ 0.8 = pro-level: clean most of the time, occasionally misses
+    //             the timing like a real human.
+    public float CounterStrafeChance { get; set; } = 0f;
 }

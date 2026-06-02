@@ -86,18 +86,25 @@
   // his rifle even after picking up a Deagle from a corpse.
   "RifleOnly": false,
 
-  // Counter-strafe at engagement onset. On the false->true edge of
-  // IsAimingAtEnemy, zero the bot's lateral velocity for ~120ms so the
-  // first tap-shot lands with full standing-still accuracy.
+  // Counter-strafe at engagement onset, gated by probability. On the
+  // false->true edge of IsAimingAtEnemy we roll a die against this chance;
+  // on a success we zero lateral velocity for ~120ms so the first tap-shot
+  // lands with full standing-still accuracy.
   //
-  // Real human pros do this by tapping the opposite-direction movement key
-  // for 1-3 frames to cancel momentum (left-strafe + brief D-tap = stopped).
-  // We achieve the same observable effect by writing AbsVelocity.X/Y = 0 each
-  // tick during the window. Once the window expires, normal movement resumes,
-  // so a sustained spray fight still has the bot strafing — only the first
-  // shot of an engagement gets the freeze.
+  // Real human pros counter-strafe by tapping the opposite-direction
+  // movement key for 1-3 frames to cancel momentum (left-strafe + brief
+  // D-tap = stopped). We achieve the same observable effect by writing
+  // AbsVelocity.X/Y = 0 each tick during the window. Once the window
+  // expires, normal movement resumes — sustained spray fights still have
+  // the bot strafing — only the FIRST shot of an engagement gets the
+  // freeze.
   //
-  // Without this trait the bot run-and-guns and ALWAYS sprays which is
-  // visually wrong for pros who counter-strafe their first taps.
-  "CounterStrafes": false
+  // Values:
+  //   0.0  = never counter-strafe (run-and-gun all engagements)
+  //   1.0  = always counter-strafe (perfect, reads as aimbot)
+  //   0.7-0.8 = pro-level: clean most of the time, occasionally misses
+  //             the timing like a real human would
+  //
+  // Default 0 means the trait is off; pick a value in (0, 1] to enable.
+  "CounterStrafeChance": 0
 }
