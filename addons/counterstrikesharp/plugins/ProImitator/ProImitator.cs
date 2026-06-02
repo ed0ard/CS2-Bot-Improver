@@ -111,6 +111,16 @@ public class ProImitator : BasePlugin
     // comment in ApplyPersonality for the full design.
     private bool _bombPlanted = false;
 
+    // V4.4 — Bomb carrier run/walk coinflip state. Every CarrierRunFlipIntervalSec
+    // we roll 50/50 whether the carrier should be forced to IsRunning=true
+    // for the next interval. The cached decision avoids per-tick flicker
+    // (which at 64Hz would look like the bot is stuttering between run and
+    // walk) and produces a visible alternation across the round, which
+    // reads more like a human pro than V4.3's always-sprint behaviour.
+    private readonly Dictionary<int, float> _carrierRunFlipAt   = new();
+    private readonly Dictionary<int, bool>  _carrierRunDecision = new();
+    private const float CarrierRunFlipIntervalSec = 3.0f;
+
     // -------------------------------------------------------------------------
     public override void Load(bool hotReload)
     {
@@ -215,6 +225,8 @@ public class ProImitator : BasePlugin
             _wasAimingAtEnemy.Remove(player.Slot);
             _counterStrafeUntil.Remove(player.Slot);
             _knifeRushUntil.Remove(player.Slot);
+            _carrierRunFlipAt.Remove(player.Slot);
+            _carrierRunDecision.Remove(player.Slot);
         }
 
         return HookResult.Continue;
@@ -566,23 +578,18 @@ public class ProImitator : BasePlugin
         // small Duration values (10-20s) and removed CheckedHidingSpotCount=0
         // override.
         //
-        // V4.3 calibration (current): V4.2 was too soft on the defending
-        // side and the bomb carrier was indistinguishable from teammates.
-        // Three targeted bumps:
-        //   - CT (and post-plant T) defenders: HurryTimer EXPLICITLY cleared
-        //     (Duration=0, Timestamp=0). Critical because Entry-tagged bots
-        //     on the defending side still have AlwaysRushing in their
-        //     profile, which writes HurryTimer.Duration=600 every tick. If
-        //     BombFocus only writes SafeTime, the AlwaysRushing bot still
-        //     rushes — they look "agressifs trop de fight en dehors des BP".
-        //     The clear here wins the per-tick race against AlwaysRushing.
-        //   - Defender SafeTime raised 3s → 6s. Still not the V4.1 8s, but
-        //     more committed-to-position.
-        //   - Bomb carrier: HurryTimer 20s → 30s AND IsRunning forced true.
-        //     The forced run (no walk) is the visible difference between the
-        //     carrier and other Ts, without the V4.1 timer-wipe extremes
-        //     (SneakTimer / PoliteTimer / IsWaitingBehindFriend still
-        //     untouched — they can still use cover and trade).
+        // V4.3 added: defender HurryTimer cleared (wins the race vs
+        // AlwaysRushing for Entry-tagged defenders), SafeTime raised 3→6,
+        // carrier HurryTimer 20→30 + IsRunning forced.
+        //
+        // V4.4 calibration (current): always-on IsRunning for the carrier
+        // looked robotic. Now we 50/50 coinflip the run/walk decision on
+        // ~3s windows (see _carrierRunFlipAt + _carrierRunDecision state).
+        // Across a round the carrier visibly alternates pace, which reads
+        // as a real pro making situational decisions instead of a hold-W
+        // bot. The other V4.3 bumps (defender HurryTimer clear, SafeTime=6,
+        // carrier HurryTimer=30) stay as they are — those were the bits
+        // that actually fixed the CT-too-aggressive complaint.
         //
         // What BombFocus does per phase (V4.3 values):
         //   PRE-PLANT  T (attacker):  HurryTimer.Duration = 10s, refreshed
@@ -675,16 +682,20 @@ public class ProImitator : BasePlugin
 
             // Bomb carrier on pre-plant T-side: more site-focused than the
             // rest of the T side, but still strategic. V4.3 = HurryTimer
-            // 30s (vs 10s for other Ts) + IsRunning=true (always runs, no
-            // walk). The forced run is the visible "this bot is on
-            // mission" signal; the longer hurry horizon biases their path
-            // choice toward the assigned site.
+            // 30s (vs 10s for other Ts) + IsRunning=true (always runs).
             //
-            // V4.1's full timer wipe (SneakTimer / PoliteTimer /
-            // IsWaitingBehindFriend cleared) stays REMOVED — those wiped
+            // V4.4 calibration: always-on IsRunning was too robotic. Now
+            // we coin-flip every CarrierRunFlipIntervalSec (~3s) whether
+            // to force the run for the next interval. Half the time the
+            // carrier sprints, half the time they let the engine pick the
+            // pace (walk-carry, situational crouch, etc). Produces visible
+            // run/walk alternation across the round that reads as a real
+            // pro making situational pace decisions.
+            //
+            // V4.1's timer wipes (SneakTimer / PoliteTimer /
+            // IsWaitingBehindFriend cleared) stay REMOVED — those wiped
             // away the "strategic" behaviour the user wants the carrier
-            // to keep. They still use cover, still wait for trades, still
-            // pause at angles; they just run a bit faster toward the site.
+            // to keep.
             if (isT && !_bombPlanted && IsCarryingBomb(pawn))
             {
                 CountdownTimer hurry = bot.HurryTimer;
@@ -695,8 +706,21 @@ public class ProImitator : BasePlugin
                 ref float hurryTimestamp = ref hurry.Timestamp;
                 hurryTimestamp           = now + 30.0f;
 
-                ref bool isRunning = ref bot.IsRunning;
-                isRunning = true;
+                // 50/50 run/walk coinflip cached for CarrierRunFlipIntervalSec.
+                // Decision flips ~every 3 seconds so the carrier alternates
+                // visibly across the round rather than flickering each tick.
+                if (!_carrierRunFlipAt.TryGetValue(player.Slot, out float flipAt)
+                    || now > flipAt)
+                {
+                    _carrierRunDecision[player.Slot] = _rng.NextDouble() < 0.5;
+                    _carrierRunFlipAt[player.Slot]   = now + CarrierRunFlipIntervalSec;
+                }
+
+                if (_carrierRunDecision.GetValueOrDefault(player.Slot, false))
+                {
+                    ref bool isRunning = ref bot.IsRunning;
+                    isRunning = true;
+                }
             }
         }
 
