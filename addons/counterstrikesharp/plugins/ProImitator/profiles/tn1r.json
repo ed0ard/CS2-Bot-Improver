@@ -1,0 +1,25 @@
+{
+  "Name": "tN1R",
+
+  "MatchByName": ["tN1R", "tn1r"],
+
+  "Role": "Lurker",
+
+  "Description": "Andrey 'tN1R' Tatarinovich — Belarusian rifler joined Spirit September 2025 from HEROIC. T-side lurker, CT anchor, supports donk. 73/100 HLTV clutch rating — the closer when rounds break down.",
+
+  "AlwaysRushing":          false,
+  "NeverSneaks":            false,
+  "NeverPolite":            false,
+  "NoSafeTime":             true,
+  "NoPanic":                true,
+
+  "NoCrouchWithRifle":      false,
+  "NeverWaitsBetweenShots": false,
+  "NoApproachPause":        false,
+  "Rifler":                 true,
+
+  "CounterStrafeChance":    0.75,
+
+  "KnifeRush":              true,
+  "KnifeRushSec":           7.5
+}

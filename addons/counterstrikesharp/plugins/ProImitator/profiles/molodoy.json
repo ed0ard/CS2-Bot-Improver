@@ -1,0 +1,26 @@
+{
+  "Name": "molodoy",
+
+  "MatchByName": ["molodoy"],
+
+  "Role": "AWPer",
+
+  "Description": "FURIA's primary AWPer. Elite clutch-round performer, the sniper closing rounds. Patient holding angles, picks the right peeks. Plays the role disciplined — saves the AWP rather than half-buying.",
+
+  "AlwaysRushing":          false,
+  "NeverSneaks":            false,
+  "NeverPolite":            true,
+  "NoSafeTime":             false,
+  "NoPanic":                true,
+
+  "NoCrouchWithRifle":      false,
+  "NeverWaitsBetweenShots": false,
+  "NoApproachPause":        false,
+  "Rifler":                 false,
+  "AWPer":                  true,
+
+  "CounterStrafeChance":    0.85,
+
+  "KnifeRush":              true,
+  "KnifeRushSec":           7.0
+}

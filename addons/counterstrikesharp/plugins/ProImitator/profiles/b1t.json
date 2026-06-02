@@ -1,0 +1,25 @@
+{
+  "Name": "b1t",
+
+  "MatchByName": ["b1t"],
+
+  "Role": "Star rifler",
+
+  "Description": "Valeriy 'b1t' Vakhovskyi — Ukrainian NaVi prodigy. Precision rifler, clutch potential, plays both star duels and supportive positions. The successor to s1mple's NaVi legacy on rifles.",
+
+  "AlwaysRushing":          false,
+  "NeverSneaks":            true,
+  "NeverPolite":            true,
+  "NoSafeTime":             true,
+  "NoPanic":                true,
+
+  "NoCrouchWithRifle":      true,
+  "NeverWaitsBetweenShots": false,
+  "NoApproachPause":        false,
+  "Rifler":                 true,
+
+  "CounterStrafeChance":    0.75,
+
+  "KnifeRush":              true,
+  "KnifeRushSec":           6.0
+}

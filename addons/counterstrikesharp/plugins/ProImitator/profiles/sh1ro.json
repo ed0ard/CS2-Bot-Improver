@@ -1,0 +1,26 @@
+{
+  "Name": "sh1ro",
+
+  "MatchByName": ["sh1ro"],
+
+  "Role": "AWPer",
+
+  "Description": "Dmitry 'sh1ro' Sokolov — Russian world-class AWPer. Ex-Gambit/Cloud9 dynasty. The 'closer' role in Spirit — holds angles, takes the last AWP shot of the round. Patient, methodical, low-tilt.",
+
+  "AlwaysRushing":          false,
+  "NeverSneaks":            false,
+  "NeverPolite":            true,
+  "NoSafeTime":             false,
+  "NoPanic":                true,
+
+  "NoCrouchWithRifle":      false,
+  "NeverWaitsBetweenShots": false,
+  "NoApproachPause":        false,
+  "Rifler":                 false,
+  "AWPer":                  true,
+
+  "CounterStrafeChance":    0.85,
+
+  "KnifeRush":              true,
+  "KnifeRushSec":           7.5
+}

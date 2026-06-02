@@ -1,0 +1,26 @@
+{
+  "Name": "w0nderful",
+
+  "MatchByName": ["w0nderful", "wonderful"],
+
+  "Role": "AWPer",
+
+  "Description": "Ihor 'w0nderful' Zhdanov — Ukrainian AWP prodigy, joined NaVi 2023. Patient hold of long angles, picks his peeks carefully. Disciplined AWP buys — never half-buys with Scout when AWP is out of budget.",
+
+  "AlwaysRushing":          false,
+  "NeverSneaks":            false,
+  "NeverPolite":            true,
+  "NoSafeTime":             false,
+  "NoPanic":                true,
+
+  "NoCrouchWithRifle":      false,
+  "NeverWaitsBetweenShots": false,
+  "NoApproachPause":        false,
+  "Rifler":                 false,
+  "AWPer":                  true,
+
+  "CounterStrafeChance":    0.85,
+
+  "KnifeRush":              true,
+  "KnifeRushSec":           7.5
+}

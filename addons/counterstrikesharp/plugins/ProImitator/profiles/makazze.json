@@ -1,0 +1,25 @@
+{
+  "Name": "makazze",
+
+  "MatchByName": ["makazze"],
+
+  "Role": "Entry rifler",
+
+  "Description": "Drin 'makazze' Shaqiri — 19-year-old Kosovo hyper-aggressive entry. From NAVI Junior to main roster July 2025. ESL Pro League S23 MVP. Pure space-taker — pushes forward, forces rotations, opens rounds.",
+
+  "AlwaysRushing":          true,
+  "NeverSneaks":            true,
+  "NeverPolite":            true,
+  "NoSafeTime":             true,
+  "NoPanic":                true,
+
+  "NoCrouchWithRifle":      true,
+  "NeverWaitsBetweenShots": false,
+  "NoApproachPause":        true,
+  "Rifler":                 true,
+
+  "CounterStrafeChance":    0.75,
+
+  "KnifeRush":              true,
+  "KnifeRushSec":           4.5
+}

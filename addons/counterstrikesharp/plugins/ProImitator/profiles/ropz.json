@@ -1,0 +1,25 @@
+{
+  "Name": "ropz",
+
+  "MatchByName": ["ropz"],
+
+  "Role": "Lurker",
+
+  "Description": "Robin 'ropz' Kool — Estonian lurker, ex-FaZe veteran. HLTV #3 in 2025. Meticulous timing-based flanks, 1v2/1v3 clutch master. Plays solo on the flank to catch rotators, prefers slow methodical pace, never overextends. He sneaks, he waits, then takes the duel that breaks the round.",
+
+  "AlwaysRushing":          false,
+  "NeverSneaks":            false,
+  "NeverPolite":            false,
+  "NoSafeTime":             true,
+  "NoPanic":                true,
+
+  "NoCrouchWithRifle":      false,
+  "NeverWaitsBetweenShots": false,
+  "NoApproachPause":        false,
+  "Rifler":                 true,
+
+  "CounterStrafeChance":    0.75,
+
+  "KnifeRush":              true,
+  "KnifeRushSec":           7.5
+}

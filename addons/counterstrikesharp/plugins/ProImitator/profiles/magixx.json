@@ -1,0 +1,25 @@
+{
+  "Name": "magixx",
+
+  "MatchByName": ["magixx"],
+
+  "Role": "IGL",
+
+  "Description": "Boris 'magixx' Vorobiev — Russian rifler, new Spirit captain. Returned to the active roster late 2025. Calls rounds while rifling, builds the team around donk's entry firepower.",
+
+  "AlwaysRushing":          false,
+  "NeverSneaks":            true,
+  "NeverPolite":            false,
+  "NoSafeTime":             true,
+  "NoPanic":                true,
+
+  "NoCrouchWithRifle":      false,
+  "NeverWaitsBetweenShots": false,
+  "NoApproachPause":        false,
+  "Rifler":                 true,
+
+  "CounterStrafeChance":    0.75,
+
+  "KnifeRush":              true,
+  "KnifeRushSec":           7.0
+}

@@ -1,0 +1,25 @@
+{
+  "Name": "mezii",
+
+  "MatchByName": ["mezii"],
+
+  "Role": "Support rifler",
+
+  "Description": "William 'mezii' Merriman — British support rifler for Vitality. Anchors hard sites, prioritises utility (flashes, mollies, smokes for teammates). Versatile second-in on attack and primary anchor on defense. Stats less flashy than ZywOo/ropz but consistent trade kills make Vitality's structure work.",
+
+  "AlwaysRushing":          false,
+  "NeverSneaks":            true,
+  "NeverPolite":            false,
+  "NoSafeTime":             true,
+  "NoPanic":                true,
+
+  "NoCrouchWithRifle":      false,
+  "NeverWaitsBetweenShots": false,
+  "NoApproachPause":        false,
+  "Rifler":                 true,
+
+  "CounterStrafeChance":    0.75,
+
+  "KnifeRush":              true,
+  "KnifeRushSec":           6.0
+}

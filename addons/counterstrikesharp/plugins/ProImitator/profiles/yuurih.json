@@ -1,0 +1,25 @@
+{
+  "Name": "yuurih",
+
+  "MatchByName": ["yuurih"],
+
+  "Role": "Star rifler",
+
+  "Description": "Yuri 'yuurih' Santos — Brazilian star rifler, longest-tenured FURIA member. Consistent firepower, plays both entry and second-in depending on call. Stand-spray identity with rifles, never timid in duels.",
+
+  "AlwaysRushing":          false,
+  "NeverSneaks":            true,
+  "NeverPolite":            true,
+  "NoSafeTime":             true,
+  "NoPanic":                true,
+
+  "NoCrouchWithRifle":      true,
+  "NeverWaitsBetweenShots": false,
+  "NoApproachPause":        false,
+  "Rifler":                 true,
+
+  "CounterStrafeChance":    0.75,
+
+  "KnifeRush":              true,
+  "KnifeRushSec":           6.0
+}

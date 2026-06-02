@@ -1,0 +1,25 @@
+{
+  "Name": "KSCERATO",
+
+  "MatchByName": ["KSCERATO", "kscerato"],
+
+  "Role": "Star rifler",
+
+  "Description": "Kaike 'KSCERATO' Cerato — Brazilian star rifler, FURIA's other consistent firepower alongside yuurih. Clean stand-spray, takes star duels, anchors sites on defense. Together with yuurih the rifling core that has defined FURIA's best periods.",
+
+  "AlwaysRushing":          false,
+  "NeverSneaks":            true,
+  "NeverPolite":            true,
+  "NoSafeTime":             true,
+  "NoPanic":                true,
+
+  "NoCrouchWithRifle":      true,
+  "NeverWaitsBetweenShots": false,
+  "NoApproachPause":        false,
+  "Rifler":                 true,
+
+  "CounterStrafeChance":    0.75,
+
+  "KnifeRush":              true,
+  "KnifeRushSec":           6.0
+}

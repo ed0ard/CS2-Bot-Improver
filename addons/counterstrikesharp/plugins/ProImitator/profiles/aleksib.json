@@ -1,0 +1,25 @@
+{
+  "Name": "Aleksib",
+
+  "MatchByName": ["Aleksib", "aleksib"],
+
+  "Role": "IGL",
+
+  "Description": "Aleksi 'Aleksib' Virolainen — Finnish veteran IGL of NaVi. ENCE/OG/G2 history. Tactical caller, default-heavy style, builds rounds around utility execution. Plays support rifle behind his stars.",
+
+  "AlwaysRushing":          false,
+  "NeverSneaks":            true,
+  "NeverPolite":            false,
+  "NoSafeTime":             true,
+  "NoPanic":                true,
+
+  "NoCrouchWithRifle":      false,
+  "NeverWaitsBetweenShots": false,
+  "NoApproachPause":        false,
+  "Rifler":                 true,
+
+  "CounterStrafeChance":    0.75,
+
+  "KnifeRush":              true,
+  "KnifeRushSec":           7.0
+}

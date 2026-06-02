@@ -1,0 +1,25 @@
+{
+  "Name": "YEKINDAR",
+
+  "MatchByName": ["YEKINDAR", "yekindar"],
+
+  "Role": "Entry rifler",
+
+  "Description": "Mareks 'YEKINDAR' Gaļinskis — Latvian aggressive entry, ex-Liquid star. Hyper-aggressive opening duels, fearless commit, adds a new dimension to FURIA's attacking game. The hold-W energy of the squad.",
+
+  "AlwaysRushing":          true,
+  "NeverSneaks":            true,
+  "NeverPolite":            true,
+  "NoSafeTime":             true,
+  "NoPanic":                true,
+
+  "NoCrouchWithRifle":      true,
+  "NeverWaitsBetweenShots": false,
+  "NoApproachPause":        true,
+  "Rifler":                 true,
+
+  "CounterStrafeChance":    0.75,
+
+  "KnifeRush":              true,
+  "KnifeRushSec":           4.5
+}

@@ -1,0 +1,25 @@
+{
+  "Name": "kyousuke",
+
+  "MatchByName": ["kyousuke"],
+
+  "Role": "Entry rifler",
+
+  "Description": "Maxim 'kyousuke' Lukin — 18-year-old Russian aim freak, Falcons entry fragger. Youngest member of a Tier-1 team. High opener success, low clutch — pure first-duel specialist. Hold-W with surgical aim.",
+
+  "AlwaysRushing":          true,
+  "NeverSneaks":            true,
+  "NeverPolite":            true,
+  "NoSafeTime":             true,
+  "NoPanic":                true,
+
+  "NoCrouchWithRifle":      true,
+  "NeverWaitsBetweenShots": false,
+  "NoApproachPause":        true,
+  "Rifler":                 true,
+
+  "CounterStrafeChance":    0.75,
+
+  "KnifeRush":              true,
+  "KnifeRushSec":           5.0
+}

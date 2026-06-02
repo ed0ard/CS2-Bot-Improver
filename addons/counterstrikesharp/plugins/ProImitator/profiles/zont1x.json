@@ -1,0 +1,25 @@
+{
+  "Name": "zont1x",
+
+  "MatchByName": ["zont1x"],
+
+  "Role": "Entry rifler",
+
+  "Description": "Myroslav 'zont1x' Plakhotia — Ukrainian entry rifler, returned to Spirit late 2025. Space-taker alongside donk on T-side. Aggressive opener, opens up rounds with raw aim.",
+
+  "AlwaysRushing":          true,
+  "NeverSneaks":            true,
+  "NeverPolite":            true,
+  "NoSafeTime":             true,
+  "NoPanic":                true,
+
+  "NoCrouchWithRifle":      true,
+  "NeverWaitsBetweenShots": false,
+  "NoApproachPause":        true,
+  "Rifler":                 true,
+
+  "CounterStrafeChance":    0.75,
+
+  "KnifeRush":              true,
+  "KnifeRushSec":           5.0
+}
