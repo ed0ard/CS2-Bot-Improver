@@ -15,12 +15,22 @@
   "MatchByName": ["ExamplePro"],
 
   // Display-only role tag, shown in `pro_list`. Purely documentation: does
-  // NOT change behavior. The point is to make a 5-bot roster legible at a
-  // glance ("oh, this team has 2 entries, 1 AWPer, 1 lurker, 1 IGL") and to
-  // remind profile authors to pick a coherent set of traits for the role
-  // they're modelling. Suggested values: "Entry rifler", "Star rifler",
-  // "Lurker", "AWPer", "AWPer (aggressive)", "IGL", "Support".
-  "Role": "Entry rifler",
+  // NOT change behavior. Use the canonical 5 CS2 roles (dmarket taxonomy):
+  //
+  //   "Entry Fragger" — aggressive first-in, breaks defenses
+  //   "Support"       — utility-heavy, enables Entry/AWPer, anchors sites
+  //   "Lurker"        — stealthy independent flanker, gathers info
+  //   "AWPer"         — long-range sniper, picks holds angles
+  //   "IGL"           — coordinator, calls strats, makes economic decisions
+  //
+  // Players often fill 2 roles depending on side / situation. Use a comma:
+  //   "IGL, Support"          (typical for IGLs who play support secondary)
+  //   "Lurker, Entry Fragger" (flexible rifler shifting per round)
+  //   "Entry Fragger, Lurker" (star rifler with solo-flank tendencies)
+  //
+  // Convention: the FIRST role listed is the primary; the second is the
+  // common secondary. Behavioral flags below should match the primary.
+  "Role": "Entry Fragger",
 
   // Free-form notes for future maintainers. Not displayed at runtime.
   "Description": "Notes on this player's playstyle and why we chose these traits.",
