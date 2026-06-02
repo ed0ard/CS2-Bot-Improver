@@ -249,13 +249,9 @@ public class ProImitator : BasePlugin
             // Rifler wins by reading first.
             if (prof.Rifler)
             {
-                // Both AK and M4A1 cost 2700 in current CS2 (Valve aligned
-                // the prices in a recent update). Note: BotBuy.cs still has
-                // M4A1 at 2900 in its price table — that's a stale BotBuy
-                // bug, separate from ProImitator. We use the engine's real
-                // current price so our deduction matches what CS2 thinks.
+                // Prices mirror BotBuy.cs price table (AK 2700, M4A4 2900).
                 string preferred = isT ? "weapon_ak47" : "weapon_m4a1";
-                int    price     = 2700;
+                int    price     = isT ? 2700        : 2900;
                 TryBuyRoleWeapon(player, pawn, preferred, price);
             }
             else if (prof.AWPer)
@@ -734,11 +730,11 @@ public sealed class ProProfile
     public bool NoApproachPause      { get; set; } = false;
 
     // "I main rifles." Two effects:
-    //   1. At round-freeze: if the bot has the AK / M4A1 full price (2700,
-    //      same for both in current CS2) in cash AND doesn't already own
-    //      the preferred rifle, buy it. Any other big primary the engine
-    //      gave them is dropped (sunk cost). No refunds, no fake money —
-    //      strict "buy iff you have the cash".
+    //   1. At round-freeze: if the bot has the full price in cash (AK 2700
+    //      for T, M4A4 2900 for CT) AND doesn't already own the preferred
+    //      rifle, buy it. Any other big primary the engine gave them is
+    //      dropped (sunk cost). No refunds, no fake money — strict "buy
+    //      iff you have the cash".
     //   2. Per tick: if the bot is holding a non-rifle but already owns one,
     //      `use weapon_*` switches them back to it.
     public bool Rifler               { get; set; } = false;
