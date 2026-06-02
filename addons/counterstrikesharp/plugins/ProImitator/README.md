@@ -54,15 +54,17 @@ examples), so it ships safely.
    ```
 3. Inspect at any time:
    ```
-   css_pro_list       # all profiles loaded from disk
-   css_pro_assigned   # which live bots currently have a profile
-   css_pro_reload     # re-read profiles after editing JSON
+   pro_list       # all profiles loaded from disk
+   pro_assigned   # which live bots currently have a profile
+   pro_reload     # re-read profiles after editing JSON
    ```
+   These are plain game console commands (no `css_` prefix), same UX as
+   `bot_aim` / `bot_nades` — no admin permission needed.
 
 ## Adding a new pro
 
 Copy `profiles/_template.json` to e.g. `profiles/zywoo.json`, set `Name` and
-`MatchByName`, then toggle the behavior flags. Run `css_pro_reload` to pick up
+`MatchByName`, then toggle the behavior flags. Run `pro_reload` to pick up
 the change without restarting the server.
 
 If you need a trait that isn't represented by an existing flag, the recipe is:

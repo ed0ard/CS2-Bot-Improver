@@ -88,6 +88,14 @@ public class ProImitator : BasePlugin
         RegisterEventHandler<EventPlayerTeam>(OnPlayerTeam);
         RegisterListener<Listeners.OnTick>(OnTick);
 
+        // Register commands as plain game console commands (mirrors how the
+        // rest of the suite exposes `bot_aim`, `bot_nades`, etc.) so they
+        // don't hit the CSS admin permission check that `css_*` commands do
+        // by default. Public inspection commands; no destructive operations.
+        AddCommand("pro_list",     "List Pro-Imitator profiles loaded from disk",          OnProListCmd);
+        AddCommand("pro_assigned", "List bots that currently have a Pro-Imitator profile", OnProAssignedCmd);
+        AddCommand("pro_reload",   "Re-read JSON profiles from disk",                       OnProReloadCmd);
+
         Console.WriteLine($"[Pro-Imitator] loaded with {_profiles.Count} profile(s): "
                           + string.Join(", ", _profiles.Values.Select(p => p.Name)));
     }
@@ -449,12 +457,11 @@ public class ProImitator : BasePlugin
         return null;
     }
     // -------------------------------------------------------------------------
-    // Console commands. Mirrors the convention used elsewhere in the suite:
-    // `css_*` prefix, [ConsoleCommand] + [CommandHelper] attributes, reply via
-    // CommandInfo so both server console and client console see the output.
+    // Console commands. Exposed via AddCommand (not the `[ConsoleCommand]`
+    // attribute with a `css_*` name) so they behave like the suite's other
+    // user-facing commands (`bot_aim`, `bot_nades`) instead of hitting the CSS
+    // admin permission check. All commands are read-only / informational.
     // -------------------------------------------------------------------------
-    [ConsoleCommand("css_pro_list", "List Pro-Imitator profiles loaded from disk")]
-    [CommandHelper(minArgs: 0, usage: "", whoCanExecute: CommandUsage.CLIENT_AND_SERVER)]
     public void OnProListCmd(CCSPlayerController? caller, CommandInfo cmd)
     {
         if (_profiles.Count == 0)
@@ -471,8 +478,6 @@ public class ProImitator : BasePlugin
         }
     }
     // -------------------------------------------------------------------------
-    [ConsoleCommand("css_pro_assigned", "List bots that currently have a Pro-Imitator profile attached")]
-    [CommandHelper(minArgs: 0, usage: "", whoCanExecute: CommandUsage.CLIENT_AND_SERVER)]
     public void OnProAssignedCmd(CCSPlayerController? caller, CommandInfo cmd)
     {
         if (_assigned.Count == 0)
@@ -498,8 +503,6 @@ public class ProImitator : BasePlugin
         }
     }
     // -------------------------------------------------------------------------
-    [ConsoleCommand("css_pro_reload", "Re-read JSON profiles from disk and re-evaluate all bots")]
-    [CommandHelper(minArgs: 0, usage: "", whoCanExecute: CommandUsage.CLIENT_AND_SERVER)]
     public void OnProReloadCmd(CCSPlayerController? caller, CommandInfo cmd)
     {
         int oldCount = _profiles.Count;
