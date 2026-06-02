@@ -69,6 +69,16 @@ public class ProImitator : BasePlugin
     private readonly Dictionary<int, float> _lastWeaponSwitchAt = new();
     private const float WeaponSwitchCooldownSec = 0.5f;
 
+    // CounterStrafes state. The pro behavior we're simulating: bot rushes,
+    // first sees an enemy (IsAimingAtEnemy transitions false -> true), then
+    // we kill its lateral velocity for ~120ms so the first tap lands with
+    // CS's full-accuracy "standing still" penalty applied. Real human pros
+    // do this via A+D-tap inputs that cancel momentum within 1-3 frames; here
+    // we just zero the schema field, same observable effect.
+    private readonly Dictionary<int, bool> _wasAimingAtEnemy = new();
+    private readonly Dictionary<int, float> _counterStrafeUntil = new();
+    private const float CounterStrafeDurationSec = 0.12f;
+
     // -------------------------------------------------------------------------
     public override void Load(bool hotReload)
     {
@@ -159,6 +169,8 @@ public class ProImitator : BasePlugin
         {
             _assigned.Remove(player.Slot);
             _lastWeaponSwitchAt.Remove(player.Slot);
+            _wasAimingAtEnemy.Remove(player.Slot);
+            _counterStrafeUntil.Remove(player.Slot);
         }
 
         return HookResult.Continue;
@@ -352,6 +364,41 @@ public class ProImitator : BasePlugin
             checkedHidingSpotCount = 0;
         }
 
+        if (prof.CounterStrafes)
+        {
+            // Engagement-onset velocity kill. The pro tap-shot rhythm:
+            //   rush -> see enemy -> *brief stop* -> first tap (accurate) -> resume
+            //
+            // We detect the false->true edge of IsAimingAtEnemy and schedule
+            // ~120ms of zeroed lateral velocity. During that window, even if
+            // the bot's pathfinder is still trying to push forward, the
+            // velocity write each tick keeps it pinned in place.
+            //
+            // Once the window expires, normal movement resumes — so this
+            // doesn't turn donk into a stationary turret in a sustained
+            // spray, just gives him the iconic mid-rush counter-strafe stop
+            // on EVERY new engagement.
+            bool isAimingAtEnemy = bot.IsAimingAtEnemy;
+            bool wasAiming = _wasAimingAtEnemy.GetValueOrDefault(player.Slot, false);
+
+            if (isAimingAtEnemy && !wasAiming)
+                _counterStrafeUntil[player.Slot] = now + CounterStrafeDurationSec;
+
+            if (_counterStrafeUntil.TryGetValue(player.Slot, out float until) && now < until)
+            {
+                // Only stomp velocity if the bot is actually moving — avoids
+                // a useless SetStateChanged when he's already at rest.
+                if (MathF.Abs(pawn.AbsVelocity.X) > 1f || MathF.Abs(pawn.AbsVelocity.Y) > 1f)
+                {
+                    pawn.AbsVelocity.X = 0f;
+                    pawn.AbsVelocity.Y = 0f;
+                    Utilities.SetStateChanged(pawn, "CBaseEntity", "m_vecAbsVelocity");
+                }
+            }
+
+            _wasAimingAtEnemy[player.Slot] = isAimingAtEnemy;
+        }
+
         if (prof.RifleOnly)
         {
             // Force-prefer rifles when the bot is holding something else but
@@ -513,4 +560,11 @@ public sealed class ProProfile
     // a rifle in inventory. Does NOT give weapons (would break the economy);
     // pair with a coordinated BotBuy of `ak47` / `m4a1` / `aug` etc.
     public bool RifleOnly            { get; set; } = false;
+
+    // Counter-strafe at engagement onset. When the bot first sees an enemy
+    // (IsAimingAtEnemy transitions false->true), zero its lateral velocity
+    // for ~120ms so the first tap-shot lands with full standing-still
+    // accuracy. Pro-rusher signature; without this the bot run-and-guns and
+    // ALWAYS sprays which is visually wrong.
+    public bool CounterStrafes       { get; set; } = false;
 }

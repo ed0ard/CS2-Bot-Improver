@@ -3,7 +3,7 @@
 
   "MatchByName": ["donk"],
 
-  "Description": "Danil 'donk' Kryshkovets — Team Spirit star entry fragger. Hold-W mentality but calculated. Forces raw-aim duels at close to mid range with rifles, no AWP. Rated #1 by HLTV in 2024 as a 17-year-old prodigy. Iconic stand-spray with AK, never crouches with rifles, rifle-only (AK/M4) — never swaps to pistol or SMG when a rifle is available.",
+  "Description": "Danil 'donk' Kryshkovets — Team Spirit star entry fragger. Hold-W mentality but calculated. Forces raw-aim duels at close to mid range with rifles, no AWP. Rated #1 by HLTV in 2024 as a 17-year-old prodigy. Iconic: stand-spray with AK, never crouches with rifles, counter-strafes mid-rush before each first tap, rifle-only (never swaps to pistol/SMG when a rifle is available).",
 
   "AlwaysRushing":          true,
   "NeverSneaks":            true,
@@ -14,5 +14,6 @@
   "NoCrouchWithRifle":      true,
   "NeverWaitsBetweenShots": true,
   "NoApproachPause":        true,
-  "RifleOnly":              true
+  "RifleOnly":              true,
+  "CounterStrafes":         true
 }
