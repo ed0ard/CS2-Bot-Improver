@@ -350,6 +350,14 @@ public class ProImitator : BasePlugin
             // Rifler wins by reading first.
             if (prof.Rifler)
             {
+                // V4.7 — pickup-respect: if the bot already has ANY rifle
+                // (e.g. a CT mezii carrying over the AK he picked up off a
+                // dead T last round), don't force the role primary. Skip
+                // the M4 buy and let him keep the AK. AK is the universal
+                // pro favourite — no Rifler profile would willingly drop
+                // it for a M4 just because they're on CT.
+                if (FindOwnedRifle(pawn) != null) continue;
+
                 // Prices mirror BotBuy.cs price table (AK 2700, M4A4 2900).
                 string preferred = isT ? "weapon_ak47" : "weapon_m4a1";
                 int    price     = isT ? 2700        : 2900;
@@ -357,6 +365,10 @@ public class ProImitator : BasePlugin
             }
             else if (prof.AWPer)
             {
+                // Same pickup-respect logic for AWPers — if they already
+                // have any sniper (AWP or SSG08), don't force-buy on top.
+                if (FindOwnedSniper(pawn) != null) continue;
+
                 TryBuyRoleWeapon(player, pawn, "weapon_awp", 4750);
             }
         }
@@ -894,17 +906,26 @@ public class ProImitator : BasePlugin
             bool holdingKnife = activeWeapon != null && activeWeapon.StartsWith("weapon_knife");
             if (!holdingKnife)
             {
-                // V4.6 — `bot_command` does not exist in CS2 (verified by
-                // "Unknown command: bot_command" log spam in playtests). The
-                // dual-path V4.1 trick is gone; we keep only `slot3`. If the
-                // bot AI continues to outrace `slot3`, the next escalation
-                // would be a direct schema write to
-                // pawn.WeaponServices.ActiveWeapon (not implemented yet —
-                // brittle without confirmed schema-field semantics in CSS).
+                // V4.7 — direct schema write to the active-weapon handle.
                 //
-                // No cooldown: re-issue every tick until activeWeapon
-                // actually becomes a knife. Once holdingKnife=true the loop
-                // stops issuing.
+                // None of the other plugins in the ed0ard suite (BotState,
+                // BotAI, BotBuy, BotAimImprover) attempt active-weapon
+                // switching for bots, so we have no reference pattern.
+                // Playtests confirmed `slot3` and `use weapon_knife`
+                // commands lose the race against the engine's bot-AI weapon
+                // selection (which runs every server tick).
+                //
+                // Schema write bypasses the command queue entirely: we set
+                // CPlayer_WeaponServices.m_hActiveWeapon directly to the
+                // knife's handle, then SetStateChanged tells the network
+                // layer to broadcast the update. The engine reads this
+                // field on the same tick its bot-AI runs, so we no longer
+                // race.
+                //
+                // We keep the `slot3` issue as a belt-and-braces fallback:
+                // if the schema write ever fails (CS2 schema rename, CSS
+                // API change), the command path still tries.
+                TrySetActiveKnife(pawn);
                 NativeAPI.IssueClientCommand((int)player.Slot, "slot3");
             }
         }
@@ -954,6 +975,54 @@ public class ProImitator : BasePlugin
                     _lastWeaponSwitchAt[player.Slot] = now;
                 }
             }
+        }
+    }
+    // -------------------------------------------------------------------------
+    // V4.7 — Direct schema-level active-weapon switch to a knife. Bypasses
+    // the command queue (which the bot AI was outracing for `slot3`).
+    //
+    // Mechanism: walk MyWeapons, find a weapon_knife*, copy its handle's
+    // raw uint into m_hActiveWeapon on the pawn's WeaponServices, then
+    // SetStateChanged so the network layer broadcasts the change.
+    //
+    // Caveats (read before touching):
+    //   - This assumes CSS exposes a settable `.Raw` on NetworkedCHandle.
+    //     If a future CSS update locks that, this no-ops silently and the
+    //     `slot3` fallback in the caller takes over.
+    //   - Schema-field path "m_pWeaponServices" matches the embedded sub-
+    //     object on CCSPlayerPawn. If a CS2 schema rename ever changes
+    //     this, SetStateChanged becomes a no-op and the engine still
+    //     reads the old handle until next natural switch.
+    //   - The try/catch swallows any unexpected nulls — silent failure is
+    //     preferable to crashing the server tick for an observability /
+    //     polish feature.
+    // -------------------------------------------------------------------------
+    private static void TrySetActiveKnife(CCSPlayerPawn pawn)
+    {
+        try
+        {
+            var ws = pawn.WeaponServices;
+            if (ws == null) return;
+            var myWeapons = ws.MyWeapons;
+            if (myWeapons == null) return;
+
+            foreach (var handle in myWeapons)
+            {
+                var weapon = handle.Value;
+                if (weapon == null || !weapon.IsValid) continue;
+                string? designer = weapon.DesignerName;
+                if (designer == null || !designer.StartsWith("weapon_knife")) continue;
+
+                // Set ActiveWeapon to point at this knife handle.
+                ws.ActiveWeapon.Raw = handle.Raw;
+                Utilities.SetStateChanged(pawn, "CCSPlayerPawn", "m_pWeaponServices");
+                return;
+            }
+        }
+        catch
+        {
+            // Schema field renamed, handle API changed, or pawn pointer
+            // briefly invalid. Caller still issues slot3 as fallback.
         }
     }
     // -------------------------------------------------------------------------
@@ -1037,24 +1106,34 @@ public class ProImitator : BasePlugin
     }
     // -------------------------------------------------------------------------
     // Walk the bot's weapon inventory and return the designer name of the
-    // first rifle found, or null if none. Used by RifleOnly to know what to
-    // pass to `use <weapon_*>`.
+    // preferred rifle, or null if none.
+    //
+    // V4.7 — AK preference. AK-47 is the universal pro favourite (T main
+    // weapon, but CTs who pick one up off a corpse also keep it over their
+    // M4 — see ESL meta + the user's V4.7 spec). When the bot has both an
+    // M4 and a picked-up AK in inventory, we return the AK so the per-tick
+    // Rifler switch picks it.
     // -------------------------------------------------------------------------
     private static string? FindOwnedRifle(CCSPlayerPawn pawn)
     {
         var weapons = pawn.WeaponServices?.MyWeapons;
         if (weapons == null) return null;
 
+        // Two-pass: return AK immediately if owned, otherwise the first
+        // non-AK rifle we find.
+        string? fallback = null;
         foreach (var handle in weapons)
         {
             var weapon = handle.Value;
             if (weapon == null || !weapon.IsValid) continue;
 
             string? designer = weapon.DesignerName;
-            if (designer != null && RifleDesignerNames.Contains(designer))
-                return designer;
+            if (designer == null) continue;
+
+            if (designer == "weapon_ak47") return designer;
+            if (fallback == null && RifleDesignerNames.Contains(designer)) fallback = designer;
         }
-        return null;
+        return fallback;
     }
     // -------------------------------------------------------------------------
     // Sniper-equivalent of FindOwnedRifle. AWP wins ties: we iterate in the
