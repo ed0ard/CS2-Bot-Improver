@@ -43,5 +43,31 @@
   // Force PanicTimer = 0 every tick. BotState already does this too, but
   // setting it here means the personality is self-contained if BotState ever
   // gets unloaded.
-  "NoPanic": false
+  "NoPanic": false,
+
+  // ---- V2 visual-identity traits --------------------------------------------
+  // These are the markers that make a profiled bot READ as the specific player
+  // to a spectator, rather than just "yet another aggressive bot".
+  // ---------------------------------------------------------------------------
+
+  // Force IsCrouching=false EVERY TICK whenever the bot is holding a rifle
+  // (AK47, M4A1/M4A1-S, SG556, AUG, GalilAR, FAMAS). The classifier is in
+  // RifleDesignerNames in ProImitator.cs — pistols / SMGs / snipers / shotguns
+  // are left alone so e.g. a Deagle-pop scenario still looks natural.
+  //
+  // This is the SINGLE biggest visual marker for stand-spray riflers like donk:
+  // BotState's per-shot crouch chance is 50% for rifles. Setting this trait
+  // overrides that to 0% and produces the recognisable upright-spray silhouette.
+  "NoCrouchWithRifle": false,
+
+  // Zero FireWeaponTimestamp + IsRapidFiring=true each tick. The bot never
+  // throttles its rate of fire between bursts. Pair with NoCrouchWithRifle
+  // for the "click-click-click-click" donk feel.
+  "NeverWaitsBetweenShots": false,
+
+  // Skip "pause and check angles" beats at ApproachPoints during traversal.
+  // Hyper-aggressive players are already committed before reaching the angle
+  // and engage the moment they see an enemy. Sets InhibitLookAroundTimestamp
+  // and CheckedHidingSpotCount to zero.
+  "NoApproachPause": false
 }

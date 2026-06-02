@@ -38,9 +38,23 @@ namespace ProImitator;
 public class ProImitator : BasePlugin
 {
     public override string ModuleName        => "Pro-Imitator";
-    public override string ModuleVersion     => "0.1.0";
+    public override string ModuleVersion     => "0.2.0";
     public override string ModuleAuthor      => "Contribution to ed0ard/CS2-Bot-Improver";
     public override string ModuleDescription => "Per-bot personality presets so the donk bot plays like donk";
+
+    // Weapon classifier used by NoCrouchWithRifle. Anything not in this set
+    // (pistols, SMGs, snipers, shotguns) keeps the BotState default crouch
+    // behavior so a profiled bot still crouches with e.g. a Deagle pop.
+    private static readonly HashSet<string> RifleDesignerNames = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "weapon_ak47",
+        "weapon_m4a1",
+        "weapon_m4a1_silencer",
+        "weapon_sg556",      // Krieg
+        "weapon_aug",
+        "weapon_galilar",
+        "weapon_famas",
+    };
 
     // Loaded profiles, keyed by their JSON 'Name' (lowercased) for de-dup.
     private readonly Dictionary<string, ProProfile> _profiles = new();
@@ -187,7 +201,10 @@ public class ProImitator : BasePlugin
             var bot = pawn.Bot;
             if (bot == null) continue;
 
-            ApplyPersonality(bot, prof, now);
+            // Weapon name is needed by a couple of traits. Cheap to read once.
+            string? activeWeapon = pawn.WeaponServices?.ActiveWeapon?.Value?.DesignerName;
+
+            ApplyPersonality(bot, pawn, prof, now, activeWeapon);
         }
     }
     // -------------------------------------------------------------------------
@@ -196,7 +213,7 @@ public class ProImitator : BasePlugin
     // Each block is opt-in; profiles can mix-and-match. Anything not listed in
     // a profile is left untouched (BotState's generic improvements still apply).
     // -------------------------------------------------------------------------
-    private static void ApplyPersonality(CCSBot bot, ProProfile prof, float now)
+    private static void ApplyPersonality(CCSBot bot, CCSPlayerPawn pawn, ProProfile prof, float now, string? activeWeapon)
     {
         if (prof.AlwaysRushing)
         {
@@ -278,6 +295,54 @@ public class ProImitator : BasePlugin
 
             ref float panicTimescale = ref panicTimer.Timescale;
             panicTimescale = 1.0f;
+        }
+
+        // ---------------------------------------------------------------------
+        // V2 visual-identity traits. These are the markers that make a
+        // profiled bot READ as "X player" to a spectator rather than just
+        // "generic aggressive bot".
+        // ---------------------------------------------------------------------
+
+        if (prof.NoCrouchWithRifle)
+        {
+            // donk's most iconic visual: stand-spray with rifles instead of
+            // the 50% crouch chance BotState picks for AK/M4 classes (see
+            // BotState.OnWeaponFire). Forcing IsCrouching=false every tick
+            // overrides BotState's per-shot decision when the active weapon
+            // is a rifle. Non-rifle weapons keep the BotState default so
+            // pistol-pop scenarios still look natural.
+            if (activeWeapon != null && RifleDesignerNames.Contains(activeWeapon))
+            {
+                ref bool isCrouching = ref bot.IsCrouching;
+                isCrouching = false;
+            }
+        }
+
+        if (prof.NeverWaitsBetweenShots)
+        {
+            // Zero the "next allowed shot" timer so the AI never throttles
+            // its fire rate between bursts. BotAI has memory patches in the
+            // same family (AttackState_SkipFireRateCheck) for all bots; this
+            // is the schema-level equivalent re-applied each tick.
+            ref float fireWeaponTimestamp = ref bot.FireWeaponTimestamp;
+            fireWeaponTimestamp = 0.0f;
+
+            ref bool isRapidFiring = ref bot.IsRapidFiring;
+            isRapidFiring = true;
+        }
+
+        if (prof.NoApproachPause)
+        {
+            // ApproachPoint pauses are the little "wait at the corner" beats
+            // a bot does when traversing a path. Hyper-aggressive players
+            // skip them — they're already committed before reaching the
+            // angle. Zeroing InhibitLookAroundTimestamp lets the aim system
+            // immediately scan and engage on arrival.
+            ref float inhibitLookAroundTimestamp = ref bot.InhibitLookAroundTimestamp;
+            inhibitLookAroundTimestamp = 0.0f;
+
+            ref int checkedHidingSpotCount = ref bot.CheckedHidingSpotCount;
+            checkedHidingSpotCount = 0;
         }
     }
     // -------------------------------------------------------------------------
@@ -381,4 +446,10 @@ public sealed class ProProfile
     public bool NeverPolite    { get; set; } = false;
     public bool NoSafeTime     { get; set; } = false;
     public bool NoPanic        { get; set; } = false;
+
+    // -- V2: visual-identity traits that make the bot READ as the specific
+    //    player rather than just "another aggressive bot".
+    public bool NoCrouchWithRifle    { get; set; } = false;
+    public bool NeverWaitsBetweenShots { get; set; } = false;
+    public bool NoApproachPause      { get; set; } = false;
 }
