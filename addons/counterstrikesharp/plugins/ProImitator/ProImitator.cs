@@ -275,15 +275,9 @@ public class ProImitator : BasePlugin
             if (!kvp.Value.KnifeRush) continue;
             _knifeRushUntil[kvp.Key] = now + kvp.Value.KnifeRushSec;
             knifeRushCount++;
-            if (_debugLog)
-            {
-                Console.WriteLine($"[Pro-Imitator-DBG] knife rush window opened slot={kvp.Key} profile={kvp.Value.Name} until=+{kvp.Value.KnifeRushSec:F1}s");
-            }
+            DebugBroadcast($"knife rush opened slot={kvp.Key} {kvp.Value.Name} +{kvp.Value.KnifeRushSec:F1}s");
         }
-        if (_debugLog)
-        {
-            Console.WriteLine($"[Pro-Imitator-DBG] OnRoundFreezeEnd: {_assigned.Count} profiled, {knifeRushCount} got knife rush windows");
-        }
+        DebugBroadcast($"OnRoundFreezeEnd: {_assigned.Count} profiled, {knifeRushCount} knife rush windows");
         return HookResult.Continue;
     }
     // -------------------------------------------------------------------------
@@ -315,10 +309,7 @@ public class ProImitator : BasePlugin
         _bombPlanted        = false;
         _logBombWasDropped  = false;
 
-        if (_debugLog)
-        {
-            Console.WriteLine($"[Pro-Imitator-DBG] OnRoundStart fired. assigned={_assigned.Count} bots, _bombPlanted reset to false");
-        }
+        DebugBroadcast($"OnRoundStart, assigned={_assigned.Count}, _bombPlanted reset");
 
         if (_assigned.Count == 0) return HookResult.Continue;
 
@@ -335,10 +326,7 @@ public class ProImitator : BasePlugin
     public HookResult OnBombPlanted(EventBombPlanted @event, GameEventInfo info)
     {
         _bombPlanted = true;
-        if (_debugLog)
-        {
-            Console.WriteLine("[Pro-Imitator-DBG] OnBombPlanted fired → switching to post-plant role inversion (T defender, CT attacker)");
-        }
+        DebugBroadcast("OnBombPlanted → post-plant inversion (T=defender, CT=attacker)");
         return HookResult.Continue;
     }
     // -------------------------------------------------------------------------
@@ -451,11 +439,11 @@ public class ProImitator : BasePlugin
         // Edge-log when state transitions for debug visibility.
         Vector? droppedBombPos = _bombPlanted ? null : FindDroppedBombPosition();
         bool bombDroppedNow = droppedBombPos != null;
-        if (_debugLog && bombDroppedNow != _logBombWasDropped)
+        if (bombDroppedNow != _logBombWasDropped)
         {
-            Console.WriteLine(bombDroppedNow
-                ? $"[Pro-Imitator-DBG] BOMB_DROPPED at ({droppedBombPos!.X:F0},{droppedBombPos.Y:F0},{droppedBombPos.Z:F0}) — CT in range will hold harder"
-                : "[Pro-Imitator-DBG] BOMB no longer dropped (picked up, planted, or round reset)");
+            DebugBroadcast(bombDroppedNow
+                ? $"BOMB_DROPPED at ({droppedBombPos!.X:F0},{droppedBombPos.Y:F0}) — CT within 1500u hold harder"
+                : "BOMB no longer dropped (picked up / planted / round reset)");
             _logBombWasDropped = bombDroppedNow;
         }
 
@@ -773,17 +761,16 @@ public class ProImitator : BasePlugin
             bool isCarrier = isT && !_bombPlanted && IsCarryingBomb(pawn);
 
             // Edge-logged carrier detection (state change only).
-            if (_debugLog)
             {
                 bool wasCarrier = _logWasCarrier.GetValueOrDefault(player.Slot, false);
                 if (isCarrier && !wasCarrier)
                 {
-                    Console.WriteLine($"[Pro-Imitator-DBG] CARRIER slot={player.Slot} bot={player.PlayerName} (BombFocus extra applied)");
+                    DebugBroadcast($"CARRIER {player.PlayerName} (slot={player.Slot})");
                     _logWasCarrier[player.Slot] = true;
                 }
                 else if (!isCarrier && wasCarrier)
                 {
-                    Console.WriteLine($"[Pro-Imitator-DBG] CARRIER no longer slot={player.Slot} bot={player.PlayerName}");
+                    DebugBroadcast($"CARRIER no longer {player.PlayerName}");
                     _logWasCarrier[player.Slot] = false;
                 }
             }
@@ -888,17 +875,16 @@ public class ProImitator : BasePlugin
         bool forceKnife = inKnifeRush && !inDuel;
 
         // Edge-detected log: knife force START / END (only when state flips).
-        if (_debugLog)
         {
             bool wasActive = _logKnifeForceWasActive.GetValueOrDefault(player.Slot, false);
             if (forceKnife && !wasActive)
             {
-                Console.WriteLine($"[Pro-Imitator-DBG] KNIFE_FORCE START slot={player.Slot} bot={player.PlayerName} (active={activeWeapon ?? "null"})");
+                DebugBroadcast($"KNIFE_FORCE START {player.PlayerName} (active={activeWeapon ?? "null"})");
                 _logKnifeForceWasActive[player.Slot] = true;
             }
             else if (!forceKnife && wasActive)
             {
-                Console.WriteLine($"[Pro-Imitator-DBG] KNIFE_FORCE END slot={player.Slot} bot={player.PlayerName} (active={activeWeapon ?? "null"})");
+                DebugBroadcast($"KNIFE_FORCE END {player.PlayerName} (active={activeWeapon ?? "null"})");
                 _logKnifeForceWasActive[player.Slot] = false;
             }
         }
@@ -908,26 +894,18 @@ public class ProImitator : BasePlugin
             bool holdingKnife = activeWeapon != null && activeWeapon.StartsWith("weapon_knife");
             if (!holdingKnife)
             {
-                // V4.1 — we now fire BOTH command paths every tick because
-                // playtests showed the client-only `slot3` was getting
-                // consistently outraced by the bot AI's internal weapon
-                // selection (which runs every server tick too).
-                //
-                //   1. `slot3`        — client-side slot selection. Cheap,
-                //                       maps to whatever knife the bot has.
-                //   2. `use weapon_knife` via Server.ExecuteCommand —
-                //                       server-side path through the engine's
-                //                       weapon-use logic. Different priority
-                //                       than slot3 in the command queue, so
-                //                       at least one of the two should win
-                //                       the race against the AI's auto-select
-                //                       on any given tick.
+                // V4.6 — `bot_command` does not exist in CS2 (verified by
+                // "Unknown command: bot_command" log spam in playtests). The
+                // dual-path V4.1 trick is gone; we keep only `slot3`. If the
+                // bot AI continues to outrace `slot3`, the next escalation
+                // would be a direct schema write to
+                // pawn.WeaponServices.ActiveWeapon (not implemented yet —
+                // brittle without confirmed schema-field semantics in CSS).
                 //
                 // No cooldown: re-issue every tick until activeWeapon
                 // actually becomes a knife. Once holdingKnife=true the loop
                 // stops issuing.
                 NativeAPI.IssueClientCommand((int)player.Slot, "slot3");
-                Server.ExecuteCommand($"bot_command \"{player.PlayerName}\" use weapon_knife");
             }
         }
 
@@ -1177,8 +1155,25 @@ public class ProImitator : BasePlugin
         cmd.ReplyToCommand($"[Pro-Imitator] debug logging {(_debugLog ? "ON" : "OFF")}");
         if (_debugLog)
         {
-            Console.WriteLine("[Pro-Imitator-DBG] enabled. Round lifecycle + per-bot state changes will log to this console.");
+            // Broadcast on toggle-on so all players see we just enabled debug.
+            // Subsequent logs go via DebugBroadcast which also broadcasts.
+            Server.PrintToChatAll($" \x04[ProDBG]\x01 logging enabled — events will appear here");
         }
+    }
+    // -------------------------------------------------------------------------
+    // V4.6 — Centralised debug print. Goes to BOTH the server console
+    // (Console.WriteLine, useful when running headless / via PowerShell)
+    // AND the in-game chat (PrintToChatAll, the only place a listen-server
+    // host can actually see plugin output). Gated by _debugLog so it's
+    // silent when debug isn't on.
+    //
+    // Format: green prefix "[ProDBG]" + message in default colour.
+    // -------------------------------------------------------------------------
+    private void DebugBroadcast(string msg)
+    {
+        if (!_debugLog) return;
+        Console.WriteLine($"[Pro-Imitator-DBG] {msg}");
+        Server.PrintToChatAll($" \x04[ProDBG]\x01 {msg}");
     }
 }
 // -----------------------------------------------------------------------------
