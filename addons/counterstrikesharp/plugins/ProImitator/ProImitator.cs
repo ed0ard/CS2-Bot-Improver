@@ -523,6 +523,89 @@ public class ProImitator : BasePlugin
             checkedHidingSpotCount = 0;
         }
 
+        // =====================================================================
+        // V4 — Objective awareness (BombFocus)
+        //
+        // Problem this addresses (reported during V3 testing):
+        //   Even with role-tuned aggression, CS2 bots default to "engage
+        //   whatever enemy I see, wherever I see them". On Dust2 this
+        //   produces rounds where Ts and CTs trade kills at mid for 1:45
+        //   and the bomb never gets planted. Tactical site execution and
+        //   coordinated defence are lost to fragfest behaviour.
+        //
+        // What BombFocus does (per-tick, when the trait flag is on):
+        //   T-SIDE: hard-max HurryTimer and clear CheckedHidingSpotCount so
+        //   the bot prioritises moving toward its assigned bombsite over
+        //   stopping for off-angle duels.  This stacks with AlwaysRushing
+        //   when both are set — same field writes, both intents agree.
+        //
+        //   CT-SIDE: extend SafeTime so the bot feels "safe at home" near
+        //   its assigned site. It defends the bomb plant rather than
+        //   wandering out toward mid for a long peek. Opposite intent of
+        //   NoSafeTime — these two should NOT both be set on a single
+        //   profile (mutually contradictory).
+        //
+        // What BombFocus deliberately does NOT do:
+        //   - Override the engine's bombsite assignment. CS2's nav system
+        //     decides which bot is "attacker of A vs attacker of B" at
+        //     scenario init; we don't touch that. We just nudge the timer
+        //     biases so the engine's existing plan executes more cleanly.
+        //   - Suppress combat. If an enemy actually crosses the bot's path,
+        //     normal engagement still happens. This is a *priority* bias,
+        //     not a passivity flag.
+        //   - Snapshot bomb-site entities. We rely on the engine knowing
+        //     where its own scenario objectives are; explicit nav-mesh
+        //     traversal from the C# side would be brittle and map-specific.
+        //
+        // Tuning notes for future maintainers:
+        //   The two field writes below are the smallest-footprint nudge we
+        //   could find that produced visible behaviour change in playtests.
+        //   If you add more aggressive overrides here (e.g. forcing
+        //   bot.Task or bot.GoalEntity), document the schema fields you
+        //   touch, because BotState may also write them and the load order
+        //   between the two plugins isn't guaranteed.
+        // =====================================================================
+        if (prof.BombFocus)
+        {
+            bool isT  = player.Team == CsTeam.Terrorist;
+            bool isCT = player.Team == CsTeam.CounterTerrorist;
+
+            if (isT)
+            {
+                // Max-out HurryTimer: bot stays in "rush toward goal" mode
+                // for the full round duration. Goal is decided by the
+                // engine's scenario system (the assigned bombsite).
+                CountdownTimer hurry = bot.HurryTimer;
+
+                ref float hurryDuration  = ref hurry.Duration;
+                hurryDuration            = 600.0f;
+
+                ref float hurryTimestamp = ref hurry.Timestamp;
+                hurryTimestamp           = now + 600.0f;
+
+                ref float hurryTimescale = ref hurry.Timescale;
+                hurryTimescale           = 1.0f;
+
+                // Skip hiding-spot checks while in transit — those are what
+                // makes a bot stop at mid-route corners. The engine still
+                // chooses a hiding spot once it ARRIVES at the site (which
+                // is what defence post-plant needs), this just shortens the
+                // approach phase.
+                ref int checkedHidingSpotCount = ref bot.CheckedHidingSpotCount;
+                checkedHidingSpotCount         = 0;
+            }
+            else if (isCT)
+            {
+                // Extend SafeTime: bot stays in "safe at home" perception
+                // longer, meaning it's less likely to peek out for distant
+                // duels. The engine still triggers full alertness once an
+                // enemy is actually nearby; this just stops the early-round
+                // mid-rush behaviour CTs sometimes show.
+                ref float safeTime = ref bot.SafeTime;
+                safeTime           = 8.0f;
+            }
+        }
+
         if (prof.CounterStrafeChance > 0f)
         {
             // Engagement-onset velocity kill. The pro tap-shot rhythm:
@@ -863,6 +946,25 @@ public sealed class ProProfile
     // 0.7 ~ 0.8 = pro-level: clean most of the time, occasionally misses
     //             the timing like a real human.
     public float CounterStrafeChance { get; set; } = 0f;
+
+    // V4 — Objective awareness. See the V4 banner block in ApplyPersonality
+    // for the full design discussion (problem, intent, limitations).
+    //
+    // T-side effect:  bot HurryTimer maxed, CheckedHidingSpotCount cleared.
+    //                 Pushes bot toward its assigned bombsite, less stopping
+    //                 for off-route duels.
+    // CT-side effect: bot SafeTime extended to 8s. Bot holds its assigned
+    //                 site rather than peeking out toward mid.
+    //
+    // Recommended for: Entry Fraggers, IGLs, Supports — roles that should
+    // execute the team plan. Leave OFF for Lurkers and AWPers (they play
+    // away from the main objective by design).
+    //
+    // Don't combine with NoSafeTime=true on the same profile: NoSafeTime
+    // forces SafeTime=0 every tick, BombFocus writes SafeTime=8 on CT-side
+    // every tick — the two would fight per-tick (last-write-wins) and the
+    // bot oscillates between alert and relaxed.
+    public bool BombFocus { get; set; } = false;
 
     // KnifeRush: hold knife during the peaceful early-round rush so the bot
     // gets the knife's movement bonus (~20% faster: 260 u/s vs 215 rifle,

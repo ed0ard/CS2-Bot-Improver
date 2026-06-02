@@ -20,6 +20,8 @@
 
   "CounterStrafeChance":    0.75,
 
+  "BombFocus":              true,
+
   "KnifeRush":              true,
   "KnifeRushSec":           6.0
 }

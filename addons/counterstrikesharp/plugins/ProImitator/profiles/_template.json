@@ -139,6 +139,29 @@
   // Default 0 means the trait is off; pick a value in (0, 1] to enable.
   "CounterStrafeChance": 0,
 
+  // BombFocus (V4 — objective awareness): nudges the bot to favour the
+  // round's actual win condition over mid-round fragfest behaviour.
+  //
+  //   T-SIDE:  HurryTimer maxed every tick + CheckedHidingSpotCount=0.
+  //            Bot rushes its assigned bombsite, less stopping for off-
+  //            angle duels at mid. Stacks fine with AlwaysRushing.
+  //
+  //   CT-SIDE: SafeTime set to 8s every tick. Bot holds its assigned site
+  //            rather than peeking out to mid. Opposite of NoSafeTime —
+  //            don't combine the two on a single profile (they fight per
+  //            tick).
+  //
+  // Set true for: Entry Fraggers, IGLs, Supports — anyone who should be
+  //               executing the team plan.
+  // Set false for: Lurkers and AWPers — by design they play away from the
+  //                main objective; BombFocus would erase that.
+  //
+  // What this trait deliberately doesn't do: override the engine's bomb-
+  // site assignment, suppress combat, or path the bot manually. It's a
+  // priority bias on top of CS2's existing scenario logic. See the V4
+  // banner in ProImitator.cs ApplyPersonality for the full design notes.
+  "BombFocus": false,
+
   // KnifeRush: hold the knife during the peaceful early-round rush so the
   // bot gets the knife's movement bonus (260 u/s vs 215 with a rifle, 200
   // with the AWP — ~20% faster). Switches back to the role weapon the
