@@ -560,39 +560,48 @@ public class ProImitator : BasePlugin
         //   and the bomb never gets planted. Tactical site execution and
         //   coordinated defence are lost to fragfest behaviour.
         //
-        // V4.1 expansion (post-V4 testing feedback):
-        //   - Bomb carrier on T-side now gets an EXTRA-HARD push so they
-        //     don't lurk or wander — they bring the bomb to a site.
-        //   - Pre/post-plant role inversion (dmarket "T-side vs CT-side"
-        //     section): once the bomb is planted, T becomes the defender of
-        //     the plant and CT becomes the attacker who needs to retake.
-        //     BombFocus flips its intent on both sides accordingly.
+        // V4.1 added: pre/post-plant inversion + bomb carrier extra push.
         //
-        // What BombFocus does per phase:
-        //   PRE-PLANT  T (attacker): HurryTimer maxed, CheckedHidingSpotCount=0
-        //                            Bomb carrier additionally gets IsRunning
-        //                            forced true + SneakTimer/PoliteTimer zeroed.
-        //              CT (defender): SafeTime extended to 8s, holds site.
+        // V4.2 tone-down (current): V4.1's effects were too heavy in play-
+        // tests — bots looked like "locomotives" running through cover.
+        // The fix is to keep the strategic intent (push site / hold site /
+        // invert post-plant) but make every field write a NUDGE rather than
+        // an override:
+        //   - HurryTimer Duration dropped from 600s (perpetual max) to 10s
+        //     (still refreshed each tick, but with a short "horizon" the
+        //     engine pathing code can interpret as bias, not absolute).
+        //   - CheckedHidingSpotCount=0 REMOVED. That was the line that made
+        //     bots ignore cover. Now the engine's hiding-spot checks run
+        //     normally, just with HurryTimer favouring the objective route.
+        //   - Defender SafeTime dropped from 8s to 3s. Less jumpy on peeks
+        //     but still reacts to clear threats.
+        //   - Bomb carrier no longer gets IsRunning=true and the wait-timer
+        //     wipe. They keep strategic behaviour (cover, peeks, patience)
+        //     and only get a slightly longer hurry horizon (20s vs 10s for
+        //     other Ts) as the "slightly more site-focused than teammates"
+        //     bias the user asked for.
         //
-        //   POST-PLANT T (defender): HurryTimer cleared, SafeTime extended to
-        //                            8s, holds the planted site.
-        //              CT (attacker): HurryTimer maxed, CheckedHidingSpotCount=0,
-        //                            retakes toward bomb (engine targets it via
-        //                            its scenario system automatically).
+        // What BombFocus does per phase (V4.2 values):
+        //   PRE-PLANT  T (attacker):  HurryTimer.Duration = 10s, refreshed
+        //                             Bomb carrier: HurryTimer.Duration = 20s
+        //              CT (defender): SafeTime = 3s, refreshed
+        //
+        //   POST-PLANT T (defender):  SafeTime = 3s, refreshed
+        //              CT (attacker): HurryTimer.Duration = 10s, refreshed
         //
         // What BombFocus deliberately does NOT do:
         //   - Override the engine's bombsite assignment. CS2's nav system
         //     decides which bot is "attacker of A vs attacker of B" at
         //     scenario init; we don't touch that. We just nudge the timer
         //     biases so the engine's existing plan executes more cleanly.
-        //   - Suppress combat. If an enemy actually crosses the bot's path,
-        //     normal engagement still happens. This is a *priority* bias,
-        //     not a passivity flag.
+        //   - Suppress combat or use of cover. The bot still pauses at
+        //     hiding spots, takes peeks, uses utility — BombFocus is a
+        //     destination bias, not a behaviour replacement.
         //   - Distribute CTs across A / B / mid. The engine's nav system
         //     already assigns CT bots to sites at scenario init; forcing a
-        //     specific 2/2/1 split would fight that assignment. If you
-        //     want stronger CT split, deferred future work — would need
-        //     map-specific bombsite position lookup.
+        //     specific 2/2/1 split would fight that assignment. Deferred
+        //     future work — would need map-specific bombsite position
+        //     lookup.
         //
         // Tuning notes for future maintainers:
         //   The pre/post-plant flag lives in _bombPlanted (set in
@@ -600,6 +609,12 @@ public class ProImitator : BasePlugin
         //   detected by walking the bot's MyWeapons for weapon_c4 — see
         //   IsCarryingBomb helper. All field writes here are idempotent
         //   and respect the engine's nav assignment.
+        //
+        //   When tuning numbers: keep them small. V4.1 used 600s and it
+        //   looked terrible. V4.2 uses 10-20s and looks like real CS. If
+        //   you need more punch, prefer adjusting the AlwaysRushing /
+        //   NoSafeTime traits in profiles rather than amplifying these
+        //   nudges — those are the heavy levers, BombFocus is the trim.
         // =====================================================================
         if (prof.BombFocus)
         {
@@ -615,72 +630,53 @@ public class ProImitator : BasePlugin
 
             if (isAttacker)
             {
-                // Max HurryTimer: keep moving toward the engine's selected
-                // objective (assigned site pre-plant, planted-bomb position
-                // post-plant for retake).
+                // Subtle hurry bias: 10s horizon refreshed each tick. Bot
+                // prioritises the objective route but the engine still
+                // honours hiding-spot pauses, peeks, and cover usage. We
+                // deliberately do NOT clear CheckedHidingSpotCount here —
+                // that V4.1 line was the "locomotive" behaviour the user
+                // flagged as too extreme.
                 CountdownTimer hurry = bot.HurryTimer;
 
                 ref float hurryDuration  = ref hurry.Duration;
-                hurryDuration            = 600.0f;
+                hurryDuration            = 10.0f;
 
                 ref float hurryTimestamp = ref hurry.Timestamp;
-                hurryTimestamp           = now + 600.0f;
+                hurryTimestamp           = now + 10.0f;
 
                 ref float hurryTimescale = ref hurry.Timescale;
                 hurryTimescale           = 1.0f;
-
-                // Skip hiding-spot checks while in transit — those are what
-                // makes a bot stop at mid-route corners. The engine still
-                // chooses a hiding spot once it ARRIVES at the objective.
-                ref int checkedHidingSpotCount = ref bot.CheckedHidingSpotCount;
-                checkedHidingSpotCount         = 0;
             }
             else if (isDefender)
             {
-                // Extend SafeTime: bot stays in "safe at home" perception
-                // longer, meaning it's less likely to peek out for distant
-                // duels. Pre-plant CTs hold their site; post-plant Ts hold
-                // the planted bomb. Same mechanism for both phases.
+                // Subtle hold bias: SafeTime 3s (V4.1 used 8s). Bot stays
+                // slightly less jumpy on early-round peeks but still
+                // reacts to clear threats. We deliberately do NOT clear
+                // HurryTimer — the engine should keep its natural ability
+                // to chase a wounded enemy or rotate when needed.
                 ref float safeTime = ref bot.SafeTime;
-                safeTime           = 8.0f;
-
-                // Clear HurryTimer so the bot stops trying to advance.
-                // Without this, a T who was AlwaysRushing pre-plant would
-                // keep wandering away from the planted bomb post-plant.
-                CountdownTimer hurry = bot.HurryTimer;
-                ref float hurryDuration = ref hurry.Duration;
-                hurryDuration = 0.0f;
-                ref float hurryTimestamp = ref hurry.Timestamp;
-                hurryTimestamp = 0.0f;
+                safeTime           = 3.0f;
             }
 
-            // Bomb-carrier extra push (pre-plant T only — post-plant the
-            // bomb is on the ground, no carrier). The bomb-carrier role is
-            // strategically the most important on T-side: they need to GET
-            // TO A SITE and PLANT, not lurk or trade.
+            // Bomb carrier on pre-plant T-side: slightly more site-focused
+            // than the rest of the T side, but still strategic. They keep
+            // strategic behaviour intact — they use cover, take peeks, wait
+            // for trades — they just have a longer hurry horizon (20s vs
+            // 10s for the other Ts) so they're less likely to peel back to
+            // lurk or back-trade. The V4.1 carrier hack (force IsRunning,
+            // wipe SneakTimer / PoliteTimer / IsWaitingBehindFriend) was
+            // removed: it made the carrier behave like a hold-W zombie
+            // instead of a pro who knows the bomb still needs to be brought
+            // to site safely.
             if (isT && !_bombPlanted && IsCarryingBomb(pawn))
             {
-                // Force the bot to run (no walking, no crouch-stand).
-                ref bool isRunning = ref bot.IsRunning;
-                isRunning = true;
+                CountdownTimer hurry = bot.HurryTimer;
 
-                // Zero out every "wait" timer so nothing delays the bomb-
-                // carrier — they're the round, they don't lurk, they don't
-                // wait for trades, they don't pause for a sneak peek.
-                CountdownTimer sneak = bot.SneakTimer;
-                ref float sneakDuration  = ref sneak.Duration;
-                sneakDuration            = 0.0f;
-                ref float sneakTimestamp = ref sneak.Timestamp;
-                sneakTimestamp           = 0.0f;
+                ref float hurryDuration  = ref hurry.Duration;
+                hurryDuration            = 20.0f;
 
-                CountdownTimer polite = bot.PoliteTimer;
-                ref float politeDuration  = ref polite.Duration;
-                politeDuration            = 0.0f;
-                ref float politeTimestamp = ref polite.Timestamp;
-                politeTimestamp           = 0.0f;
-
-                ref bool waitingBehindFriend = ref bot.IsWaitingBehindFriend;
-                waitingBehindFriend = false;
+                ref float hurryTimestamp = ref hurry.Timestamp;
+                hurryTimestamp           = now + 20.0f;
             }
         }
 
