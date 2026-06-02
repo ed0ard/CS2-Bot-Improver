@@ -59,8 +59,8 @@ public class BotAimOverrides
 public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
 {
     public override string ModuleName => "BotAimImprover";
-    public override string ModuleVersion => "4.0.0";
-    public override string ModuleAuthor => "ed0ard";
+    public override string ModuleVersion => "3.0.0";
+    public override string ModuleAuthor => "ed0ard & htfy96";
     public override string ModuleDescription => "Unified smart bot aim: per-bot skill, dwell-decaying error, sticky parts, reaction lag.";
 
     public BotAimConfig Config { get; set; } = new();
@@ -95,12 +95,8 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
         sig: "55 48 89 E5 41 55 41 54 53 48 89 FB 48 83 EC 58 8B 8F E8 59 00 00 83 F9 FF");
 
     private static readonly Offsets WINDOWS = new(
-        // TODO(windows): tsVel/tsTime are best-guesses from the Linux relative deltas
-        // (ts+0xC, ts+0x3C) applied to the Windows m_targetSpot 0x59A4. The intra-cluster
-        // layout matched Linux for ts/enemy (both +0x6C apart), so these are likely right,
-        // but verify against a current server.dll before trusting the Windows prediction path.
-        ts: 0x59A4, tsVel: 0x59B0, tsTime: 0x59E0,
-        en: 0x5A10, vis: 0x5A14, pbot: 0x1298, eye: 0 /*use controller*/,
+        ts: 0x59A4, tsVel: 0x59B0, tsTime: 0x59E0,   // all verified vs server.dll 2026-06-02 (PickNewAimSpot writes)
+        en: 0x5A10, vis: 0x5A14, pbot: 0x1298, eye: 0x108 /*use controller*/,
         ex: 0, ey: 0, ez: 0, aerr: 0 /*don't neutralize native error*/,
         sig: "48 8B C4 55 57 48 8D 68 A1 48 81 EC A8 00 00 00 48 8B F9 0F 29 70 D8 8B 89 10 5A 00 00 83 F9 FF");
 
@@ -146,7 +142,7 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
         { 2, 1, 0, 3, 4, 5, 6, 7, 10, 11, 8, 9, 12, 13, 14, 15, 16 };
     // Body order leads with GUT/PELVIS (low) so recoil climb tops out at the chest.
     private static readonly int[] _priorityBody =
-        { 4, 5, 11, 10, 3, 7, 6, 8, 9, 2, 1, 0, 12, 13, 14, 15, 16 };
+        { 4, 5, 10, 11, 3, 6, 7, 8, 9, 2, 1, 0, 12, 13, 14, 15, 16 };
 
     // ============================================================
     // Resolved tuning (preset merged with overrides). Live-editable.
