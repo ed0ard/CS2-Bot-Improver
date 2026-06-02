@@ -79,38 +79,37 @@
   // and CheckedHidingSpotCount to zero.
   "NoApproachPause": false,
 
-  // "This pro is a rifler." Two coordinated effects, both deferring the
-  // eco / semi-buy / full-buy decision to the engine + BotBuy:
+  // "This pro is a rifler." All-or-save rule, observed at round-freeze:
   //
-  //   1. AT ROUND-FREEZE: ProImitator observes what the bot was given by the
-  //      engine and BotBuy. Three cases:
+  //   - Bot has only pistol / SMG / shotgun / nothing → engine called it an
+  //     eco or semi-buy round, ProImitator leaves it alone.
   //
-  //        - Bot has a rifle (any): swap it for the role's main (AK for T,
-  //          M4 for CT). Account adjusted by the PRICE DIFFERENCE — e.g.
-  //          Galil 1800$ → AK 2700$ costs the bot 900$; AUG 3300$ → M4
-  //          2900$ refunds 400$. If the bot can't afford an upgrade, we
-  //          keep the original rifle rather than leave them broke.
+  //   - Bot has a big primary (rifle or sniper) AND can afford the swap to
+  //     the role rifle (AK for T, M4 for CT) → swap. Account is adjusted by
+  //     the PRICE DIFFERENCE: AUG 3300 → M4 2900 refunds 400; Galil 1800 →
+  //     AK 2700 costs 900; AK 2700 → AK 2700 cross-team isn't a thing but
+  //     same-rifle ownership skips the swap entirely (already optimal).
   //
-  //        - Bot has a sniper (AWP / SSG08 / Scar20 / G3SG1): same swap,
-  //          treated as a "wrong primary" → switch to the role rifle.
+  //   - Bot has a big primary but CAN'T afford the swap → REFUND the wrong
+  //     primary and save the money. Without this branch, a Rifler stuck with
+  //     a Krieg (3000) when AK (2700) refund-swap costs nothing wouldn't
+  //     matter, but a Rifler stuck with a Scout (1700) from a force-buy
+  //     round would bleed money round after round. The refund breaks that
+  //     funnel.
   //
-  //        - Bot has only SMG / shotgun / pistol / nothing: LEAVE IT. The
-  //          engine decided it's eco or semi-buy this round; we respect
-  //          that and don't force a rifle the team economy can't sustain.
-  //
-  //   2. EVERY TICK: if the bot is holding a non-rifle (pistol, SMG, etc)
-  //      AND already owns a rifle, `use weapon_<rifle>` switches them back.
-  //      Rifles classified: AK47, M4A1 / M4A1-S, SG556, AUG, GalilAR, FAMAS.
+  // Also, EVERY TICK: if the bot is holding a non-rifle (pistol, SMG, etc)
+  // AND already owns a rifle, `use weapon_<rifle>` switches them back.
+  // Rifles classified: AK47, M4A1 / M4A1-S, SG556, AUG, GalilAR, FAMAS.
   //
   // Don't combine with AWPer in the same profile — they'd both try to swap
-  // primaries at the same tick, and Rifler wins (deterministic but arbitrary).
+  // primaries on the same tick, and Rifler wins (deterministic but arbitrary).
   "Rifler": false,
 
-  // AWPer mirror of Rifler. Same observe-then-swap logic: if the bot was
-  // given any big primary (rifle or sniper), swap to AWP and pay the diff;
-  // if they only got a small primary or nothing, respect the engine's
-  // semi-buy / eco call. SSG08 is classified as a sniper, so an SSG08 pistol-
-  // round pickup will be respected and won't trigger the swap loop.
+  // AWPer mirror of Rifler. Same all-or-save rule with the AWP as the role
+  // weapon: bot has a big primary AND can afford the AWP swap → swap; bot
+  // has a big primary but CAN'T afford the AWP → refund and save (this is
+  // the fix for the Scout / AUG hoarding funnel); bot has only small
+  // primaries / nothing → leave alone.
   "AWPer": false,
 
   // Counter-strafe at engagement onset, gated by probability. On the

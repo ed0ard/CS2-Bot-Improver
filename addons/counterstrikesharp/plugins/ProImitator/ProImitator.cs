@@ -200,29 +200,30 @@ public class ProImitator : BasePlugin
         return HookResult.Continue;
     }
     // -------------------------------------------------------------------------
-    // Role-bias the bot's primary weapon, per round.
+    // Role-bias the bot's primary weapon, per round. All-or-save rule.
     //
-    // Design philosophy: we do NOT hardcode "you need X$ to buy a rifle"
-    // floors here. The engine + BotBuy already decide eco / semi-buy / full-
-    // buy each round based on the bot's account and team state. ProImitator
-    // just OBSERVES what they decided and steers the choice of weapon
-    // *within that decision*:
+    // Design philosophy: NO hardcoded "you need X$ to buy a rifle" floors.
+    // The engine + BotBuy already decide eco / semi-buy / full-buy each round
+    // based on the bot's account and team state. ProImitator just OBSERVES
+    // what they decided and either:
+    //   - swaps the wrong primary to the role's preferred (if affordable), or
+    //   - refunds the wrong primary so the bot can save for next round.
     //
-    //   - Engine bought the bot a rifle + the profile is Rifler? Swap to the
-    //     role's main rifle (AK for T, M4 for CT). Cost = price difference,
-    //     positive or negative, refunds included.
-    //   - Engine bought the bot an SMG/shotgun (= semi-buy round)? Leave it.
-    //     The bot doesn't have rifle-buy money this round, we respect that.
-    //   - Engine bought the bot nothing (= eco round)? Leave it. Pistol only.
-    //   - Engine bought the bot a rifle but the profile is AWPer? Refund the
-    //     rifle and try to buy AWP if the account covers the difference.
+    // Why "all-or-save" instead of "keep what you have": the half-buy funnel.
+    // Without the save branch, an AWPer who got a Scout from BotBuy can never
+    // afford the Scout->AWP upgrade, keeps the Scout, gets killed, buys
+    // another Scout next round, and never reaches AWP money. The refund
+    // breaks the funnel: the bot ends the round pistol-only but with
+    // accumulated cash for a real full-buy.
     //
-    // Why a separate buy hook instead of doing it in OnTick: buying / refunding
-    // is only legal during freeze, and we don't want to fight BotBuy's armor-
-    // gift / drop-weapon cycles that fire during the early freeze. We delay
-    // 3.5s after EventRoundStart so BotBuy's longest scheduled timer (3.0s)
-    // has already settled. Freeze is typically 15-20s, so we're still well
-    // inside the buy window.
+    // See TrySwapToPreferredPrimary's comment block for the case-by-case
+    // breakdown.
+    //
+    // Why a separate hook instead of OnTick: refunding / GiveNamedItem is
+    // only legal during freeze, and we don't want to fight BotBuy's armor-
+    // gift / drop-weapon cycles that fire in the early freeze. We delay 3.5s
+    // after EventRoundStart so BotBuy's longest timer (3.0s) has settled;
+    // freeze is typically 15-20s, so we're well inside the buy window.
     // -------------------------------------------------------------------------
     [GameEventHandler]
     public HookResult OnRoundStart(EventRoundStart @event, GameEventInfo info)
@@ -265,20 +266,39 @@ public class ProImitator : BasePlugin
         }
     }
     // -------------------------------------------------------------------------
-    // "Same-class or better": if the bot already has a big-primary (any rifle
-    // or any sniper), we treat the round as a buy round and swap them onto
-    // the role's preferred weapon. If they have no big-primary (= pistol /
-    // SMG / shotgun / nothing), the engine + BotBuy decided it's eco or
-    // semi-buy — we leave it alone.
+    // The all-or-save rule: a role-buy activates "if possible", otherwise
+    // the bot refunds whatever wrong primary they got and saves for next
+    // round. Three cases, depending on what the engine + BotBuy gave them:
     //
-    // Net cost = preferred_price - owned_price.
-    //   - Same-tier swap (AK 2700 -> M4 2900 cross-team would never happen,
-    //     but AK 2700 -> Krieg 3000 would cost 300): tiny upgrade fee.
-    //   - Downgrade (AUG 3300 -> M4 2900): bot gets 400$ refunded.
-    //   - Upgrade (Galil 1800 -> AK 2700): 900$ deducted; if the bot can't
-    //     afford it, we skip — they keep the Galil rather than ending up
-    //     broke and rifle-less.
-    //   - Cross-class (M4 2900 -> AWP 4750 for an AWPer): 1850$ deducted.
+    //   1. Bot has no big-primary (only pistol / SMG / shotgun / nothing).
+    //      The engine read the round as eco / semi-buy — we leave it alone.
+    //      The role doesn't override CS's economy model when the bot truly
+    //      has no rifle money.
+    //
+    //   2. Bot has a big-primary AND can afford the swap to the preferred
+    //      weapon (netCost = preferredPrice - ownedPrice, possibly negative).
+    //      We refund the wrong primary, give the preferred, adjust the
+    //      account by netCost. Examples:
+    //        - AK 2700 -> Krieg 3000:        +300  small upgrade fee
+    //        - AUG 3300 -> M4 2900:          -400  bot gets a refund
+    //        - Galil 1800 -> AK 2700:        +900  if affordable
+    //        - M4 2900 -> AWP 4750 (AWPer): +1850
+    //
+    //   3. Bot has a big-primary but CAN'T afford the swap. Without this
+    //      branch, ZywOo on a force-buy round ends up holding the Scout the
+    //      engine bought him because the AWP upgrade costs more than he has.
+    //      Next round he buys another Scout (1700$ down the drain), never
+    //      reaches the 4750$ AWP threshold. Funnel of doom.
+    //
+    //      Fix: refund the wrong primary and let the bot save. He ends the
+    //      round with pistol only but +ownedPrice$ in the bank — a real save
+    //      round in pro terms.
+    //
+    // Carry-over caveat: if the bot survived last round with weapon W and
+    // we hit case 3, we refund W and credit ownedPrice$ — money the bot
+    // didn't actually spend this round. Bounded exploit (≤ 5000$ per swap,
+    // typically ≤ 1800$ for the Galil case), matches how BotBuy.Refund
+    // works in the same scenarios.
     // -------------------------------------------------------------------------
     private static void TrySwapToPreferredPrimary(
         CCSPlayerController player,
@@ -289,21 +309,31 @@ public class ProImitator : BasePlugin
         // Already holds the preferred weapon? Done.
         if (HasWeapon(pawn, preferred)) return;
 
-        // Find any rifle OR sniper currently owned. SMGs / shotguns don't
-        // count — those mean "semi-buy round, the bot didn't get rifle money
-        // and we shouldn't conjure one out of nowhere".
+        // Find any rifle OR sniper currently owned. SMGs / shotguns / pistols
+        // do NOT count — those mean the engine + BotBuy decided "eco / semi-
+        // buy round, no rifle money this round". We respect that.
         (string? ownedName, int ownedPrice) = FindOwnedBigPrimary(pawn);
         if (ownedName == null) return;
 
-        int netCost = preferredPrice - ownedPrice;
+        int  netCost   = preferredPrice - ownedPrice;
+        bool canAfford = netCost <= 0
+                      || player.InGameMoneyServices!.Account >= netCost;
 
-        // Upgrade beyond the bot's wallet -> skip. Keep current rifle rather
-        // than leave them broke + rifle-less.
-        if (netCost > 0 && player.InGameMoneyServices!.Account < netCost) return;
-
-        player.RemoveItemByDesignerName(ownedName);
-        player.GiveNamedItem(preferred);
-        player.InGameMoneyServices!.Account -= netCost;   // negative netCost = refund
+        if (canAfford)
+        {
+            // Swap: refund the wrong primary, give the preferred, pay the diff.
+            player.RemoveItemByDesignerName(ownedName);
+            player.GiveNamedItem(preferred);
+            player.InGameMoneyServices!.Account -= netCost;  // negative = refund
+        }
+        else
+        {
+            // Can't afford the role weapon. Refund the wrong primary and let
+            // the bot save. Keeps the role identity coherent ("ZywOo doesn't
+            // half-buy Scout") and stops the per-round eco bleed.
+            player.RemoveItemByDesignerName(ownedName);
+            player.InGameMoneyServices!.Account += ownedPrice;
+        }
         Utilities.SetStateChanged(player, "CCSPlayerController", "m_pInGameMoneyServices");
     }
     // -------------------------------------------------------------------------
