@@ -82,8 +82,9 @@
   // "This pro is a rifler." Two effects:
   //
   //   1. AT ROUND-FREEZE: if the bot has the FULL rifle price in cash
-  //      (AK 2700 for T, M4A1 2900 for CT) AND doesn't already own the
-  //      preferred rifle, ProImitator buys it. Strict rule — no refund
+  //      (2700, same for AK and M4A1 in current CS2) AND doesn't already
+  //      own the preferred rifle, ProImitator buys it. Strict rule — no
+  //      refund
   //      credits, no swap math, no fake money. The price in cash IS the
   //      "full-buy phase" detector: under it, ProImitator does nothing
   //      (BotBuy and the engine handle eco / semi-buy / save).
