@@ -94,12 +94,10 @@ public class ProImitator : BasePlugin
     private readonly Dictionary<int, float> _counterStrafeUntil = new();
     private const float CounterStrafeDurationSec = 0.12f;
 
-    // KnifeRush state. The pro round-opener: hold knife to gain ~20% movement
-    // speed (260 u/s vs 215 rifle / 200 AWP) during the peaceful rush phase,
-    // switch to weapon ~3s before expected contact. We track until-when the
-    // bot should hold knife (per-profile KnifeRushSec, set in OnRoundFreezeEnd).
-    // Per-tick logic forces knife if currently in window AND not in combat.
-    private readonly Dictionary<int, float> _knifeRushUntil = new();
+    // V4.8 — KnifeRush is now purely distance-gated. No time window; the bot
+    // holds the knife whenever no alive opponent is within 1500u. As soon as
+    // someone enters that radius, the Rifler / AWPer per-tick switch pulls
+    // their primary. State dict + OnRoundFreezeEnd setup removed.
 
     // V4.1 — Pre/post-plant phase tracker. Set true on EventBombPlanted,
     // reset on EventRoundStart. Read by the BombFocus block in
@@ -148,7 +146,6 @@ public class ProImitator : BasePlugin
         RegisterEventHandler<EventPlayerSpawn>(OnPlayerSpawn);
         RegisterEventHandler<EventPlayerTeam>(OnPlayerTeam);
         RegisterEventHandler<EventRoundStart>(OnRoundStart);
-        RegisterEventHandler<EventRoundFreezeEnd>(OnRoundFreezeEnd);
         RegisterEventHandler<EventBombPlanted>(OnBombPlanted);
         RegisterListener<Listeners.OnTick>(OnTick);
 
@@ -244,7 +241,6 @@ public class ProImitator : BasePlugin
             _lastWeaponSwitchAt.Remove(player.Slot);
             _wasAimingAtEnemy.Remove(player.Slot);
             _counterStrafeUntil.Remove(player.Slot);
-            _knifeRushUntil.Remove(player.Slot);
             _carrierRunFlipAt.Remove(player.Slot);
             _carrierRunDecision.Remove(player.Slot);
             _logKnifeForceWasActive.Remove(player.Slot);
@@ -263,23 +259,8 @@ public class ProImitator : BasePlugin
     // holding knife while the bot is rooted in spawn. We want the knife hold
     // to start the instant the bot can actually move.
     // -------------------------------------------------------------------------
-    [GameEventHandler]
-    public HookResult OnRoundFreezeEnd(EventRoundFreezeEnd @event, GameEventInfo info)
-    {
-        if (_assigned.Count == 0) return HookResult.Continue;
-
-        float now = Server.CurrentTime;
-        int knifeRushCount = 0;
-        foreach (var kvp in _assigned)
-        {
-            if (!kvp.Value.KnifeRush) continue;
-            _knifeRushUntil[kvp.Key] = now + kvp.Value.KnifeRushSec;
-            knifeRushCount++;
-            DebugBroadcast($"knife rush opened slot={kvp.Key} {kvp.Value.Name} +{kvp.Value.KnifeRushSec:F1}s");
-        }
-        DebugBroadcast($"OnRoundFreezeEnd: {_assigned.Count} profiled, {knifeRushCount} knife rush windows");
-        return HookResult.Continue;
-    }
+    // V4.8 — OnRoundFreezeEnd handler removed. Was only used to open per-bot
+    // KnifeRush time windows; now KnifeRush is distance-only, no setup needed.
     // -------------------------------------------------------------------------
     // Role-buy at round-freeze. Strict rule:
     //   if bot has cash >= role weapon's FULL price (no refund credits,
@@ -854,37 +835,20 @@ public class ProImitator : BasePlugin
         }
 
         // ---------------------------------------------------------------------
-        // KnifeRush: hold knife during the peaceful early-round rush phase
-        // (faster movement: 260 u/s vs 215 rifle / 200 AWP) and switch to the
-        // role weapon once a real duel is imminent. Window was opened in
-        // OnRoundFreezeEnd.
+        // KnifeRush (V4.8 distance-only): hold knife whenever no alive
+        // opponent is within KnifeRushCombatRangeUnits (1500u), pull the
+        // role weapon the instant someone enters that radius. No time
+        // window — the bot will repeatedly hold knife mid-round during
+        // long traversals between angles, then weapon-up on every threat
+        // approach. Realistic pro movement pattern across all sides.
         //
-        // "Imminent duel" detection uses two signals:
-        //   - bot.IsAimingAtEnemy: the bot's AI has locked onto an enemy.
-        //     This is necessary but NOT sufficient — the bot AI sees long
-        //     sightlines, and at round-start on Dust2 a CT can lock onto a
-        //     T 3000 units away and we don't want that to break the knife
-        //     rush across the entire map.
-        //   - nearest enemy distance: an alive enemy of the opposite team
-        //     must be within KnifeRushCombatRangeUnits (~1500u, roughly mid-
-        //     Dust2 length). Below that we treat it as a real duel and pull
-        //     the role weapon.
-        //
-        // Once we decide to force knife, we re-issue `slot3` EVERY tick (no
-        // cooldown) until activeWeapon actually becomes a knife — the engine
-        // bot AI tries to re-pull primary aggressively and we need to outpace
-        // it. `slot3` is more reliable than `use weapon_*` for knives because
-        // the designer name varies by team / skin (weapon_knife_t, etc).
+        // The IsAimingAtEnemy AI gate was removed in V4.8 — it was a
+        // hedge for the previous time-window approach. Now we trust the
+        // pure spatial check: if a threat is geometrically close, weapon
+        // up, regardless of whether the bot has visually "spotted" them.
         // ---------------------------------------------------------------------
-        bool inKnifeRush = _knifeRushUntil.TryGetValue(player.Slot, out float kRushUntil)
-                        && now < kRushUntil;
-
-        bool inDuel = false;
-        if (inKnifeRush && bot.IsAimingAtEnemy)
-        {
-            inDuel = NearestEnemyWithinUnits(player, pawn, 1500f);
-        }
-        bool forceKnife = inKnifeRush && !inDuel;
+        bool forceKnife = prof.KnifeRush
+                       && !NearestEnemyWithinUnits(player, pawn, 1500f);
 
         // Edge-detected log: knife force START / END (only when state flips).
         {
@@ -1346,15 +1310,18 @@ public sealed class ProProfile
     // bot oscillates between alert and relaxed.
     public bool BombFocus { get; set; } = false;
 
-    // KnifeRush: hold knife during the peaceful early-round rush so the bot
-    // gets the knife's movement bonus (~20% faster: 260 u/s vs 215 rifle,
-    // 200 AWP). Switches back to the role weapon either after KnifeRushSec
-    // elapses OR the moment the bot enters a duel (whichever comes first).
+    // KnifeRush (V4.8 distance-only): hold knife to gain ~20% movement
+    // speed (260 u/s vs 215 rifle / 200 AWP) whenever no alive opponent
+    // is within 1500u. As soon as a threat enters that radius, the Rifler
+    // / AWPer per-tick switch pulls the role weapon.
     //
-    // Real pros do this all the time on de_*: jog out with the knife,
-    // switch ~3s before expected contact. The "expected contact" varies by
-    // map and role — entry T sees enemies sooner than a CT AWPer holding
-    // a long angle — so KnifeRushSec is per-profile.
+    // No time window — the bot will repeatedly hold knife during long
+    // mid-round traversals between angles, weapon-up on every threat
+    // approach. Real pro movement pattern across both sides.
+    //
+    // (V4.7 and earlier had a per-profile KnifeRushSec time window. The
+    // field is deserialised-but-ignored now for backward compat with
+    // old JSON files; safe to omit from new profiles.)
     public bool  KnifeRush    { get; set; } = false;
-    public float KnifeRushSec { get; set; } = 5.0f;
+    public float KnifeRushSec { get; set; } = 0.0f;  // deprecated, ignored
 }
