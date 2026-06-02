@@ -563,31 +563,46 @@ public class ProImitator : BasePlugin
 
         // ---------------------------------------------------------------------
         // KnifeRush: hold knife during the peaceful early-round rush phase
-        // (faster movement) and switch to the role weapon once contact is
-        // imminent. The window was opened in OnRoundFreezeEnd; we keep
-        // forcing knife per-tick until either:
-        //   - the window expires (KnifeRushSec elapsed since freeze end)
-        //   - the bot enters a duel (IsAimingAtEnemy goes true → AI takes
-        //     over, we step aside so the engine can pull the weapon).
+        // (faster movement: 260 u/s vs 215 rifle / 200 AWP) and switch to the
+        // role weapon once a real duel is imminent. Window was opened in
+        // OnRoundFreezeEnd.
         //
-        // When forceKnife is true we skip the Rifler / AWPer switch-back
-        // blocks below — otherwise they'd immediately undo our knife pull
-        // every tick.
+        // "Imminent duel" detection uses two signals:
+        //   - bot.IsAimingAtEnemy: the bot's AI has locked onto an enemy.
+        //     This is necessary but NOT sufficient — the bot AI sees long
+        //     sightlines, and at round-start on Dust2 a CT can lock onto a
+        //     T 3000 units away and we don't want that to break the knife
+        //     rush across the entire map.
+        //   - nearest enemy distance: an alive enemy of the opposite team
+        //     must be within KnifeRushCombatRangeUnits (~1500u, roughly mid-
+        //     Dust2 length). Below that we treat it as a real duel and pull
+        //     the role weapon.
+        //
+        // Once we decide to force knife, we re-issue `slot3` EVERY tick (no
+        // cooldown) until activeWeapon actually becomes a knife — the engine
+        // bot AI tries to re-pull primary aggressively and we need to outpace
+        // it. `slot3` is more reliable than `use weapon_*` for knives because
+        // the designer name varies by team / skin (weapon_knife_t, etc).
         // ---------------------------------------------------------------------
         bool inKnifeRush = _knifeRushUntil.TryGetValue(player.Slot, out float kRushUntil)
                         && now < kRushUntil;
-        bool inDuel      = bot.IsAimingAtEnemy;
-        bool forceKnife  = inKnifeRush && !inDuel;
+
+        bool inDuel = false;
+        if (inKnifeRush && bot.IsAimingAtEnemy)
+        {
+            inDuel = NearestEnemyWithinUnits(player, pawn, 1500f);
+        }
+        bool forceKnife = inKnifeRush && !inDuel;
 
         if (forceKnife)
         {
             bool holdingKnife = activeWeapon != null && activeWeapon.StartsWith("weapon_knife");
-            if (!holdingKnife
-                && (!_lastWeaponSwitchAt.TryGetValue(player.Slot, out float lastAtK)
-                    || now - lastAtK > WeaponSwitchCooldownSec))
+            if (!holdingKnife)
             {
-                NativeAPI.IssueClientCommand((int)player.Slot, "use weapon_knife");
-                _lastWeaponSwitchAt[player.Slot] = now;
+                NativeAPI.IssueClientCommand((int)player.Slot, "slot3");
+                // Intentionally no cooldown: re-issue every tick until the
+                // bot is actually on knife. Once holdingKnife=true the issue
+                // stops naturally.
             }
         }
 
@@ -637,6 +652,38 @@ public class ProImitator : BasePlugin
                 }
             }
         }
+    }
+    // -------------------------------------------------------------------------
+    // Is any alive opposing-team player within maxUnits of selfPawn? Used by
+    // KnifeRush to decide whether the bot is in an actual combat-range duel
+    // (pull weapon) or just locked on a long-distance enemy across the map
+    // (keep knife out).
+    //
+    // O(N) over all players each tick — N is at most 64 in CS2, negligible.
+    // -------------------------------------------------------------------------
+    private static bool NearestEnemyWithinUnits(CCSPlayerController self, CCSPlayerPawn selfPawn, float maxUnits)
+    {
+        if (selfPawn.AbsOrigin == null) return false;
+        CsTeam selfTeam = self.Team;
+        float maxSq = maxUnits * maxUnits;
+        float sx = selfPawn.AbsOrigin.X;
+        float sy = selfPawn.AbsOrigin.Y;
+        float sz = selfPawn.AbsOrigin.Z;
+
+        foreach (var p in Utilities.GetPlayers())
+        {
+            if (p == null || !p.IsValid) continue;
+            if (p.Team == selfTeam) continue;
+            var ePawn = p.PlayerPawn?.Value;
+            if (ePawn == null || !ePawn.IsValid || ePawn.AbsOrigin == null) continue;
+            if (ePawn.Health <= 0) continue;
+
+            float dx = sx - ePawn.AbsOrigin.X;
+            float dy = sy - ePawn.AbsOrigin.Y;
+            float dz = sz - ePawn.AbsOrigin.Z;
+            if (dx * dx + dy * dy + dz * dz < maxSq) return true;
+        }
+        return false;
     }
     // -------------------------------------------------------------------------
     // Walk the bot's weapon inventory and return the designer name of the
