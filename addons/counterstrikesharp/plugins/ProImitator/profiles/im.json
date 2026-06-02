@@ -7,7 +7,7 @@
 
   "Description": "Mihai 'iM' Ivan — Romanian dynamic rifler, joined NaVi from GamerLegion. Aggressive star duels, second piece in the trade chain. High peak rounds, willing to take 50/50s.",
 
-  "AlwaysRushing":          false,
+  "AlwaysRushing":          true,
   "NeverSneaks":            true,
   "NeverPolite":            true,
   "NoSafeTime":             true,
@@ -15,11 +15,11 @@
 
   "NoCrouchWithRifle":      true,
   "NeverWaitsBetweenShots": false,
-  "NoApproachPause":        false,
+  "NoApproachPause":        true,
   "Rifler":                 true,
 
   "CounterStrafeChance":    0.75,
 
   "KnifeRush":              true,
-  "KnifeRushSec":           5.5
+  "KnifeRushSec":           5.0
 }
