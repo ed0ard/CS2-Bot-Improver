@@ -79,31 +79,31 @@
   // and CheckedHidingSpotCount to zero.
   "NoApproachPause": false,
 
-  // Force-prefer rifles: every time the bot is holding a non-rifle (pistol,
-  // SMG, sniper, shotgun) AND owns a rifle, issue `use weapon_<rifle>` so the
-  // bot swaps back. Rifles classified: AK47, M4A1/M4A1-S, SG556, AUG,
-  // GalilAR, FAMAS.
+  // "This pro is a rifler." Two coordinated effects, both eco-aware:
   //
-  // Important: this trait does NOT *give* a rifle. The bot has to obtain one
-  // through the normal channels (BotBuy coordinated buy, picking one up off
-  // the ground, getting it from a dropped weapon). That way we don't break
-  // the in-game economy.
+  //   1. AT ROUND-FREEZE: if the bot can afford a full buy (rifle + armor =
+  //      3700$ for T with AK, 3900$ for CT with M4) AND doesn't already own
+  //      a rifle, ProImitator buys their team's main rifle (AK for T, M4
+  //      for CT) and deducts the price from their account.
   //
-  // Pair-with: run `ak47` (or `m4a1` / `aug` etc.) in chat before the round
-  // so BotBuy gives every Terrorist / CT an AK / M4. donk will then stick to
-  // his rifle even after picking up a Deagle from a corpse.
-  "RifleOnly": false,
+  //      Below the full-buy floor → DO NOTHING. The bot falls back to
+  //      whatever BotBuy / the engine bought (pistol round, eco SMG, etc).
+  //      No "stupid" rifle buys on a 2200$ account.
+  //
+  //   2. EVERY TICK: if the bot is holding a non-rifle (pistol, SMG, sniper,
+  //      shotgun) AND owns a rifle, `use weapon_<rifle>` switches them back.
+  //      Rifles classified: AK47, M4A1 / M4A1-S, SG556, AUG, GalilAR, FAMAS.
+  //
+  // Don't combine with AWPer in the same profile — they'd both try to buy a
+  // primary at the same tick, and Rifler wins (deterministic but arbitrary).
+  "Rifler": false,
 
-  // AWPer mirror of RifleOnly. Force-switch back to AWP / SSG08 every time
-  // the bot is holding something else AND owns a sniper. Same no-give
-  // policy: requires the bot to already own the sniper (via the buyscript
-  // or a pickup). Set this true for AWPer profiles so they don't permanently
-  // settle on a teammate's dropped rifle.
-  //
-  // Don't combine with RifleOnly — the two would fight each other every
-  // tick and both wins would cancel out (cooldown protects from spam, but
-  // the bot would never settle).
-  "AwpOnly": false,
+  // AWPer mirror of Rifler. Same eco logic with the AWP full-buy floor at
+  // 5750$ (AWP 4750 + 1000 armor). Same per-tick switch-back if the bot picks
+  // up a teammate's dropped rifle. SSG08 is also classified as a sniper, so
+  // a profiled AWPer with Scout from an early-round eco buy won't be force-
+  // switched out of it.
+  "AWPer": false,
 
   // Counter-strafe at engagement onset, gated by probability. On the
   // false->true edge of IsAimingAtEnemy we roll a die against this chance;

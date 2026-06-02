@@ -16,7 +16,7 @@
   "NoCrouchWithRifle":      true,
   "NeverWaitsBetweenShots": false,
   "NoApproachPause":        false,
-  "RifleOnly":              true,
+  "Rifler":                 true,
 
-  "CounterStrafeChance":    0.90
+  "CounterStrafeChance":    0.78
 }
