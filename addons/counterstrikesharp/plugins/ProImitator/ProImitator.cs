@@ -63,6 +63,12 @@ public class ProImitator : BasePlugin
     // change so a bot moved to spectator drops its personality cleanly.
     private readonly Dictionary<int, ProProfile> _assigned = new();
 
+    // Cooldown per bot for the RifleOnly weapon switch. Without it we'd send
+    // a `use weapon_*` command every tick (64Hz) which spams the engine and
+    // prevents the swap from ever resolving.
+    private readonly Dictionary<int, float> _lastWeaponSwitchAt = new();
+    private const float WeaponSwitchCooldownSec = 0.5f;
+
     // -------------------------------------------------------------------------
     public override void Load(bool hotReload)
     {
@@ -152,6 +158,7 @@ public class ProImitator : BasePlugin
             && (CsTeam)@event.Team != CsTeam.Terrorist)
         {
             _assigned.Remove(player.Slot);
+            _lastWeaponSwitchAt.Remove(player.Slot);
         }
 
         return HookResult.Continue;
@@ -204,7 +211,7 @@ public class ProImitator : BasePlugin
             // Weapon name is needed by a couple of traits. Cheap to read once.
             string? activeWeapon = pawn.WeaponServices?.ActiveWeapon?.Value?.DesignerName;
 
-            ApplyPersonality(bot, pawn, prof, now, activeWeapon);
+            ApplyPersonality(player, bot, pawn, prof, now, activeWeapon);
         }
     }
     // -------------------------------------------------------------------------
@@ -213,7 +220,7 @@ public class ProImitator : BasePlugin
     // Each block is opt-in; profiles can mix-and-match. Anything not listed in
     // a profile is left untouched (BotState's generic improvements still apply).
     // -------------------------------------------------------------------------
-    private static void ApplyPersonality(CCSBot bot, CCSPlayerPawn pawn, ProProfile prof, float now, string? activeWeapon)
+    private void ApplyPersonality(CCSPlayerController player, CCSBot bot, CCSPlayerPawn pawn, ProProfile prof, float now, string? activeWeapon)
     {
         if (prof.AlwaysRushing)
         {
@@ -344,6 +351,55 @@ public class ProImitator : BasePlugin
             ref int checkedHidingSpotCount = ref bot.CheckedHidingSpotCount;
             checkedHidingSpotCount = 0;
         }
+
+        if (prof.RifleOnly)
+        {
+            // Force-prefer rifles when the bot is holding something else but
+            // already owns a rifle (typically picked up via BotBuy's
+            // coordinated rifle commands, or off the ground).
+            //
+            // We do NOT call GiveNamedItem here — that would break the game's
+            // economy and let the bot have a free rifle every round. Instead
+            // we issue a `use weapon_<name>` command in the bot's context,
+            // which only succeeds if the weapon is already in inventory.
+            //
+            // A 0.5s cooldown prevents spamming the engine: the swap takes a
+            // few ticks to resolve, and the next tick after we issue would
+            // still see the old activeWeapon.
+            bool holdingRifle = activeWeapon != null && RifleDesignerNames.Contains(activeWeapon);
+            if (!holdingRifle
+                && (!_lastWeaponSwitchAt.TryGetValue(player.Slot, out float lastAt)
+                    || now - lastAt > WeaponSwitchCooldownSec))
+            {
+                string? rifleToUse = FindOwnedRifle(pawn);
+                if (rifleToUse != null)
+                {
+                    NativeAPI.IssueClientCommand((int)player.Slot, $"use {rifleToUse}");
+                    _lastWeaponSwitchAt[player.Slot] = now;
+                }
+            }
+        }
+    }
+    // -------------------------------------------------------------------------
+    // Walk the bot's weapon inventory and return the designer name of the
+    // first rifle found, or null if none. Used by RifleOnly to know what to
+    // pass to `use <weapon_*>`.
+    // -------------------------------------------------------------------------
+    private static string? FindOwnedRifle(CCSPlayerPawn pawn)
+    {
+        var weapons = pawn.WeaponServices?.MyWeapons;
+        if (weapons == null) return null;
+
+        foreach (var handle in weapons)
+        {
+            var weapon = handle.Value;
+            if (weapon == null || !weapon.IsValid) continue;
+
+            string? designer = weapon.DesignerName;
+            if (designer != null && RifleDesignerNames.Contains(designer))
+                return designer;
+        }
+        return null;
     }
     // -------------------------------------------------------------------------
     // Console commands. Mirrors the convention used elsewhere in the suite:
@@ -452,4 +508,9 @@ public sealed class ProProfile
     public bool NoCrouchWithRifle    { get; set; } = false;
     public bool NeverWaitsBetweenShots { get; set; } = false;
     public bool NoApproachPause      { get; set; } = false;
+
+    // Force-switch to a rifle whenever the bot is holding a non-rifle AND has
+    // a rifle in inventory. Does NOT give weapons (would break the economy);
+    // pair with a coordinated BotBuy of `ak47` / `m4a1` / `aug` etc.
+    public bool RifleOnly            { get; set; } = false;
 }

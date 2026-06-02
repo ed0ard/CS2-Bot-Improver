@@ -69,5 +69,20 @@
   // Hyper-aggressive players are already committed before reaching the angle
   // and engage the moment they see an enemy. Sets InhibitLookAroundTimestamp
   // and CheckedHidingSpotCount to zero.
-  "NoApproachPause": false
+  "NoApproachPause": false,
+
+  // Force-prefer rifles: every time the bot is holding a non-rifle (pistol,
+  // SMG, sniper, shotgun) AND owns a rifle, issue `use weapon_<rifle>` so the
+  // bot swaps back. Rifles classified: AK47, M4A1/M4A1-S, SG556, AUG,
+  // GalilAR, FAMAS.
+  //
+  // Important: this trait does NOT *give* a rifle. The bot has to obtain one
+  // through the normal channels (BotBuy coordinated buy, picking one up off
+  // the ground, getting it from a dropped weapon). That way we don't break
+  // the in-game economy.
+  //
+  // Pair-with: run `ak47` (or `m4a1` / `aug` etc.) in chat before the round
+  // so BotBuy gives every Terrorist / CT an AK / M4. donk will then stick to
+  // his rifle even after picking up a Deagle from a corpse.
+  "RifleOnly": false
 }
