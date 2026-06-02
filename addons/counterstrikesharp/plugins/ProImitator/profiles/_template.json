@@ -79,16 +79,22 @@
   // and CheckedHidingSpotCount to zero.
   "NoApproachPause": false,
 
-  // "This pro is a rifler." Pure preference — ProImitator does NOT buy,
-  // give, refund or touch the bot's account. The engine + BotBuy fully
-  // own the economic decisions (eco / semi-buy / full-buy, what weapon to
-  // give, when to refund). All this trait does:
+  // "This pro is a rifler." Two effects:
   //
-  //   - Every tick, if the bot is holding a non-rifle (pistol, knife from
-  //     reload-switch, etc) but already owns a rifle in inventory, issue
-  //     `use weapon_<rifle>` to switch the active slot back. If the engine
-  //     never gave the bot a rifle this round, nothing happens — the bot
-  //     plays whatever they have.
+  //   1. AT ROUND-FREEZE: if the bot has the FULL rifle price in cash
+  //      (AK 2700 for T, M4A1 2900 for CT) AND doesn't already own the
+  //      preferred rifle, ProImitator buys it. Strict rule — no refund
+  //      credits, no swap math, no fake money. The price in cash IS the
+  //      "full-buy phase" detector: under it, ProImitator does nothing
+  //      (BotBuy and the engine handle eco / semi-buy / save).
+  //
+  //      Any other big primary the engine gave the bot (Galil, AUG,
+  //      Scout, etc) is dropped without refund — the bot demonstrated
+  //      by having `price` cash on top that they could afford this.
+  //
+  //   2. EVERY TICK: if the bot is holding a non-rifle (pistol from auto-
+  //      switch on empty mag, knife, etc) AND owns a rifle, issue
+  //      `use weapon_<rifle>` to switch the active slot back.
   //
   // Rifles classified: AK47, M4A1 / M4A1-S, SG556, AUG, GalilAR, FAMAS.
   //
@@ -96,11 +102,9 @@
   // makes sense per bot.
   "Rifler": false,
 
-  // AWPer mirror of Rifler. Pure preference: if the engine ever gave the
-  // bot an AWP / SSG08 and they're currently holding something else,
-  // switch back. Otherwise, no-op. We never conjure an AWP for them — if
-  // BotBuy and the engine decide the bot can't afford or shouldn't AWP
-  // this round, we respect that.
+  // AWPer mirror of Rifler. Same strict "buy iff has 4750 cash" rule for
+  // the AWP at round-freeze; same per-tick switch-back to a sniper if
+  // currently held weapon is something else.
   "AWPer": false,
 
   // Counter-strafe at engagement onset, gated by probability. On the
