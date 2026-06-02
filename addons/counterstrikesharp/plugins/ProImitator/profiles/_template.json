@@ -79,37 +79,28 @@
   // and CheckedHidingSpotCount to zero.
   "NoApproachPause": false,
 
-  // "This pro is a rifler." All-or-save rule, observed at round-freeze:
+  // "This pro is a rifler." Pure preference — ProImitator does NOT buy,
+  // give, refund or touch the bot's account. The engine + BotBuy fully
+  // own the economic decisions (eco / semi-buy / full-buy, what weapon to
+  // give, when to refund). All this trait does:
   //
-  //   - Bot has only pistol / SMG / shotgun / nothing → engine called it an
-  //     eco or semi-buy round, ProImitator leaves it alone.
+  //   - Every tick, if the bot is holding a non-rifle (pistol, knife from
+  //     reload-switch, etc) but already owns a rifle in inventory, issue
+  //     `use weapon_<rifle>` to switch the active slot back. If the engine
+  //     never gave the bot a rifle this round, nothing happens — the bot
+  //     plays whatever they have.
   //
-  //   - Bot has a big primary (rifle or sniper) AND can afford the swap to
-  //     the role rifle (AK for T, M4 for CT) → swap. Account is adjusted by
-  //     the PRICE DIFFERENCE: AUG 3300 → M4 2900 refunds 400; Galil 1800 →
-  //     AK 2700 costs 900; AK 2700 → AK 2700 cross-team isn't a thing but
-  //     same-rifle ownership skips the swap entirely (already optimal).
-  //
-  //   - Bot has a big primary but CAN'T afford the swap → REFUND the wrong
-  //     primary and save the money. Without this branch, a Rifler stuck with
-  //     a Krieg (3000) when AK (2700) refund-swap costs nothing wouldn't
-  //     matter, but a Rifler stuck with a Scout (1700) from a force-buy
-  //     round would bleed money round after round. The refund breaks that
-  //     funnel.
-  //
-  // Also, EVERY TICK: if the bot is holding a non-rifle (pistol, SMG, etc)
-  // AND already owns a rifle, `use weapon_<rifle>` switches them back.
   // Rifles classified: AK47, M4A1 / M4A1-S, SG556, AUG, GalilAR, FAMAS.
   //
-  // Don't combine with AWPer in the same profile — they'd both try to swap
-  // primaries on the same tick, and Rifler wins (deterministic but arbitrary).
+  // Don't combine with AWPer in the same profile — only one role bias
+  // makes sense per bot.
   "Rifler": false,
 
-  // AWPer mirror of Rifler. Same all-or-save rule with the AWP as the role
-  // weapon: bot has a big primary AND can afford the AWP swap → swap; bot
-  // has a big primary but CAN'T afford the AWP → refund and save (this is
-  // the fix for the Scout / AUG hoarding funnel); bot has only small
-  // primaries / nothing → leave alone.
+  // AWPer mirror of Rifler. Pure preference: if the engine ever gave the
+  // bot an AWP / SSG08 and they're currently holding something else,
+  // switch back. Otherwise, no-op. We never conjure an AWP for them — if
+  // BotBuy and the engine decide the bot can't afford or shouldn't AWP
+  // this round, we respect that.
   "AWPer": false,
 
   // Counter-strafe at engagement onset, gated by probability. On the

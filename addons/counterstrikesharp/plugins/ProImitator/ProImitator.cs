@@ -101,7 +101,6 @@ public class ProImitator : BasePlugin
 
         RegisterEventHandler<EventPlayerSpawn>(OnPlayerSpawn);
         RegisterEventHandler<EventPlayerTeam>(OnPlayerTeam);
-        RegisterEventHandler<EventRoundStart>(OnRoundStart);
         RegisterListener<Listeners.OnTick>(OnTick);
 
         // Register commands as plain game console commands (mirrors how the
@@ -198,196 +197,6 @@ public class ProImitator : BasePlugin
         }
 
         return HookResult.Continue;
-    }
-    // -------------------------------------------------------------------------
-    // Role-bias the bot's primary weapon, per round. All-or-save rule.
-    //
-    // Design philosophy: NO hardcoded "you need X$ to buy a rifle" floors.
-    // The engine + BotBuy already decide eco / semi-buy / full-buy each round
-    // based on the bot's account and team state. ProImitator just OBSERVES
-    // what they decided and either:
-    //   - swaps the wrong primary to the role's preferred (if affordable), or
-    //   - refunds the wrong primary so the bot can save for next round.
-    //
-    // Why "all-or-save" instead of "keep what you have": the half-buy funnel.
-    // Without the save branch, an AWPer who got a Scout from BotBuy can never
-    // afford the Scout->AWP upgrade, keeps the Scout, gets killed, buys
-    // another Scout next round, and never reaches AWP money. The refund
-    // breaks the funnel: the bot ends the round pistol-only but with
-    // accumulated cash for a real full-buy.
-    //
-    // See TrySwapToPreferredPrimary's comment block for the case-by-case
-    // breakdown.
-    //
-    // Why a separate hook instead of OnTick: refunding / GiveNamedItem is
-    // only legal during freeze, and we don't want to fight BotBuy's armor-
-    // gift / drop-weapon cycles that fire in the early freeze. We delay 3.5s
-    // after EventRoundStart so BotBuy's longest timer (3.0s) has settled;
-    // freeze is typically 15-20s, so we're well inside the buy window.
-    // -------------------------------------------------------------------------
-    [GameEventHandler]
-    public HookResult OnRoundStart(EventRoundStart @event, GameEventInfo info)
-    {
-        if (_assigned.Count == 0) return HookResult.Continue;
-
-        AddTimer(3.5f, SwapPreferredPrimaries);
-        return HookResult.Continue;
-    }
-    // -------------------------------------------------------------------------
-    private void SwapPreferredPrimaries()
-    {
-        foreach (var kvp in _assigned)
-        {
-            var player = Utilities.GetPlayerFromSlot(kvp.Key);
-            if (player == null || !player.IsValid || !player.IsBot) continue;
-            if (player.InGameMoneyServices == null) continue;
-
-            var pawn = player.PlayerPawn.Value;
-            if (pawn == null || !pawn.IsValid) continue;
-
-            var prof = kvp.Value;
-            bool isT = player.Team == CsTeam.Terrorist;
-            bool isCT = player.Team == CsTeam.CounterTerrorist;
-            if (!isT && !isCT) continue;
-
-            // Rifler / AWPer should be mutually exclusive (template warns); if
-            // both true Rifler wins by reading first.
-            if (prof.Rifler)
-            {
-                // Prices mirror BotBuy.cs price table (AK 2700, M4A1 2900).
-                string preferred = isT ? "weapon_ak47" : "weapon_m4a1";
-                int     price     = isT ? 2700        : 2900;
-                TrySwapToPreferredPrimary(player, pawn, preferred, price);
-            }
-            else if (prof.AWPer)
-            {
-                TrySwapToPreferredPrimary(player, pawn, "weapon_awp", 4750);
-            }
-        }
-    }
-    // -------------------------------------------------------------------------
-    // The all-or-save rule: a role-buy activates "if possible", otherwise
-    // the bot refunds whatever wrong primary they got and saves for next
-    // round. Three cases, depending on what the engine + BotBuy gave them:
-    //
-    //   1. Bot has no big-primary (only pistol / SMG / shotgun / nothing).
-    //      The engine read the round as eco / semi-buy — we leave it alone.
-    //      The role doesn't override CS's economy model when the bot truly
-    //      has no rifle money.
-    //
-    //   2. Bot has a big-primary AND can afford the swap to the preferred
-    //      weapon (netCost = preferredPrice - ownedPrice, possibly negative).
-    //      We refund the wrong primary, give the preferred, adjust the
-    //      account by netCost. Examples:
-    //        - AK 2700 -> Krieg 3000:        +300  small upgrade fee
-    //        - AUG 3300 -> M4 2900:          -400  bot gets a refund
-    //        - Galil 1800 -> AK 2700:        +900  if affordable
-    //        - M4 2900 -> AWP 4750 (AWPer): +1850
-    //
-    //   3. Bot has a big-primary but CAN'T afford the swap. Without this
-    //      branch, ZywOo on a force-buy round ends up holding the Scout the
-    //      engine bought him because the AWP upgrade costs more than he has.
-    //      Next round he buys another Scout (1700$ down the drain), never
-    //      reaches the 4750$ AWP threshold. Funnel of doom.
-    //
-    //      Fix: refund the wrong primary and let the bot save. He ends the
-    //      round with pistol only but +ownedPrice$ in the bank — a real save
-    //      round in pro terms.
-    //
-    // Carry-over caveat: if the bot survived last round with weapon W and
-    // we hit case 3, we refund W and credit ownedPrice$ — money the bot
-    // didn't actually spend this round. Bounded exploit (≤ 5000$ per swap,
-    // typically ≤ 1800$ for the Galil case), matches how BotBuy.Refund
-    // works in the same scenarios.
-    // -------------------------------------------------------------------------
-    private static void TrySwapToPreferredPrimary(
-        CCSPlayerController player,
-        CCSPlayerPawn pawn,
-        string preferred,
-        int preferredPrice)
-    {
-        // Already holds the preferred weapon? Done.
-        if (HasWeapon(pawn, preferred)) return;
-
-        // Find any rifle OR sniper currently owned. SMGs / shotguns / pistols
-        // do NOT count — those mean the engine + BotBuy decided "eco / semi-
-        // buy round, no rifle money this round". We respect that.
-        (string? ownedName, int ownedPrice) = FindOwnedBigPrimary(pawn);
-        if (ownedName == null) return;
-
-        int  netCost   = preferredPrice - ownedPrice;
-        bool canAfford = netCost <= 0
-                      || player.InGameMoneyServices!.Account >= netCost;
-
-        if (canAfford)
-        {
-            // Swap: refund the wrong primary, give the preferred, pay the diff.
-            player.RemoveItemByDesignerName(ownedName);
-            player.GiveNamedItem(preferred);
-            player.InGameMoneyServices!.Account -= netCost;  // negative = refund
-        }
-        else
-        {
-            // Can't afford the role weapon. Refund the wrong primary and let
-            // the bot save. Keeps the role identity coherent ("ZywOo doesn't
-            // half-buy Scout") and stops the per-round eco bleed.
-            player.RemoveItemByDesignerName(ownedName);
-            player.InGameMoneyServices!.Account += ownedPrice;
-        }
-        Utilities.SetStateChanged(player, "CCSPlayerController", "m_pInGameMoneyServices");
-    }
-    // -------------------------------------------------------------------------
-    // Scan the bot's inventory for the first owned rifle / sniper and return
-    // its designer name + BotBuy-canonical price. Returns (null, 0) if the
-    // bot only has SMGs / shotguns / pistols.
-    //
-    // Price table mirrors BotBuy.cs — keep in sync if upstream ever changes.
-    // -------------------------------------------------------------------------
-    private static readonly Dictionary<string, int> BigPrimaryPrices = new(StringComparer.OrdinalIgnoreCase)
-    {
-        // Rifles
-        { "weapon_ak47",            2700 },
-        { "weapon_m4a1",            2900 },
-        { "weapon_m4a1_silencer",   2900 },
-        { "weapon_sg556",           3000 },
-        { "weapon_aug",             3300 },
-        { "weapon_galilar",         1800 },
-        { "weapon_famas",           1950 },
-        // Snipers
-        { "weapon_awp",             4750 },
-        { "weapon_ssg08",           1700 },
-        { "weapon_scar20",          5000 },
-        { "weapon_g3sg1",           5000 },
-    };
-
-    private static (string? name, int price) FindOwnedBigPrimary(CCSPlayerPawn pawn)
-    {
-        var weapons = pawn.WeaponServices?.MyWeapons;
-        if (weapons == null) return (null, 0);
-
-        foreach (var handle in weapons)
-        {
-            var w = handle.Value;
-            if (w == null || !w.IsValid) continue;
-
-            string? n = w.DesignerName;
-            if (n != null && BigPrimaryPrices.TryGetValue(n, out int p))
-                return (n, p);
-        }
-        return (null, 0);
-    }
-    // -------------------------------------------------------------------------
-    private static bool HasWeapon(CCSPlayerPawn pawn, string designerName)
-    {
-        var weapons = pawn.WeaponServices?.MyWeapons;
-        if (weapons == null) return false;
-
-        foreach (var handle in weapons)
-        {
-            var w = handle.Value;
-            if (w != null && w.IsValid && w.DesignerName == designerName) return true;
-        }
-        return false;
     }
     // -------------------------------------------------------------------------
     private ProProfile? MatchProfile(string botName)
@@ -618,18 +427,17 @@ public class ProImitator : BasePlugin
 
         if (prof.Rifler)
         {
-            // Switch-back half of the Rifler trait. The eco-aware *buy* half
-            // runs in OnRoundFreezeEnded (post round-start, once per round);
-            // here we just keep the bot on its rifle if it picks up a pistol
-            // off the ground or drops to a knife after running out of ammo.
+            // Pure preference: if the bot has a rifle in inventory but is
+            // currently holding something else (pistol from auto-switch on
+            // empty mag, knife, etc), issue `use weapon_<rifle>` to switch
+            // back.
             //
-            // GiveNamedItem is NOT called here — see the per-round buy logic
-            // for that. We issue `use weapon_<name>` which only succeeds if
-            // the weapon is already in inventory, so we never duplicate a
-            // rifle or give one for free.
+            // We never call GiveNamedItem and never touch Account — the
+            // engine + BotBuy fully decide what the bot owns. `use weapon_*`
+            // only succeeds if the weapon is already in inventory.
             //
-            // A 0.5s cooldown prevents spamming the engine: the swap takes a
-            // few ticks to resolve, and the next tick after we issue would
+            // A 0.5s cooldown prevents spamming the engine: the swap takes
+            // a few ticks to resolve, and the next tick after we issue would
             // still see the old activeWeapon.
             bool holdingRifle = activeWeapon != null && RifleDesignerNames.Contains(activeWeapon);
             if (!holdingRifle
@@ -648,9 +456,8 @@ public class ProImitator : BasePlugin
         if (prof.AWPer)
         {
             // AWPer mirror of the Rifler switch-back. Same cooldown, same
-            // no-give policy: the per-round buy of the AWP happens in
-            // OnRoundFreezeEnded; here we just prevent the bot from running
-            // around with a teammate's rifle once it has the AWP available.
+            // no-give policy: if the engine ever gave the bot an AWP / SSG08
+            // and they're holding something else, switch back to it.
             bool holdingSniper = activeWeapon != null && SniperDesignerNames.Contains(activeWeapon);
             if (!holdingSniper
                 && (!_lastWeaponSwitchAt.TryGetValue(player.Slot, out float lastAt)
@@ -818,20 +625,16 @@ public sealed class ProProfile
     public bool NeverWaitsBetweenShots { get; set; } = false;
     public bool NoApproachPause      { get; set; } = false;
 
-    // "I main rifles." Two effects, both deferring eco-vs-buy decisions to
-    // the engine + BotBuy:
-    //   1. At round-freeze, if the bot was given ANY rifle/sniper by the
-    //      engine, swap it for the role's main rifle (AK for T, M4 for CT)
-    //      and pay only the price difference. If they only got a pistol /
-    //      SMG / shotgun, leave it (= the round is eco/semi-buy per the
-    //      engine's read, we don't override that).
-    //   2. Per tick, if the bot is holding a non-rifle but already owns one,
-    //      `use weapon_*` switches them back to it.
+    // "I main rifles." Pure preference — we do not buy, give, refund or
+    // touch the bot's account. Every tick, if the bot is currently holding
+    // a non-rifle but already owns one in inventory, `use weapon_*` switches
+    // them back. The engine + BotBuy fully decide what weapon the bot owns;
+    // we only steer the active slot among what they already have.
     public bool Rifler               { get; set; } = false;
 
-    // AWPer mirror of Rifler. Same swap-not-buy logic: if the bot got a
-    // primary, swap it to AWP (paying the diff); if they only got a small
-    // primary or nothing, leave it. Same per-tick switch-back behavior.
+    // AWPer mirror of Rifler. Same pure-preference logic: if the bot owns
+    // an AWP / SSG08 in inventory, switch to it. If the engine never gave
+    // them a sniper this round, they play whatever they have.
     public bool AWPer                { get; set; } = false;
 
     // Counter-strafe at engagement onset, gated by probability so the bot
