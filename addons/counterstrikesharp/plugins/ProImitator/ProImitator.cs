@@ -246,16 +246,25 @@ public class ProImitator : BasePlugin
             // first — keeps behavior deterministic for misconfigured profiles.
             if (prof.Rifler)
             {
+                // Prices mirror BotBuy.cs price table (AK 2700, M4A1 2900).
                 string preferred = isT ? "weapon_ak47" : "weapon_m4a1";
                 int     price     = isT ? 2700        : 2900;
-                int     fullBuy   = price + 1000;     // + kevlar+helm floor
 
-                TryBuyRolePrimary(player, pawn, preferred, price, fullBuy, FindOwnedRifle);
+                // Full-buy floor = rifle + armor + min nade kit. A pro full-buy
+                // is roughly rifle (2700-2900) + armor (1000) + 1-2 nades
+                // (smoke 300, flash 200, molly/HE 300-500) -> ~4700-5100. We
+                // pick 5000 as a round number that's strict enough that
+                // tagging a "Rifler" never triggers a half-buy panic-rifle
+                // on a 3500$ account.
+                TryBuyRolePrimary(player, pawn, preferred, price, 5000, FindOwnedRifle);
             }
             else if (prof.AWPer)
             {
-                // AWP costs 4750; full-buy floor 5750.
-                TryBuyRolePrimary(player, pawn, "weapon_awp", 4750, 5750, FindOwnedSniper);
+                // AWP 4750 + armor 1000 + nades + pistol upgrade ≈ 6500. The
+                // floor is high on purpose: a pro who can't afford the full
+                // AWP kit shouldn't get a "naked AWP" buy that leaves them
+                // with no utility and a bad pistol.
+                TryBuyRolePrimary(player, pawn, "weapon_awp", 4750, 6500, FindOwnedSniper);
             }
         }
     }

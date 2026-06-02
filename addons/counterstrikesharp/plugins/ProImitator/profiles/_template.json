@@ -81,10 +81,10 @@
 
   // "This pro is a rifler." Two coordinated effects, both eco-aware:
   //
-  //   1. AT ROUND-FREEZE: if the bot can afford a full buy (rifle + armor =
-  //      3700$ for T with AK, 3900$ for CT with M4) AND doesn't already own
-  //      a rifle, ProImitator buys their team's main rifle (AK for T, M4
-  //      for CT) and deducts the price from their account.
+  //   1. AT ROUND-FREEZE: if the bot can afford a full buy (5000$ floor =
+  //      rifle + armor + minimal nade kit) AND doesn't already own a rifle,
+  //      ProImitator buys their team's main rifle (AK for T, M4 for CT)
+  //      and deducts the price from their account.
   //
   //      Below the full-buy floor → DO NOTHING. The bot falls back to
   //      whatever BotBuy / the engine bought (pistol round, eco SMG, etc).
@@ -99,10 +99,10 @@
   "Rifler": false,
 
   // AWPer mirror of Rifler. Same eco logic with the AWP full-buy floor at
-  // 5750$ (AWP 4750 + 1000 armor). Same per-tick switch-back if the bot picks
-  // up a teammate's dropped rifle. SSG08 is also classified as a sniper, so
-  // a profiled AWPer with Scout from an early-round eco buy won't be force-
-  // switched out of it.
+  // 6500$ (AWP 4750 + armor 1000 + nades + pistol upgrade). Same per-tick
+  // switch-back if the bot picks up a teammate's dropped rifle. SSG08 is also
+  // classified as a sniper, so a profiled AWPer with Scout from an early-
+  // round eco buy won't be force-switched out of it.
   "AWPer": false,
 
   // Counter-strafe at engagement onset, gated by probability. On the
