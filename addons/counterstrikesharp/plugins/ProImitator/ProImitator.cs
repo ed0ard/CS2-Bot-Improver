@@ -101,6 +101,16 @@ public class ProImitator : BasePlugin
     // Per-tick logic forces knife if currently in window AND not in combat.
     private readonly Dictionary<int, float> _knifeRushUntil = new();
 
+    // V4.1 — Pre/post-plant phase tracker. Set true on EventBombPlanted,
+    // reset on EventRoundStart. Read by the BombFocus block in
+    // ApplyPersonality to flip attacker/defender intent per side:
+    //   pre-plant  : T = attacker, CT = defender
+    //   post-plant : T = defender (hold the bomb tick), CT = attacker (retake/defuse)
+    //
+    // This is the dmarket "post-plant role inversion" — see the V4 banner
+    // comment in ApplyPersonality for the full design.
+    private bool _bombPlanted = false;
+
     // -------------------------------------------------------------------------
     public override void Load(bool hotReload)
     {
@@ -110,6 +120,7 @@ public class ProImitator : BasePlugin
         RegisterEventHandler<EventPlayerTeam>(OnPlayerTeam);
         RegisterEventHandler<EventRoundStart>(OnRoundStart);
         RegisterEventHandler<EventRoundFreezeEnd>(OnRoundFreezeEnd);
+        RegisterEventHandler<EventBombPlanted>(OnBombPlanted);
         RegisterListener<Listeners.OnTick>(OnTick);
 
         // Register commands as plain game console commands (mirrors how the
@@ -255,9 +266,25 @@ public class ProImitator : BasePlugin
     [GameEventHandler]
     public HookResult OnRoundStart(EventRoundStart @event, GameEventInfo info)
     {
+        // Reset pre/post-plant state for the new round so BombFocus reverts
+        // to its pre-plant intent (T = attacker, CT = defender).
+        _bombPlanted = false;
+
         if (_assigned.Count == 0) return HookResult.Continue;
 
         AddTimer(3.5f, BuyRoleWeapons);
+        return HookResult.Continue;
+    }
+    // -------------------------------------------------------------------------
+    // EventBombPlanted flips the pre/post-plant flag. Combined with BombFocus
+    // in ApplyPersonality, this swaps attacker/defender intent on both sides
+    // — T now needs to defend the plant, CT now needs to retake to defuse.
+    // See dmarket roles guide → "T-side vs CT-side" section for the rationale.
+    // -------------------------------------------------------------------------
+    [GameEventHandler]
+    public HookResult OnBombPlanted(EventBombPlanted @event, GameEventInfo info)
+    {
+        _bombPlanted = true;
         return HookResult.Continue;
     }
     // -------------------------------------------------------------------------
@@ -533,17 +560,25 @@ public class ProImitator : BasePlugin
         //   and the bomb never gets planted. Tactical site execution and
         //   coordinated defence are lost to fragfest behaviour.
         //
-        // What BombFocus does (per-tick, when the trait flag is on):
-        //   T-SIDE: hard-max HurryTimer and clear CheckedHidingSpotCount so
-        //   the bot prioritises moving toward its assigned bombsite over
-        //   stopping for off-angle duels.  This stacks with AlwaysRushing
-        //   when both are set — same field writes, both intents agree.
+        // V4.1 expansion (post-V4 testing feedback):
+        //   - Bomb carrier on T-side now gets an EXTRA-HARD push so they
+        //     don't lurk or wander — they bring the bomb to a site.
+        //   - Pre/post-plant role inversion (dmarket "T-side vs CT-side"
+        //     section): once the bomb is planted, T becomes the defender of
+        //     the plant and CT becomes the attacker who needs to retake.
+        //     BombFocus flips its intent on both sides accordingly.
         //
-        //   CT-SIDE: extend SafeTime so the bot feels "safe at home" near
-        //   its assigned site. It defends the bomb plant rather than
-        //   wandering out toward mid for a long peek. Opposite intent of
-        //   NoSafeTime — these two should NOT both be set on a single
-        //   profile (mutually contradictory).
+        // What BombFocus does per phase:
+        //   PRE-PLANT  T (attacker): HurryTimer maxed, CheckedHidingSpotCount=0
+        //                            Bomb carrier additionally gets IsRunning
+        //                            forced true + SneakTimer/PoliteTimer zeroed.
+        //              CT (defender): SafeTime extended to 8s, holds site.
+        //
+        //   POST-PLANT T (defender): HurryTimer cleared, SafeTime extended to
+        //                            8s, holds the planted site.
+        //              CT (attacker): HurryTimer maxed, CheckedHidingSpotCount=0,
+        //                            retakes toward bomb (engine targets it via
+        //                            its scenario system automatically).
         //
         // What BombFocus deliberately does NOT do:
         //   - Override the engine's bombsite assignment. CS2's nav system
@@ -553,28 +588,36 @@ public class ProImitator : BasePlugin
         //   - Suppress combat. If an enemy actually crosses the bot's path,
         //     normal engagement still happens. This is a *priority* bias,
         //     not a passivity flag.
-        //   - Snapshot bomb-site entities. We rely on the engine knowing
-        //     where its own scenario objectives are; explicit nav-mesh
-        //     traversal from the C# side would be brittle and map-specific.
+        //   - Distribute CTs across A / B / mid. The engine's nav system
+        //     already assigns CT bots to sites at scenario init; forcing a
+        //     specific 2/2/1 split would fight that assignment. If you
+        //     want stronger CT split, deferred future work — would need
+        //     map-specific bombsite position lookup.
         //
         // Tuning notes for future maintainers:
-        //   The two field writes below are the smallest-footprint nudge we
-        //   could find that produced visible behaviour change in playtests.
-        //   If you add more aggressive overrides here (e.g. forcing
-        //   bot.Task or bot.GoalEntity), document the schema fields you
-        //   touch, because BotState may also write them and the load order
-        //   between the two plugins isn't guaranteed.
+        //   The pre/post-plant flag lives in _bombPlanted (set in
+        //   OnBombPlanted, reset in OnRoundStart). The bomb carrier is
+        //   detected by walking the bot's MyWeapons for weapon_c4 — see
+        //   IsCarryingBomb helper. All field writes here are idempotent
+        //   and respect the engine's nav assignment.
         // =====================================================================
         if (prof.BombFocus)
         {
             bool isT  = player.Team == CsTeam.Terrorist;
             bool isCT = player.Team == CsTeam.CounterTerrorist;
 
-            if (isT)
+            // Pre/post-plant phase determines who's the "attacker" (pushing
+            // toward objective) and who's the "defender" (holding ground).
+            //   pre-plant  → T attacks, CT defends
+            //   post-plant → CT attacks (defuse), T defends (the plant)
+            bool isAttacker = (isT && !_bombPlanted) || (isCT && _bombPlanted);
+            bool isDefender = (isCT && !_bombPlanted) || (isT && _bombPlanted);
+
+            if (isAttacker)
             {
-                // Max-out HurryTimer: bot stays in "rush toward goal" mode
-                // for the full round duration. Goal is decided by the
-                // engine's scenario system (the assigned bombsite).
+                // Max HurryTimer: keep moving toward the engine's selected
+                // objective (assigned site pre-plant, planted-bomb position
+                // post-plant for retake).
                 CountdownTimer hurry = bot.HurryTimer;
 
                 ref float hurryDuration  = ref hurry.Duration;
@@ -588,21 +631,56 @@ public class ProImitator : BasePlugin
 
                 // Skip hiding-spot checks while in transit — those are what
                 // makes a bot stop at mid-route corners. The engine still
-                // chooses a hiding spot once it ARRIVES at the site (which
-                // is what defence post-plant needs), this just shortens the
-                // approach phase.
+                // chooses a hiding spot once it ARRIVES at the objective.
                 ref int checkedHidingSpotCount = ref bot.CheckedHidingSpotCount;
                 checkedHidingSpotCount         = 0;
             }
-            else if (isCT)
+            else if (isDefender)
             {
                 // Extend SafeTime: bot stays in "safe at home" perception
                 // longer, meaning it's less likely to peek out for distant
-                // duels. The engine still triggers full alertness once an
-                // enemy is actually nearby; this just stops the early-round
-                // mid-rush behaviour CTs sometimes show.
+                // duels. Pre-plant CTs hold their site; post-plant Ts hold
+                // the planted bomb. Same mechanism for both phases.
                 ref float safeTime = ref bot.SafeTime;
                 safeTime           = 8.0f;
+
+                // Clear HurryTimer so the bot stops trying to advance.
+                // Without this, a T who was AlwaysRushing pre-plant would
+                // keep wandering away from the planted bomb post-plant.
+                CountdownTimer hurry = bot.HurryTimer;
+                ref float hurryDuration = ref hurry.Duration;
+                hurryDuration = 0.0f;
+                ref float hurryTimestamp = ref hurry.Timestamp;
+                hurryTimestamp = 0.0f;
+            }
+
+            // Bomb-carrier extra push (pre-plant T only — post-plant the
+            // bomb is on the ground, no carrier). The bomb-carrier role is
+            // strategically the most important on T-side: they need to GET
+            // TO A SITE and PLANT, not lurk or trade.
+            if (isT && !_bombPlanted && IsCarryingBomb(pawn))
+            {
+                // Force the bot to run (no walking, no crouch-stand).
+                ref bool isRunning = ref bot.IsRunning;
+                isRunning = true;
+
+                // Zero out every "wait" timer so nothing delays the bomb-
+                // carrier — they're the round, they don't lurk, they don't
+                // wait for trades, they don't pause for a sneak peek.
+                CountdownTimer sneak = bot.SneakTimer;
+                ref float sneakDuration  = ref sneak.Duration;
+                sneakDuration            = 0.0f;
+                ref float sneakTimestamp = ref sneak.Timestamp;
+                sneakTimestamp           = 0.0f;
+
+                CountdownTimer polite = bot.PoliteTimer;
+                ref float politeDuration  = ref polite.Duration;
+                politeDuration            = 0.0f;
+                ref float politeTimestamp = ref polite.Timestamp;
+                politeTimestamp           = 0.0f;
+
+                ref bool waitingBehindFriend = ref bot.IsWaitingBehindFriend;
+                waitingBehindFriend = false;
             }
         }
 
@@ -682,10 +760,26 @@ public class ProImitator : BasePlugin
             bool holdingKnife = activeWeapon != null && activeWeapon.StartsWith("weapon_knife");
             if (!holdingKnife)
             {
+                // V4.1 — we now fire BOTH command paths every tick because
+                // playtests showed the client-only `slot3` was getting
+                // consistently outraced by the bot AI's internal weapon
+                // selection (which runs every server tick too).
+                //
+                //   1. `slot3`        — client-side slot selection. Cheap,
+                //                       maps to whatever knife the bot has.
+                //   2. `use weapon_knife` via Server.ExecuteCommand —
+                //                       server-side path through the engine's
+                //                       weapon-use logic. Different priority
+                //                       than slot3 in the command queue, so
+                //                       at least one of the two should win
+                //                       the race against the AI's auto-select
+                //                       on any given tick.
+                //
+                // No cooldown: re-issue every tick until activeWeapon
+                // actually becomes a knife. Once holdingKnife=true the loop
+                // stops issuing.
                 NativeAPI.IssueClientCommand((int)player.Slot, "slot3");
-                // Intentionally no cooldown: re-issue every tick until the
-                // bot is actually on knife. Once holdingKnife=true the issue
-                // stops naturally.
+                Server.ExecuteCommand($"bot_command \"{player.PlayerName}\" use weapon_knife");
             }
         }
 
@@ -735,6 +829,25 @@ public class ProImitator : BasePlugin
                 }
             }
         }
+    }
+    // -------------------------------------------------------------------------
+    // Does the bot's inventory contain the C4? Used by BombFocus to give the
+    // bomb carrier an extra push toward planting (no lurk, no wait, run).
+    // The CS2 C4 designer name is "weapon_c4"; if it's in MyWeapons the bot
+    // is carrying it (only one player per T-side has it at a time).
+    // -------------------------------------------------------------------------
+    private static bool IsCarryingBomb(CCSPlayerPawn pawn)
+    {
+        var weapons = pawn.WeaponServices?.MyWeapons;
+        if (weapons == null) return false;
+
+        foreach (var handle in weapons)
+        {
+            var w = handle.Value;
+            if (w == null || !w.IsValid) continue;
+            if (w.DesignerName == "weapon_c4") return true;
+        }
+        return false;
     }
     // -------------------------------------------------------------------------
     // Is any alive opposing-team player within maxUnits of selfPawn? Used by
