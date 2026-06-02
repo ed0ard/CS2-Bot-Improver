@@ -562,31 +562,34 @@ public class ProImitator : BasePlugin
         //
         // V4.1 added: pre/post-plant inversion + bomb carrier extra push.
         //
-        // V4.2 tone-down (current): V4.1's effects were too heavy in play-
-        // tests — bots looked like "locomotives" running through cover.
-        // The fix is to keep the strategic intent (push site / hold site /
-        // invert post-plant) but make every field write a NUDGE rather than
-        // an override:
-        //   - HurryTimer Duration dropped from 600s (perpetual max) to 10s
-        //     (still refreshed each tick, but with a short "horizon" the
-        //     engine pathing code can interpret as bias, not absolute).
-        //   - CheckedHidingSpotCount=0 REMOVED. That was the line that made
-        //     bots ignore cover. Now the engine's hiding-spot checks run
-        //     normally, just with HurryTimer favouring the objective route.
-        //   - Defender SafeTime dropped from 8s to 3s. Less jumpy on peeks
-        //     but still reacts to clear threats.
-        //   - Bomb carrier no longer gets IsRunning=true and the wait-timer
-        //     wipe. They keep strategic behaviour (cover, peeks, patience)
-        //     and only get a slightly longer hurry horizon (20s vs 10s for
-        //     other Ts) as the "slightly more site-focused than teammates"
-        //     bias the user asked for.
+        // V4.2 tone-down: V4.1 was too heavy ("locomotives"). Switched to
+        // small Duration values (10-20s) and removed CheckedHidingSpotCount=0
+        // override.
         //
-        // What BombFocus does per phase (V4.2 values):
+        // V4.3 calibration (current): V4.2 was too soft on the defending
+        // side and the bomb carrier was indistinguishable from teammates.
+        // Three targeted bumps:
+        //   - CT (and post-plant T) defenders: HurryTimer EXPLICITLY cleared
+        //     (Duration=0, Timestamp=0). Critical because Entry-tagged bots
+        //     on the defending side still have AlwaysRushing in their
+        //     profile, which writes HurryTimer.Duration=600 every tick. If
+        //     BombFocus only writes SafeTime, the AlwaysRushing bot still
+        //     rushes — they look "agressifs trop de fight en dehors des BP".
+        //     The clear here wins the per-tick race against AlwaysRushing.
+        //   - Defender SafeTime raised 3s → 6s. Still not the V4.1 8s, but
+        //     more committed-to-position.
+        //   - Bomb carrier: HurryTimer 20s → 30s AND IsRunning forced true.
+        //     The forced run (no walk) is the visible difference between the
+        //     carrier and other Ts, without the V4.1 timer-wipe extremes
+        //     (SneakTimer / PoliteTimer / IsWaitingBehindFriend still
+        //     untouched — they can still use cover and trade).
+        //
+        // What BombFocus does per phase (V4.3 values):
         //   PRE-PLANT  T (attacker):  HurryTimer.Duration = 10s, refreshed
-        //                             Bomb carrier: HurryTimer.Duration = 20s
-        //              CT (defender): SafeTime = 3s, refreshed
+        //                             Bomb carrier: HurryTimer 30s + IsRunning
+        //              CT (defender): SafeTime = 6s + HurryTimer cleared
         //
-        //   POST-PLANT T (defender):  SafeTime = 3s, refreshed
+        //   POST-PLANT T (defender):  SafeTime = 6s + HurryTimer cleared
         //              CT (attacker): HurryTimer.Duration = 10s, refreshed
         //
         // What BombFocus deliberately does NOT do:
@@ -649,34 +652,51 @@ public class ProImitator : BasePlugin
             }
             else if (isDefender)
             {
-                // Subtle hold bias: SafeTime 3s (V4.1 used 8s). Bot stays
-                // slightly less jumpy on early-round peeks but still
-                // reacts to clear threats. We deliberately do NOT clear
-                // HurryTimer — the engine should keep its natural ability
-                // to chase a wounded enemy or rotate when needed.
+                // Hold bias: SafeTime 6s + HurryTimer EXPLICITLY cleared.
+                //
+                // The HurryTimer clear is the critical bit. Entry profiles
+                // (flameZ on Vitality CT, kyousuke on Falcons CT, makazze
+                // on NaVi CT, …) set HurryTimer.Duration=600 every tick via
+                // their AlwaysRushing trait. Without an explicit clear here,
+                // the defender behaviour gets overwritten and the Entry-
+                // tagged CT just rushes mid as if they were still on T.
+                // SafeTime alone is not enough to override that.
                 ref float safeTime = ref bot.SafeTime;
-                safeTime           = 3.0f;
+                safeTime           = 6.0f;
+
+                CountdownTimer hurry = bot.HurryTimer;
+
+                ref float hurryDuration  = ref hurry.Duration;
+                hurryDuration            = 0.0f;
+
+                ref float hurryTimestamp = ref hurry.Timestamp;
+                hurryTimestamp           = 0.0f;
             }
 
-            // Bomb carrier on pre-plant T-side: slightly more site-focused
-            // than the rest of the T side, but still strategic. They keep
-            // strategic behaviour intact — they use cover, take peeks, wait
-            // for trades — they just have a longer hurry horizon (20s vs
-            // 10s for the other Ts) so they're less likely to peel back to
-            // lurk or back-trade. The V4.1 carrier hack (force IsRunning,
-            // wipe SneakTimer / PoliteTimer / IsWaitingBehindFriend) was
-            // removed: it made the carrier behave like a hold-W zombie
-            // instead of a pro who knows the bomb still needs to be brought
-            // to site safely.
+            // Bomb carrier on pre-plant T-side: more site-focused than the
+            // rest of the T side, but still strategic. V4.3 = HurryTimer
+            // 30s (vs 10s for other Ts) + IsRunning=true (always runs, no
+            // walk). The forced run is the visible "this bot is on
+            // mission" signal; the longer hurry horizon biases their path
+            // choice toward the assigned site.
+            //
+            // V4.1's full timer wipe (SneakTimer / PoliteTimer /
+            // IsWaitingBehindFriend cleared) stays REMOVED — those wiped
+            // away the "strategic" behaviour the user wants the carrier
+            // to keep. They still use cover, still wait for trades, still
+            // pause at angles; they just run a bit faster toward the site.
             if (isT && !_bombPlanted && IsCarryingBomb(pawn))
             {
                 CountdownTimer hurry = bot.HurryTimer;
 
                 ref float hurryDuration  = ref hurry.Duration;
-                hurryDuration            = 20.0f;
+                hurryDuration            = 30.0f;
 
                 ref float hurryTimestamp = ref hurry.Timestamp;
-                hurryTimestamp           = now + 20.0f;
+                hurryTimestamp           = now + 30.0f;
+
+                ref bool isRunning = ref bot.IsRunning;
+                isRunning = true;
             }
         }
 
