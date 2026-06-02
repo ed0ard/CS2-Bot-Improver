@@ -18,5 +18,8 @@
   "NoApproachPause":        false,
   "Rifler":                 true,
 
-  "CounterStrafeChance":    0.75
+  "CounterStrafeChance":    0.75,
+
+  "KnifeRush":              true,
+  "KnifeRushSec":           6.5
 }

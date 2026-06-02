@@ -127,5 +127,26 @@
   //             the timing like a real human would
   //
   // Default 0 means the trait is off; pick a value in (0, 1] to enable.
-  "CounterStrafeChance": 0
+  "CounterStrafeChance": 0,
+
+  // KnifeRush: hold the knife during the peaceful early-round rush so the
+  // bot gets the knife's movement bonus (260 u/s vs 215 with a rifle, 200
+  // with the AWP — ~20% faster). Switches back to the role weapon the
+  // moment either:
+  //   - KnifeRushSec elapses (the bot reaches their expected angle), OR
+  //   - the bot enters a duel (IsAimingAtEnemy flips true → bot AI takes
+  //     over, ProImitator stops fighting the weapon switch).
+  //
+  // Real pros do this on every round on de_*: jog out with knife, switch
+  // ~3s before expected contact. The "expected contact" varies by map
+  // and role — an entry T sees enemies at 4-6s, a CT AWPer holding long
+  // at 8-10s — so tune KnifeRushSec to the player's typical first-contact
+  // timing.
+  //
+  // Suggested values:
+  //   4.0-5.0  = aggressive entry / peeker (donk, m0NESY)
+  //   5.5-6.5  = standard rifler (jL, NiKo)
+  //   7.0-8.0  = patient AWPer holding angles (ZywOo)
+  "KnifeRush":    false,
+  "KnifeRushSec": 5.0
 }

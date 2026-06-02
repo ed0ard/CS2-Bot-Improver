@@ -94,6 +94,13 @@ public class ProImitator : BasePlugin
     private readonly Dictionary<int, float> _counterStrafeUntil = new();
     private const float CounterStrafeDurationSec = 0.12f;
 
+    // KnifeRush state. The pro round-opener: hold knife to gain ~20% movement
+    // speed (260 u/s vs 215 rifle / 200 AWP) during the peaceful rush phase,
+    // switch to weapon ~3s before expected contact. We track until-when the
+    // bot should hold knife (per-profile KnifeRushSec, set in OnRoundFreezeEnd).
+    // Per-tick logic forces knife if currently in window AND not in combat.
+    private readonly Dictionary<int, float> _knifeRushUntil = new();
+
     // -------------------------------------------------------------------------
     public override void Load(bool hotReload)
     {
@@ -102,6 +109,7 @@ public class ProImitator : BasePlugin
         RegisterEventHandler<EventPlayerSpawn>(OnPlayerSpawn);
         RegisterEventHandler<EventPlayerTeam>(OnPlayerTeam);
         RegisterEventHandler<EventRoundStart>(OnRoundStart);
+        RegisterEventHandler<EventRoundFreezeEnd>(OnRoundFreezeEnd);
         RegisterListener<Listeners.OnTick>(OnTick);
 
         // Register commands as plain game console commands (mirrors how the
@@ -195,8 +203,32 @@ public class ProImitator : BasePlugin
             _lastWeaponSwitchAt.Remove(player.Slot);
             _wasAimingAtEnemy.Remove(player.Slot);
             _counterStrafeUntil.Remove(player.Slot);
+            _knifeRushUntil.Remove(player.Slot);
         }
 
+        return HookResult.Continue;
+    }
+    // -------------------------------------------------------------------------
+    // KnifeRush window opens when freeze ends — that's when bots actually start
+    // moving. We just record per-bot "hold knife until time T"; the actual
+    // forced knife switch is done per-tick in ApplyPersonality (so we can
+    // gracefully step aside the moment the bot enters a duel).
+    //
+    // Why not OnRoundStart: freeze can be long (15-20s) and there's no point
+    // holding knife while the bot is rooted in spawn. We want the knife hold
+    // to start the instant the bot can actually move.
+    // -------------------------------------------------------------------------
+    [GameEventHandler]
+    public HookResult OnRoundFreezeEnd(EventRoundFreezeEnd @event, GameEventInfo info)
+    {
+        if (_assigned.Count == 0) return HookResult.Continue;
+
+        float now = Server.CurrentTime;
+        foreach (var kvp in _assigned)
+        {
+            if (!kvp.Value.KnifeRush) continue;
+            _knifeRushUntil[kvp.Key] = now + kvp.Value.KnifeRushSec;
+        }
         return HookResult.Continue;
     }
     // -------------------------------------------------------------------------
@@ -529,7 +561,37 @@ public class ProImitator : BasePlugin
             _wasAimingAtEnemy[player.Slot] = isAimingAtEnemy;
         }
 
-        if (prof.Rifler)
+        // ---------------------------------------------------------------------
+        // KnifeRush: hold knife during the peaceful early-round rush phase
+        // (faster movement) and switch to the role weapon once contact is
+        // imminent. The window was opened in OnRoundFreezeEnd; we keep
+        // forcing knife per-tick until either:
+        //   - the window expires (KnifeRushSec elapsed since freeze end)
+        //   - the bot enters a duel (IsAimingAtEnemy goes true → AI takes
+        //     over, we step aside so the engine can pull the weapon).
+        //
+        // When forceKnife is true we skip the Rifler / AWPer switch-back
+        // blocks below — otherwise they'd immediately undo our knife pull
+        // every tick.
+        // ---------------------------------------------------------------------
+        bool inKnifeRush = _knifeRushUntil.TryGetValue(player.Slot, out float kRushUntil)
+                        && now < kRushUntil;
+        bool inDuel      = bot.IsAimingAtEnemy;
+        bool forceKnife  = inKnifeRush && !inDuel;
+
+        if (forceKnife)
+        {
+            bool holdingKnife = activeWeapon != null && activeWeapon.StartsWith("weapon_knife");
+            if (!holdingKnife
+                && (!_lastWeaponSwitchAt.TryGetValue(player.Slot, out float lastAtK)
+                    || now - lastAtK > WeaponSwitchCooldownSec))
+            {
+                NativeAPI.IssueClientCommand((int)player.Slot, "use weapon_knife");
+                _lastWeaponSwitchAt[player.Slot] = now;
+            }
+        }
+
+        if (prof.Rifler && !forceKnife)
         {
             // Pure preference: if the bot has a rifle in inventory but is
             // currently holding something else (pistol from auto-switch on
@@ -557,7 +619,7 @@ public class ProImitator : BasePlugin
             }
         }
 
-        if (prof.AWPer)
+        if (prof.AWPer && !forceKnife)
         {
             // AWPer mirror of the Rifler switch-back. Same cooldown, same
             // no-give policy: if the engine ever gave the bot an AWP / SSG08
@@ -754,4 +816,16 @@ public sealed class ProProfile
     // 0.7 ~ 0.8 = pro-level: clean most of the time, occasionally misses
     //             the timing like a real human.
     public float CounterStrafeChance { get; set; } = 0f;
+
+    // KnifeRush: hold knife during the peaceful early-round rush so the bot
+    // gets the knife's movement bonus (~20% faster: 260 u/s vs 215 rifle,
+    // 200 AWP). Switches back to the role weapon either after KnifeRushSec
+    // elapses OR the moment the bot enters a duel (whichever comes first).
+    //
+    // Real pros do this all the time on de_*: jog out with the knife,
+    // switch ~3s before expected contact. The "expected contact" varies by
+    // map and role — entry T sees enemies sooner than a CT AWPer holding
+    // a long angle — so KnifeRushSec is per-profile.
+    public bool  KnifeRush    { get; set; } = false;
+    public float KnifeRushSec { get; set; } = 5.0f;
 }

@@ -19,5 +19,8 @@
   "Rifler":                 false,
   "AWPer":                  true,
 
-  "CounterStrafeChance":    0.85
+  "CounterStrafeChance":    0.85,
+
+  "KnifeRush":              true,
+  "KnifeRushSec":           4.5
 }
