@@ -121,6 +121,25 @@ public class ProImitator : BasePlugin
     private readonly Dictionary<int, bool>  _carrierRunDecision = new();
     private const float CarrierRunFlipIntervalSec = 3.0f;
 
+    // V4.5 — Debug logging toggle. Off by default; flip with `pro_debug`
+    // console command. When on, the plugin logs lifecycle events (round
+    // start, freeze end, bomb planted/dropped) and per-bot state changes
+    // (knife rush start/end, carrier detection, BombFocus phase) to the
+    // server console. Used to verify that traits are actually firing — if
+    // a behaviour looks broken in game and the logs show the codepath
+    // isn't running, the bug is upstream (event registration, profile
+    // load); if logs show the codepath IS running but in-game behaviour
+    // is wrong, the bug is the schema write or command.
+    private bool _debugLog = false;
+
+    // Per-bot state-change trackers for logging (edge-detected). Avoids
+    // spamming the console at 64Hz with the same state info every tick.
+    private readonly Dictionary<int, bool> _logKnifeForceWasActive = new();
+    private readonly Dictionary<int, bool> _logWasCarrier          = new();
+    // Last reported dropped-bomb seen-state for the "now defending dropped
+    // bomb" CT log — null = no dropped bomb last tick.
+    private bool _logBombWasDropped = false;
+
     // -------------------------------------------------------------------------
     public override void Load(bool hotReload)
     {
@@ -140,6 +159,7 @@ public class ProImitator : BasePlugin
         AddCommand("pro_list",     "List Pro-Imitator profiles loaded from disk",          OnProListCmd);
         AddCommand("pro_assigned", "List bots that currently have a Pro-Imitator profile", OnProAssignedCmd);
         AddCommand("pro_reload",   "Re-read JSON profiles from disk",                       OnProReloadCmd);
+        AddCommand("pro_debug",    "Toggle Pro-Imitator debug logging to server console",  OnProDebugCmd);
 
         Console.WriteLine($"[Pro-Imitator] loaded with {_profiles.Count} profile(s): "
                           + string.Join(", ", _profiles.Values.Select(p => p.Name)));
@@ -227,6 +247,8 @@ public class ProImitator : BasePlugin
             _knifeRushUntil.Remove(player.Slot);
             _carrierRunFlipAt.Remove(player.Slot);
             _carrierRunDecision.Remove(player.Slot);
+            _logKnifeForceWasActive.Remove(player.Slot);
+            _logWasCarrier.Remove(player.Slot);
         }
 
         return HookResult.Continue;
@@ -247,10 +269,20 @@ public class ProImitator : BasePlugin
         if (_assigned.Count == 0) return HookResult.Continue;
 
         float now = Server.CurrentTime;
+        int knifeRushCount = 0;
         foreach (var kvp in _assigned)
         {
             if (!kvp.Value.KnifeRush) continue;
             _knifeRushUntil[kvp.Key] = now + kvp.Value.KnifeRushSec;
+            knifeRushCount++;
+            if (_debugLog)
+            {
+                Console.WriteLine($"[Pro-Imitator-DBG] knife rush window opened slot={kvp.Key} profile={kvp.Value.Name} until=+{kvp.Value.KnifeRushSec:F1}s");
+            }
+        }
+        if (_debugLog)
+        {
+            Console.WriteLine($"[Pro-Imitator-DBG] OnRoundFreezeEnd: {_assigned.Count} profiled, {knifeRushCount} got knife rush windows");
         }
         return HookResult.Continue;
     }
@@ -280,7 +312,13 @@ public class ProImitator : BasePlugin
     {
         // Reset pre/post-plant state for the new round so BombFocus reverts
         // to its pre-plant intent (T = attacker, CT = defender).
-        _bombPlanted = false;
+        _bombPlanted        = false;
+        _logBombWasDropped  = false;
+
+        if (_debugLog)
+        {
+            Console.WriteLine($"[Pro-Imitator-DBG] OnRoundStart fired. assigned={_assigned.Count} bots, _bombPlanted reset to false");
+        }
 
         if (_assigned.Count == 0) return HookResult.Continue;
 
@@ -297,6 +335,10 @@ public class ProImitator : BasePlugin
     public HookResult OnBombPlanted(EventBombPlanted @event, GameEventInfo info)
     {
         _bombPlanted = true;
+        if (_debugLog)
+        {
+            Console.WriteLine("[Pro-Imitator-DBG] OnBombPlanted fired → switching to post-plant role inversion (T defender, CT attacker)");
+        }
         return HookResult.Continue;
     }
     // -------------------------------------------------------------------------
@@ -404,6 +446,19 @@ public class ProImitator : BasePlugin
 
         float now = Server.CurrentTime;
 
+        // V4.5 — Find dropped-bomb position once per tick, not per profiled bot.
+        // null if no bomb is currently dropped (carried, planted, or absent).
+        // Edge-log when state transitions for debug visibility.
+        Vector? droppedBombPos = _bombPlanted ? null : FindDroppedBombPosition();
+        bool bombDroppedNow = droppedBombPos != null;
+        if (_debugLog && bombDroppedNow != _logBombWasDropped)
+        {
+            Console.WriteLine(bombDroppedNow
+                ? $"[Pro-Imitator-DBG] BOMB_DROPPED at ({droppedBombPos!.X:F0},{droppedBombPos.Y:F0},{droppedBombPos.Z:F0}) — CT in range will hold harder"
+                : "[Pro-Imitator-DBG] BOMB no longer dropped (picked up, planted, or round reset)");
+            _logBombWasDropped = bombDroppedNow;
+        }
+
         foreach (var player in Utilities.FindAllEntitiesByDesignerName<CCSPlayerController>("cs_player_controller"))
         {
             if (!player.IsValid || !player.IsBot) continue;
@@ -421,7 +476,7 @@ public class ProImitator : BasePlugin
             // Weapon name is needed by a couple of traits. Cheap to read once.
             string? activeWeapon = pawn.WeaponServices?.ActiveWeapon?.Value?.DesignerName;
 
-            ApplyPersonality(player, bot, pawn, prof, now, activeWeapon);
+            ApplyPersonality(player, bot, pawn, prof, now, activeWeapon, droppedBombPos);
         }
     }
     // -------------------------------------------------------------------------
@@ -430,7 +485,7 @@ public class ProImitator : BasePlugin
     // Each block is opt-in; profiles can mix-and-match. Anything not listed in
     // a profile is left untouched (BotState's generic improvements still apply).
     // -------------------------------------------------------------------------
-    private void ApplyPersonality(CCSPlayerController player, CCSBot bot, CCSPlayerPawn pawn, ProProfile prof, float now, string? activeWeapon)
+    private void ApplyPersonality(CCSPlayerController player, CCSBot bot, CCSPlayerPawn pawn, ProProfile prof, float now, string? activeWeapon, Vector? droppedBombPos)
     {
         if (prof.AlwaysRushing)
         {
@@ -668,8 +723,27 @@ public class ProImitator : BasePlugin
                 // the defender behaviour gets overwritten and the Entry-
                 // tagged CT just rushes mid as if they were still on T.
                 // SafeTime alone is not enough to override that.
+                float defenderSafeTime = 6.0f;
+
+                // V4.5 dropped-bomb defence: if the bomb is on the ground
+                // (carrier died pre-plant) and this CT can guard it (within
+                // 1500u), bump SafeTime higher so they hold the bomb area
+                // harder. Denies T pickup attempts and forces Ts to clear
+                // the immediate bomb perimeter, not just any CT angle.
+                if (isCT && droppedBombPos != null && pawn.AbsOrigin != null)
+                {
+                    float dx = pawn.AbsOrigin.X - droppedBombPos.X;
+                    float dy = pawn.AbsOrigin.Y - droppedBombPos.Y;
+                    float dz = pawn.AbsOrigin.Z - droppedBombPos.Z;
+                    float distSq = dx * dx + dy * dy + dz * dz;
+                    if (distSq < 1500f * 1500f)
+                    {
+                        defenderSafeTime = 9.0f;  // stronger hold around the bomb
+                    }
+                }
+
                 ref float safeTime = ref bot.SafeTime;
-                safeTime           = 6.0f;
+                safeTime           = defenderSafeTime;
 
                 CountdownTimer hurry = bot.HurryTimer;
 
@@ -696,7 +770,25 @@ public class ProImitator : BasePlugin
             // IsWaitingBehindFriend cleared) stay REMOVED — those wiped
             // away the "strategic" behaviour the user wants the carrier
             // to keep.
-            if (isT && !_bombPlanted && IsCarryingBomb(pawn))
+            bool isCarrier = isT && !_bombPlanted && IsCarryingBomb(pawn);
+
+            // Edge-logged carrier detection (state change only).
+            if (_debugLog)
+            {
+                bool wasCarrier = _logWasCarrier.GetValueOrDefault(player.Slot, false);
+                if (isCarrier && !wasCarrier)
+                {
+                    Console.WriteLine($"[Pro-Imitator-DBG] CARRIER slot={player.Slot} bot={player.PlayerName} (BombFocus extra applied)");
+                    _logWasCarrier[player.Slot] = true;
+                }
+                else if (!isCarrier && wasCarrier)
+                {
+                    Console.WriteLine($"[Pro-Imitator-DBG] CARRIER no longer slot={player.Slot} bot={player.PlayerName}");
+                    _logWasCarrier[player.Slot] = false;
+                }
+            }
+
+            if (isCarrier)
             {
                 CountdownTimer hurry = bot.HurryTimer;
 
@@ -795,6 +887,22 @@ public class ProImitator : BasePlugin
         }
         bool forceKnife = inKnifeRush && !inDuel;
 
+        // Edge-detected log: knife force START / END (only when state flips).
+        if (_debugLog)
+        {
+            bool wasActive = _logKnifeForceWasActive.GetValueOrDefault(player.Slot, false);
+            if (forceKnife && !wasActive)
+            {
+                Console.WriteLine($"[Pro-Imitator-DBG] KNIFE_FORCE START slot={player.Slot} bot={player.PlayerName} (active={activeWeapon ?? "null"})");
+                _logKnifeForceWasActive[player.Slot] = true;
+            }
+            else if (!forceKnife && wasActive)
+            {
+                Console.WriteLine($"[Pro-Imitator-DBG] KNIFE_FORCE END slot={player.Slot} bot={player.PlayerName} (active={activeWeapon ?? "null"})");
+                _logKnifeForceWasActive[player.Slot] = false;
+            }
+        }
+
         if (forceKnife)
         {
             bool holdingKnife = activeWeapon != null && activeWeapon.StartsWith("weapon_knife");
@@ -869,6 +977,34 @@ public class ProImitator : BasePlugin
                 }
             }
         }
+    }
+    // -------------------------------------------------------------------------
+    // V4.5 — Find the dropped bomb's world position, or null if no bomb is
+    // currently dropped (carried, planted, or absent). A "dropped" C4 is a
+    // weapon_c4 entity whose OwnerEntity is invalid or null — the carrier
+    // either died or willingly dropped it. Excludes planted bombs (those
+    // become CPlantedC4 with a different designer name and stop being
+    // pickable).
+    //
+    // Used by BombFocus to make CTs near the dropped bomb hold harder
+    // (extra-defensive SafeTime), so they deny T pickup attempts.
+    //
+    // Caller responsibility: cache the result per-tick to avoid running
+    // FindAllEntitiesByDesignerName once per profiled bot per tick.
+    // -------------------------------------------------------------------------
+    private static Vector? FindDroppedBombPosition()
+    {
+        foreach (var bomb in Utilities.FindAllEntitiesByDesignerName<CC4>("weapon_c4"))
+        {
+            if (bomb == null || !bomb.IsValid) continue;
+
+            // OwnerEntity null/invalid = dropped (no carrier).
+            var owner = bomb.OwnerEntity?.Value;
+            if (owner != null && owner.IsValid) continue;
+
+            return bomb.AbsOrigin;
+        }
+        return null;
     }
     // -------------------------------------------------------------------------
     // Does the bot's inventory contain the C4? Used by BombFocus to give the
@@ -1026,6 +1162,23 @@ public class ProImitator : BasePlugin
         }
 
         cmd.ReplyToCommand($"[Pro-Imitator] reloaded: {_profiles.Count} profile(s) (was {oldCount}), re-evaluated {_assigned.Count} bot(s)");
+    }
+    // -------------------------------------------------------------------------
+    // Toggle the V4.5 debug logger. Off by default — keeps the server console
+    // clean for normal play. Turn it on when investigating "is feature X
+    // actually running?" — the logs cover round lifecycle events, knife rush
+    // edges, carrier detection, BombFocus phase transitions, dropped-bomb
+    // defence triggers. See the _debugLog field comment for what each log
+    // line means.
+    // -------------------------------------------------------------------------
+    public void OnProDebugCmd(CCSPlayerController? caller, CommandInfo cmd)
+    {
+        _debugLog = !_debugLog;
+        cmd.ReplyToCommand($"[Pro-Imitator] debug logging {(_debugLog ? "ON" : "OFF")}");
+        if (_debugLog)
+        {
+            Console.WriteLine("[Pro-Imitator-DBG] enabled. Round lifecycle + per-bot state changes will log to this console.");
+        }
     }
 }
 // -----------------------------------------------------------------------------
