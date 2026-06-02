@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Runtime.InteropServices;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes;
@@ -9,31 +10,111 @@ using CounterStrikeSharp.API.Core.Capabilities;
 using RayTraceAPI;
 using Microsoft.Extensions.Logging;
 
-
 namespace BotAimImprover;
 
+// ============================================================
+// Config (configs/plugins/BotAimImprover/BotAimImprover.json)
+// Pick a difficulty Preset; any non-null field in Overrides wins over it.
+// ============================================================
+public class BotAimConfig : BasePluginConfig
+{
+    public override int Version { get; set; } = 1;
+
+    // "low" | "medium" | "high"
+    public string Preset { get; set; } = "medium";
+
+    public BotAimOverrides Overrides { get; set; } = new();
+}
+
+public class BotAimOverrides
+{
+    // World-unit aim error (added to m_targetSpot). Settled = BASE; just-spotted
+    // adds DECAY, fading over TAU seconds.
+    public float? BaseErrMin { get; set; }
+    public float? BaseErrMax { get; set; }
+    public float? DecayErrMin { get; set; }
+    public float? DecayErrMax { get; set; }
+    public float? TauMin { get; set; }
+    public float? TauMax { get; set; }
+    public float? VertErrScale { get; set; }
+
+    // Fraction of bots that aim head/jaw (the headshot-rate dial).
+    public float? HighAimFraction { get; set; }
+
+    // Reaction lag: aim at where the enemy was ReactMs ago, led by LeadK.
+    public float? ReactMsMin { get; set; }
+    public float? ReactMsMax { get; set; }
+    public float? LeadKMin { get; set; }
+    public float? LeadKMax { get; set; }
+    public float? AccelKMin { get; set; }
+    public float? AccelKMax { get; set; }
+    public bool?  LagEnabled { get; set; }
+
+    // Global multipliers / misc.
+    public float? ErrorScale { get; set; }
+    public float? PartRepickInterval { get; set; }
+}
+
 [MinimumApiVersion(305)]
-public class BotAimImprover : BasePlugin
+public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
 {
     public override string ModuleName => "BotAimImprover";
-    public override string ModuleVersion => "2.0.2";
+    public override string ModuleVersion => "4.0.0";
     public override string ModuleAuthor => "ed0ard";
-    public override string ModuleDescription => "Restores intelligent aim part selection for CS2 bots.";
+    public override string ModuleDescription => "Unified smart bot aim: per-bot skill, dwell-decaying error, sticky parts, reaction lag.";
+
+    public BotAimConfig Config { get; set; } = new();
 
     // ============================================================
-    // Full-body derived aim points. Each point is defined in the enemy's local frame:
-    //   pos.xy = origin.xy + RIGHT * Lateral   (RIGHT = player's right, from yaw)
-    //   pos.z  = origin.z  + eyeZ * Frac        (FeetAbsRise>0 means absolute z+rise)
-    // Heights (Frac of live eyeZ) come from tm_phoenix/ctm_sas spine bone world heights;
-    // lateral offsets from hitbox radii + measured shoulder/elbow widths.
-    // Index in this array is the part id used everywhere else.
+    // Platform-specific memory layout. Verified offsets:
+    //   Linux  libserver.so 2026-05-28 (PickNewAimSpot @ 0xb57170 + consumer 0xb4a650)
+    //   Windows server.dll  2026-05-19 (from the original BotAimImprover v2.0.2)
+    // Fields set to 0 are unknown on that platform and handled gracefully.
+    // ============================================================
+    private readonly struct Offsets
+    {
+        public readonly int TargetSpot;   // Vector(3) - base aim point (the bot shoots here)
+        public readonly int TsVel;        // Vector(3) - m_targetSpotVelocity (engine extrapolates spot by this each frame)
+        public readonly int TsTime;       // float     - m_targetSpotTime (curtime the spot was set; fTimeSinceAimSpot = now - this)
+        public readonly int Enemy;        // CHandle
+        public readonly int IsVisible;    // bool
+        public readonly int PBot;         // CCSPlayerPawn->m_pBot (controller mapping; best-effort)
+        public readonly int BotEye;       // CCSBot cached shoot origin (0 = use controller eye)
+        public readonly int AimErrX, AimErrY, AimErrZ, AimError; // native aim-error (0 = don't touch)
+        public readonly string Sig;
+        public Offsets(int ts, int tsVel, int tsTime, int en, int vis, int pbot, int eye,
+                       int ex, int ey, int ez, int aerr, string sig)
+        { TargetSpot = ts; TsVel = tsVel; TsTime = tsTime; Enemy = en; IsVisible = vis; PBot = pbot; BotEye = eye;
+          AimErrX = ex; AimErrY = ey; AimErrZ = ez; AimError = aerr; Sig = sig; }
+    }
+
+    private static readonly Offsets LINUX = new(
+        ts: 0x597C, tsVel: 0x5988, tsTime: 0x59B8,   // all verified vs libserver.so 2026-05-28 (PickNewAimSpot writes)
+        en: 0x59E8, vis: 0x59EC, pbot: 0x1568, eye: 0x100,
+        ex: 0x59A0, ey: 0x59A4, ez: 0x59A8, aerr: 0x59BC,
+        sig: "55 48 89 E5 41 55 41 54 53 48 89 FB 48 83 EC 58 8B 8F E8 59 00 00 83 F9 FF");
+
+    private static readonly Offsets WINDOWS = new(
+        // TODO(windows): tsVel/tsTime are best-guesses from the Linux relative deltas
+        // (ts+0xC, ts+0x3C) applied to the Windows m_targetSpot 0x59A4. The intra-cluster
+        // layout matched Linux for ts/enemy (both +0x6C apart), so these are likely right,
+        // but verify against a current server.dll before trusting the Windows prediction path.
+        ts: 0x59A4, tsVel: 0x59B0, tsTime: 0x59E0,
+        en: 0x5A10, vis: 0x5A14, pbot: 0x1298, eye: 0 /*use controller*/,
+        ex: 0, ey: 0, ez: 0, aerr: 0 /*don't neutralize native error*/,
+        sig: "48 8B C4 55 57 48 8D 68 A1 48 81 EC A8 00 00 00 48 8B F9 0F 29 70 D8 8B 89 10 5A 00 00 83 F9 FF");
+
+    private Offsets _off;
+
+    // ============================================================
+    // Derived aim points (enemy local frame). Index is the part id.
     // ============================================================
     private readonly struct AimPoint
     {
         public readonly string Name;
-        public readonly float Frac;        // height as fraction of live eyeZ (ignored if FeetAbs)
-        public readonly float Lateral;     // +right / -left, world units
-        public readonly bool  FeetAbs;     // true => z = origin.z + Frac (absolute rise), lateral 0
+        public readonly float Frac;
+        public readonly float Lateral;
+        public readonly bool  FeetAbs;
         public AimPoint(string n, float f, float lat, bool feetAbs = false)
         { Name = n; Frac = f; Lateral = lat; FeetAbs = feetAbs; }
     }
@@ -56,99 +137,191 @@ public class BotAimImprover : BasePlugin
         new("RIGHT_THIGH",    0.38f,  5f),   // 13
         new("LEFT_SHIN",      0.15f, -5f),   // 14
         new("RIGHT_SHIN",     0.15f,  5f),   // 15
-        new("FEET",           5.0f,   0f, true), // 16  // absolute z + 5
+        new("FEET",           5.0f,   0f, true), // 16
     };
-    // Priority orders (values are indices into _aimPoints), highest priority first.
-    // Tiers: core > centerline > side > shoulder > limb > feet.
-    // Within a tier, higher points come first. Left/right of equal height share a tier
 
     private static readonly int[] _priorityHead =
-    {
-        0, 1, 2,         // HEAD, NECK, JAW
-        3, 4, 5,         // CHEST, GUT, PELVIS
-        6, 7, 10, 11,    // L_CHEST, R_CHEST, L_GUT, R_GUT
-        8, 9,            // L_SHOULDER, R_SHOULDER
-        12, 13, 14, 15,  // L_THIGH, R_THIGH, L_SHIN, R_SHIN
-        16               // FEET
-    };
-
+        { 0, 1, 2, 3, 4, 5, 6, 7, 10, 11, 8, 9, 12, 13, 14, 15, 16 };
     private static readonly int[] _priorityJaw =
-    {
-        2, 1, 0,         // JAW, NECK, HEAD
-        3, 4, 5,         // CHEST, GUT, PELVIS
-        6, 7, 10, 11,    // L_CHEST, R_CHEST, L_GUT, R_GUT
-        8, 9,            // L_SHOULDER, R_SHOULDER
-        12, 13, 14, 15,  // L_THIGH, R_THIGH, L_SHIN, R_SHIN
-        16               // FEET
-    };
-
+        { 2, 1, 0, 3, 4, 5, 6, 7, 10, 11, 8, 9, 12, 13, 14, 15, 16 };
+    // Body order leads with GUT/PELVIS (low) so recoil climb tops out at the chest.
     private static readonly int[] _priorityBody =
+        { 4, 5, 11, 10, 3, 7, 6, 8, 9, 2, 1, 0, 12, 13, 14, 15, 16 };
+
+    // ============================================================
+    // Resolved tuning (preset merged with overrides). Live-editable.
+    // ============================================================
+    private struct Tuning
     {
-        3, 4, 5,         // CHEST, GUT, PELVIS
-        6, 7, 10, 11,    // L_CHEST, R_CHEST, L_GUT, R_GUT
-        8, 9,            // L_SHOULDER, R_SHOULDER
-        2, 1, 0,         // JAW, NECK, HEAD
-        12, 13, 14, 15,  // L_THIGH, R_THIGH, L_SHIN, R_SHIN
-        16               // FEET
+        public float BaseErrMin, BaseErrMax, DecayErrMin, DecayErrMax, TauMin, TauMax, VertErrScale;
+        public float HighAimFraction;
+        public float ReactMsMin, ReactMsMax, LeadKMin, LeadKMax;
+        public float AccelKMin, AccelKMax;   // accel-prediction lead time (s); 0 = no accel prediction
+        public float ErrorScale, PartRepickInterval;
+        public bool  LagEnabled;
+    }
+    private Tuning _t;
+
+    private static Tuning PresetFor(string name) => name.Trim().ToLowerInvariant() switch
+    {
+        "low" => new Tuning   // easy: loose, body-aiming, slow + low-lead reactions
+        {
+            BaseErrMin = 4f, BaseErrMax = 9f, DecayErrMin = 10f, DecayErrMax = 22f,
+            TauMin = 0.40f, TauMax = 0.90f, VertErrScale = 0.80f, HighAimFraction = 0.14f,
+            ReactMsMin = 200f, ReactMsMax = 320f, LeadKMin = 0.40f, LeadKMax = 0.70f,
+            AccelKMin = 0.00f, AccelKMax = 0.00f,   // easy bots don't anticipate accel — get juked
+            ErrorScale = 1f, PartRepickInterval = 0.85f, LagEnabled = true,
+        },
+        "high" => new Tuning  // hard: tight, head-prone, fast + near-full-lead reactions
+        {
+            BaseErrMin = 1f, BaseErrMax = 3f, DecayErrMin = 3f, DecayErrMax = 8f,
+            TauMin = 0.25f, TauMax = 0.60f, VertErrScale = 0.80f, HighAimFraction = 0.60f,
+            ReactMsMin = 90f, ReactMsMax = 180f, LeadKMin = 0.85f, LeadKMax = 1.05f,
+            AccelKMin = 0.10f, AccelKMax = 0.16f,   // hard bots lead into strafe accel
+            ErrorScale = 1f, PartRepickInterval = 0.60f, LagEnabled = true,
+        },
+        _ => new Tuning       // medium (default)
+        {
+            BaseErrMin = 2f, BaseErrMax = 5f, DecayErrMin = 5f, DecayErrMax = 13f,
+            TauMin = 0.35f, TauMax = 0.80f, VertErrScale = 0.80f, HighAimFraction = 0.30f,
+            ReactMsMin = 140f, ReactMsMax = 260f, LeadKMin = 0.60f, LeadKMax = 0.90f,
+            AccelKMin = 0.05f, AccelKMax = 0.10f,   // some accel anticipation
+            ErrorScale = 1f, PartRepickInterval = 0.75f, LagEnabled = true,
+        },
     };
-    // ============================================================
-    // Memory offsets (2026-05-19)
-    // ============================================================
-    // CCSBot fields:
-    private const int OFF_M_TARGETSPOT       = 0x59A4; // Vector(3 floats)
-    private const int OFF_M_ENEMY_HANDLE     = 0x5A10; // CHandle (4 bytes)
-    private const int OFF_M_IS_ENEMY_VISIBLE = 0x5A14; // bool
-
-    // CCSPlayerPawn->m_pBot is a CCSBot*. Used to map controller -> pawn -> bot for caching.
-    private const int OFF_PAWN_M_PBOT = 0x1298;
-
-    // ============================================================
-    // Function signature - server.dll 2026-05-19 build, Windows x64.
-    // ============================================================
-    private const string SIG_PICK_NEW_AIM_SPOT =
-        "48 8B C4 55 57 48 8D 68 A1 48 81 EC A8 00 00 00 48 8B F9 0F 29 70 D8 8B 89 10 5A 00 00 83 F9 FF";
 
     private MemoryFunctionVoid<IntPtr>? _pickNewAimSpot;
     private static readonly PluginCapability<CRayTraceInterface> _rayTraceCapability =
         new("raytrace:craytraceinterface");
 
-    // Cache: CCSBot* -> bot's UserId .
-    // Cleared on round_start and per-bot on disconnect.
-    private readonly ConcurrentDictionary<IntPtr, int> _botToControllerUserId = new();
-
-    // Aim mode controlled by the `bot_aim` console command:
-    //   Mixed = priority logic; snipers + spread weapons aim body-first, others head-first
-    //   Head  = always head-first
-    //   Body  = always body-first
     private enum AimMode { MIXED, HEAD, BODY }
     private AimMode _aimMode = AimMode.MIXED;
 
-    // Weapons that aim body-first when in Mixed mode (snipers + high-spread / shotguns).
     private static readonly HashSet<string> _bodyFirstWeapons = new()
     {
         "weapon_awp", "weapon_ssg08", "weapon_p90", "weapon_bizon",
         "weapon_nova", "weapon_xm1014", "weapon_sawedoff", "weapon_mag7", "weapon_revolver"
     };
 
-    // One-shot flag so we log a single confirmation that overrides are actually firing.
-    private bool _firstOverrideLogged = false;
+    private enum AimBias { HEAD, JAW, BODY }
+
+    private sealed class BotState
+    {
+        public Random Rng = new();
+        public float   BaseErr, DecayErr, Tau, ReactionMs, LeadK, AccelK;
+        public AimBias Bias;
+        public float VisibleSince = -1f;
+        public int   LastEnemyIdx = -1;
+        public int   CurrentPart  = -1;
+        public float PartChosenAt = -1f;
+        public string? Weapon;            // resolved on part re-pick
+
+        // Smoothed-error drift: a standard-normal offset that wanders (OU process)
+        // instead of teleporting to a fresh random point every pick.
+        public float OffX, OffY, OffZ;
+        public float DriftT = -1f;        // last drift-update time
+
+        // Cached bot eye (refreshed on each part re-pick) for angular error scaling.
+        public float EyeX, EyeY, EyeZ;
+        public bool  HasEye;
+    }
+
+    private readonly ConcurrentDictionary<IntPtr, BotState> _botState = new();
+
+    // Per-entity position history (reaction lag). Keyed by pawn entity index.
+    private struct Sample { public float T, PX, PY, PZ, VX, VY, VZ, Yaw, EyeZ; }
+
+    private sealed class History
+    {
+        public const int CAP = 48;
+        public readonly Sample[] Buf = new Sample[CAP];
+        public int Count = 0, Head = 0;
+
+        public void Push(in Sample s)
+        {
+            Buf[Head] = s;
+            Head = (Head + 1) % CAP;
+            if (Count < CAP) Count++;
+        }
+
+        // Most recent sample at or before targetT; oldest if none older. -1 if empty.
+        public int IndexAt(float targetT)
+        {
+            int best = -1;
+            for (int i = 0; i < Count; i++)
+            {
+                int idx = (Head - 1 - i + CAP) % CAP;
+                best = idx;
+                if (Buf[idx].T <= targetT) return idx;
+            }
+            return best;
+        }
+    }
+
+    private readonly Dictionary<int, History> _history = new();
+    private readonly bool[] _visBuf = new bool[_aimPoints.Length];  // reusable visibility mask
+
+    // Diagnostics.
+    private long   _hookCalls = 0, _writes = 0, _gateBail = 0, _botResolveFail = 0;
+    private string _lastInfo = "(none yet)";
+    private long   _botKills = 0, _botHsKills = 0;
 
     // ============================================================
-    // Lifecycle
+    // Config lifecycle
+    // ============================================================
+    public void OnConfigParsed(BotAimConfig config)
+    {
+        Config = config;
+        ApplyConfig();
+    }
+
+    private static void Set(ref float dst, float? v) { if (v.HasValue) dst = v.Value; }
+
+    private void ApplyConfig()
+    {
+        var t = PresetFor(Config.Preset);
+        var o = Config.Overrides ?? new BotAimOverrides();
+        Set(ref t.BaseErrMin,  o.BaseErrMin);
+        Set(ref t.BaseErrMax,  o.BaseErrMax);
+        Set(ref t.DecayErrMin, o.DecayErrMin);
+        Set(ref t.DecayErrMax, o.DecayErrMax);
+        Set(ref t.TauMin,      o.TauMin);
+        Set(ref t.TauMax,      o.TauMax);
+        Set(ref t.VertErrScale, o.VertErrScale);
+        Set(ref t.ReactMsMin,  o.ReactMsMin);
+        Set(ref t.ReactMsMax,  o.ReactMsMax);
+        Set(ref t.LeadKMin,    o.LeadKMin);
+        Set(ref t.LeadKMax,    o.LeadKMax);
+        Set(ref t.AccelKMin,   o.AccelKMin);
+        Set(ref t.AccelKMax,   o.AccelKMax);
+        Set(ref t.PartRepickInterval, o.PartRepickInterval);
+        if (o.HighAimFraction.HasValue) t.HighAimFraction = Math.Clamp(o.HighAimFraction.Value, 0f, 1f);
+        if (o.ErrorScale.HasValue)      t.ErrorScale      = Math.Clamp(o.ErrorScale.Value, 0f, 10f);
+        if (o.LagEnabled.HasValue)      t.LagEnabled      = o.LagEnabled.Value;
+        _t = t;
+        _botState.Clear(); // re-roll personalities with new tuning
+    }
+
+    // ============================================================
+    // Plugin lifecycle
     // ============================================================
     public override void Load(bool hotReload)
     {
+        bool win = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        _off = win ? WINDOWS : LINUX;
+        if (_t.BaseErrMax == 0f) _t = PresetFor(Config.Preset); // if OnConfigParsed hasn't run
+
         try
         {
-            _pickNewAimSpot = new MemoryFunctionVoid<IntPtr>(SIG_PICK_NEW_AIM_SPOT);
-
-            long pnaRuntime = _pickNewAimSpot.Handle.ToInt64();
-            if (pnaRuntime == 0)
+            _pickNewAimSpot = new MemoryFunctionVoid<IntPtr>(_off.Sig);
+            if (_pickNewAimSpot.Handle.ToInt64() == 0)
                 throw new InvalidOperationException("PickNewAimSpot signature resolved to zero address.");
 
             _pickNewAimSpot.Hook(OnPickNewAimSpotPost, HookMode.Post);
-
-            Logger.LogInformation("[BotAimImprover] Loaded. PickNewAimSpot=0x{Pna:X16}", pnaRuntime);
+            Logger.LogInformation("[BotAimImprover] Loaded ({Plat}). PickNewAimSpot=0x{Pna:X}, preset={Preset}",
+                win ? "Windows" : "Linux", _pickNewAimSpot.Handle.ToInt64(), Config.Preset);
+            Server.PrintToConsole($"[BotAimImprover] HOOK BOUND ({(win ? "Windows" : "Linux")}). " +
+                $"PickNewAimSpot=0x{_pickNewAimSpot.Handle.ToInt64():X} preset={Config.Preset}");
         }
         catch (Exception ex)
         {
@@ -156,243 +329,409 @@ public class BotAimImprover : BasePlugin
             return;
         }
 
-        RegisterEventHandler<EventRoundStart>((_, _) =>
-        {
-            _botToControllerUserId.Clear();
-            return HookResult.Continue;
-        });
-
-        RegisterEventHandler<EventPlayerDisconnect>((ev, _) =>
+        RegisterEventHandler<EventPlayerDeath>((ev, _) =>
         {
             try
             {
-                var disconnecter = ev.Userid;
-                if (disconnecter != null && disconnecter.UserId.HasValue)
+                var atk = ev.Attacker;
+                if (atk != null && atk.IsValid && atk.IsBot)
                 {
-                    int leavingUserId = disconnecter.UserId.Value;
-                    foreach (var kv in _botToControllerUserId)
-                        if (kv.Value == leavingUserId)
-                            _botToControllerUserId.TryRemove(kv.Key, out int _);
+                    _botKills++;
+                    if (ev.Headshot) _botHsKills++;
                 }
             }
-            catch { /* non-fatal */ }
+            catch { }
             return HookResult.Continue;
         });
 
-        AddCommand("bot_aim", "Set bot aim mode: head, body, mixed", (caller, info) =>
+        RegisterEventHandler<EventRoundStart>((_, _) =>
         {
-            string arg = info.ArgCount > 1 ? info.GetArg(1).Trim().ToLowerInvariant() : "";
-            string reply;
-            switch (arg)
+            foreach (var st in _botState.Values)
             {
-                case "head":
-                    _aimMode = AimMode.HEAD;
-                    reply = "[BotAimImprover] aim mode -> HEAD (always head-first)";
-                    break;
-                case "body":
-                    _aimMode = AimMode.BODY;
-                    reply = "[BotAimImprover] aim mode -> BODY (always body-first)";
-                    break;
-                case "mixed":
-                    _aimMode = AimMode.MIXED;
-                    reply = "[BotAimImprover] aim mode -> MIXED (default)";
-                    break;
-                default:
-                    reply = $"[BotAimImprover] Current aim mode: {_aimMode}. Valid values: head, body, mixed";
-                    break;
+                st.VisibleSince = -1f; st.LastEnemyIdx = -1; st.CurrentPart = -1; st.PartChosenAt = -1f;
             }
-            Server.PrintToConsole(reply);
+            _history.Clear();
+            return HookResult.Continue;
         });
+
+        RegisterListener<Listeners.OnTick>(OnTick);
+        RegisterCommands();
     }
 
     public override void Unload(bool hotReload)
     {
         try { _pickNewAimSpot?.Unhook(OnPickNewAimSpotPost, HookMode.Post); }
-        catch { /* ignore */ }
+        catch { }
+    }
+
+    private void RegisterCommands()
+    {
+        AddCommand("bot_aim", "Set bot aim mode: head, body, mixed", (caller, info) =>
+        {
+            string arg = info.ArgCount > 1 ? info.GetArg(1).Trim().ToLowerInvariant() : "";
+            string reply = arg switch
+            {
+                "head"  => Set(AimMode.HEAD,  "HEAD (all bots head-first)"),
+                "body"  => Set(AimMode.BODY,  "BODY (all bots body-first)"),
+                "mixed" => Set(AimMode.MIXED, "MIXED (per-bot bias, default)"),
+                _       => $"[BotAimImprover] Current aim mode: {_aimMode}. Valid: head, body, mixed",
+            };
+            Server.PrintToConsole(reply);
+            string Set(AimMode m, string desc) { _aimMode = m; return $"[BotAimImprover] aim mode -> {desc}"; }
+        });
+
+        AddCommand("bot_aim_preset", "Difficulty preset: low, medium, high", (caller, info) =>
+        {
+            if (info.ArgCount > 1)
+            {
+                string p = info.GetArg(1).Trim().ToLowerInvariant();
+                if (p is "low" or "medium" or "high")
+                {
+                    Config.Preset = p;
+                    ApplyConfig();
+                    Server.PrintToConsole($"[BotAimImprover] preset -> {p} (personalities re-rolled)");
+                }
+                else Server.PrintToConsole("[BotAimImprover] valid presets: low, medium, high");
+            }
+            else Server.PrintToConsole($"[BotAimImprover] preset is {Config.Preset}. Usage: bot_aim_preset <low|medium|high>");
+        });
+
+        AddCommand("bot_aim_error", "Global error multiplier (0=perfect, 1=default)", (caller, info) =>
+        {
+            if (info.ArgCount > 1 && float.TryParse(info.GetArg(1).Trim(), out float s))
+            {
+                _t.ErrorScale = Math.Clamp(s, 0f, 10f);
+                Server.PrintToConsole($"[BotAimImprover] error scale -> {_t.ErrorScale:0.00}");
+            }
+            else Server.PrintToConsole($"[BotAimImprover] error scale is {_t.ErrorScale:0.00}. Usage: bot_aim_error <0..10>");
+        });
+
+        AddCommand("bot_headshot_bias", "Fraction of bots that aim high/head (0-100%)", (caller, info) =>
+        {
+            if (info.ArgCount > 1 && int.TryParse(info.GetArg(1).Trim(), out int pct))
+            {
+                _t.HighAimFraction = Math.Clamp(pct, 0, 100) / 100f;
+                _botState.Clear();
+                Server.PrintToConsole($"[BotAimImprover] high-aim fraction -> {_t.HighAimFraction:P0} (re-rolled)");
+            }
+            else Server.PrintToConsole($"[BotAimImprover] high-aim fraction is {_t.HighAimFraction:P0}. Usage: bot_headshot_bias <0-100>");
+        });
+
+        AddCommand("bot_aim_lag", "Toggle reaction lag + lead (0/1)", (caller, info) =>
+        {
+            if (info.ArgCount > 1 && int.TryParse(info.GetArg(1).Trim(), out int v))
+            {
+                _t.LagEnabled = v != 0;
+                Server.PrintToConsole($"[BotAimImprover] reaction lag -> {(_t.LagEnabled ? "ON" : "OFF")}");
+            }
+            else Server.PrintToConsole($"[BotAimImprover] reaction lag is {(_t.LagEnabled ? "ON" : "OFF")}. Usage: bot_aim_lag <0/1>");
+        });
+
+        AddCommand("bot_aim_status", "Show runtime diagnostics", (caller, info) =>
+        {
+            long addr = _pickNewAimSpot?.Handle.ToInt64() ?? 0;
+            string plat = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "Windows" : "Linux";
+            Server.PrintToConsole(
+                $"[BotAimImprover] {plat} sig=0x{addr:X} bound={(addr != 0)} preset={Config.Preset} | " +
+                $"calls={_hookCalls} writes={_writes} gateBail={_gateBail} ctrlFail={_botResolveFail} | " +
+                $"bots={_botState.Count} hist={_history.Count} mode={_aimMode} errScale={_t.ErrorScale:0.00} " +
+                $"highAim={_t.HighAimFraction:P0} lag={(_t.LagEnabled ? "ON" : "OFF")}");
+            float hsRate = _botKills > 0 ? 100f * _botHsKills / _botKills : 0f;
+            Server.PrintToConsole($"[BotAimImprover] MEASURED bot headshot rate: {_botHsKills}/{_botKills} = {hsRate:0.0}%");
+            Server.PrintToConsole($"[BotAimImprover] last write: {_lastInfo}");
+        });
+
+        AddCommand("bot_aim_reset_stats", "Reset measured headshot counters", (caller, info) =>
+        {
+            _botKills = 0; _botHsKills = 0;
+            Server.PrintToConsole("[BotAimImprover] headshot counters reset.");
+        });
     }
 
     // ============================================================
-    // Core override logic (Post-hook on PickNewAimSpot)
-    //
-    // Native function already set m_targetSpot to GUT or HEAD based on
-    // mp_damage_headshot_only. We re-pick based on visible enemy parts and the
-    // bot's weapon, then overwrite only the 12 bytes of m_targetSpot.
+    // Core: Post-hook on PickNewAimSpot.
     // ============================================================
     private HookResult OnPickNewAimSpotPost(DynamicHook hook)
     {
         try
         {
             IntPtr pCCSBot = hook.GetParam<IntPtr>(0);
-            if (pCCSBot == IntPtr.Zero)
-                return HookResult.Continue;
+            if (pCCSBot == IntPtr.Zero) return HookResult.Continue;
 
-            // 1) Gate: enemy must be generally visible before we
-            //    spend any raytraces. Otherwise the native used last-known position.
-            if (ReadByte(pCCSBot + OFF_M_IS_ENEMY_VISIBLE) == 0)
-                return HookResult.Continue;
+            BotState st = _botState.GetOrAdd(pCCSBot, CreateState);
+            _hookCalls++;
 
-            // 2) Resolve enemy pawn from m_enemy CHandle.
-            int enemyHandleRaw = ReadInt32(pCCSBot + OFF_M_ENEMY_HANDLE);
-            if (enemyHandleRaw == -1)
-                return HookResult.Continue;
+            float now = Server.CurrentTime;
 
-            int enemyIdx = enemyHandleRaw & 0x7FFF;
-            if (enemyIdx <= 0 || enemyIdx >= 4096)
+            bool visible = ReadByte(pCCSBot + _off.IsVisible) != 0;
+            int enemyRaw = ReadInt32(pCCSBot + _off.Enemy);
+            if (!visible || enemyRaw == -1)
+            {
+                st.VisibleSince = -1f; st.CurrentPart = -1; _gateBail++;
                 return HookResult.Continue;
+            }
+
+            int enemyIdx = enemyRaw & 0x7FFF;
+            if (enemyIdx <= 0 || enemyIdx >= 4096) return HookResult.Continue;
 
             CCSPlayerPawn? enemyPawn = Utilities.GetEntityFromIndex<CCSPlayerPawn>(enemyIdx);
             if (enemyPawn == null || !enemyPawn.IsValid || enemyPawn.Handle == IntPtr.Zero)
                 return HookResult.Continue;
 
-            // 3) Resolve the bot's controller (for weapon + eye position).
-            var botController = ResolveBotController(pCCSBot);
-            if (botController == null || !TryGetBotEyePosition(botController, out var botEye))
-                return HookResult.Continue;
-
-            string? wpn = botController.PlayerPawn?.Value?.WeaponServices?.ActiveWeapon?.Value?.DesignerName;
-
-            // 4) Compute visible derived points by raytrace from the bot's eye.
-            var visiblePoints = ComputeVisiblePoints(botEye, enemyPawn);
-            if (visiblePoints.Count == 0)
-                return HookResult.Continue;
-
-            // 5) Select the priority order based on aim mode and weapon, then pick.
-            // head: awp -> others -> Head. body: all weapons -> Body.
-            // mixed: body-first weapons -> Body, others -> Jaw.
-            bool isBodyWeapon = wpn != null && _bodyFirstWeapons.Contains(wpn);
-            int[] order = _aimMode switch
+            if (st.VisibleSince < 0f || st.LastEnemyIdx != enemyIdx)
             {
-                AimMode.HEAD => wpn == "weapon_awp" ? _priorityBody : _priorityHead,
-                AimMode.BODY => _priorityBody,
-                _            => isBodyWeapon ? _priorityBody : _priorityJaw, // MIXED
-            };
+                st.VisibleSince = now; st.LastEnemyIdx = enemyIdx;
+                st.CurrentPart = -1; st.PartChosenAt = -1f;
+            }
+            float dwell = MathF.Max(0f, now - st.VisibleSince);
 
-            int chosenIdx = PickBestPoint(visiblePoints, order);
+            PushHistory(enemyIdx, enemyPawn, now);
 
-            // 6) Compute chosen point world position.
-            if (!TryComputePartPos(enemyPawn, chosenIdx, out float rx, out float ry, out float rz))
-                return HookResult.Continue;
-
-            // 7) Overwrite only m_targetSpot.xyz.
-            unsafe
+            // (a) Sticky part selection. Controller + weapon are only needed here,
+            // so resolve them lazily on re-pick instead of every hook call.
+            if (st.CurrentPart < 0 || (now - st.PartChosenAt) >= _t.PartRepickInterval)
             {
-                float* dst = (float*)(pCCSBot + OFF_M_TARGETSPOT).ToPointer();
-                dst[0] = rx; dst[1] = ry; dst[2] = rz;
+                var botController = ResolveBotController(pCCSBot);
+                if (botController == null) _botResolveFail++;
+                st.Weapon = botController?.PlayerPawn?.Value?.WeaponServices?.ActiveWeapon?.Value?.DesignerName;
+
+                int[] order = OrderFor(st, st.Weapon);
+                int chosen = -1;
+                if (TryGetEye(pCCSBot, botController, out var eye))
+                {
+                    st.EyeX = eye.X; st.EyeY = eye.Y; st.EyeZ = eye.Z; st.HasEye = true;
+                    ComputeVisiblePoints(eye, enemyPawn, _visBuf);
+                    chosen = PickBestPoint(_visBuf, order);
+                }
+                if (chosen < 0) chosen = order[0];
+                st.CurrentPart = chosen; st.PartChosenAt = now;
             }
 
-            // One-time confirmation that the override path actually runs end-to-end.
-            if (!_firstOverrideLogged)
+            // (b) Prediction. Rather than baking a one-shot lead into m_targetSpot, we feed the
+            // engine a base point + velocity + timestamp and let its own per-frame extrapolator
+            // (m_targetSpotPredicted = m_targetSpot + (now - m_targetSpotTime)*m_targetSpotVelocity)
+            // track the target every frame. That kills the stale-velocity lag AND lets us inject a
+            // (lagged) acceleration term the engine itself lacks. Base/velocity sampled from history.
+            float tx = 0, ty = 0, tz = 0;          // base part position (at baseTime)
+            float vx = 0, vy = 0, vz = 0;          // predicted velocity the engine integrates
+            float baseTime = now;
+            bool lagged = false, havePoint = false;
+            if (_t.LagEnabled && TryPredict(enemyIdx, st, now, st.CurrentPart,
+                                            out tx, out ty, out tz, out vx, out vy, out vz, out baseTime))
+                havePoint = lagged = true;
+            else if (TryComputePartPos(enemyPawn, st.CurrentPart, out tx, out ty, out tz))
             {
-                _firstOverrideLogged = true;
-                Logger.LogInformation(
-                    "[BotAimImprover] Active: first override (visible={N} weapon={W} point={P}).",
-                    visiblePoints.Count, wpn ?? "(null)", _aimPoints[chosenIdx].Name);
+                var lv = enemyPawn.AbsVelocity;     // no history: anchor at now, lead with live velocity
+                vx = (lv?.X ?? 0f) * st.LeadK; vy = (lv?.Y ?? 0f) * st.LeadK; vz = (lv?.Z ?? 0f) * st.LeadK;
+                baseTime = now; havePoint = true;
+            }
+
+            if (havePoint)
+            {
+                // (c) Angular error: the dwell-decaying magnitude is an angle, so the
+                // world-space radius scales with distance. Constant world units would
+                // make bots laser at range and miss up close (inverted from humans).
+                float baseRadius = (st.BaseErr + st.DecayErr * MathF.Exp(-dwell / st.Tau)) * _t.ErrorScale;
+                float dist = ErrRefDist;
+                if (st.HasEye)
+                {
+                    float dx = tx - st.EyeX, dy = ty - st.EyeY, dz = tz - st.EyeZ;
+                    dist = MathF.Max(1f, MathF.Sqrt(dx * dx + dy * dy + dz * dz));
+                }
+                float radius = baseRadius * (dist / ErrRefDist);
+
+                // (d) Smoothed drift: an Ornstein-Uhlenbeck process keeps a standard-
+                // normal offset that wanders continuously instead of teleporting to a
+                // fresh random point every pick. e^(-dt/tau) keeps unit stationary
+                // variance for any dt, so the per-axis sigma is just `radius * 0.5`
+                // (matches the old uniform-disc per-axis spread, plus Gaussian fliers).
+                float dt = st.DriftT < 0f ? DriftTau : Math.Clamp(now - st.DriftT, 0f, 0.5f);
+                st.DriftT = now;
+                float a = MathF.Exp(-dt / DriftTau);
+                float b = MathF.Sqrt(MathF.Max(0f, 1f - a * a));
+                st.OffX = a * st.OffX + b * Gauss(st.Rng);
+                st.OffY = a * st.OffY + b * Gauss(st.Rng);
+                st.OffZ = a * st.OffZ + b * Gauss(st.Rng);
+                float sigma = radius * 0.5f;
+                float ox = st.OffX * sigma;
+                float oy = st.OffY * sigma;
+                float oz = st.OffZ * sigma * _t.VertErrScale;
+
+                unsafe
+                {
+                    float* d = (float*)(pCCSBot + _off.TargetSpot).ToPointer();
+                    float px = d[0], py = d[1], pz = d[2];
+                    d[0] = tx + ox; d[1] = ty + oy; d[2] = tz + oz;
+
+                    // Feed the engine's per-frame extrapolator: the velocity it integrates and
+                    // the timestamp the base point corresponds to (lagged into the past by the
+                    // reaction time, so fTimeSinceAimSpot = now - baseTime leads it back to ~live).
+                    if (_off.TsVel != 0)
+                    {
+                        float* v = (float*)(pCCSBot + _off.TsVel).ToPointer();
+                        v[0] = vx; v[1] = vy; v[2] = vz;
+                    }
+                    if (_off.TsTime != 0) WriteFloat(pCCSBot + _off.TsTime, baseTime);
+
+                    if (_off.AimErrX != 0)   // neutralize native aim-error where known (Linux)
+                    {
+                        WriteFloat(pCCSBot + _off.AimErrX, 0f);
+                        WriteFloat(pCCSBot + _off.AimErrY, 0f);
+                        WriteFloat(pCCSBot + _off.AimErrZ, 0f);
+                        if (_off.AimError != 0) WriteFloat(pCCSBot + _off.AimError, 0f);
+                    }
+                    _writes++;
+                    float spd = MathF.Sqrt(vx * vx + vy * vy + vz * vz);
+                    _lastInfo =
+                        $"part={_aimPoints[st.CurrentPart].Name} dwell={dwell:0.00}s err={radius:0.0} " +
+                        $"react={st.ReactionMs:0}ms leadK={st.LeadK:0.00} accelK={st.AccelK:0.00} predV={spd:0} " +
+                        $"lagged={lagged} wpn={st.Weapon ?? "?"} native=({px:0},{py:0},{pz:0}) -> ours=({d[0]:0},{d[1]:0},{d[2]:0})";
+                }
             }
         }
         catch (Exception ex)
         {
             Logger.LogError(ex, "[BotAimImprover] Exception in PostHook");
         }
-
         return HookResult.Continue;
     }
 
-    /// Find the CCSPlayerController whose pawn's m_pBot field equals pCCSBot.
-    /// Cache key: CCSBot pointer. Cache value: bot UserId.
+    private BotState CreateState(IntPtr pCCSBot)
+    {
+        var rng = new Random(pCCSBot.GetHashCode());
+        double biasRoll = rng.NextDouble();
+        float headCut = _t.HighAimFraction * 0.4f;
+        return new BotState
+        {
+            Rng      = rng,
+            BaseErr  = Lerp(_t.BaseErrMin,  _t.BaseErrMax,  (float)rng.NextDouble()),
+            DecayErr = Lerp(_t.DecayErrMin, _t.DecayErrMax, (float)rng.NextDouble()),
+            Tau      = MathF.Max(0.05f, Lerp(_t.TauMin, _t.TauMax, (float)rng.NextDouble())),
+            ReactionMs = Lerp(_t.ReactMsMin, _t.ReactMsMax, (float)rng.NextDouble()),
+            LeadK      = Lerp(_t.LeadKMin,   _t.LeadKMax,   (float)rng.NextDouble()),
+            AccelK     = Lerp(_t.AccelKMin,  _t.AccelKMax,  (float)rng.NextDouble()),
+            Bias     = biasRoll < headCut             ? AimBias.HEAD
+                     : biasRoll < _t.HighAimFraction  ? AimBias.JAW
+                     : AimBias.BODY,
+            // Seed the drift offset so the first shot already carries error.
+            OffX = Gauss(rng), OffY = Gauss(rng), OffZ = Gauss(rng),
+        };
+    }
+
+    private int[] OrderFor(BotState st, string? wpn)
+    {
+        if (wpn == "weapon_awp") return _priorityBody;   // AWP always aims at the body
+        if (_aimMode == AimMode.HEAD) return _priorityHead;
+        if (_aimMode == AimMode.BODY) return _priorityBody;
+        if (wpn != null && _bodyFirstWeapons.Contains(wpn)) return _priorityBody;
+        return st.Bias switch
+        {
+            AimBias.HEAD => _priorityHead,
+            AimBias.JAW  => _priorityJaw,
+            _            => _priorityBody,
+        };
+    }
+
+    private static float Lerp(float a, float b, float t) => a + (b - a) * t;
+
+    // Reference distance at which the error knobs equal their nominal world units;
+    // closer/farther scales the world radius so the *angular* spread stays constant.
+    private const float ErrRefDist = 512f;
+    // Time constant of the aim wander (seconds); smaller = twitchier, larger = floatier.
+    private const float DriftTau = 0.30f;
+
+    // Acceleration prediction: estimate accel from a velocity slope sampled `AccelLagS`
+    // BEFORE the velocity sample (humans notice a change in speed later than speed itself),
+    // over an `AccelDtS` window, clamped to `AccelMaxVel` per-axis so a noisy estimate can't
+    // fling the aim. accelLag intentionally trails the (already reaction-lagged) velocity.
+    private const float AccelLagS  = 0.05f;   // 50 ms further back than the velocity sample
+    private const float AccelDtS   = 0.08f;   // finite-difference window for the slope
+    private const float AccelMaxVel = 400f;   // u/s cap on the accel-derived velocity bump
+
+    // Standard-normal sample (Box-Muller).
+    private static float Gauss(Random r)
+    {
+        double u1 = 1.0 - r.NextDouble();   // in (0,1], avoids log(0)
+        double u2 = r.NextDouble();
+        return (float)(Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Cos(2.0 * Math.PI * u2));
+    }
+
+    // Eye: from CCSBot memory if that offset is known (Linux), else controller.
+    private bool TryGetEye(IntPtr pCCSBot, CCSPlayerController? bot, out Vector eye)
+    {
+        if (_off.BotEye != 0) { eye = ReadVec3(pCCSBot + _off.BotEye); return true; }
+        if (bot != null) return TryGetBotEyePosition(bot, out eye);
+        eye = new Vector(0, 0, 0);
+        return false;
+    }
+
     private CCSPlayerController? ResolveBotController(IntPtr pCCSBot)
     {
-        // Cache hit -> look up by UserId.
-        if (_botToControllerUserId.TryGetValue(pCCSBot, out int cachedUserId))
-        {
-            foreach (var ctrl in Utilities.GetPlayers())
-                if (ctrl != null && ctrl.IsValid && ctrl.UserId.HasValue && ctrl.UserId.Value == cachedUserId)
-                    return ctrl;
-            _botToControllerUserId.TryRemove(pCCSBot, out int _); // stale
-        }
-
-        // Slow path: find which bot pawn's m_pBot points to pCCSBot.
         foreach (var ctrl in Utilities.GetPlayers())
         {
-            if (ctrl == null || !ctrl.IsValid || !ctrl.IsBot || !ctrl.UserId.HasValue)
-                continue;
-
+            if (ctrl == null || !ctrl.IsValid || !ctrl.IsBot) continue;
             var pawn = ctrl.PlayerPawn?.Value;
-            if (pawn == null || !pawn.IsValid || pawn.Handle == IntPtr.Zero)
-                continue;
-
+            if (pawn == null || !pawn.IsValid || pawn.Handle == IntPtr.Zero) continue;
             IntPtr pBotPtr;
-            try { pBotPtr = ReadIntPtr(pawn.Handle + OFF_PAWN_M_PBOT); }
-            catch { continue; }
-
-            if (pBotPtr == pCCSBot)
-            {
-                _botToControllerUserId[pCCSBot] = ctrl.UserId.Value;
-                return ctrl;
-            }
+            try { pBotPtr = ReadIntPtr(pawn.Handle + _off.PBot); } catch { continue; }
+            if (pBotPtr == pCCSBot) return ctrl;
         }
         return null;
     }
 
-    // Pick the highest-priority visible point. Walks the priority order and returns
-    // the first index that is in the visible set. Returns -1 if none.
-    private static int PickBestPoint(List<int> visible, int[] order)
+    private static int PickBestPoint(bool[] visibleMask, int[] order)
     {
-        if (visible.Count == 0) return -1;
-
-        foreach (int idx in order)
-            if (visible.Contains(idx))
-                return idx;
+        foreach (int idx in order) if (visibleMask[idx]) return idx;
         return -1;
     }
 
-    // Returns the list of visible derived-point indices (eye -> point, world-only LoS).
-    private List<int> ComputeVisiblePoints(Vector botEye, CCSPlayerPawn enemyPawn)
+    // Fills `mask[i]` = part i visible from botEye. Reads the enemy's origin/yaw/eyeZ
+    // once (they're identical across all parts) instead of per part.
+    private void ComputeVisiblePoints(Vector botEye, CCSPlayerPawn enemyPawn, bool[] mask)
     {
-        var visible = new List<int>(_aimPoints.Length);
+        Array.Clear(mask, 0, mask.Length);
+        var origin = enemyPawn.AbsOrigin;
+        if (origin == null) return;
+        float ox = origin.X, oy = origin.Y, oz = origin.Z;
+        float eyeZ = enemyPawn.ViewOffset?.Z ?? 64.0f;
+        float yaw  = enemyPawn.EyeAngles?.Y ?? 0.0f;
         for (int i = 0; i < _aimPoints.Length; i++)
-        {
-            if (!TryComputePartPos(enemyPawn, i, out float x, out float y, out float z))
-                continue;
-            if (PointVisibleFromEye(botEye, x, y, z))
-                visible.Add(i);
-        }
-        return visible;
+            if (ComputePartPosCore(ox, oy, oz, yaw, eyeZ, i, out float x, out float y, out float z)
+                && PointVisibleFromEye(botEye, x, y, z))
+                mask[i] = true;
     }
 
-    // Bot eye position = bot pawn origin + view offset Z.
     private static bool TryGetBotEyePosition(CCSPlayerController bot, out Vector eye)
     {
         eye = new Vector(0, 0, 0);
         var pawn = bot.PlayerPawn?.Value;
         var origin = pawn?.AbsOrigin;
         if (origin == null) return false;
-        float ez = pawn!.ViewOffset?.Z ?? 64.0f;
-        eye = new Vector(origin.X, origin.Y, origin.Z + ez);
+        eye = new Vector(origin.X, origin.Y, origin.Z + (pawn!.ViewOffset?.Z ?? 64.0f));
         return true;
     }
 
-    // Compute world position of derived point `idx` from the enemy pawn's schema fields.
     private static bool TryComputePartPos(CCSPlayerPawn enemyPawn, int idx,
                                           out float x, out float y, out float z)
     {
         x = y = z = 0;
-        if (idx < 0 || idx >= _aimPoints.Length) return false;
         var origin = enemyPawn.AbsOrigin;
         if (origin == null) return false;
-
-        ref readonly AimPoint p = ref _aimPoints[idx];
-        float ox = origin.X, oy = origin.Y, oz = origin.Z;
         float eyeZ = enemyPawn.ViewOffset?.Z ?? 64.0f;
+        float yaw  = enemyPawn.EyeAngles?.Y ?? 0.0f;
+        return ComputePartPosCore(origin.X, origin.Y, origin.Z, yaw, eyeZ, idx, out x, out y, out z);
+    }
 
-        float yawDeg = enemyPawn.EyeAngles?.Y ?? 0.0f;
+    private static bool ComputePartPosCore(float ox, float oy, float oz, float yawDeg, float eyeZ,
+                                           int idx, out float x, out float y, out float z)
+    {
+        x = y = z = 0;
+        if (idx < 0 || idx >= _aimPoints.Length) return false;
+        ref readonly AimPoint p = ref _aimPoints[idx];
         double yawRad = yawDeg * Math.PI / 180.0;
-        float rX = (float)Math.Sin(yawRad);   // RIGHT vector x
-        float rY = (float)-Math.Cos(yawRad);  // RIGHT vector y
-
-        if (p.FeetAbs)
-        {
-            x = ox; y = oy; z = oz + p.Frac;   // absolute rise (FEET)
-        }
+        float rX = (float)Math.Sin(yawRad);
+        float rY = (float)-Math.Cos(yawRad);
+        if (p.FeetAbs) { x = ox; y = oy; z = oz + p.Frac; }
         else
         {
             x = ox + rX * p.Lateral;
@@ -403,13 +742,87 @@ public class BotAimImprover : BasePlugin
                  || float.IsInfinity(x) || float.IsInfinity(y) || float.IsInfinity(z));
     }
 
-    // World-only LoS test from eye to target point. True if unobstructed (>= 0.999).
+    // Build the inputs for the engine's per-frame extrapolator from history:
+    //   base point  = the chosen body part at the reaction-lagged sample (t = now - reaction)
+    //   baseTime    = that sample's timestamp (so the engine leads it forward to ~live and beyond)
+    //   velocity    = (sampled velocity + lagged-acceleration bump) * LeadK
+    // The acceleration is sampled a further AccelLagS into the past than the velocity, so a bot
+    // reacts to a change in speed later than to speed itself (and can be juked). LeadK < 1 makes
+    // the engine under-lead so strafing beats the bot.
+    private bool TryPredict(int enemyIdx, BotState st, float now, int part,
+                            out float x, out float y, out float z,
+                            out float vx, out float vy, out float vz, out float baseTime)
+    {
+        x = y = z = vx = vy = vz = 0; baseTime = now;
+        if (!_history.TryGetValue(enemyIdx, out var hh) || hh.Count == 0) return false;
+        float reactionS = st.ReactionMs * 0.001f;
+        float tV = now - reactionS;
+        int i = hh.IndexAt(tV);
+        if (i < 0) return false;
+        ref readonly Sample s = ref hh.Buf[i];
+        baseTime = s.T;
+
+        // Acceleration from a velocity slope ending AccelLagS before the velocity sample.
+        float ax = 0, ay = 0, az = 0;
+        if (st.AccelK > 0f)
+        {
+            int iA = hh.IndexAt(tV - AccelLagS);
+            int iB = hh.IndexAt(tV - AccelLagS - AccelDtS);
+            if (iA >= 0 && iB >= 0)
+            {
+                float adt = hh.Buf[iA].T - hh.Buf[iB].T;
+                if (adt > 1e-3f)
+                {
+                    ax = (hh.Buf[iA].VX - hh.Buf[iB].VX) / adt;
+                    ay = (hh.Buf[iA].VY - hh.Buf[iB].VY) / adt;
+                    az = (hh.Buf[iA].VZ - hh.Buf[iB].VZ) / adt;
+                }
+            }
+        }
+        vx = (s.VX + Math.Clamp(ax * st.AccelK, -AccelMaxVel, AccelMaxVel)) * st.LeadK;
+        vy = (s.VY + Math.Clamp(ay * st.AccelK, -AccelMaxVel, AccelMaxVel)) * st.LeadK;
+        vz = (s.VZ + Math.Clamp(az * st.AccelK, -AccelMaxVel, AccelMaxVel)) * st.LeadK;
+        return ComputePartPosCore(s.PX, s.PY, s.PZ, s.Yaw, s.EyeZ, part, out x, out y, out z);
+    }
+
+    private void OnTick()
+    {
+        float now = Server.CurrentTime;
+        foreach (var ctrl in Utilities.GetPlayers())
+        {
+            try
+            {
+                if (ctrl == null || !ctrl.IsValid) continue;
+                var pawn = ctrl.PlayerPawn?.Value;
+                if (pawn == null || !pawn.IsValid || pawn.Handle == IntPtr.Zero) continue;
+                if (pawn.LifeState != (byte)LifeState_t.LIFE_ALIVE) continue;
+                PushHistory((int)pawn.Index, pawn, now);
+            }
+            catch { }
+        }
+    }
+
+    private void PushHistory(int idx, CCSPlayerPawn pawn, float now)
+    {
+        var origin = pawn.AbsOrigin;
+        if (origin == null) return;
+        var vel = pawn.AbsVelocity;
+        var s = new Sample
+        {
+            T = now, PX = origin.X, PY = origin.Y, PZ = origin.Z,
+            VX = vel?.X ?? 0f, VY = vel?.Y ?? 0f, VZ = vel?.Z ?? 0f,
+            Yaw = pawn.EyeAngles?.Y ?? 0f, EyeZ = pawn.ViewOffset?.Z ?? 64f,
+        };
+        if (!_history.TryGetValue(idx, out var hh)) { hh = new History(); _history[idx] = hh; }
+        hh.Push(in s);
+    }
+
     private bool PointVisibleFromEye(Vector eye, float tx, float ty, float tz)
     {
         try
         {
             var rt = _rayTraceCapability.Get();
-            if (rt == null) return true; // RayTrace not loaded -> don't block
+            if (rt == null) return true;
             var end  = new Vector(tx, ty, tz);
             var opts = new TraceOptions(InteractionLayers.MASK_WORLD_ONLY);
             rt.TraceEndShape(eye, end, null, opts, out TraceResult res);
@@ -418,10 +831,10 @@ public class BotAimImprover : BasePlugin
         catch { return true; }
     }
 
-    // ============================================================
-    // Raw memory readers
-    // ============================================================
     private static unsafe byte   ReadByte(IntPtr addr)   => *(byte*)addr.ToPointer();
     private static unsafe int    ReadInt32(IntPtr addr)  => *(int*)addr.ToPointer();
     private static unsafe IntPtr ReadIntPtr(IntPtr addr) => *(IntPtr*)addr.ToPointer();
+    private static unsafe void   WriteFloat(IntPtr addr, float v) => *(float*)addr.ToPointer() = v;
+    private static unsafe Vector ReadVec3(IntPtr addr)
+    { float* f = (float*)addr.ToPointer(); return new Vector(f[0], f[1], f[2]); }
 }
