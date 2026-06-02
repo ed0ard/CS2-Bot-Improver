@@ -38,13 +38,14 @@ namespace ProImitator;
 public class ProImitator : BasePlugin
 {
     public override string ModuleName        => "Pro-Imitator";
-    public override string ModuleVersion     => "0.2.0";
+    public override string ModuleVersion     => "0.3.0";
     public override string ModuleAuthor      => "Contribution to ed0ard/CS2-Bot-Improver";
     public override string ModuleDescription => "Per-bot personality presets so the donk bot plays like donk";
 
-    // Weapon classifier used by NoCrouchWithRifle. Anything not in this set
-    // (pistols, SMGs, snipers, shotguns) keeps the BotState default crouch
-    // behavior so a profiled bot still crouches with e.g. a Deagle pop.
+    // Weapon classifier used by NoCrouchWithRifle and RifleOnly. Anything
+    // not in this set (pistols, SMGs, snipers, shotguns) keeps the BotState
+    // default crouch behavior so a profiled bot still crouches with e.g. a
+    // Deagle pop.
     private static readonly HashSet<string> RifleDesignerNames = new(StringComparer.OrdinalIgnoreCase)
     {
         "weapon_ak47",
@@ -54,6 +55,15 @@ public class ProImitator : BasePlugin
         "weapon_aug",
         "weapon_galilar",
         "weapon_famas",
+    };
+
+    // Sniper classifier used by AwpOnly. AWPers (ZywOo, m0NESY, s1mple) want
+    // to stick to their main; Scout / SSG08 included since it's the cheap
+    // sniper a pro will pull on pistol rounds.
+    private static readonly HashSet<string> SniperDesignerNames = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "weapon_awp",
+        "weapon_ssg08",      // Scout
     };
 
     // Loaded profiles, keyed by their JSON 'Name' (lowercased) for de-dup.
@@ -442,6 +452,26 @@ public class ProImitator : BasePlugin
                 }
             }
         }
+
+        if (prof.AwpOnly)
+        {
+            // AWPer mirror of RifleOnly: prefer the sniper when the bot is
+            // holding a non-sniper but already owns one. Same cooldown, same
+            // no-give policy — we don't conjure an AWP, we just demand the
+            // bot switch back to it once it's in inventory.
+            bool holdingSniper = activeWeapon != null && SniperDesignerNames.Contains(activeWeapon);
+            if (!holdingSniper
+                && (!_lastWeaponSwitchAt.TryGetValue(player.Slot, out float lastAt)
+                    || now - lastAt > WeaponSwitchCooldownSec))
+            {
+                string? sniperToUse = FindOwnedSniper(pawn);
+                if (sniperToUse != null)
+                {
+                    NativeAPI.IssueClientCommand((int)player.Slot, $"use {sniperToUse}");
+                    _lastWeaponSwitchAt[player.Slot] = now;
+                }
+            }
+        }
     }
     // -------------------------------------------------------------------------
     // Walk the bot's weapon inventory and return the designer name of the
@@ -465,6 +495,27 @@ public class ProImitator : BasePlugin
         return null;
     }
     // -------------------------------------------------------------------------
+    // Sniper-equivalent of FindOwnedRifle. AWP wins ties: we iterate in the
+    // order MyWeapons returns, but pros holding both AWP and Scout would
+    // always pick the AWP anyway, and the engine returns the primary first.
+    // -------------------------------------------------------------------------
+    private static string? FindOwnedSniper(CCSPlayerPawn pawn)
+    {
+        var weapons = pawn.WeaponServices?.MyWeapons;
+        if (weapons == null) return null;
+
+        foreach (var handle in weapons)
+        {
+            var weapon = handle.Value;
+            if (weapon == null || !weapon.IsValid) continue;
+
+            string? designer = weapon.DesignerName;
+            if (designer != null && SniperDesignerNames.Contains(designer))
+                return designer;
+        }
+        return null;
+    }
+    // -------------------------------------------------------------------------
     // Console commands. Exposed via AddCommand (not the `[ConsoleCommand]`
     // attribute with a `css_*` name) so they behave like the suite's other
     // user-facing commands (`bot_aim`, `bot_nades`) instead of hitting the CSS
@@ -482,7 +533,8 @@ public class ProImitator : BasePlugin
         foreach (var prof in _profiles.Values.OrderBy(p => p.Name))
         {
             string aliases = prof.MatchByName.Count > 0 ? string.Join(", ", prof.MatchByName) : "(none)";
-            cmd.ReplyToCommand($"  - {prof.Name}  matches: [{aliases}]");
+            string role    = string.IsNullOrWhiteSpace(prof.Role) ? "" : $"  [{prof.Role}]";
+            cmd.ReplyToCommand($"  - {prof.Name}{role}  matches: [{aliases}]");
         }
     }
     // -------------------------------------------------------------------------
@@ -553,6 +605,13 @@ public sealed class ProProfile
     // read a profile and understand the intent without digging through git.
     public string Description { get; set; } = "";
 
+    // Display-only role tag. Used by `pro_list` to remind operators which
+    // bot fills which slot ("Entry rifler", "Lurker", "AWPer", "IGL", ...).
+    // Does NOT influence behavior — the trait flags below do that. The point
+    // is to make a 5-bot roster legible at a glance and to encourage profiles
+    // that double down on a role rather than picking random traits.
+    public string Role { get; set; } = "";
+
     // -- Behavioral flags. All default to false (= "don't touch") so a profile
     //    can opt into only the traits that match the player.
     public bool AlwaysRushing  { get; set; } = false;
@@ -571,6 +630,11 @@ public sealed class ProProfile
     // a rifle in inventory. Does NOT give weapons (would break the economy);
     // pair with a coordinated BotBuy of `ak47` / `m4a1` / `aug` etc.
     public bool RifleOnly            { get; set; } = false;
+
+    // AWPer mirror of RifleOnly. Force-switch back to AWP / Scout whenever
+    // the bot is holding something else. Same no-give policy: requires the
+    // bot to already own the sniper (typically via the buyscript).
+    public bool AwpOnly              { get; set; } = false;
 
     // Counter-strafe at engagement onset, gated by probability so the bot
     // doesn't read as aimbot. On the false->true edge of IsAimingAtEnemy

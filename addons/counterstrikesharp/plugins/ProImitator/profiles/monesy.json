@@ -1,0 +1,23 @@
+{
+  "Name": "m0NESY",
+
+  "MatchByName": ["m0NESY", "monesy"],
+
+  "Role": "AWPer (aggressive)",
+
+  "Description": "Ilya 'm0NESY' Osipov — G2 star AWPer. Aggressive read of the AWP role: takes early-round map control with the AWP, peeks more often than he holds, runs onto angles. Closer in feel to a rifler's tempo than ZywOo's patient holds. Hence AlwaysRushing + NoApproachPause + NeverPolite, but kept AwpOnly so he never drops to the secondary rifle when he has the AWP.",
+
+  "AlwaysRushing":          true,
+  "NeverSneaks":            true,
+  "NeverPolite":            true,
+  "NoSafeTime":             true,
+  "NoPanic":                true,
+
+  "NoCrouchWithRifle":      false,
+  "NeverWaitsBetweenShots": false,
+  "NoApproachPause":        true,
+  "RifleOnly":              false,
+  "AwpOnly":                true,
+
+  "CounterStrafeChance":    0.80
+}

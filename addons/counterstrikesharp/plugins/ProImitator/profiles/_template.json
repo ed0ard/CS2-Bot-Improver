@@ -14,6 +14,14 @@
   //   "MatchByName": ["s1mple", "S1MPLE", "s1mple_bot"]
   "MatchByName": ["ExamplePro"],
 
+  // Display-only role tag, shown in `pro_list`. Purely documentation: does
+  // NOT change behavior. The point is to make a 5-bot roster legible at a
+  // glance ("oh, this team has 2 entries, 1 AWPer, 1 lurker, 1 IGL") and to
+  // remind profile authors to pick a coherent set of traits for the role
+  // they're modelling. Suggested values: "Entry rifler", "Star rifler",
+  // "Lurker", "AWPer", "AWPer (aggressive)", "IGL", "Support".
+  "Role": "Entry rifler",
+
   // Free-form notes for future maintainers. Not displayed at runtime.
   "Description": "Notes on this player's playstyle and why we chose these traits.",
 
@@ -85,6 +93,17 @@
   // so BotBuy gives every Terrorist / CT an AK / M4. donk will then stick to
   // his rifle even after picking up a Deagle from a corpse.
   "RifleOnly": false,
+
+  // AWPer mirror of RifleOnly. Force-switch back to AWP / SSG08 every time
+  // the bot is holding something else AND owns a sniper. Same no-give
+  // policy: requires the bot to already own the sniper (via the buyscript
+  // or a pickup). Set this true for AWPer profiles so they don't permanently
+  // settle on a teammate's dropped rifle.
+  //
+  // Don't combine with RifleOnly — the two would fight each other every
+  // tick and both wins would cancel out (cooldown protects from spam, but
+  // the bot would never settle).
+  "AwpOnly": false,
 
   // Counter-strafe at engagement onset, gated by probability. On the
   // false->true edge of IsAimingAtEnemy we roll a die against this chance;

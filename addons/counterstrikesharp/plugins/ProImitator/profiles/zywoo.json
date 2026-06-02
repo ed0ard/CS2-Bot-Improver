@@ -1,0 +1,23 @@
+{
+  "Name": "ZywOo",
+
+  "MatchByName": ["ZywOo", "zywoo"],
+
+  "Role": "AWPer",
+
+  "Description": "Mathieu 'ZywOo' Herbaut — Vitality star AWPer, multiple-time HLTV #1. Patient, position-driven, holds angles from spawn and times peeks rather than running them. NOT rushing, NOT skipping approach pauses (he WANTS those long holds). AwpOnly forces him back to the AWP whenever he picks up a teammate's rifle off the floor. Counter-strafe is high but not perfect — even ZywOo occasionally peeks running.",
+
+  "AlwaysRushing":          false,
+  "NeverSneaks":            false,
+  "NeverPolite":            true,
+  "NoSafeTime":             false,
+  "NoPanic":                true,
+
+  "NoCrouchWithRifle":      false,
+  "NeverWaitsBetweenShots": false,
+  "NoApproachPause":        false,
+  "RifleOnly":              false,
+  "AwpOnly":                true,
+
+  "CounterStrafeChance":    0.85
+}
