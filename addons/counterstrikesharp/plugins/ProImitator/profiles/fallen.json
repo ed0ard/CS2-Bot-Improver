@@ -8,10 +8,10 @@
   "Description": "Gabriel 'FalleN' Toledo — Brazilian veteran, IGL for FURIA. 'The Professor', Major winner. Calls strats, plays secondary AWP on some rounds but mostly rifles. Decades of CS knowledge translate into patient mid-round adjustments. Never panics.",
 
   "AlwaysRushing":          false,
-  "NeverSneaks":            true,
+  "NeverSneaks":            false,
   "NeverPolite":            false,
-  "NoSafeTime":             true,
-  "NoPanic":                true,
+  "NoSafeTime":             false,
+  "NoPanic":                false,
 
   "NoCrouchWithRifle":      false,
   "NeverWaitsBetweenShots": false,

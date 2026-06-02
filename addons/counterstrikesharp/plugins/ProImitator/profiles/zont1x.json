@@ -11,11 +11,11 @@
   "NeverSneaks":            true,
   "NeverPolite":            true,
   "NoSafeTime":             true,
-  "NoPanic":                true,
+  "NoPanic":                false,
 
   "NoCrouchWithRifle":      true,
   "NeverWaitsBetweenShots": false,
-  "NoApproachPause":        true,
+  "NoApproachPause":        false,
   "Rifler":                 true,
 
   "CounterStrafeChance":    0.75,

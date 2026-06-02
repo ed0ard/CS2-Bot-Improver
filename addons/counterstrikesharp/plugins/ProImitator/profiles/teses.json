@@ -8,10 +8,10 @@
   "Description": "René 'TeSeS' Madsen — Danish rifler for Falcons. Small-site anchor on CT (often B Mirage), second-in on T, reliable mid-round voice. High-trust support role on a star-heavy lineup — frees up NiKo and m0NESY to take their duels.",
 
   "AlwaysRushing":          false,
-  "NeverSneaks":            true,
+  "NeverSneaks":            false,
   "NeverPolite":            false,
-  "NoSafeTime":             true,
-  "NoPanic":                true,
+  "NoSafeTime":             false,
+  "NoPanic":                false,
 
   "NoCrouchWithRifle":      false,
   "NeverWaitsBetweenShots": false,

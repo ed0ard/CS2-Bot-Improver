@@ -11,7 +11,7 @@
   "NeverSneaks":            false,
   "NeverPolite":            true,
   "NoSafeTime":             false,
-  "NoPanic":                true,
+  "NoPanic":                false,
 
   "NoCrouchWithRifle":      false,
   "NeverWaitsBetweenShots": false,

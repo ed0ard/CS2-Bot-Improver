@@ -8,10 +8,10 @@
   "Description": "Dan 'apEX' Madesclaire — Team Vitality captain and in-game leader. French veteran, the structural backbone of Vitality. Calls plays, coordinates utility, takes calm fragging duties. Not the entry but always within trade range. Pure rifler, plays smart positions, never wastes economy on bad force buys.",
 
   "AlwaysRushing":          false,
-  "NeverSneaks":            true,
+  "NeverSneaks":            false,
   "NeverPolite":            false,
-  "NoSafeTime":             true,
-  "NoPanic":                true,
+  "NoSafeTime":             false,
+  "NoPanic":                false,
 
   "NoCrouchWithRifle":      false,
   "NeverWaitsBetweenShots": false,
