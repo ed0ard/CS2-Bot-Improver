@@ -1,0 +1,47 @@
+{
+  // Files whose name starts with '_' are skipped by Pro-Imitator at load time,
+  // so this template ships safely next to real profiles. Copy it to e.g.
+  // `s1mple.json` (or whichever pro you're modelling) and edit.
+
+  // Display name shown in `css_pro_list` and server logs.
+  "Name": "ExamplePro",
+
+  // List of bot in-game names that should receive this profile when they
+  // spawn. Matched case-insensitively against `bot.PlayerName`. Typically the
+  // pro's nick exactly as it appears in `bot_add_ct "<nick>"`.
+  //
+  // Multiple entries are allowed for nick variants:
+  //   "MatchByName": ["s1mple", "S1MPLE", "s1mple_bot"]
+  "MatchByName": ["ExamplePro"],
+
+  // Free-form notes for future maintainers. Not displayed at runtime.
+  "Description": "Notes on this player's playstyle and why we chose these traits.",
+
+  // ---- Behavior traits ------------------------------------------------------
+  // All default to false. Each true flag is opted into in a small block in
+  // ProImitator.ApplyPersonality. Setting a trait to false means "don't touch
+  // that part of the bot's behavior" — BotState's generic improvements still
+  // apply.
+  // --------------------------------------------------------------------------
+
+  // Always be in a hurry (HurryTimer maxed every tick). Bot ignores hiding
+  // spots, takes shortest paths, less likely to camp. Pair with NeverPolite
+  // for full-send entry behavior.
+  "AlwaysRushing": false,
+
+  // Never silent-walk (SneakTimer zeroed every tick). Loud, fast traversal.
+  "NeverSneaks": false,
+
+  // Never wait behind teammates (PoliteTimer + IsWaitingBehindFriend cleared).
+  // Bot will push through allies rather than yield in chokepoints.
+  "NeverPolite": false,
+
+  // Force SafeTime = 0 every tick. The bot never feels "safe enough to skip
+  // threat checks" near its spawn. Most pros should have this true.
+  "NoSafeTime": false,
+
+  // Force PanicTimer = 0 every tick. BotState already does this too, but
+  // setting it here means the personality is self-contained if BotState ever
+  // gets unloaded.
+  "NoPanic": false
+}

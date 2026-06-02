@@ -1,0 +1,384 @@
+using System.Text.Json;
+using CounterStrikeSharp.API;
+using CounterStrikeSharp.API.Core;
+using CounterStrikeSharp.API.Core.Attributes.Registration;
+using CounterStrikeSharp.API.Modules.Commands;
+using CounterStrikeSharp.API.Modules.Memory;
+using CounterStrikeSharp.API.Modules.Utils;
+
+namespace ProImitator;
+
+// -----------------------------------------------------------------------------
+// ProImitator
+//
+// Layered-on-top personality plugin: scans bot spawn events, matches the bot's
+// PlayerName against one of the JSON profiles shipped in `profiles/`, and on
+// each tick writes a small set of bot-AI properties that reflect the matched
+// pro's playstyle (e.g. always-rushing, never-sneaks, no-panic).
+//
+// Why "layered on top": this plugin does NOT replace anything in the suite. It
+// only sets properties that are either un-touched by BotState or that BotState
+// also sets — in which case both writes agree (e.g. PanicTimer = 0). We never
+// fight another plugin's intent; we just amplify or specialise it per-bot.
+//
+// Intentionally minimal V1 scope:
+//   - No memory patches  (that's BotAI's domain)
+//   - No native hooks    (that's BotAimImprover's domain)
+//   - No per-bot aim style override (would require coupling with BotAimImprover)
+//   - No pathing / waypoints (we leave CS2's nav-mesh + BotState in charge)
+//
+// Profile location (read at plugin Load):
+//   addons/counterstrikesharp/plugins/ProImitator/profiles/*.json
+//
+// Identity model:
+//   - Bots are spawned via `bot_add_ct "<name>"` (see Commands.txt rosters).
+//   - We key everything on `player.Slot` so a single bot keeps its profile for
+//     its whole lifetime, even across deaths / respawns within the round.
+// -----------------------------------------------------------------------------
+public class ProImitator : BasePlugin
+{
+    public override string ModuleName        => "Pro-Imitator";
+    public override string ModuleVersion     => "0.1.0";
+    public override string ModuleAuthor      => "Contribution to ed0ard/CS2-Bot-Improver";
+    public override string ModuleDescription => "Per-bot personality presets so the donk bot plays like donk";
+
+    // Loaded profiles, keyed by their JSON 'Name' (lowercased) for de-dup.
+    private readonly Dictionary<string, ProProfile> _profiles = new();
+
+    // Bot slot -> applied profile. Survives multiple spawns; cleared on team
+    // change so a bot moved to spectator drops its personality cleanly.
+    private readonly Dictionary<int, ProProfile> _assigned = new();
+
+    // -------------------------------------------------------------------------
+    public override void Load(bool hotReload)
+    {
+        LoadProfilesFromDisk();
+
+        RegisterEventHandler<EventPlayerSpawn>(OnPlayerSpawn);
+        RegisterEventHandler<EventPlayerTeam>(OnPlayerTeam);
+        RegisterListener<Listeners.OnTick>(OnTick);
+
+        Console.WriteLine($"[Pro-Imitator] loaded with {_profiles.Count} profile(s): "
+                          + string.Join(", ", _profiles.Values.Select(p => p.Name)));
+    }
+    // -------------------------------------------------------------------------
+    private void LoadProfilesFromDisk()
+    {
+        _profiles.Clear();
+
+        string dir = Path.Combine(ModuleDirectory, "profiles");
+        if (!Directory.Exists(dir))
+        {
+            Console.WriteLine($"[Pro-Imitator] profiles dir not found: {dir}");
+            return;
+        }
+
+        var opts = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            ReadCommentHandling = JsonCommentHandling.Skip,
+            AllowTrailingCommas = true,
+        };
+
+        foreach (string path in Directory.EnumerateFiles(dir, "*.json"))
+        {
+            string filename = Path.GetFileName(path);
+            // Profiles starting with '_' are templates/examples; skip silently.
+            if (filename.StartsWith('_')) continue;
+
+            try
+            {
+                string json = File.ReadAllText(path);
+                var prof = JsonSerializer.Deserialize<ProProfile>(json, opts);
+                if (prof == null || string.IsNullOrWhiteSpace(prof.Name))
+                {
+                    Console.WriteLine($"[Pro-Imitator] skip {filename}: missing Name");
+                    continue;
+                }
+                _profiles[prof.Name.ToLowerInvariant()] = prof;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Pro-Imitator] failed to parse {filename}: {ex.Message}");
+            }
+        }
+    }
+    // -------------------------------------------------------------------------
+    // Spawn / team transitions decide who gets a profile attached.
+    // -------------------------------------------------------------------------
+    [GameEventHandler]
+    public HookResult OnPlayerSpawn(EventPlayerSpawn @event, GameEventInfo info)
+    {
+        var player = @event.Userid;
+        if (player == null || !player.IsValid || !player.IsBot) return HookResult.Continue;
+
+        // First spawn for this slot? Attempt to match. Subsequent respawns keep
+        // the same profile (we never re-evaluate mid-match unless team changes).
+        if (_assigned.ContainsKey(player.Slot)) return HookResult.Continue;
+
+        var prof = MatchProfile(player.PlayerName);
+        if (prof != null)
+        {
+            _assigned[player.Slot] = prof;
+            Console.WriteLine($"[Pro-Imitator] attached profile '{prof.Name}' to bot '{player.PlayerName}' (slot {player.Slot})");
+        }
+
+        return HookResult.Continue;
+    }
+    // -------------------------------------------------------------------------
+    [GameEventHandler]
+    public HookResult OnPlayerTeam(EventPlayerTeam @event, GameEventInfo info)
+    {
+        var player = @event.Userid;
+        if (player == null || !player.IsValid) return HookResult.Continue;
+
+        // Spectator / unassigned: drop the profile so re-joining as a bot lets
+        // us re-evaluate (the controller's PlayerName might be reused).
+        if ((CsTeam)@event.Team != CsTeam.CounterTerrorist
+            && (CsTeam)@event.Team != CsTeam.Terrorist)
+        {
+            _assigned.Remove(player.Slot);
+        }
+
+        return HookResult.Continue;
+    }
+    // -------------------------------------------------------------------------
+    private ProProfile? MatchProfile(string botName)
+    {
+        if (string.IsNullOrEmpty(botName)) return null;
+        string lower = botName.ToLowerInvariant();
+
+        foreach (var prof in _profiles.Values)
+        {
+            foreach (string candidate in prof.MatchByName)
+            {
+                if (candidate.Equals(lower, StringComparison.OrdinalIgnoreCase))
+                    return prof;
+            }
+        }
+        return null;
+    }
+    // -------------------------------------------------------------------------
+    // Per-tick personality writes. Kept fast: a small dictionary lookup per
+    // bot and a handful of ref-property writes when a profile is attached.
+    //
+    // Note on ordering: CounterStrikeSharp runs plugin tick listeners in load
+    // order. Plugins loaded later get the last word. We don't depend on that
+    // here — we only set values that BotState either leaves alone (HurryTimer,
+    // SneakTimer, SafeTime) or sets to the same value we'd want (PanicTimer=0).
+    // -------------------------------------------------------------------------
+    private void OnTick()
+    {
+        if (_assigned.Count == 0) return;
+
+        float now = Server.CurrentTime;
+
+        foreach (var player in Utilities.FindAllEntitiesByDesignerName<CCSPlayerController>("cs_player_controller"))
+        {
+            if (!player.IsValid || !player.IsBot) continue;
+            if (!_assigned.TryGetValue(player.Slot, out var prof)) continue;
+
+            // Don't override anything when a human has taken over the bot.
+            if (player.HasBeenControlledByPlayerThisRound) continue;
+
+            var pawn = player.PlayerPawn.Value;
+            if (pawn == null || !pawn.IsValid) continue;
+
+            var bot = pawn.Bot;
+            if (bot == null) continue;
+
+            ApplyPersonality(bot, prof, now);
+        }
+    }
+    // -------------------------------------------------------------------------
+    // The core: translate a profile's boolean traits into CCSBot property writes.
+    //
+    // Each block is opt-in; profiles can mix-and-match. Anything not listed in
+    // a profile is left untouched (BotState's generic improvements still apply).
+    // -------------------------------------------------------------------------
+    private static void ApplyPersonality(CCSBot bot, ProProfile prof, float now)
+    {
+        if (prof.AlwaysRushing)
+        {
+            // HurryTimer drives bot "I'm in a hurry to reach my goal" behavior:
+            // ignores hiding spots, takes shortest paths, less likely to camp.
+            CountdownTimer hurryTimer = bot.HurryTimer;
+
+            ref float duration = ref hurryTimer.Duration;
+            duration = 600.0f;
+
+            ref float timestamp = ref hurryTimer.Timestamp;
+            timestamp = now + 600.0f;
+
+            ref float timescale = ref hurryTimer.Timescale;
+            timescale = 1.0f;
+
+            // Reinforce: an aggressive entry never patiently walks. IsRunning
+            // is set to true by BotState on stuck/idle paths anyway, but here
+            // we make it the default while the bot has hurry intent.
+            ref bool isRunning = ref bot.IsRunning;
+            isRunning = true;
+        }
+
+        if (prof.NeverSneaks)
+        {
+            // SneakTimer = silent crouch-walk. Zero it so even cautious
+            // pathing code can't put us in sneak mode.
+            CountdownTimer sneakTimer = bot.SneakTimer;
+
+            ref float sneakDuration = ref sneakTimer.Duration;
+            sneakDuration = 0.0f;
+
+            ref float sneakTimestamp = ref sneakTimer.Timestamp;
+            sneakTimestamp = 0.0f;
+
+            ref float sneakTimescale = ref sneakTimer.Timescale;
+            sneakTimescale = 1.0f;
+        }
+
+        if (prof.NeverPolite)
+        {
+            // PoliteTimer = "I'm waiting for a teammate to pass". Disable for
+            // bots whose real-life counterpart pushes through their own team.
+            CountdownTimer politeTimer = bot.PoliteTimer;
+
+            ref float politeDuration = ref politeTimer.Duration;
+            politeDuration = 0.0f;
+
+            ref float politeTimestamp = ref politeTimer.Timestamp;
+            politeTimestamp = 0.0f;
+
+            ref float politeTimescale = ref politeTimer.Timescale;
+            politeTimescale = 1.0f;
+
+            ref bool waitingBehindFriend = ref bot.IsWaitingBehindFriend;
+            waitingBehindFriend = false;
+        }
+
+        if (prof.NoSafeTime)
+        {
+            // SafeTime = how long after spawn the bot considers the area safe
+            // and skips threat checks. BotState already zeroes this on spawn,
+            // but we keep writing it each tick so the bot never "feels safe".
+            ref float safeTime = ref bot.SafeTime;
+            safeTime = 0f;
+        }
+
+        if (prof.NoPanic)
+        {
+            // BotState already zeroes PanicTimer in its OnTick, but doing it
+            // ourselves means the personality survives if BotState is unloaded.
+            CountdownTimer panicTimer = bot.PanicTimer;
+
+            ref float panicDuration = ref panicTimer.Duration;
+            panicDuration = 0.0f;
+
+            ref float panicTimestamp = ref panicTimer.Timestamp;
+            panicTimestamp = 0.0f;
+
+            ref float panicTimescale = ref panicTimer.Timescale;
+            panicTimescale = 1.0f;
+        }
+    }
+    // -------------------------------------------------------------------------
+    // Console commands. Mirrors the convention used elsewhere in the suite:
+    // `css_*` prefix, [ConsoleCommand] + [CommandHelper] attributes, reply via
+    // CommandInfo so both server console and client console see the output.
+    // -------------------------------------------------------------------------
+    [ConsoleCommand("css_pro_list", "List Pro-Imitator profiles loaded from disk")]
+    [CommandHelper(minArgs: 0, usage: "", whoCanExecute: CommandUsage.CLIENT_AND_SERVER)]
+    public void OnProListCmd(CCSPlayerController? caller, CommandInfo cmd)
+    {
+        if (_profiles.Count == 0)
+        {
+            cmd.ReplyToCommand("[Pro-Imitator] no profiles loaded");
+            return;
+        }
+
+        cmd.ReplyToCommand($"[Pro-Imitator] {_profiles.Count} profile(s):");
+        foreach (var prof in _profiles.Values.OrderBy(p => p.Name))
+        {
+            string aliases = prof.MatchByName.Count > 0 ? string.Join(", ", prof.MatchByName) : "(none)";
+            cmd.ReplyToCommand($"  - {prof.Name}  matches: [{aliases}]");
+        }
+    }
+    // -------------------------------------------------------------------------
+    [ConsoleCommand("css_pro_assigned", "List bots that currently have a Pro-Imitator profile attached")]
+    [CommandHelper(minArgs: 0, usage: "", whoCanExecute: CommandUsage.CLIENT_AND_SERVER)]
+    public void OnProAssignedCmd(CCSPlayerController? caller, CommandInfo cmd)
+    {
+        if (_assigned.Count == 0)
+        {
+            cmd.ReplyToCommand("[Pro-Imitator] no bots currently profiled");
+            return;
+        }
+
+        // Build slot -> controller index once, so the per-assignment lookups
+        // below are O(1) instead of O(N*M) for verbose servers.
+        var bySlot = new Dictionary<int, string>();
+        foreach (var p in Utilities.GetPlayers())
+        {
+            if (p == null || !p.IsValid) continue;
+            bySlot[p.Slot] = p.PlayerName;
+        }
+
+        cmd.ReplyToCommand($"[Pro-Imitator] {_assigned.Count} bot(s) profiled:");
+        foreach (var kvp in _assigned)
+        {
+            string name = bySlot.TryGetValue(kvp.Key, out var n) ? n : "<gone>";
+            cmd.ReplyToCommand($"  slot {kvp.Key}  bot '{name}'  -> profile '{kvp.Value.Name}'");
+        }
+    }
+    // -------------------------------------------------------------------------
+    [ConsoleCommand("css_pro_reload", "Re-read JSON profiles from disk and re-evaluate all bots")]
+    [CommandHelper(minArgs: 0, usage: "", whoCanExecute: CommandUsage.CLIENT_AND_SERVER)]
+    public void OnProReloadCmd(CCSPlayerController? caller, CommandInfo cmd)
+    {
+        int oldCount = _profiles.Count;
+        LoadProfilesFromDisk();
+        _assigned.Clear();
+
+        // Re-evaluate every currently-alive bot against the freshly loaded set.
+        foreach (var p in Utilities.GetPlayers())
+        {
+            if (p == null || !p.IsValid || !p.IsBot) continue;
+            var prof = MatchProfile(p.PlayerName);
+            if (prof != null) _assigned[p.Slot] = prof;
+        }
+
+        cmd.ReplyToCommand($"[Pro-Imitator] reloaded: {_profiles.Count} profile(s) (was {oldCount}), re-evaluated {_assigned.Count} bot(s)");
+    }
+}
+// -----------------------------------------------------------------------------
+// ProProfile
+//
+// Bag of personality flags + identity. Mirrors the JSON shape on disk: see
+// `profiles/_template.json` for the documented field-by-field reference.
+//
+// Adding a new trait? Two steps:
+//   1. Add the property here (default to a no-op value).
+//   2. Add an `if (prof.NewTrait) { ... }` block in ProImitator.ApplyPersonality
+//      that translates it into CCSBot ref writes.
+// -----------------------------------------------------------------------------
+public sealed class ProProfile
+{
+    // Display name. Shown in logs and in `css_pro_list`.
+    public string Name { get; set; } = "";
+
+    // List of bot in-game names (case-insensitive) that should receive this
+    // profile when they spawn. Typically the pro's nick exactly as it appears
+    // in `bot_add_ct "<nick>"` from Commands.txt.
+    public List<string> MatchByName { get; set; } = new();
+
+    // Free-form notes shown nowhere at runtime; just so future maintainers can
+    // read a profile and understand the intent without digging through git.
+    public string Description { get; set; } = "";
+
+    // -- Behavioral flags. All default to false (= "don't touch") so a profile
+    //    can opt into only the traits that match the player.
+    public bool AlwaysRushing  { get; set; } = false;
+    public bool NeverSneaks    { get; set; } = false;
+    public bool NeverPolite    { get; set; } = false;
+    public bool NoSafeTime     { get; set; } = false;
+    public bool NoPanic        { get; set; } = false;
+}

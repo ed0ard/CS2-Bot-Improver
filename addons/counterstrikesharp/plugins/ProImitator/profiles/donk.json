@@ -1,0 +1,13 @@
+{
+  "Name": "donk",
+
+  "MatchByName": ["donk"],
+
+  "Description": "Danil 'donk' Kryshkovets — Team Spirit star entry fragger. Hold-W mentality but calculated. Forces raw-aim duels at close to mid range with rifles, no AWP. Rated #1 by HLTV in 2024 as a 17-year-old prodigy.",
+
+  "AlwaysRushing": true,
+  "NeverSneaks":   true,
+  "NeverPolite":   true,
+  "NoSafeTime":    true,
+  "NoPanic":       true
+}

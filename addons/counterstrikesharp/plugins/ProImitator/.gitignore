@@ -1,0 +1,9 @@
+# Build artifacts (regenerable by `dotnet build`)
+bin/
+obj/
+
+# JetBrains / Visual Studio user-specific files
+.idea/
+.vs/
+*.user
+*.suo

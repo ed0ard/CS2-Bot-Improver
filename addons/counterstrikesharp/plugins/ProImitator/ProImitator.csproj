@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>ProImitator</AssemblyName>
+    <RootNamespace>ProImitator</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CounterStrikeSharp.API" Version="1.0.367" />
+  </ItemGroup>
+
+  <!-- Ship the JSON profiles next to the DLL so the plugin can find them at
+       runtime via Path.Combine(ModuleDirectory, "profiles"). -->
+  <ItemGroup>
+    <None Include="profiles\**\*.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>
