@@ -19,5 +19,5 @@
   "Rifler":                 false,
   "AWPer":                  true,
 
-  "CounterStrafeChance":    0.75
+  "CounterStrafeChance":    0.85
 }

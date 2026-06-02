@@ -18,5 +18,5 @@
   "NoApproachPause":        true,
   "Rifler":                 true,
 
-  "CounterStrafeChance":    0.72
+  "CounterStrafeChance":    0.75
 }
