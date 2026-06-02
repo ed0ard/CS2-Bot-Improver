@@ -79,30 +79,38 @@
   // and CheckedHidingSpotCount to zero.
   "NoApproachPause": false,
 
-  // "This pro is a rifler." Two coordinated effects, both eco-aware:
+  // "This pro is a rifler." Two coordinated effects, both deferring the
+  // eco / semi-buy / full-buy decision to the engine + BotBuy:
   //
-  //   1. AT ROUND-FREEZE: if the bot can afford a full buy (5000$ floor =
-  //      rifle + armor + minimal nade kit) AND doesn't already own a rifle,
-  //      ProImitator buys their team's main rifle (AK for T, M4 for CT)
-  //      and deducts the price from their account.
+  //   1. AT ROUND-FREEZE: ProImitator observes what the bot was given by the
+  //      engine and BotBuy. Three cases:
   //
-  //      Below the full-buy floor → DO NOTHING. The bot falls back to
-  //      whatever BotBuy / the engine bought (pistol round, eco SMG, etc).
-  //      No "stupid" rifle buys on a 2200$ account.
+  //        - Bot has a rifle (any): swap it for the role's main (AK for T,
+  //          M4 for CT). Account adjusted by the PRICE DIFFERENCE — e.g.
+  //          Galil 1800$ → AK 2700$ costs the bot 900$; AUG 3300$ → M4
+  //          2900$ refunds 400$. If the bot can't afford an upgrade, we
+  //          keep the original rifle rather than leave them broke.
   //
-  //   2. EVERY TICK: if the bot is holding a non-rifle (pistol, SMG, sniper,
-  //      shotgun) AND owns a rifle, `use weapon_<rifle>` switches them back.
+  //        - Bot has a sniper (AWP / SSG08 / Scar20 / G3SG1): same swap,
+  //          treated as a "wrong primary" → switch to the role rifle.
+  //
+  //        - Bot has only SMG / shotgun / pistol / nothing: LEAVE IT. The
+  //          engine decided it's eco or semi-buy this round; we respect
+  //          that and don't force a rifle the team economy can't sustain.
+  //
+  //   2. EVERY TICK: if the bot is holding a non-rifle (pistol, SMG, etc)
+  //      AND already owns a rifle, `use weapon_<rifle>` switches them back.
   //      Rifles classified: AK47, M4A1 / M4A1-S, SG556, AUG, GalilAR, FAMAS.
   //
-  // Don't combine with AWPer in the same profile — they'd both try to buy a
-  // primary at the same tick, and Rifler wins (deterministic but arbitrary).
+  // Don't combine with AWPer in the same profile — they'd both try to swap
+  // primaries at the same tick, and Rifler wins (deterministic but arbitrary).
   "Rifler": false,
 
-  // AWPer mirror of Rifler. Same eco logic with the AWP full-buy floor at
-  // 6500$ (AWP 4750 + armor 1000 + nades + pistol upgrade). Same per-tick
-  // switch-back if the bot picks up a teammate's dropped rifle. SSG08 is also
-  // classified as a sniper, so a profiled AWPer with Scout from an early-
-  // round eco buy won't be force-switched out of it.
+  // AWPer mirror of Rifler. Same observe-then-swap logic: if the bot was
+  // given any big primary (rifle or sniper), swap to AWP and pay the diff;
+  // if they only got a small primary or nothing, respect the engine's
+  // semi-buy / eco call. SSG08 is classified as a sniper, so an SSG08 pistol-
+  // round pickup will be respected and won't trigger the swap loop.
   "AWPer": false,
 
   // Counter-strafe at engagement onset, gated by probability. On the
