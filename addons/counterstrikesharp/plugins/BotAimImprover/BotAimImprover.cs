@@ -200,9 +200,10 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
     private enum AimMode { MIXED, HEAD, BODY }
     private AimMode _aimMode = AimMode.MIXED;
 
+    // weapon_awp is handled by the "always body" check in OrderFor; these only body-aim in MIXED mode.
     private static readonly HashSet<string> _bodyFirstWeapons = new()
     {
-        "weapon_awp", "weapon_ssg08", "weapon_p90", "weapon_bizon",
+        "weapon_ssg08", "weapon_p90", "weapon_bizon",
         "weapon_nova", "weapon_xm1014", "weapon_sawedoff", "weapon_mag7", "weapon_revolver"
     };
 
@@ -269,8 +270,8 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
     private long   _hookCalls = 0, _writes = 0, _gateBail = 0, _botResolveFail = 0;
     private string _lastInfo = "(none yet)";
     private long   _botKills = 0, _botHsKills = 0;
-    private bool   _autoDetect = true;       // sync preset to server bot difficulty
     private string _detectedPreset = "(n/a)"; // last auto-detection result, for status
+    private bool   _configApplied;            // OnConfigParsed/ApplyConfig has run at least once
 
     // ============================================================
     // Config lifecycle
@@ -278,7 +279,6 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
     public void OnConfigParsed(BotAimConfig config)
     {
         Config = config;
-        _autoDetect = config.AutoDetectDifficulty;
         ApplyConfig();
     }
 
@@ -306,6 +306,7 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
         if (o.ErrorScale.HasValue)      t.ErrorScale      = Math.Clamp(o.ErrorScale.Value, 0f, 10f);
         if (o.LagEnabled.HasValue)      t.LagEnabled      = o.LagEnabled.Value;
         _t = t;
+        _configApplied = true;
         _botState.Clear(); // re-roll personalities with new tuning
     }
 
@@ -317,7 +318,7 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
     // ============================================================
     private void MaybeAutoApplyPreset(string ctx)
     {
-        if (!_autoDetect) return;
+        if (!Config.AutoDetectDifficulty) return;
         string? detected = DetectPresetFromProfile();
         _detectedPreset = detected ?? "unknown";
         if (detected == null)
@@ -394,7 +395,7 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
     {
         bool win = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
         _off = win ? WINDOWS : LINUX;
-        if (_t.BaseErrMax == 0f) _t = PresetFor(Config.Preset); // if OnConfigParsed hasn't run
+        if (!_configApplied) ApplyConfig(); // apply preset+overrides if OnConfigParsed hasn't run
 
         try
         {
@@ -431,10 +432,11 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
 
         RegisterEventHandler<EventRoundStart>((_, _) =>
         {
+            float now = Server.CurrentTime;
             foreach (var st in _botState.Values)
             {
                 st.VisibleSince = -1f; st.LastEnemyIdx = -1; st.CurrentPart = -1; st.PartChosenAt = -1f;
-                st.Bias = RollBias(st.Rng); st.LastBiasRollAt = -1f;   // fresh aim priority each round
+                MaybeRerollBias(st, now, force: true);   // fresh aim priority each round
             }
             _history.Clear();
             return HookResult.Continue;
@@ -477,20 +479,20 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
                 string p = info.GetArg(1).Trim().ToLowerInvariant();
                 if (p == "auto")
                 {
-                    _autoDetect = true;
+                    Config.AutoDetectDifficulty = true;
                     MaybeAutoApplyPreset("manual auto");
                     Server.PrintToConsole($"[BotAimImprover] auto-difficulty ON (preset={Config.Preset}, detected={_detectedPreset})");
                 }
                 else if (p is "low" or "medium" or "high")
                 {
-                    _autoDetect = false; // manual pin wins until `bot_aim_preset auto`
+                    Config.AutoDetectDifficulty = false; // manual pin wins until `bot_aim_preset auto`
                     Config.Preset = p;
                     ApplyConfig();
                     Server.PrintToConsole($"[BotAimImprover] preset -> {p} (auto-difficulty OFF, personalities re-rolled)");
                 }
                 else Server.PrintToConsole("[BotAimImprover] valid presets: low, medium, high, auto");
             }
-            else Server.PrintToConsole($"[BotAimImprover] preset is {Config.Preset} (auto={(_autoDetect ? "ON" : "OFF")}, detected={_detectedPreset}). Usage: bot_aim_preset <low|medium|high|auto>");
+            else Server.PrintToConsole($"[BotAimImprover] preset is {Config.Preset} (auto={(Config.AutoDetectDifficulty ? "ON" : "OFF")}, detected={_detectedPreset}). Usage: bot_aim_preset <low|medium|high|auto>");
         });
 
         AddCommand("bot_aim_error", "Global error multiplier (0=perfect, 1=default)", (caller, info) =>
@@ -530,7 +532,7 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
             string plat = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "Windows" : "Linux";
             Server.PrintToConsole(
                 $"[BotAimImprover] {plat} sig=0x{addr:X} bound={(addr != 0)} preset={Config.Preset} " +
-                $"auto={(_autoDetect ? "ON" : "OFF")}(detected={_detectedPreset}) | " +
+                $"auto={(Config.AutoDetectDifficulty ? "ON" : "OFF")}(detected={_detectedPreset}) | " +
                 $"calls={_hookCalls} writes={_writes} gateBail={_gateBail} ctrlFail={_botResolveFail} | " +
                 $"bots={_botState.Count} hist={_history.Count} mode={_aimMode} errScale={_t.ErrorScale:0.00} " +
                 $"highAim={_t.HighAimFraction:P0} lag={(_t.LagEnabled ? "ON" : "OFF")}");
@@ -568,12 +570,7 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
                 // On the visible->idle edge, re-roll the aim-priority bias so a bot's
                 // head/body tendency is not fixed for its whole life (keeps the aggregate
                 // HS% from feeling rigid). Rate-limited so quick re-peeks don't thrash it.
-                if (st.VisibleSince >= 0f
-                    && (st.LastBiasRollAt < 0f || now - st.LastBiasRollAt >= BiasRerollCooldown))
-                {
-                    st.Bias = RollBias(st.Rng);
-                    st.LastBiasRollAt = now;
-                }
+                if (st.VisibleSince >= 0f) MaybeRerollBias(st, now, force: false);
                 st.VisibleSince = -1f; st.CurrentPart = -1; _gateBail++;
                 return HookResult.Continue;
             }
@@ -602,7 +599,7 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
                 if (botController == null) _botResolveFail++;
                 st.Weapon = botController?.PlayerPawn?.Value?.WeaponServices?.ActiveWeapon?.Value?.DesignerName;
 
-                int[] order = OrderFor(st, st.Weapon);
+                int[] order = OrderFor(st);
                 int chosen = -1;
                 if (TryGetEye(pCCSBot, botController, out var eye))
                 {
@@ -736,7 +733,6 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
     }
 
     // Roll a fresh head/jaw/body aim-priority bias from the current HighAimFraction.
-    // Re-rolled when a bot goes idle so its head/body tendency is not fixed for life.
     private AimBias RollBias(Random rng)
     {
         double roll = rng.NextDouble();
@@ -746,12 +742,23 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
              : AimBias.BODY;
     }
 
-    private int[] OrderFor(BotState st, string? wpn)
+    // Re-roll a bot's aim-priority bias so its head/body tendency is not fixed for life.
+    // `force` (round start) ignores the cooldown; otherwise (idle edge) it is rate-limited
+    // by BiasRerollCooldown so quick re-peeks don't flip the bias mid-fight.
+    private void MaybeRerollBias(BotState st, float now, bool force)
     {
-        if (wpn == "weapon_awp") return _priorityBody;   // AWP always aims at the body
+        if (!force && st.LastBiasRollAt >= 0f && now - st.LastBiasRollAt < BiasRerollCooldown)
+            return;
+        st.Bias = RollBias(st.Rng);
+        st.LastBiasRollAt = force ? -1f : now;
+    }
+
+    private int[] OrderFor(BotState st)
+    {
+        if (st.Weapon == "weapon_awp") return _priorityBody;   // AWP always aims at the body, regardless of mode
         if (_aimMode == AimMode.HEAD) return _priorityHead;
         if (_aimMode == AimMode.BODY) return _priorityBody;
-        if (wpn != null && _bodyFirstWeapons.Contains(wpn)) return _priorityBody;
+        if (st.Weapon != null && _bodyFirstWeapons.Contains(st.Weapon)) return _priorityBody;
         return st.Bias switch
         {
             AimBias.HEAD => _priorityHead,
