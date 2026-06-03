@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes;
@@ -22,6 +23,12 @@ public class BotAimConfig : BasePluginConfig
 
     // "low" | "medium" | "high"
     public string Preset { get; set; } = "medium";
+
+    // When true, the preset is auto-synced to the server's active bot difficulty
+    // (overrides/botprofile.vpk matched against Low/Medium/High) on load and every
+    // map start. `Preset` above is the fallback if detection fails. A manual
+    // `bot_aim_preset <low|medium|high>` pins it (turns auto off until `bot_aim_preset auto`).
+    public bool AutoDetectDifficulty { get; set; } = true;
 
     public BotAimOverrides Overrides { get; set; } = new();
 }
@@ -262,6 +269,8 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
     private long   _hookCalls = 0, _writes = 0, _gateBail = 0, _botResolveFail = 0;
     private string _lastInfo = "(none yet)";
     private long   _botKills = 0, _botHsKills = 0;
+    private bool   _autoDetect = true;       // sync preset to server bot difficulty
+    private string _detectedPreset = "(n/a)"; // last auto-detection result, for status
 
     // ============================================================
     // Config lifecycle
@@ -269,6 +278,7 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
     public void OnConfigParsed(BotAimConfig config)
     {
         Config = config;
+        _autoDetect = config.AutoDetectDifficulty;
         ApplyConfig();
     }
 
@@ -297,6 +307,84 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
         if (o.LagEnabled.HasValue)      t.LagEnabled      = o.LagEnabled.Value;
         _t = t;
         _botState.Clear(); // re-roll personalities with new tuning
+    }
+
+    // ============================================================
+    // Auto difficulty detection
+    // Mirrors RoundDamageRecap: the active overrides/botprofile.vpk is SHA-256'd
+    // and matched against the Low/Medium/High reference profiles. Pure filesystem,
+    // no native offsets, so it is safe on both platforms.
+    // ============================================================
+    private void MaybeAutoApplyPreset(string ctx)
+    {
+        if (!_autoDetect) return;
+        string? detected = DetectPresetFromProfile();
+        _detectedPreset = detected ?? "unknown";
+        if (detected == null)
+        {
+            Logger.LogInformation("[BotAimImprover] auto-difficulty: undetected ({Ctx}); keeping preset={Preset}", ctx, Config.Preset);
+            return;
+        }
+        if (!string.Equals(detected, Config.Preset, StringComparison.OrdinalIgnoreCase))
+        {
+            Config.Preset = detected;
+            ApplyConfig();
+            Logger.LogInformation("[BotAimImprover] auto-difficulty -> preset={Preset} ({Ctx})", detected, ctx);
+            Server.PrintToConsole($"[BotAimImprover] auto-difficulty: preset -> {detected} ({ctx})");
+        }
+    }
+
+    private string? DetectPresetFromProfile()
+    {
+        try
+        {
+            string? overridesDir = FindOverridesDirectory();
+            if (overridesDir == null) return null;
+
+            string activePath = Path.Combine(overridesDir, "botprofile.vpk");
+            if (!File.Exists(activePath)) return null;
+            byte[] activeHash = ComputeSha256(activePath);
+
+            foreach (var (preset, folder) in new[] { ("low", "Low"), ("medium", "Medium"), ("high", "High") })
+            {
+                string p = Path.Combine(overridesDir, folder, "botprofile.vpk");
+                if (!File.Exists(p)) continue;
+                if (CryptographicOperations.FixedTimeEquals(activeHash, ComputeSha256(p)))
+                    return preset;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogWarning(ex, "[BotAimImprover] auto-difficulty detection failed");
+        }
+        return null;
+    }
+
+    private static string? FindOverridesDirectory()
+    {
+        var candidates = new[]
+        {
+            Path.Combine(Server.GameDirectory, "overrides"),
+            Path.Combine(Server.GameDirectory, "csgo", "overrides"),
+            Path.Combine(Server.GameDirectory, "game", "csgo", "overrides"),
+        };
+        foreach (var c in candidates)
+            if (File.Exists(Path.Combine(c, "botprofile.vpk"))) return c;
+
+        var current = new DirectoryInfo(AppContext.BaseDirectory);
+        while (current != null)
+        {
+            var c = Path.Combine(current.FullName, "overrides");
+            if (File.Exists(Path.Combine(c, "botprofile.vpk"))) return c;
+            current = current.Parent;
+        }
+        return null;
+    }
+
+    private static byte[] ComputeSha256(string path)
+    {
+        using var stream = File.OpenRead(path);
+        return SHA256.HashData(stream);
     }
 
     // ============================================================
@@ -353,7 +441,11 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
         });
 
         RegisterListener<Listeners.OnTick>(OnTick);
+        RegisterListener<Listeners.OnMapStart>(_ => MaybeAutoApplyPreset("map start"));
         RegisterCommands();
+
+        // Sync to the server's active bot difficulty now (GameDirectory is valid here).
+        MaybeAutoApplyPreset("load");
     }
 
     public override void Unload(bool hotReload)
@@ -378,20 +470,27 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
             string Set(AimMode m, string desc) { _aimMode = m; return $"[BotAimImprover] aim mode -> {desc}"; }
         });
 
-        AddCommand("bot_aim_preset", "Difficulty preset: low, medium, high", (caller, info) =>
+        AddCommand("bot_aim_preset", "Difficulty preset: low, medium, high, auto", (caller, info) =>
         {
             if (info.ArgCount > 1)
             {
                 string p = info.GetArg(1).Trim().ToLowerInvariant();
-                if (p is "low" or "medium" or "high")
+                if (p == "auto")
                 {
+                    _autoDetect = true;
+                    MaybeAutoApplyPreset("manual auto");
+                    Server.PrintToConsole($"[BotAimImprover] auto-difficulty ON (preset={Config.Preset}, detected={_detectedPreset})");
+                }
+                else if (p is "low" or "medium" or "high")
+                {
+                    _autoDetect = false; // manual pin wins until `bot_aim_preset auto`
                     Config.Preset = p;
                     ApplyConfig();
-                    Server.PrintToConsole($"[BotAimImprover] preset -> {p} (personalities re-rolled)");
+                    Server.PrintToConsole($"[BotAimImprover] preset -> {p} (auto-difficulty OFF, personalities re-rolled)");
                 }
-                else Server.PrintToConsole("[BotAimImprover] valid presets: low, medium, high");
+                else Server.PrintToConsole("[BotAimImprover] valid presets: low, medium, high, auto");
             }
-            else Server.PrintToConsole($"[BotAimImprover] preset is {Config.Preset}. Usage: bot_aim_preset <low|medium|high>");
+            else Server.PrintToConsole($"[BotAimImprover] preset is {Config.Preset} (auto={(_autoDetect ? "ON" : "OFF")}, detected={_detectedPreset}). Usage: bot_aim_preset <low|medium|high|auto>");
         });
 
         AddCommand("bot_aim_error", "Global error multiplier (0=perfect, 1=default)", (caller, info) =>
@@ -430,7 +529,8 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
             long addr = _pickNewAimSpot?.Handle.ToInt64() ?? 0;
             string plat = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "Windows" : "Linux";
             Server.PrintToConsole(
-                $"[BotAimImprover] {plat} sig=0x{addr:X} bound={(addr != 0)} preset={Config.Preset} | " +
+                $"[BotAimImprover] {plat} sig=0x{addr:X} bound={(addr != 0)} preset={Config.Preset} " +
+                $"auto={(_autoDetect ? "ON" : "OFF")}(detected={_detectedPreset}) | " +
                 $"calls={_hookCalls} writes={_writes} gateBail={_gateBail} ctrlFail={_botResolveFail} | " +
                 $"bots={_botState.Count} hist={_history.Count} mode={_aimMode} errScale={_t.ErrorScale:0.00} " +
                 $"highAim={_t.HighAimFraction:P0} lag={(_t.LagEnabled ? "ON" : "OFF")}");

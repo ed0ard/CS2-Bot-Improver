@@ -57,6 +57,30 @@ Bots prioritize aiming at the torso
 `bot_aim`  
 Check the current aim mode
 
+`bot_aim_preset <low|medium|high>`  
+Set the aim difficulty preset (low = loose/slow, high = tight/fast). Pins the preset and turns auto-detection off
+
+`bot_aim_preset auto`  
+Make the aim preset follow the server's bot difficulty automatically (the default; see [How to change the difficulty level](#how-to-change-the-difficulty-level))
+
+`bot_aim_preset`  
+Check the current preset and whether auto-detection is on
+
+`bot_headshot_bias <0-100>`  
+Percentage of bots that aim high (head/jaw). Higher = more headshots
+
+`bot_aim_error <0..10>`  
+Global aim-error multiplier (0 = perfect aim, 1 = preset default)
+
+`bot_aim_lag <0|1>`  
+Toggle human-like reaction lag + target lead/prediction (on by default)
+
+`bot_aim_status`  
+Show runtime diagnostics: bound state, current preset, measured headshot rate, and the last aim point
+
+`bot_aim_reset_stats`  
+Reset the measured headshot-rate counters
+
 ### Nades
 
 `bot_nades off`  
@@ -138,6 +162,16 @@ Input the command after a match begins to turn on/off Flying Scoutsman
 1. Open the root of CS2 and navigate to `game/csgo/overrides` directory  
 2. Open the `Low` for easy difficulty, `Medium` for a mixed difficulty based on HLTV stats (default), and `High` for extreme difficulty  
 3. Copy `botprofile.vpk` and paste it into `game/csgo/overrides` before launching the game
+
+The aim plugin (BotAimImprover) automatically matches its aim preset (`low`/`medium`/`high`) to whichever `botprofile.vpk` you copied here, so the bots' aim stays in sync with their skill level. No extra steps are needed.
+
+To override this, edit `game/csgo/addons/counterstrikesharp/configs/plugins/BotAimImprover/BotAimImprover.json` (generated on first launch):
+
+- `Preset`: `low` | `medium` | `high`. Fallback used when auto-detection is off or can't identify the profile
+- `AutoDetectDifficulty`: `true` (default) syncs the preset to the active `botprofile.vpk`; set to `false` to always use `Preset`
+- `Overrides`: fine-tune individual values (aim error, reaction time, target lead, headshot fraction, etc.) on top of the preset
+
+You can also switch presets live in console with `bot_aim_preset <low|medium|high|auto>`.
 
 ### How to play online matches normally
 
