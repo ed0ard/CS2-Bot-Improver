@@ -206,6 +206,7 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
         public Random Rng = new();
         public float   BaseErr, DecayErr, Tau, ReactionMs, LeadK, AccelK;
         public AimBias Bias;
+        public float LastBiasRollAt = -1f;   // last time the bias was re-rolled (idle re-roll rate limit)
         public float VisibleSince = -1f;
         public int   LastEnemyIdx = -1;
         public int   CurrentPart  = -1;
@@ -345,6 +346,7 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
             foreach (var st in _botState.Values)
             {
                 st.VisibleSince = -1f; st.LastEnemyIdx = -1; st.CurrentPart = -1; st.PartChosenAt = -1f;
+                st.Bias = RollBias(st.Rng); st.LastBiasRollAt = -1f;   // fresh aim priority each round
             }
             _history.Clear();
             return HookResult.Continue;
@@ -463,6 +465,15 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
             int enemyRaw = ReadInt32(pCCSBot + _off.Enemy);
             if (!visible || enemyRaw == -1)
             {
+                // On the visible->idle edge, re-roll the aim-priority bias so a bot's
+                // head/body tendency is not fixed for its whole life (keeps the aggregate
+                // HS% from feeling rigid). Rate-limited so quick re-peeks don't thrash it.
+                if (st.VisibleSince >= 0f
+                    && (st.LastBiasRollAt < 0f || now - st.LastBiasRollAt >= BiasRerollCooldown))
+                {
+                    st.Bias = RollBias(st.Rng);
+                    st.LastBiasRollAt = now;
+                }
                 st.VisibleSince = -1f; st.CurrentPart = -1; _gateBail++;
                 return HookResult.Continue;
             }
@@ -608,8 +619,7 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
     private BotState CreateState(IntPtr pCCSBot)
     {
         var rng = new Random(pCCSBot.GetHashCode());
-        double biasRoll = rng.NextDouble();
-        float headCut = _t.HighAimFraction * 0.4f;
+        AimBias bias = RollBias(rng);   // drawn first to preserve the RNG ordering of the other traits
         return new BotState
         {
             Rng      = rng,
@@ -619,12 +629,21 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
             ReactionMs = Lerp(_t.ReactMsMin, _t.ReactMsMax, (float)rng.NextDouble()),
             LeadK      = Lerp(_t.LeadKMin,   _t.LeadKMax,   (float)rng.NextDouble()),
             AccelK     = Lerp(_t.AccelKMin,  _t.AccelKMax,  (float)rng.NextDouble()),
-            Bias     = biasRoll < headCut             ? AimBias.HEAD
-                     : biasRoll < _t.HighAimFraction  ? AimBias.JAW
-                     : AimBias.BODY,
+            Bias     = bias,
             // Seed the drift offset so the first shot already carries error.
             OffX = Gauss(rng), OffY = Gauss(rng), OffZ = Gauss(rng),
         };
+    }
+
+    // Roll a fresh head/jaw/body aim-priority bias from the current HighAimFraction.
+    // Re-rolled when a bot goes idle so its head/body tendency is not fixed for life.
+    private AimBias RollBias(Random rng)
+    {
+        double roll = rng.NextDouble();
+        float headCut = _t.HighAimFraction * 0.4f;
+        return roll < headCut            ? AimBias.HEAD
+             : roll < _t.HighAimFraction ? AimBias.JAW
+             : AimBias.BODY;
     }
 
     private int[] OrderFor(BotState st, string? wpn)
@@ -648,6 +667,9 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
     private const float ErrRefDist = 512f;
     // Time constant of the aim wander (seconds); smaller = twitchier, larger = floatier.
     private const float DriftTau = 0.30f;
+    // Minimum gap between idle aim-priority re-rolls (seconds), so rapid re-peeks
+    // (lose sight then immediately re-acquire) don't flip a bot's bias mid-fight.
+    private const float BiasRerollCooldown = 1.5f;
 
     // Acceleration prediction: estimate accel from a velocity slope sampled `AccelLagS`
     // BEFORE the velocity sample (humans notice a change in speed later than speed itself),
