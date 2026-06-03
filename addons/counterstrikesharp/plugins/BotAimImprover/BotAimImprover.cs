@@ -165,7 +165,7 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
             BaseErrMin = 4f, BaseErrMax = 9f, DecayErrMin = 10f, DecayErrMax = 22f,
             TauMin = 0.40f, TauMax = 0.90f, VertErrScale = 0.80f, HighAimFraction = 0.14f,
             ReactMsMin = 200f, ReactMsMax = 320f, LeadKMin = 0.40f, LeadKMax = 0.70f,
-            AccelKMin = 0.00f, AccelKMax = 0.00f,   // easy bots don't anticipate accel — get juked
+            AccelKMin = 0.00f, AccelKMax = 0.00f,   // easy bots don't anticipate accel - get juked
             ErrorScale = 1f, PartRepickInterval = 0.85f, LagEnabled = true,
         },
         "high" => new Tuning  // hard: tight, head-prone, fast + near-full-lead reactions
@@ -498,6 +498,19 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
                     st.EyeX = eye.X; st.EyeY = eye.Y; st.EyeZ = eye.Z; st.HasEye = true;
                     ComputeVisiblePoints(eye, enemyPawn, _visBuf);
                     chosen = PickBestPoint(_visBuf, order);
+
+                    // Lateral-jitter guard: if the part we're already aiming at is still
+                    // visible, don't swap to a same-height left/right/centre variant just
+                    // because it ranks higher in `order` - that only teleports the aim
+                    // sideways across re-picks (LEFT_GUT<->RIGHT_GUT, side<->centre). Allow
+                    // a switch only when the new part is a genuine vertical re-target
+                    // (different height, e.g. gut->head), which keeps the headshot upgrade.
+                    if (chosen >= 0 && st.CurrentPart >= 0 && st.CurrentPart < _visBuf.Length
+                        && _visBuf[st.CurrentPart]
+                        && _aimPoints[chosen].Frac == _aimPoints[st.CurrentPart].Frac)
+                    {
+                        chosen = st.CurrentPart;
+                    }
                 }
                 if (chosen < 0) chosen = order[0];
                 st.CurrentPart = chosen; st.PartChosenAt = now;
