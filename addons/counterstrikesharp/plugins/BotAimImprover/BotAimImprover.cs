@@ -214,7 +214,6 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
         public Random Rng = new();
         public float   BaseErr, DecayErr, Tau, ReactionMs, LeadK, AccelK;
         public AimBias Bias;
-        public float LastBiasRollAt = -1f;   // last time the bias was re-rolled (idle re-roll rate limit)
         public float VisibleSince = -1f;
         public int   LastEnemyIdx = -1;
         public int   CurrentPart  = -1;
@@ -232,6 +231,7 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
     }
 
     private readonly ConcurrentDictionary<IntPtr, BotState> _botState = new();
+    private int _biasEpoch = 0;   // reshuffle seed for the per-round balanced bias bag
 
     // Per-entity position history (reaction lag). Keyed by pawn entity index.
     private struct Sample { public float T, PX, PY, PZ, VX, VY, VZ, Yaw, EyeZ; }
@@ -432,12 +432,11 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
 
         RegisterEventHandler<EventRoundStart>((_, _) =>
         {
-            float now = Server.CurrentTime;
             foreach (var st in _botState.Values)
             {
                 st.VisibleSince = -1f; st.LastEnemyIdx = -1; st.CurrentPart = -1; st.PartChosenAt = -1f;
-                MaybeRerollBias(st, now, force: true);   // fresh aim priority each round
             }
+            AssignBalancedBiases();   // fresh, team-balanced aim priority each round
             _history.Clear();
             return HookResult.Continue;
         });
@@ -511,6 +510,7 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
             {
                 _t.HighAimFraction = Math.Clamp(pct, 0, 100) / 100f;
                 _botState.Clear();
+                AssignBalancedBiases();
                 Server.PrintToConsole($"[BotAimImprover] high-aim fraction -> {_t.HighAimFraction:P0} (re-rolled)");
             }
             else Server.PrintToConsole($"[BotAimImprover] high-aim fraction is {_t.HighAimFraction:P0}. Usage: bot_headshot_bias <0-100>");
@@ -567,10 +567,9 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
             int enemyRaw = ReadInt32(pCCSBot + _off.Enemy);
             if (!visible || enemyRaw == -1)
             {
-                // On the visible->idle edge, re-roll the aim-priority bias so a bot's
-                // head/body tendency is not fixed for its whole life (keeps the aggregate
-                // HS% from feeling rigid). Rate-limited so quick re-peeks don't thrash it.
-                if (st.VisibleSince >= 0f) MaybeRerollBias(st, now, force: false);
+                // Bias is assigned per round in AssignBalancedBiases (team-balanced), so a
+                // bot's head/body tendency varies round to round without being re-rolled
+                // mid-life (which would desync the two teams).
                 st.VisibleSince = -1f; st.CurrentPart = -1; _gateBail++;
                 return HookResult.Continue;
             }
@@ -742,15 +741,69 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
              : AimBias.BODY;
     }
 
-    // Re-roll a bot's aim-priority bias so its head/body tendency is not fixed for life.
-    // `force` (round start) ignores the cooldown; otherwise (idle edge) it is rate-limited
-    // by BiasRerollCooldown so quick re-peeks don't flip the bias mid-fight.
-    private void MaybeRerollBias(BotState st, float now, bool force)
+    // Assign head/jaw/body biases so both teams get the *same* mix and the head/jaw
+    // count matches HighAimFraction (instead of each bot rolling independently, which
+    // - on a 5-bot team - clusters by chance and makes one side much deadlier).
+    //
+    // A single shuffled "bag" of biases is built once and dealt to each team's bots in
+    // a stable order, so rank k on team T and rank k on team CT get the identical bias.
+    // The bag is reshuffled each call (round start / bias change), so the distribution
+    // is randomized round to round without ever being lopsided between the teams.
+    private void AssignBalancedBiases()
     {
-        if (!force && st.LastBiasRollAt >= 0f && now - st.LastBiasRollAt < BiasRerollCooldown)
-            return;
-        st.Bias = RollBias(st.Rng);
-        st.LastBiasRollAt = force ? -1f : now;
+        var byTeam = new Dictionary<int, List<(uint key, BotState st)>>();
+        foreach (var ctrl in Utilities.GetPlayers())
+        {
+            if (ctrl == null || !ctrl.IsValid || !ctrl.IsBot) continue;
+            var pawn = ctrl.PlayerPawn?.Value;
+            if (pawn == null || !pawn.IsValid || pawn.Handle == IntPtr.Zero) continue;
+            int team = ctrl.TeamNum;
+            if (team != 2 && team != 3) continue;   // T / CT only
+            IntPtr pBot;
+            try { pBot = ReadIntPtr(pawn.Handle + _off.PBot); } catch { continue; }
+            if (pBot == IntPtr.Zero) continue;
+            var st = _botState.GetOrAdd(pBot, CreateState);
+            if (!byTeam.TryGetValue(team, out var list)) { list = new(); byTeam[team] = list; }
+            list.Add((ctrl.Index, st));   // Index = stable per-bot ordering key
+        }
+        if (byTeam.Count == 0) return;
+
+        int n = 0;
+        foreach (var list in byTeam.Values) n = Math.Max(n, list.Count);
+        if (n == 0) return;
+
+        AimBias[] bag = BuildBiasBag(n, _biasEpoch++);
+        foreach (var list in byTeam.Values)
+        {
+            list.Sort((a, b) => a.key.CompareTo(b.key));
+            for (int i = 0; i < list.Count; i++) list[i].st.Bias = bag[i];
+        }
+    }
+
+    // Build a length-n bag whose HEAD/JAW counts track HighAimFraction (head share is
+    // HighAimFraction*0.4, matching RollBias), then Fisher-Yates shuffle it with a
+    // per-round seed so which ranks aim high is randomized.
+    private AimBias[] BuildBiasBag(int n, int seed)
+    {
+        float f = _t.HighAimFraction;
+        int high = (int)MathF.Round(n * f);
+        int head = (int)MathF.Round(n * f * 0.4f);
+        if (head > high) head = high;
+        int jaw = high - head;
+
+        var bag = new AimBias[n];
+        int idx = 0;
+        for (int i = 0; i < head; i++) bag[idx++] = AimBias.HEAD;
+        for (int i = 0; i < jaw;  i++) bag[idx++] = AimBias.JAW;
+        for (; idx < n; idx++)        bag[idx]   = AimBias.BODY;
+
+        var rng = new Random(seed);
+        for (int i = n - 1; i > 0; i--)
+        {
+            int j = rng.Next(i + 1);
+            (bag[i], bag[j]) = (bag[j], bag[i]);
+        }
+        return bag;
     }
 
     private int[] OrderFor(BotState st)
@@ -774,9 +827,6 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
     private const float ErrRefDist = 512f;
     // Time constant of the aim wander (seconds); smaller = twitchier, larger = floatier.
     private const float DriftTau = 0.30f;
-    // Minimum gap between idle aim-priority re-rolls (seconds), so rapid re-peeks
-    // (lose sight then immediately re-acquire) don't flip a bot's bias mid-fight.
-    private const float BiasRerollCooldown = 1.5f;
 
     // Acceleration prediction: estimate accel from a velocity slope sampled `AccelLagS`
     // BEFORE the velocity sample (humans notice a change in speed later than speed itself),
