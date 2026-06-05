@@ -169,26 +169,26 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
     {
         "low" => new Tuning   // easy: loose, body-aiming, slow + low-lead reactions
         {
-            BaseErrMin = 4f, BaseErrMax = 9f, DecayErrMin = 10f, DecayErrMax = 22f,
-            TauMin = 0.40f, TauMax = 0.90f, VertErrScale = 0.80f, HighAimFraction = 0.14f,
-            ReactMsMin = 200f, ReactMsMax = 320f, LeadKMin = 0.40f, LeadKMax = 0.70f,
+            BaseErrMin = 4.5f, BaseErrMax = 10f, DecayErrMin = 11f, DecayErrMax = 24f,
+            TauMin = 0.45f, TauMax = 1.00f, VertErrScale = 0.80f, HighAimFraction = 0.12f,
+            ReactMsMin = 200f, ReactMsMax = 320f, LeadKMin = 0.35f, LeadKMax = 0.65f,
             AccelKMin = 0.00f, AccelKMax = 0.00f,   // easy bots don't anticipate accel - get juked
             ErrorScale = 1f, PartRepickInterval = 0.85f, LagEnabled = true,
         },
         "high" => new Tuning  // hard: tight, head-prone, fast + near-full-lead reactions
         {
-            BaseErrMin = 1f, BaseErrMax = 3f, DecayErrMin = 3f, DecayErrMax = 8f,
-            TauMin = 0.25f, TauMax = 0.60f, VertErrScale = 0.80f, HighAimFraction = 0.60f,
-            ReactMsMin = 90f, ReactMsMax = 180f, LeadKMin = 0.85f, LeadKMax = 1.05f,
-            AccelKMin = 0.10f, AccelKMax = 0.16f,   // hard bots lead into strafe accel
+            BaseErrMin = 1.5f, BaseErrMax = 3.5f, DecayErrMin = 4f, DecayErrMax = 9f,
+            TauMin = 0.28f, TauMax = 0.65f, VertErrScale = 0.80f, HighAimFraction = 0.55f,
+            ReactMsMin = 90f, ReactMsMax = 180f, LeadKMin = 0.80f, LeadKMax = 1.00f,
+            AccelKMin = 0.09f, AccelKMax = 0.14f,   // hard bots lead into strafe accel
             ErrorScale = 1f, PartRepickInterval = 0.60f, LagEnabled = true,
         },
         _ => new Tuning       // medium (default)
         {
-            BaseErrMin = 2f, BaseErrMax = 5f, DecayErrMin = 5f, DecayErrMax = 13f,
-            TauMin = 0.35f, TauMax = 0.80f, VertErrScale = 0.80f, HighAimFraction = 0.30f,
-            ReactMsMin = 140f, ReactMsMax = 260f, LeadKMin = 0.60f, LeadKMax = 0.90f,
-            AccelKMin = 0.05f, AccelKMax = 0.10f,   // some accel anticipation
+            BaseErrMin = 2.5f, BaseErrMax = 6f, DecayErrMin = 6f, DecayErrMax = 15f,
+            TauMin = 0.40f, TauMax = 0.90f, VertErrScale = 0.80f, HighAimFraction = 0.25f,
+            ReactMsMin = 140f, ReactMsMax = 260f, LeadKMin = 0.55f, LeadKMax = 0.85f,
+            AccelKMin = 0.04f, AccelKMax = 0.08f,   // some accel anticipation
             ErrorScale = 1f, PartRepickInterval = 0.75f, LagEnabled = true,
         },
     };
