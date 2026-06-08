@@ -104,7 +104,7 @@ public class BotAimImprover : BasePlugin, IPluginConfig<BotAimConfig>
     private static readonly Offsets WINDOWS = new(
         ts: 0x59A4, tsVel: 0x59B0, tsTime: 0x59E0,   // all verified vs server.dll 2026-06-02 (PickNewAimSpot writes)
         en: 0x5A10, vis: 0x5A14, pbot: 0x1298, eye: 0x108 /*use controller*/,
-        ex: 0, ey: 0, ez: 0, aerr: 0 /*don't neutralize native error*/,
+        ex: 0x59C8, ey: 0x59CC, ez: 0x59D0, aerr: 0x59E4 /*neutralize native error*/,
         sig: "48 8B C4 55 57 48 8D 68 A1 48 81 EC A8 00 00 00 48 8B F9 0F 29 70 D8 8B 89 10 5A 00 00 83 F9 FF");
 
     private Offsets _off;
