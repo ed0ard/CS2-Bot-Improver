@@ -22,8 +22,11 @@ export default function ModeCard() {
   const current: GameMode | null =
     pending ?? mode?.current ?? ((config?.mode as GameMode | null) ?? null);
 
-  // Yellow only if the mode was changed while CS2 is running (pending restart).
-  const tone = mode?.cs2_running && modePending ? "yellow" : "green";
+  // Yellow while CS2 is running and a change is pending a restart — either the
+  // user switched mode this session (modePending) or the boot-time apply was
+  // skipped because CS2 held gameinfo.gi (mode.pending). In the latter case
+  // `current` (above) still reflects the real on-disk mode.
+  const tone = mode?.cs2_running && (modePending || mode.pending) ? "yellow" : "green";
 
   const onChange = async (m: GameMode) => {
     setPending(m);
