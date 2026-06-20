@@ -91,6 +91,9 @@ export type ModeInfo = {
   insecure: boolean;
   user_count: number;
   cs2_running: boolean;
+  // CS2 running and the on-disk gameinfo.gi doesn't match the remembered mode
+  // (the boot-time apply was skipped) — show the mode control yellow.
+  pending: boolean;
 };
 
 export type LaunchResult = {
