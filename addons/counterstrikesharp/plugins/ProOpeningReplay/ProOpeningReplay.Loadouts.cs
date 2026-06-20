@@ -38,13 +38,7 @@ public sealed partial class ProOpeningReplayPlugin
             ? new CCSPlayer_ItemServices(pawn.ItemServices.Handle)
             : null;
 
-        pawn.ArmorValue = replayPlayer.ArmorValue;
-        Utilities.SetStateChanged(pawn, "CCSPlayerPawn", "m_ArmorValue");
-        if (itemServices != null)
-        {
-            itemServices.HasHelmet = replayPlayer.HasHelmet;
-            itemServices.HasDefuser = player.Team == CsTeam.CounterTerrorist && replayPlayer.HasDefuser;
-        }
+        ApplyReplayArmorAndKitState(player, pawn, replayPlayer, itemServices);
 
         var targetItems = BuildReplayLoadoutItems(replayPlayer);
         var deferredWeaponSync = false;
@@ -76,6 +70,53 @@ public sealed partial class ProOpeningReplayPlugin
         var loadoutValue = ReplayLoadoutValue(assignment.Player);
         player.InGameMoneyServices.Account = RoundMoneyDown(assignment.Budget - loadoutValue);
         Utilities.SetStateChanged(player, "CCSPlayerController", "m_pInGameMoneyServices");
+    }
+
+    private static void ApplyReplayArmorAndKitState(CCSPlayerController player, ReplayPlayer replayPlayer)
+    {
+        if (!player.IsValid || !player.PawnIsAlive)
+        {
+            return;
+        }
+
+        var pawn = player.PlayerPawn.Value;
+        if (pawn == null || !pawn.IsValid)
+        {
+            return;
+        }
+
+        var itemServices = pawn.ItemServices != null && pawn.ItemServices.Handle != IntPtr.Zero
+            ? new CCSPlayer_ItemServices(pawn.ItemServices.Handle)
+            : null;
+        ApplyReplayArmorAndKitState(player, pawn, replayPlayer, itemServices);
+    }
+
+    private static void ApplyReplayArmorAndKitState(
+        CCSPlayerController player,
+        CCSPlayerPawn pawn,
+        ReplayPlayer replayPlayer,
+        CCSPlayer_ItemServices? itemServices)
+    {
+        if (replayPlayer.ArmorValue > pawn.ArmorValue)
+        {
+            pawn.ArmorValue = replayPlayer.ArmorValue;
+            Utilities.SetStateChanged(pawn, "CCSPlayerPawn", "m_ArmorValue");
+        }
+
+        if (itemServices == null)
+        {
+            return;
+        }
+
+        if (replayPlayer.HasHelmet && !itemServices.HasHelmet)
+        {
+            itemServices.HasHelmet = true;
+        }
+
+        if (player.Team == CsTeam.CounterTerrorist && replayPlayer.HasDefuser && !itemServices.HasDefuser)
+        {
+            itemServices.HasDefuser = true;
+        }
     }
 
     private bool SyncTargetWeaponSlot(

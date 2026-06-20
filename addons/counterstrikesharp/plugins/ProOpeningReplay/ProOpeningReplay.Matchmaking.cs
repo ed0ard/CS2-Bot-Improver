@@ -410,6 +410,7 @@ public sealed partial class ProOpeningReplayPlugin
             {
                 continue;
             }
+            ApplyReplayArmorAndKitState(player, assignment.Player);
             ApplyReplayBudgetMoney(player, assignment);
             ApplyReplaySideEffects(session);
             Server.NextFrame(() => EnsurePrimaryOrSecondaryFallback(player));
@@ -598,6 +599,8 @@ public sealed partial class ProOpeningReplayPlugin
                 continue;
             }
 
+            ApplyReplayArmorAndKitState(player, assignment.Player);
+            ApplyReplayBudgetMoney(player, assignment);
             ApplyReplaySideEffects(session);
             var botCtrl = player.PlayerPawn.Value?.Bot;
             if (botCtrl != null)
