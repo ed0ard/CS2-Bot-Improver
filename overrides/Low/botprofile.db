@@ -417,6 +417,16 @@ ProSteady+RiflePro+RiflePersonality "摩羯兔爱吃炸鸡"
 	VoicePitch = 77
 End
 
+ProSlow+RiflePro+RiflePersonality "alex"
+End
+
+ProPrecise+SniperPro+SniperPersonality "MartinezSa"
+End
+
+ProSteady+RiflePro+RiflePersonality "ALEX"
+	VoicePitch = 77
+End
+
 ProFast+RiflePro+RiflePersonality "REZ"
 	VoicePitch = 80
 End
@@ -5138,4 +5148,7 @@ RankOthers+Duelist+ScoperPersonality "金狗头在此百无禁忌"
 End
 
 RankOthers+RiflePro+RiflePersonality "霍柏九"
+End
+
+ProSteady+RiflePro+FreemanPersonality "damag3"
 End

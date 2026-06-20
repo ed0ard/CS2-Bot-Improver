@@ -525,6 +525,29 @@ ProSteady+RiflePro+RiflePersonality "摩羯兔爱吃炸鸡"
 	LookAngleDampingAttacking = 39.95
 End
 
+ProSlow+RiflePro+RiflePersonality "alex"
+End
+
+ProPrecise+SniperPro+SniperPersonality "MartinezSa"
+	VoicePitch = 110
+	LookAngleMaxAccelNormal = 5500.0
+	LookAngleStiffnessNormal = 1150.0
+	LookAngleDampingNormal = 100.0
+	LookAngleMaxAccelAttacking = 20000.0
+	LookAngleStiffnessAttacking = 900.0
+	LookAngleDampingAttacking = 50.0
+End
+
+ProSteady+RiflePro+RiflePersonality "ALEX"
+	VoicePitch = 77
+	LookAngleMaxAccelNormal = 99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999.9.9.9.9
+	LookAngleStiffnessNormal = 3000.0
+	LookAngleDampingNormal = 45.0
+	LookAngleMaxAccelAttacking = 99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999.9.9.9.9
+	LookAngleStiffnessAttacking = 3000.0
+	LookAngleDampingAttacking = 39.95
+End
+
 ProFast+RiflePro+RiflePersonality "REZ"
 	VoicePitch = 80
 	LookAngleMaxAccelNormal = 99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999.9.9.9.9
@@ -13315,4 +13338,13 @@ RankOthers+Duelist+ScoperPersonality "金狗头在此百无禁忌"
 End
 
 RankOthers+RiflePro+RiflePersonality "霍柏九"
+End
+
+ProSteady+RiflePro+FreemanPersonality "damag3"
+	LookAngleMaxAccelNormal = 5500.0
+	LookAngleStiffnessNormal = 1150.0
+	LookAngleDampingNormal = 100.0
+	LookAngleMaxAccelAttacking = 5500.0
+	LookAngleStiffnessAttacking = 1150.0
+	LookAngleDampingAttacking = 50.0
 End
