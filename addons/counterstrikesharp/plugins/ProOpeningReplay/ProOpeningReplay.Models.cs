@@ -66,7 +66,7 @@ public sealed class ReplayConfig
     /// </summary>
     public bool StopOnAudibleEnemyNoise { get; set; } = false;
     public float SpawnMatchTolerance { get; set; } = 24f;
-    public float HumanSpawnBlockRadius { get; set; } = 72f;
+    public float HumanSpawnBlockRadius { get; set; } = 48f;
     public float MatchSelectionDelay { get; set; } = 0f;
     public float LoadoutApplyDelay { get; set; } = 0f;
     public bool AlignOpeningFreezeEnd { get; set; } = true;
@@ -342,10 +342,20 @@ public readonly record struct SpawnPosition(float X, float Y, float Z)
 
     public bool Matches(SpawnPosition other, float tolerance)
     {
+        return DistanceSquared(other) <= tolerance * tolerance;
+    }
+
+    public float DistanceTo(SpawnPosition other)
+    {
+        return MathF.Sqrt(DistanceSquared(other));
+    }
+
+    private float DistanceSquared(SpawnPosition other)
+    {
         var deltaX = X - other.X;
         var deltaY = Y - other.Y;
         var deltaZ = Z - other.Z;
-        return (deltaX * deltaX) + (deltaY * deltaY) + (deltaZ * deltaZ) <= tolerance * tolerance;
+        return (deltaX * deltaX) + (deltaY * deltaY) + (deltaZ * deltaZ);
     }
 }
 
@@ -355,7 +365,11 @@ public sealed record RoundSpawnEntry(ReplayRound Round, TeamEconomy Economy, Lis
 
 public sealed class SpawnReplayIndex(int teamNum)
 {
+    private const int CandidatePoolSize = 5;
+    private const float HumanSpawnBlockRadiusScale = 0.70f;
+    private const float MinimumHumanSpawnBlockRadius = 24f;
     private readonly List<RoundSpawnEntry> _rounds = [];
+    private float? _minimumSpawnDistance;
 
     public int RoundCount => _rounds.Count;
 
@@ -372,6 +386,24 @@ public sealed class SpawnReplayIndex(int teamNum)
         }
 
         _rounds.Add(new RoundSpawnEntry(round, economy, players));
+        _minimumSpawnDistance = null;
+    }
+
+    public float EffectiveHumanSpawnBlockRadius(float configuredRadius)
+    {
+        if (configuredRadius <= 0f)
+        {
+            return configuredRadius;
+        }
+
+        var minimumSpawnDistance = MinimumSpawnDistance();
+        if (!float.IsFinite(minimumSpawnDistance) || minimumSpawnDistance <= 0f)
+        {
+            return configuredRadius;
+        }
+
+        var dataDrivenRadius = MathF.Floor(minimumSpawnDistance * HumanSpawnBlockRadiusScale);
+        return Math.Clamp(dataDrivenRadius, MinimumHumanSpawnBlockRadius, configuredRadius);
     }
 
     public List<BotReplayAssignment>? SelectTeamAssignments(
@@ -387,8 +419,7 @@ public sealed class SpawnReplayIndex(int teamNum)
             return null;
         }
 
-        var bestScore = int.MaxValue;
-        var bestAssignments = new List<List<BotReplayAssignment>>();
+        var candidates = new List<(int Score, List<BotReplayAssignment> Assignments)>();
 
         foreach (var round in _rounds)
         {
@@ -413,21 +444,159 @@ public sealed class SpawnReplayIndex(int teamNum)
                 continue;
             }
 
-            var score = LoadoutBudgetScore(assignments);
-            if (score < bestScore)
-            {
-                bestScore = score;
-                bestAssignments.Clear();
-                bestAssignments.Add(assignments);
-            }
-            else if (score == bestScore)
-            {
-                bestAssignments.Add(assignments);
-            }
+            candidates.Add((LoadoutBudgetScore(assignments), assignments));
         }
 
-        return bestAssignments.Count == 0 ? null : bestAssignments[random.Next(bestAssignments.Count)];
+        if (candidates.Count == 0)
+        {
+            return null;
+        }
+
+        var topCandidates = candidates
+            .OrderBy(candidate => candidate.Score)
+            .Take(CandidatePoolSize)
+            .ToList();
+        return topCandidates[random.Next(topCandidates.Count)].Assignments;
     }
+
+    public List<BotReplayAssignment>? SelectMixedAssignments(
+        List<BotSpawn> bots,
+        List<SpawnPosition> humanOccupiedSpawns,
+        float humanSpawnBlockRadius,
+        bool enforcePistolRoundMatching,
+        bool currentIsPistolRound,
+        Random random)
+    {
+        if (bots.Count == 0)
+        {
+            return null;
+        }
+
+        var orderedBots = bots
+            .OrderBy(bot => bot.Budget)
+            .ThenBy(bot => PlayerKey(bot.Bot))
+            .ToList();
+        var totalBudget = orderedBots.Sum(bot => bot.Budget);
+        var remainingLoadoutBudget = totalBudget;
+        var selected = new List<BotReplayAssignment>(orderedBots.Count);
+        var usedRoutes = new HashSet<string>(StringComparer.Ordinal);
+        var usedSpawns = new List<SpawnPosition>();
+        var candidates = BuildMixedCandidates(
+                humanOccupiedSpawns,
+                humanSpawnBlockRadius,
+                enforcePistolRoundMatching,
+                currentIsPistolRound)
+            .ToList();
+
+        if (candidates.Count == 0)
+        {
+            return null;
+        }
+
+        foreach (var bot in orderedBots)
+        {
+            var choice = SelectMixedCandidate(
+                bot,
+                candidates,
+                usedRoutes,
+                usedSpawns,
+                humanSpawnBlockRadius,
+                remainingLoadoutBudget,
+                random);
+            if (choice == null)
+            {
+                return null;
+            }
+
+            selected.Add(new BotReplayAssignment(bot.Bot, choice.Entry.Round, choice.Entry.Player, bot.Budget));
+            usedRoutes.Add(RouteKey(choice.Entry));
+            usedSpawns.Add(choice.Entry.Spawn);
+            remainingLoadoutBudget -= choice.LoadoutValue;
+        }
+
+        return AllocateTeamBudgets(selected);
+    }
+
+    private IEnumerable<MixedReplayCandidate> BuildMixedCandidates(
+        List<SpawnPosition> humanOccupiedSpawns,
+        float humanSpawnBlockRadius,
+        bool enforcePistolRoundMatching,
+        bool currentIsPistolRound)
+    {
+        foreach (var round in _rounds)
+        {
+            if (enforcePistolRoundMatching && currentIsPistolRound && !IsPistolReplayRound(round))
+            {
+                continue;
+            }
+
+            foreach (var player in round.Players)
+            {
+                if (IsHumanOccupied(player.Spawn, humanOccupiedSpawns, humanSpawnBlockRadius))
+                {
+                    continue;
+                }
+
+                yield return new MixedReplayCandidate(
+                    player,
+                    ProOpeningReplayPlugin.ReplayLoadoutValue(player.Player));
+            }
+        }
+    }
+
+    private static MixedReplayCandidate? SelectMixedCandidate(
+        BotSpawn bot,
+        List<MixedReplayCandidate> candidates,
+        HashSet<string> usedRoutes,
+        List<SpawnPosition> usedSpawns,
+        float spawnBlockRadius,
+        int remainingLoadoutBudget,
+        Random random)
+    {
+        var topCandidates = candidates
+            .Where(candidate => !usedRoutes.Contains(RouteKey(candidate.Entry)))
+            .Where(candidate => !IsHumanOccupied(candidate.Entry.Spawn, usedSpawns, spawnBlockRadius))
+            .Where(candidate => candidate.LoadoutValue <= remainingLoadoutBudget)
+            .OrderBy(candidate => Math.Abs(bot.Budget - candidate.LoadoutValue))
+            .ThenByDescending(candidate => candidate.LoadoutValue)
+            .Take(CandidatePoolSize)
+            .ToList();
+
+        if (topCandidates.Count == 0)
+        {
+            topCandidates = candidates
+                .Where(candidate => !usedRoutes.Contains(RouteKey(candidate.Entry)))
+                .Where(candidate => candidate.LoadoutValue <= remainingLoadoutBudget)
+                .OrderBy(candidate => Math.Abs(bot.Budget - candidate.LoadoutValue))
+                .ThenByDescending(candidate => candidate.LoadoutValue)
+                .Take(CandidatePoolSize)
+                .ToList();
+        }
+
+        if (topCandidates.Count == 0)
+        {
+            topCandidates = candidates
+                .Where(candidate => !usedRoutes.Contains(RouteKey(candidate.Entry)))
+                .OrderBy(candidate => Math.Abs(bot.Budget - candidate.LoadoutValue))
+                .ThenByDescending(candidate => candidate.LoadoutValue)
+                .Take(CandidatePoolSize)
+                .ToList();
+        }
+
+        if (topCandidates.Count == 0)
+        {
+            topCandidates = candidates
+                .OrderBy(candidate => Math.Abs(bot.Budget - candidate.LoadoutValue))
+                .ThenByDescending(candidate => candidate.LoadoutValue)
+                .Take(CandidatePoolSize)
+                .ToList();
+        }
+
+        return topCandidates.Count == 0 ? null : topCandidates[random.Next(topCandidates.Count)];
+    }
+
+    private static string RouteKey(PlayerSpawnEntry entry)
+        => $"{entry.Round.Id}\n{entry.Round.DemoPath}\n{entry.Round.RoundNumber}\n{entry.Player.SteamId}\n{entry.Player.Slot}";
 
     private static int LoadoutBudgetScore(List<BotReplayAssignment> assignments)
     {
@@ -459,12 +628,11 @@ public sealed class SpawnReplayIndex(int teamNum)
             .ToList();
         if (players.Count < orderedBots.Count)
         {
-            players = allPlayers;
+            return null;
         }
 
         players = players
-            .OrderBy(player => player.HumanBlocked ? 1 : 0)
-            .ThenBy(player => player.LoadoutValue)
+            .OrderBy(player => player.LoadoutValue)
             .ThenBy(player => player.Entry.Player.SteamId, StringComparer.Ordinal)
             .ToList();
         if (players.Count < orderedBots.Count)
@@ -576,6 +744,33 @@ public sealed class SpawnReplayIndex(int teamNum)
         return humanOccupiedSpawns.Any(humanSpawn => spawn.Matches(humanSpawn, radius));
     }
 
+    private float MinimumSpawnDistance()
+    {
+        if (_minimumSpawnDistance.HasValue)
+        {
+            return _minimumSpawnDistance.Value;
+        }
+
+        var minimum = float.PositiveInfinity;
+        foreach (var round in _rounds)
+        {
+            for (var i = 0; i < round.Players.Count; i++)
+            {
+                for (var j = i + 1; j < round.Players.Count; j++)
+                {
+                    var distance = round.Players[i].Spawn.DistanceTo(round.Players[j].Spawn);
+                    if (distance > 0.001f && distance < minimum)
+                    {
+                        minimum = distance;
+                    }
+                }
+            }
+        }
+
+        _minimumSpawnDistance = minimum;
+        return minimum;
+    }
+
     private static bool IsPistolReplayRound(RoundSpawnEntry round)
     {
         return RoundEconomyIndex.IsPistolRoundEconomy(round.Economy)
@@ -586,6 +781,8 @@ public sealed class SpawnReplayIndex(int teamNum)
     {
         return player.UserId ?? player.Slot;
     }
+
+    private sealed record MixedReplayCandidate(PlayerSpawnEntry Entry, int LoadoutValue);
 }
 
 public sealed record IndexedRound(ReplayRound Round, TeamEconomy Economy)
@@ -848,7 +1045,9 @@ public sealed class ReplaySession
         float startTime,
         ReplaySessionKind kind = ReplaySessionKind.Opening,
         float frameTimeOffset = 0f,
-        int nativeReplayStartTick = 0)
+        int nativeReplayStartTick = 0,
+        bool nativeReplayPrerollActive = false,
+        int nativeReplayHoldBeforeTick = -1)
     {
         Player = player;
         // Snapshot the player name eagerly. After a player disconnects (or quickly switches teams) the
@@ -863,6 +1062,8 @@ public sealed class ReplaySession
         Kind = kind;
         FrameTimeOffset = frameTimeOffset;
         NativeReplayStartTick = Math.Max(0, nativeReplayStartTick);
+        NativeReplayPrerollActive = nativeReplayPrerollActive;
+        NativeReplayHoldBeforeTick = nativeReplayHoldBeforeTick;
         LastFrameTime = frames.Count == 0 ? 0f : frames[^1].Time - frameTimeOffset;
     }
 
@@ -878,6 +1079,8 @@ public sealed class ReplaySession
     // Frames can start from a non-zero native tick; subtract this so elapsed=0 matches the sliced replay.
     public float FrameTimeOffset { get; }
     public int NativeReplayStartTick { get; }
+    public bool NativeReplayPrerollActive { get; }
+    public int NativeReplayHoldBeforeTick { get; }
     public int NextGrenadeIndex { get; set; }
     public int NextFreezeInventorySnapshotIndex { get; set; }
     public bool NativeReplayActive { get; set; }

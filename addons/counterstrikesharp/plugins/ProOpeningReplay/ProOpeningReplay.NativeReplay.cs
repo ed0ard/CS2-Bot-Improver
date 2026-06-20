@@ -114,7 +114,7 @@ public sealed partial class ProOpeningReplayPlugin
         }
     }
 
-    private bool PreloadNativeReplayBuffer(CCSPlayerController player, ReplayPlayer replayPlayer, ReplaySessionKind kind, int? startTickOverride = null)
+    private bool PreloadNativeReplayBuffer(CCSPlayerController player, ReplayPlayer replayPlayer, ReplaySessionKind kind)
     {
         var slot = player.Slot;
         if (slot < 0 || slot >= 64)
@@ -129,15 +129,14 @@ public sealed partial class ProOpeningReplayPlugin
             return false;
         }
 
-        var startTick = startTickOverride ?? NativeReplayStartTick(replayPlayer, kind);
         var replayKey = ReplayKeyForKind(replayPlayer, kind);
-        var loadKey = NativeReplayLoadKey(replayPath, startTick, replayKey, _config.SuppressReplayAttackInput);
+        var loadKey = NativeReplayLoadKey(replayPath, replayKey, _config.SuppressReplayAttackInput);
         if (_nativeReplayPreloadKeys.TryGetValue(slot, out var existing) && existing == loadKey)
         {
             return true;
         }
 
-        if (!BotController.LoadReplayFromFile(slot, replayPath, startTick, _config.SuppressReplayAttackInput, replayKey))
+        if (!BotController.LoadReplayFromFile(slot, replayPath, 0, _config.SuppressReplayAttackInput, replayKey))
         {
             _nativeReplayPreloadKeys.Remove(slot);
             return false;
@@ -147,8 +146,8 @@ public sealed partial class ProOpeningReplayPlugin
         return true;
     }
 
-    private static string NativeReplayLoadKey(string replayPath, int startTick, string replayKey, bool suppressAttackInput)
-        => $"{Path.GetFullPath(replayPath)}\n{startTick}\n{replayKey}\n{suppressAttackInput}";
+    private static string NativeReplayLoadKey(string replayPath, string replayKey, bool suppressAttackInput)
+        => $"{Path.GetFullPath(replayPath)}\n{replayKey}\n{suppressAttackInput}";
 
     private bool TryStartNativeReplay(ReplaySession session)
     {
@@ -174,13 +173,16 @@ public sealed partial class ProOpeningReplayPlugin
         }
 
         if (!session.NativeReplayPreloaded
-            && !PreloadNativeReplayBuffer(session.Player, session.ReplayPlayer, session.Kind, session.NativeReplayStartTick))
+            && !PreloadNativeReplayBuffer(session.Player, session.ReplayPlayer, session.Kind))
         {
             return false;
         }
         session.NativeReplayPreloaded = true;
 
-        if (!BotController.StartReplay(slot))
+        var started = session.NativeReplayPrerollActive
+            ? BotController.StartReplayUntil(slot, session.NativeReplayStartTick, session.NativeReplayHoldBeforeTick)
+            : BotController.StartReplayAt(slot, session.NativeReplayStartTick);
+        if (!started)
         {
             return false;
         }
@@ -192,10 +194,6 @@ public sealed partial class ProOpeningReplayPlugin
         session.NativeReplayStallTicks = 0;
         session.NativeReplayDiagnosticLogged = false;
         ApplyOpeningReplayInitialPlacement(session);
-        if (session.Kind == ReplaySessionKind.Retake)
-        {
-            ApplyReplayWeaponPreset(session, ChooseStartWeaponDef(session), allowSlotReplacement: false, force: true);
-        }
         return true;
     }
 

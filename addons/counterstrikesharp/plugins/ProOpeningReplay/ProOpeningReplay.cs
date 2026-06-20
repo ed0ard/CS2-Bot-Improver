@@ -457,6 +457,7 @@ public sealed partial class ProOpeningReplayPlugin : BasePlugin
             return HookResult.Continue;
         }
 
+        StopOpeningPrerollSessions();
         if (!OpeningSessionsCoverCurrentBots()
             && (!_roundPrepared || _pendingAssignments.Count == 0 || !AssignmentsCoverCurrentBots()))
         {

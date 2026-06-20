@@ -105,6 +105,8 @@ public static class BotController
     private static GetVersionDelegate? _getVersion;
     private static LoadReplayDelegate? _loadReplay;
     private static StartReplayDelegate? _startReplay;
+    private static StartReplayAtDelegate? _startReplayAt;
+    private static StartReplayUntilDelegate? _startReplayUntil;
     private static StopReplayDelegate? _stopReplay;
     private static SetBotIdleDelegate? _setBotIdle;
     private static GetReplayCursorDelegate? _getReplayCursor;
@@ -148,6 +150,9 @@ public static class BotController
             return _status;
         }
     }
+
+    public static bool SupportsBoundedReplay
+        => IsCompatible() && _startReplayAt != null && _startReplayUntil != null;
 
     public static void ResetCompatibility()
     {
@@ -276,6 +281,9 @@ public static class BotController
     }
 
     public static bool StartReplay(int slot, bool loop = false)
+        => StartReplayAt(slot, 0, loop);
+
+    public static bool StartReplayAt(int slot, int startTick, bool loop = false)
         => Invoke(() =>
         {
             if (_lock!(slot, (int)LockKind.All, 0) != 0)
@@ -283,7 +291,36 @@ public static class BotController
                 return false;
             }
 
-            var ok = _startReplay!(slot, loop ? 1 : 0) == 0;
+            var startIndex = Math.Max(0, startTick);
+            var ok = startIndex > 0 && _startReplayAt != null
+                ? _startReplayAt(slot, loop ? 1 : 0, startIndex) == 0
+                : _startReplay!(slot, loop ? 1 : 0) == 0;
+            if (!ok)
+            {
+                _unlock!(slot, (int)LockKind.All);
+            }
+
+            return ok;
+        });
+
+    public static bool StartReplayUntil(int slot, int startTick, int holdBeforeTick, bool loop = false)
+        => Invoke(() =>
+        {
+            if (_startReplayUntil == null || holdBeforeTick <= startTick)
+            {
+                return false;
+            }
+
+            if (_lock!(slot, (int)LockKind.All, 0) != 0)
+            {
+                return false;
+            }
+
+            var ok = _startReplayUntil(
+                slot,
+                loop ? 1 : 0,
+                Math.Max(0, startTick),
+                holdBeforeTick) == 0;
             if (!ok)
             {
                 _unlock!(slot, (int)LockKind.All);
@@ -445,6 +482,8 @@ public static class BotController
                 _getVersion = LoadExport<GetVersionDelegate>("BotController_GetVersion");
                 _loadReplay = LoadExport<LoadReplayDelegate>("BotController_LoadReplay");
                 _startReplay = LoadExport<StartReplayDelegate>("BotController_StartReplay");
+                _startReplayAt = TryLoadExport<StartReplayAtDelegate>("BotController_StartReplayAt");
+                _startReplayUntil = TryLoadExport<StartReplayUntilDelegate>("BotController_StartReplayUntil");
                 _stopReplay = LoadExport<StopReplayDelegate>("BotController_StopReplay");
                 _setBotIdle = LoadExport<SetBotIdleDelegate>("BotController_SetBotIdle");
                 _getReplayCursor = LoadExport<GetReplayCursorDelegate>("BotController_GetReplayCursor");
@@ -513,6 +552,8 @@ public static class BotController
         _getVersion = null;
         _loadReplay = null;
         _startReplay = null;
+        _startReplayAt = null;
+        _startReplayUntil = null;
         _stopReplay = null;
         _getReplayCursor = null;
         _getReplayTotal = null;
@@ -1429,6 +1470,12 @@ public static class BotController
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate int StartReplayDelegate(int slot, int loop);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate int StartReplayAtDelegate(int slot, int loop, int startIndex);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    private delegate int StartReplayUntilDelegate(int slot, int loop, int startIndex, int holdBeforeIndex);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate int StopReplayDelegate(int slot);

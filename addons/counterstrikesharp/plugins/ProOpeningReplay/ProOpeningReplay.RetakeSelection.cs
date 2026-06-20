@@ -328,13 +328,7 @@ public sealed partial class ProOpeningReplayPlugin
             return 0;
         }
 
-        if (_freezeEnded)
-        {
-            return Math.Max(0, replayPlayer.FreezeEndTickIndex);
-        }
-
-        var liveFreezeTicks = CurrentLiveFreezeTicks(replayPlayer);
-        return Math.Clamp(replayPlayer.FreezeEndTickIndex - liveFreezeTicks, 0, replayPlayer.FreezeEndTickIndex);
+        return Math.Max(0, replayPlayer.FreezeEndTickIndex);
     }
 
     private float ReplayTimeOffset(int startTick)

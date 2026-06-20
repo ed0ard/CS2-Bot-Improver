@@ -84,7 +84,7 @@ public sealed partial class ProOpeningReplayPlugin
             var nativeCursor = BotController.GetReplayCursor(session.NativeReplaySlot);
             if (nativeCursor >= 0)
             {
-                ApplyFreezeInventorySnapshots(session, session.NativeReplayStartTick + nativeCursor);
+                ApplyFreezeInventorySnapshots(session, nativeCursor);
             }
         }
 
@@ -161,8 +161,10 @@ public sealed partial class ProOpeningReplayPlugin
             .Select(NormalizeLoadoutItem)
             .Where(IsReplayLoadoutItem));
 
+        EnsureDefaultPistolTarget(player, currentItems, targetItems);
         RemoveSurplusInventoryItems(player, currentItems, targetItems);
         GiveMissingInventorySnapshotItems(player, targetItems);
+        EnsurePrimaryOrSecondaryFallback(player);
     }
 
     private static void GiveMissingInventorySnapshotItems(CCSPlayerController player, Dictionary<string, int> targetItems)
@@ -181,6 +183,7 @@ public sealed partial class ProOpeningReplayPlugin
         }
 
         GivePlayerInventoryItems(player, toGive);
+        EnsurePrimaryOrSecondaryFallback(player);
     }
 
     private static void RemoveSurplusInventoryItems(

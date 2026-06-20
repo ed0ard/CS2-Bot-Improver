@@ -274,12 +274,21 @@ public sealed partial class ProOpeningReplayPlugin
         }
 
         var humanSpawns = GetHumanOccupiedSpawns();
+        var humanSpawnBlockRadius = index.EffectiveHumanSpawnBlockRadius(_config.HumanSpawnBlockRadius);
         var currentEconomy = GetCurrentTeamEconomy(bots);
         var currentIsPistolRound = IsPistolRoundEconomy(currentEconomy);
         var assignments = index.SelectTeamAssignments(
             botSpawns,
             humanSpawns,
-            _config.HumanSpawnBlockRadius,
+            humanSpawnBlockRadius,
+            _config.EnforcePistolRoundMatching,
+            currentIsPistolRound,
+            _random);
+
+        assignments ??= index.SelectMixedAssignments(
+            botSpawns,
+            humanSpawns,
+            humanSpawnBlockRadius,
             _config.EnforcePistolRoundMatching,
             currentIsPistolRound,
             _random);
@@ -343,7 +352,7 @@ public sealed partial class ProOpeningReplayPlugin
             return;
         }
 
-        if (existingOpeningKeys.Count == 0 && TryDelayOpeningReplayStart())
+        if (existingOpeningKeys.Count == 0 && TryScheduleOpeningPrerollStart())
         {
             return;
         }
@@ -401,7 +410,9 @@ public sealed partial class ProOpeningReplayPlugin
             {
                 continue;
             }
+            ApplyReplayBudgetMoney(player, assignment);
             ApplyReplaySideEffects(session);
+            Server.NextFrame(() => EnsurePrimaryOrSecondaryFallback(player));
 
             // Signal to other plugins (NadeSystem, BotState) that this bot is under replay control.
             // Written once per session start (not per tick) to avoid the client crash.
@@ -414,14 +425,19 @@ public sealed partial class ProOpeningReplayPlugin
 
     }
 
-    private bool TryDelayOpeningReplayStart()
+    private bool TryScheduleOpeningPrerollStart()
     {
         if (_freezeEnded || _roundStartTime < 0f || _pendingAssignments.Count == 0)
         {
             return false;
         }
 
-        if (_config.AlignOpeningFreezeEnd && _freezePeriodStartTime < 0f)
+        if (!_config.AlignOpeningFreezeEnd || !BotController.SupportsBoundedReplay)
+        {
+            return false;
+        }
+
+        if (_freezePeriodStartTime < 0f)
         {
             if (IsFreezePeriod())
             {
@@ -429,22 +445,21 @@ public sealed partial class ProOpeningReplayPlugin
             }
             else
             {
-                QueueOpeningReplayStart(0.05f);
+                QueueOpeningReplayStartRetry(0.05f);
                 return true;
             }
         }
 
-        var delay = OpeningReplayStartDelaySeconds();
-        if (delay <= 0.01f)
+        if (!TryGetOpeningPrerollSchedule(out var prerollSeconds, out var delay, out _))
         {
             return false;
         }
 
-        QueueOpeningReplayStart(delay);
+        QueueOpeningPrerollStart(delay, prerollSeconds);
         return true;
     }
 
-    private void QueueOpeningReplayStart(float delay)
+    private void QueueOpeningReplayStartRetry(float delay)
     {
         if (_openingReplayStartQueued)
         {
@@ -462,36 +477,170 @@ public sealed partial class ProOpeningReplayPlugin
         });
     }
 
-    private float OpeningReplayStartDelaySeconds()
+    private void QueueOpeningPrerollStart(float delay, float prerollSeconds)
     {
-        if (!_config.AlignOpeningFreezeEnd)
+        if (_openingReplayStartQueued)
         {
-            return 0f;
+            return;
         }
 
-        var replayFreezeSeconds = _pendingAssignments.Values
+        _openingReplayStartQueued = true;
+        AddTimer(Math.Max(0.01f, delay), () =>
+        {
+            _openingReplayStartQueued = false;
+            if (!_freezeEnded && CanUseDataset())
+            {
+                StartOpeningPrerollSessions(prerollSeconds);
+            }
+        });
+    }
+
+    private bool TryGetOpeningPrerollSchedule(out float prerollSeconds, out float delaySeconds, out string reason)
+    {
+        prerollSeconds = 0f;
+        delaySeconds = 0f;
+        if (!_config.AlignOpeningFreezeEnd)
+        {
+            reason = "freeze alignment disabled";
+            return false;
+        }
+
+        var maxReplayFreezeSeconds = _pendingAssignments.Values
             .Select(assignment => ReplayFreezeSeconds(assignment.Player))
             .DefaultIfEmpty(0f)
             .Max();
-        if (replayFreezeSeconds <= 0.001f)
+        if (maxReplayFreezeSeconds <= 0.001f)
         {
-            return 0f;
+            reason = "assigned replays have no freeze preroll";
+            return false;
         }
 
-        var freezeEndTime = CurrentLiveFreezeEndTime();
-        if (freezeEndTime > Server.CurrentTime)
+        var liveFreezeSeconds = CurrentLiveFreezeSeconds(maxReplayFreezeSeconds);
+        var playbackPrerollSeconds = Math.Min(liveFreezeSeconds, maxReplayFreezeSeconds);
+        if (playbackPrerollSeconds <= 0.001f)
         {
-            return Math.Max(0f, freezeEndTime - replayFreezeSeconds - Server.CurrentTime);
+            reason = "computed preroll window is empty";
+            return false;
         }
 
-        var liveFreezeSeconds = CurrentLiveFreezeSeconds(replayFreezeSeconds);
-        var anchorTime = _freezePeriodStartTime >= 0f ? _freezePeriodStartTime : _roundStartTime;
-        if (anchorTime < 0f)
+        var scheduleWindowSeconds = liveFreezeSeconds;
+        if (TryReadFreezePhaseRemainingSeconds(out var phaseRemainingSeconds)
+            && phaseRemainingSeconds > 0.001f)
         {
-            return Math.Max(0f, liveFreezeSeconds - replayFreezeSeconds);
+            scheduleWindowSeconds = phaseRemainingSeconds;
         }
 
-        return Math.Max(0f, anchorTime + liveFreezeSeconds - replayFreezeSeconds - Server.CurrentTime);
+        playbackPrerollSeconds = Math.Min(playbackPrerollSeconds, scheduleWindowSeconds);
+        if (playbackPrerollSeconds <= 0.001f)
+        {
+            reason = "remaining freeze window is empty";
+            return false;
+        }
+
+        prerollSeconds = playbackPrerollSeconds;
+        delaySeconds = Math.Max(0f, scheduleWindowSeconds - playbackPrerollSeconds);
+        reason = string.Empty;
+        return true;
+    }
+
+    private void StartOpeningPrerollSessions(float prerollSeconds)
+    {
+        if (_freezeEnded || _pendingAssignments.Count == 0)
+        {
+            return;
+        }
+
+        StopAllNativeReplays();
+        _sessions.Clear();
+        var startTime = Server.CurrentTime;
+
+        foreach (var player in Utilities.GetPlayers().Where(IsUsableBot))
+        {
+            var key = PlayerKey(player);
+            if (!_pendingAssignments.TryGetValue(key, out var assignment))
+            {
+                continue;
+            }
+
+            var prepared = _preparedOpeningSessions.TryGetValue(key, out var preparedSession)
+                && IsPreparedForAssignment(preparedSession, assignment)
+                ? preparedSession
+                : null;
+            var frames = prepared?.Frames ?? BuildSessionFrames(assignment.Player, ReplaySessionKind.Opening);
+            var holdBeforeTick = Math.Max(0, assignment.Player.FreezeEndTickIndex);
+            var nativeStartTick = OpeningPrerollStartTick(assignment.Player, prerollSeconds);
+            if (frames.Count == 0 || holdBeforeTick <= nativeStartTick)
+            {
+                continue;
+            }
+
+            var frameTimeOffset = ReplayTimeOffset(nativeStartTick);
+            var grenades = BuildSessionGrenades(assignment.Player, ReplaySessionKind.Opening, frameTimeOffset);
+            var session = new ReplaySession(
+                player,
+                assignment.Round,
+                assignment.Player,
+                frames,
+                grenades,
+                startTime,
+                frameTimeOffset: frameTimeOffset,
+                nativeReplayStartTick: nativeStartTick,
+                nativeReplayPrerollActive: true,
+                nativeReplayHoldBeforeTick: holdBeforeTick);
+            if (prepared != null)
+            {
+                session.NativeReplayPreloaded = prepared.NativeReplayPreloaded;
+                session.ReplayWeaponsPreloaded = prepared.ReplayWeaponsPreloaded;
+            }
+
+            if (!TryStartNativeReplay(session))
+            {
+                continue;
+            }
+
+            ApplyReplaySideEffects(session);
+            var botCtrl = player.PlayerPawn.Value?.Bot;
+            if (botCtrl != null)
+            {
+                botCtrl.InhibitLookAroundTimestamp = startTime + 130f;
+            }
+
+            _sessions.Add(session);
+        }
+    }
+
+    private void StopOpeningPrerollSessions()
+    {
+        for (var sessionIndex = _sessions.Count - 1; sessionIndex >= 0; sessionIndex--)
+        {
+            var session = _sessions[sessionIndex];
+            if (session.Kind != ReplaySessionKind.Opening || !session.NativeReplayPrerollActive)
+            {
+                continue;
+            }
+
+            var slot = session.NativeReplaySlot;
+            StopNativeReplay(session);
+            if (slot >= 0)
+            {
+                ClearNativeWeaponState(slot);
+            }
+            _sessions.RemoveAt(sessionIndex);
+        }
+    }
+
+    private int OpeningPrerollStartTick(ReplayPlayer replayPlayer, float liveFreezeSeconds)
+    {
+        var freezeEndTick = Math.Max(0, replayPlayer.FreezeEndTickIndex);
+        if (freezeEndTick == 0 || liveFreezeSeconds <= 0.001f)
+        {
+            return freezeEndTick;
+        }
+
+        var liveFreezeTicks = Math.Max(0, (int)MathF.Round(liveFreezeSeconds * ReplayTickRate()));
+        return liveFreezeTicks >= freezeEndTick
+            ? 0
+            : freezeEndTick - liveFreezeTicks;
     }
 
     private static bool IsPreparedForAssignment(PreparedOpeningSession prepared, ReplayAssignment assignment)

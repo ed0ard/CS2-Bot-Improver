@@ -349,6 +349,10 @@ public sealed partial class ProOpeningReplayPlugin
             {
                 return true;
             }
+            if (HasConflictingWeaponInSlot(pawn, slot, className))
+            {
+                return false;
+            }
         }
 
         try
@@ -385,7 +389,7 @@ public sealed partial class ProOpeningReplayPlugin
 
         foreach (var weapon in toRemove)
         {
-            RemovePlayerWeaponAndCleanupDrop(player, weapon);
+            DropAndKillReplayWeapon(player, pawn, weapon, "conflicting_slot");
         }
     }
 
@@ -403,6 +407,7 @@ public sealed partial class ProOpeningReplayPlugin
             {
                 player.RemoveItemByDesignerName(itemName);
             }
+            ScheduleDroppedWeaponCleanup(itemName, 0, SnapshotPlayerOrigin(player));
             return;
         }
 
@@ -423,6 +428,10 @@ public sealed partial class ProOpeningReplayPlugin
         {
             player.RemoveItemByDesignerName(itemName);
         }
+        if (toRemove.Count < count)
+        {
+            ScheduleDroppedWeaponCleanup(itemName, 0, SnapshotPlayerOrigin(player));
+        }
     }
 
     private static void RemovePlayerWeaponAndCleanupDrop(CCSPlayerController player, CBasePlayerWeapon weapon)
@@ -438,10 +447,67 @@ public sealed partial class ProOpeningReplayPlugin
             return;
         }
 
+        var pawn = player.PlayerPawn.Value;
+        if (pawn != null
+            && pawn.IsValid
+            && pawn.WeaponServices != null
+            && DropAndKillReplayWeapon(player, pawn, weapon, "remove_inventory"))
+        {
+            return;
+        }
+
         var weaponRaw = weapon.EntityHandle.Raw;
         var origin = SnapshotOrigin(weapon) ?? SnapshotPlayerOrigin(player);
         player.RemoveItemByDesignerName(weaponName);
         ScheduleDroppedWeaponCleanup(weaponName, weaponRaw, origin);
+    }
+
+    private static bool DropAndKillReplayWeapon(
+        CCSPlayerController player,
+        CCSPlayerPawn pawn,
+        CBasePlayerWeapon weapon,
+        string reason)
+    {
+        var weaponName = weapon.DesignerName;
+        if (!TrySelectWeapon(player, pawn, weapon))
+        {
+            return false;
+        }
+
+        try
+        {
+            player.DropActiveWeapon();
+        }
+        catch
+        {
+            return false;
+        }
+
+        KillDroppedWeapon(player.Slot, weapon, weaponName, reason);
+        Server.NextFrame(() => KillDroppedWeapon(player.Slot, weapon, weaponName, reason));
+        return true;
+    }
+
+    private static void KillDroppedWeapon(
+        int slot,
+        CBasePlayerWeapon weapon,
+        string weaponName,
+        string reason)
+    {
+        _ = slot;
+        _ = weaponName;
+        _ = reason;
+        try
+        {
+            if (weapon.IsValid)
+            {
+                weapon.AcceptInput("Kill");
+            }
+        }
+        catch
+        {
+            // Entity may already have been removed by the engine between frames.
+        }
     }
 
     private static Vector? SnapshotOrigin(CBaseEntity entity)
@@ -457,11 +523,17 @@ public sealed partial class ProOpeningReplayPlugin
     }
 
     private static void ScheduleDroppedWeaponCleanup(string weaponName, uint weaponRaw, Vector? origin)
+        => ScheduleDroppedWeaponCleanup(weaponName, weaponRaw, origin, 6);
+
+    private static void ScheduleDroppedWeaponCleanup(string weaponName, uint weaponRaw, Vector? origin, int framesRemaining)
     {
         Server.NextFrame(() =>
         {
             CleanupDroppedWeapon(weaponName, weaponRaw, origin);
-            Server.NextFrame(() => CleanupDroppedWeapon(weaponName, weaponRaw, origin));
+            if (framesRemaining > 0)
+            {
+                ScheduleDroppedWeaponCleanup(weaponName, weaponRaw, origin, framesRemaining - 1);
+            }
         });
     }
 
@@ -475,7 +547,7 @@ public sealed partial class ProOpeningReplayPlugin
                 continue;
             }
 
-            if (weapon.EntityHandle.Raw == weaponRaw)
+            if (weaponRaw != 0 && weapon.EntityHandle.Raw == weaponRaw)
             {
                 weapon.AcceptInput("Kill");
                 killedByHandle = true;
@@ -487,7 +559,7 @@ public sealed partial class ProOpeningReplayPlugin
             return;
         }
 
-        const float cleanupRadius = 96.0f;
+        const float cleanupRadius = 160.0f;
         var cleanupRadiusSq = cleanupRadius * cleanupRadius;
         foreach (var weapon in Utilities.FindAllEntitiesByDesignerName<CBasePlayerWeapon>(weaponName))
         {

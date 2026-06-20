@@ -66,6 +66,18 @@ public sealed partial class ProOpeningReplayPlugin
         return true;
     }
 
+    private static void ApplyReplayBudgetMoney(CCSPlayerController player, ReplayAssignment assignment)
+    {
+        if (!player.IsValid || player.InGameMoneyServices == null)
+        {
+            return;
+        }
+
+        var loadoutValue = ReplayLoadoutValue(assignment.Player);
+        player.InGameMoneyServices.Account = RoundMoneyDown(assignment.Budget - loadoutValue);
+        Utilities.SetStateChanged(player, "CCSPlayerController", "m_pInGameMoneyServices");
+    }
+
     private bool SyncTargetWeaponSlot(
         CCSPlayerController player,
         Dictionary<string, int> targetItems,
@@ -107,7 +119,22 @@ public sealed partial class ProOpeningReplayPlugin
             return false;
         }
 
-        RemoveConflictingReplaySlotWeapons(player, pawn, slot, targetItem);
+        var fallbackItem = currentSlotWeapons
+            .Select(weapon => NormalizeLoadoutItem(weapon.DesignerName))
+            .FirstOrDefault(itemName => !WeaponClassMatches(itemName, targetItem));
+        var weaponToDrop = currentSlotWeapons
+            .FirstOrDefault(weapon => !WeaponClassMatches(
+                NormalizeLoadoutItem(weapon.DesignerName),
+                targetItem));
+        if (fallbackItem == null || weaponToDrop == null)
+        {
+            return false;
+        }
+
+        if (!DropAndKillReplayWeapon(player, pawn, weaponToDrop, "replace_loadout_slot"))
+        {
+            return false;
+        }
 
         if (player.Slot >= 0)
         {
@@ -115,7 +142,7 @@ public sealed partial class ProOpeningReplayPlugin
             _lastReplayWeaponDef.Remove(player.Slot);
         }
 
-        Server.NextFrame(() => CompleteWeaponSlotReplacement(player, targetItem, slot));
+        Server.NextFrame(() => CompleteWeaponSlotReplacement(player, targetItem, fallbackItem, slot));
         return true;
     }
 
@@ -129,6 +156,7 @@ public sealed partial class ProOpeningReplayPlugin
     private void CompleteWeaponSlotReplacement(
         CCSPlayerController player,
         string targetItem,
+        string fallbackItem,
         ReplayWeaponSlot slot)
     {
         if (!player.IsValid)
@@ -142,17 +170,38 @@ public sealed partial class ProOpeningReplayPlugin
             return;
         }
 
-        if (HasReplayWeapon(pawn, targetItem))
-        {
-            return;
-        }
-
-        if (GetWeaponsInReplaySlot(pawn, slot).Any())
+        if (HasReplayWeapon(pawn, targetItem) || GetWeaponsInReplaySlot(pawn, slot).Any())
         {
             return;
         }
 
         TryGiveNamedItem(player, targetItem);
+        Server.NextFrame(() => RestoreFallbackWeaponIfNeeded(player, targetItem, fallbackItem, slot));
+    }
+
+    private static void RestoreFallbackWeaponIfNeeded(
+        CCSPlayerController player,
+        string targetItem,
+        string fallbackItem,
+        ReplayWeaponSlot slot)
+    {
+        if (!player.IsValid)
+        {
+            return;
+        }
+
+        var pawn = player.PlayerPawn.Value;
+        if (pawn == null || !pawn.IsValid || pawn.WeaponServices == null)
+        {
+            return;
+        }
+
+        if (HasReplayWeapon(pawn, targetItem) || GetWeaponsInReplaySlot(pawn, slot).Any())
+        {
+            return;
+        }
+
+        TryGiveNamedItem(player, fallbackItem);
     }
 
     private static bool TryGiveNamedItem(CCSPlayerController player, string itemName)
@@ -168,7 +217,7 @@ public sealed partial class ProOpeningReplayPlugin
         }
     }
 
-    private bool TrySelectWeapon(CCSPlayerController player, CCSPlayerPawn pawn, CBasePlayerWeapon weapon)
+    private static bool TrySelectWeapon(CCSPlayerController player, CCSPlayerPawn pawn, CBasePlayerWeapon weapon)
     {
         if (player.Slot >= 0)
         {
@@ -267,7 +316,7 @@ public sealed partial class ProOpeningReplayPlugin
         var pawn = player.PlayerPawn.Value;
         if (pawn?.WeaponServices == null) return;
 
-        var toRemove = new List<string>();
+        var toRemove = new List<CBasePlayerWeapon>();
         foreach (var handle in pawn.WeaponServices.MyWeapons)
         {
             var w = handle.Value;
@@ -278,12 +327,12 @@ public sealed partial class ProOpeningReplayPlugin
                 || name == "weapon_bayonet"
                 || name == "weapon_c4"
                 || name == "weapon_c4_explosive") continue;
-            toRemove.Add(name);
+            toRemove.Add(w);
         }
 
-        foreach (var name in toRemove)
+        foreach (var weapon in toRemove)
         {
-            player.RemoveItemByDesignerName(name);
+            RemovePlayerWeaponAndCleanupDrop(player, weapon);
         }
     }
 
@@ -347,7 +396,7 @@ public sealed partial class ProOpeningReplayPlugin
                         break;
                     }
 
-                    donor.Assignment.Bot.RemoveItemByDesignerName(itemName);
+                    RemoveInventoryItemsAndCleanupDrops(donor.Assignment.Bot, itemName, 1);
                     receiver.Assignment.Bot.GiveNamedItem(itemName);
                     donor.CurrentItems[itemName] = donor.CurrentItems.GetValueOrDefault(itemName) - 1;
                     receiver.CurrentItems[itemName] = receiver.CurrentItems.GetValueOrDefault(itemName) + 1;
@@ -459,6 +508,26 @@ public sealed partial class ProOpeningReplayPlugin
         }
     }
 
+    private static void EnsurePrimaryOrSecondaryFallback(CCSPlayerController player)
+    {
+        if (!player.IsValid || !player.PawnIsAlive)
+        {
+            return;
+        }
+
+        var currentItems = CountItems(GetCurrentInventory(player).Select(NormalizeLoadoutItem));
+        if (currentItems.Keys.Any(itemName => PrimaryWeapons.Contains(itemName) || SecondaryWeapons.Contains(itemName)))
+        {
+            return;
+        }
+
+        var defaultPistol = DefaultPistolForTeam(player.Team);
+        if (defaultPistol != null)
+        {
+            TryGiveNamedItem(player, defaultPistol);
+        }
+    }
+
     private static bool ReplayActivelyUsesWeapon(ReplayPlayer replayPlayer, string itemName)
     {
         var defIndex = WeaponDefIndex(itemName);
@@ -513,10 +582,7 @@ public sealed partial class ProOpeningReplayPlugin
 
             var targetCount = targetItems.GetValueOrDefault(itemName);
             var surplusCount = Math.Max(0, ownedCount - targetCount);
-            for (var itemIndex = 0; itemIndex < surplusCount; itemIndex++)
-            {
-                player.RemoveItemByDesignerName(itemName);
-            }
+            RemoveInventoryItemsAndCleanupDrops(player, itemName, surplusCount);
 
             if (surplusCount == 0)
             {
@@ -596,18 +662,18 @@ public sealed partial class ProOpeningReplayPlugin
             return;
         }
 
-        var weaponNames = pawn.WeaponServices.MyWeapons
+        var weapons = pawn.WeaponServices.MyWeapons
             .Select(handle => handle.Value)
             .Where(weapon => weapon != null && weapon.IsValid)
-            .Select(weapon => weapon!.DesignerName)
-            .Where(name => !string.IsNullOrWhiteSpace(name))
-            .Where(name => name != "weapon_knife" && name != "weapon_knife_t" && name != "weapon_c4")
-            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Select(weapon => weapon!)
+            .Where(weapon => weapon.DesignerName != "weapon_knife"
+                && weapon.DesignerName != "weapon_knife_t"
+                && weapon.DesignerName != "weapon_c4")
             .ToList();
 
-        foreach (var weaponName in weaponNames)
+        foreach (var weapon in weapons)
         {
-            player.RemoveItemByDesignerName(weaponName);
+            RemovePlayerWeaponAndCleanupDrop(player, weapon);
         }
     }
 
