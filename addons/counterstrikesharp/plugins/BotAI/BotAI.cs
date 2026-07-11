@@ -145,7 +145,7 @@ public class BotAI : BasePlugin
         ["AttackState_SkipSniperSpreadCheck"] = (
             signature:        "41 0F 28 C8 0F 57 C0 FF 15 ? ? ? ? F3 0F 10 0D ? ? ? ? 0F 2F C8 0F 86",
             patch:            "90 90 90 90 90 90",
-            expectedOriginal: "0F 86 8A 04 00 00",
+            expectedOriginal: "0F 86 81 04 00 00",
             patchOffset:      24  // RVA 0x320153: NOP jbe+47B
         ),
 
@@ -219,28 +219,28 @@ public class BotAI : BasePlugin
         ),
 
         ["Vision_ApproachBody_SkipSkillCheck"] = (
-            signature:        "0F 2F C7 76 3B 80 BF ? ? 00 00 00 74 32",
+            signature:        "0F 2F C6 76 33 80 BF ? ? 00 00 00 74 2A",
             patch:            "90 90",
-            expectedOriginal: "76 3B",
+            expectedOriginal: "76 33",
             patchOffset:      3
         ),
 
         ["Vision_ApproachBody_SkipHidingSpotCheck"] = (
-            signature:        "0F 2F C7 76 3B 80 BF ? ? 00 00 00 74 32",
+            signature:        "0F 2F C6 76 33 80 BF ? ? 00 00 00 74 2A",
             patch:            "90 90",
-            expectedOriginal: "74 32",
+            expectedOriginal: "74 2A",
             patchOffset:      12
         ),
 
         ["Vision_SkipIsMovingGate"] = (
-            signature:        "0F 2F 35 ? ? ? ? 77 0F 49 8B D7 48 8B CF E8",
+            signature:        "0F 2F 35 ? ? ? ? 77 0F 49 8B D6 48 8B CF E8",
             patch:            "90 90",
             expectedOriginal: "77 0F",
             patchOffset:      7    //RVA 0x319306: ja → NOP
         ),
 
         ["Vision_AlwaysEnterApproachBody"] = (
-            signature:        "84 C0 75 0D 49 C7 46 08 00 00 00 00 E9",
+            signature:        "84 C0 75 0D 48 C7 45 08 00 00 00 00 E9",
             patch:            "EB 0D",
             expectedOriginal: "75 0D",
             patchOffset:      2    //RVA 0x31931c: jne → jmp
@@ -264,7 +264,7 @@ public class BotAI : BasePlugin
         //      eax += 1
         //      return eax   
         ["InViewCone_RemoveOuterFOV"] = (
-            signature:        "FF 90 C8 00 00 00 0F 2F 05 ? ? ? ? 76 08 33 C0",
+            signature:        "FF 90 E0 00 00 00 0F 2F 05 ? ? ? ? 76 08 33 C0",
             patch:            "90 90",
             expectedOriginal: "76 08",
             patchOffset:      13
@@ -292,9 +292,9 @@ public class BotAI : BasePlugin
         // With the patch active: [gameState+0x68] is set at plant time for all bots.
         //  directly to the planted site instead of random searching.
         ["TBot_BombsiteSearch_UseKnownPlantedSite"] = (
-            signature:        "48 8B 8E ? ? 00 00 E8 ? ? ? ? 49 8B CC E8 ? ? ? ? 4C 8B 05 ? ? ? ? 85 C0",
-            patch:            "E8 55 46 F9 FF",
-            expectedOriginal: "E8 D5 3F F9 FF",
+            signature:        "48 8B 8E ? ? 00 00 E8 ? ? ? ? 48 8B CB E8 ? ? ? ? 4C 8B 05 ? ? ? ? 85 C0",
+            patch:            "E8 28 41 F9 FF",
+            expectedOriginal: "E8 38 3B F9 FF",
             patchOffset:      15
         ),
 
@@ -304,10 +304,10 @@ public class BotAI : BasePlugin
         // NOP the jbe → CT bots always enter the bombsite-update path,
         // regardless of distance to the bomb.
         ["BombBeep_CT_GlobalHearRange"] = (
-            signature:        "F3 0F 59 F6 F3 0F 59 DB F3 0F 59 D2 F3 0F 58 DA F3 0F 58 DE 0F 2F C3 76 67",
+            signature:        "F3 0F 59 C9 F3 0F 59 C0 F3 0F 59 F6 F3 0F 58 C8 F3 0F 10 05 ? ? ? ? F3 0F 58 CE 0F 2F C1 76 67",
             patch:            "90 90",
             expectedOriginal: "76 67",
-            patchOffset:      23
+            patchOffset:      31
         ),
 
         // Source: cs_bot_event_bomb.cpp — OnBombPickedUp
@@ -315,10 +315,10 @@ public class BotAI : BasePlugin
         //   if (LengthSqr() < bombPickupHearRangeSq) → CT tracks bomber
         // NOP jbe → all CT bots always track who picks up the bomb.
         ["BombPickup_CT_GlobalHearRange"] = (
-            signature:        "F3 0F 5C 78 08 F3 0F 59 D2 F3 0F 59 FF F3 0F 58 CA F3 0F 58 CF 0F 28 BC 24 E0 00 00 00 0F 2F C1 76 23",
+            signature:        "F3 0F 59 D2 F3 0F 59 C0 F3 0F 59 C9 F3 0F 58 D1 F3 0F 58 D0 F3 0F 10 05 ? ? ? ? 0F 2F C2 76 23",
             patch:            "90 90",
             expectedOriginal: "76 23",
-            patchOffset:      32
+            patchOffset:      31
         ),
 
         // Source: CCSBot::OnAudibleEvent — universal sound event gate
@@ -331,7 +331,7 @@ public class BotAI : BasePlugin
         ["OnAudibleEvent_GlobalHearRange"] = (
             signature:        "F3 44 0F 51 CA EB 0C 0F 28 C2 E8 ? ? ? ? 44 0F 28 C8 45 0F 2F D1 0F 86 ? ? ? ?",
             patch:            "90 90 90 90 90 90",
-            expectedOriginal: "0F 86 F4 03 00 00",
+            expectedOriginal: "0F 86 9E 03 00 00",
             patchOffset:      23
         ),
    
@@ -388,10 +388,10 @@ public class BotAI : BasePlugin
         //   m_me->StopAiming();      ← PATCHED OUT
         //   return false;            ← KEPT (return value unchanged, avoid crash)
         ["FlashbangAvoidance_Disable"] = (
-            signature:        "49 8B 0E 0F 14 E3 F2 0F 11 65 17 F3 0F 11 55 1F F3 0F 11 4C 24 20 E8 ? ? ? ? 49 8B 06 C6 80 ? ? 00 00 00",
+            signature:        "F3 0F 10 05 ? ? ? ? F3 0F 11 44 24 30 88 4C 24 28 49 8B 0E F3 0F 11 4C 24 20 E8 ? ? ? ? 49 8B 06 C6 80 7C 5C 00 00 00",
             patch:            "90 90 90 90 90 90 90 90 90 90 90 90 90 90 90",
-            expectedOriginal: "E8 CE BC 02 00 49 8B 06 C6 80 84 5C 00 00 00",
-            patchOffset:      22
+            expectedOriginal: "E8 5C A4 02 00 49 8B 06 C6 80 7C 5C 00 00 00",
+            patchOffset:      27
         ),
     };
 
