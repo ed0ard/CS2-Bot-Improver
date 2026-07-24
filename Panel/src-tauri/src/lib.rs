@@ -10,6 +10,7 @@ use tauri::{AppHandle, Manager};
 
 mod app_storage;
 mod app_version;
+mod appearance;
 mod atomic_fs;
 mod diagnostics;
 mod install_checks;
@@ -148,7 +149,12 @@ impl Default for AppConfig {
 fn prepare_legacy_config_for_portable_state(mut config: AppConfig) -> AppConfig {
     config.first_run_done = false;
     config.first_run_step = Some("language".into());
+    config.experimental_stickers_enabled = false;
     config
+}
+
+fn apply_release_feature_gates(config: &mut AppConfig) {
+    config.experimental_stickers_enabled = false;
 }
 
 #[derive(Serialize)]
@@ -203,6 +209,7 @@ struct BotItemsState {
 #[derive(Serialize)]
 struct PresetsState {
     aim: Option<String>,
+    aim_supported: bool,
     nades: Option<String>,
     cfg_present: bool,
     cs2_running: bool,
@@ -289,6 +296,7 @@ impl Default for GlovePreset {
 }
 
 const COSMETICS_SCHEMA_VERSION: u8 = 3;
+const STICKER_RELEASE_ENABLED: bool = false;
 const CT_ONLY_WEAPONS: &[u16] = &[3, 8, 10, 16, 27, 32, 34, 38, 60, 61];
 const T_ONLY_WEAPONS: &[u16] = &[4, 7, 11, 13, 17, 29, 30, 39];
 const SHARED_WEAPONS: &[u16] = &[
@@ -493,7 +501,9 @@ fn read_config(app: &AppHandle) -> Result<AppConfig> {
     if !path.exists() {
         return Ok(AppConfig::default());
     }
-    Ok(serde_json::from_str(&fs::read_to_string(path)?)?)
+    let mut config: AppConfig = serde_json::from_str(&fs::read_to_string(path)?)?;
+    apply_release_feature_gates(&mut config);
+    Ok(config)
 }
 
 fn write_json_atomic<T: Serialize>(path: &Path, value: &T) -> Result<()> {
@@ -502,7 +512,9 @@ fn write_json_atomic<T: Serialize>(path: &Path, value: &T) -> Result<()> {
 }
 
 fn write_config(_app: &AppHandle, config: &AppConfig) -> Result<()> {
-    write_json_atomic(&config_path()?, config)
+    let mut config = config.clone();
+    apply_release_feature_gates(&mut config);
+    write_json_atomic(&config_path()?, &config)
 }
 
 fn cs2_running() -> bool {
@@ -1609,6 +1621,7 @@ fn get_presets(app: AppHandle, csgo: String) -> Result<PresetsState> {
 fn presets_at(root: &Path, config: &AppConfig, running: bool) -> PresetsState {
     PresetsState {
         aim: config.aim.clone(),
+        aim_supported: true,
         nades: config.nades.clone(),
         cfg_present: cfg_files_present(root),
         cs2_running: running,
@@ -1967,6 +1980,7 @@ fn read_knife_config(root: &Path) -> Result<KnifeCustomizerConfig> {
 fn normalize_knife_config(config: &mut KnifeCustomizerConfig) -> Result<()> {
     migrate_legacy_config(config);
     config.schema_version = COSMETICS_SCHEMA_VERSION;
+    config.stickers_enabled = STICKER_RELEASE_ENABLED && config.stickers_enabled;
     config.music_kit_id = config.music_kit_id.clamp(0, u16::MAX as i32);
     normalize_team_loadout(WeaponSide::Ct, &mut config.loadouts.ct)?;
     normalize_team_loadout(WeaponSide::T, &mut config.loadouts.t)?;
@@ -2539,6 +2553,49 @@ async fn check_online_updates(
     .map_err(|error| AppError::update(format!("Update check task failed: {error}")))?
 }
 
+fn install_plugin_update_impl(app: &AppHandle, csgo: &str) -> Result<online_update::UpdateResult> {
+    let root = csgo_path(csgo)?;
+    ensure_target_not_running(&root)?;
+    ensure_steam_app_idle(&root)?;
+    let state = local_state_root(app)?;
+    let config = read_config(app)?;
+    let restore_preview = config.mode.as_deref() == Some("preview");
+    logging::append(&state, "INFO", "update.plugin_started", "host=github.com");
+    let (version, payload) = online_update::prepare_plugin(app)?;
+    online_update::activate_payload(&version, &payload)?;
+    match with_canonical_layout(&state, &root, restore_preview, || {
+        let result = installer::install(&payload, &state, &root, false)?;
+        write_bot_randomizer_options(&root, &config.bot_items)?;
+        Ok(result)
+    }) {
+        Ok(value) => {
+            logging::append(
+                &state,
+                "INFO",
+                "update.plugin_completed",
+                &format!("version={version}, files={}", value.installed_files),
+            );
+            Ok(online_update::UpdateResult {
+                component: "plugin".into(),
+                version,
+                installed: true,
+                restart_required: false,
+                rollback_succeeded: None,
+                detail: format!("Plugin update installed ({} files)", value.installed_files),
+            })
+        }
+        Err(error) => {
+            logging::append(
+                &state,
+                "ERROR",
+                "update.plugin_failed",
+                &format!("stage=install, rollback=attempted, {}", error.detail),
+            );
+            Err(error)
+        }
+    }
+}
+
 #[tauri::command]
 async fn install_plugin_update(
     app: AppHandle,
@@ -2546,46 +2603,7 @@ async fn install_plugin_update(
 ) -> Result<online_update::UpdateResult> {
     tauri::async_runtime::spawn_blocking(move || {
         let _busy = online_update::OperationGuard::acquire()?;
-        let root = csgo_path(&csgo)?;
-        ensure_target_not_running(&root)?;
-        ensure_steam_app_idle(&root)?;
-        let state = local_state_root(&app)?;
-        let config = read_config(&app)?;
-        let restore_preview = config.mode.as_deref() == Some("preview");
-        logging::append(&state, "INFO", "update.plugin_started", "host=github.com");
-        let (version, payload) = online_update::prepare_plugin(&app)?;
-        online_update::activate_payload(&version, &payload)?;
-        match with_canonical_layout(&state, &root, restore_preview, || {
-            let result = installer::install(&payload, &state, &root, false)?;
-            write_bot_randomizer_options(&root, &config.bot_items)?;
-            Ok(result)
-        }) {
-            Ok(value) => {
-                logging::append(
-                    &state,
-                    "INFO",
-                    "update.plugin_completed",
-                    &format!("version={version}, files={}", value.installed_files),
-                );
-                Ok(online_update::UpdateResult {
-                    component: "plugin".into(),
-                    version,
-                    installed: true,
-                    restart_required: false,
-                    rollback_succeeded: None,
-                    detail: format!("Plugin update installed ({} files)", value.installed_files),
-                })
-            }
-            Err(error) => {
-                logging::append(
-                    &state,
-                    "ERROR",
-                    "update.plugin_failed",
-                    &format!("stage=install, rollback=attempted, {}", error.detail),
-                );
-                Err(error)
-            }
-        }
+        install_plugin_update_impl(&app, &csgo)
     })
     .await
     .map_err(|error| AppError::update(format!("Plugin update task failed: {error}")))?
@@ -2594,14 +2612,70 @@ async fn install_plugin_update(
 #[tauri::command]
 async fn install_panel_update(app: AppHandle) -> Result<online_update::UpdateResult> {
     let worker_app = app.clone();
-    let result =
-        tauri::async_runtime::spawn_blocking(move || online_update::prepare_panel(&worker_app))
-            .await
-            .map_err(|error| AppError::update(format!("Panel update task failed: {error}")))??;
+    let result = tauri::async_runtime::spawn_blocking(move || {
+        let _busy = online_update::OperationGuard::acquire()?;
+        online_update::prepare_panel(&worker_app)
+    })
+    .await
+    .map_err(|error| AppError::update(format!("Panel update task failed: {error}")))??;
     std::thread::spawn(move || {
         std::thread::sleep(std::time::Duration::from_millis(500));
         app.exit(0);
     });
+    Ok(result)
+}
+
+#[tauri::command]
+async fn install_all_updates(
+    app: AppHandle,
+    csgo: Option<String>,
+) -> Result<online_update::UpdateBatchResult> {
+    let worker_app = app.clone();
+    let result = tauri::async_runtime::spawn_blocking(move || {
+        let _busy = online_update::OperationGuard::acquire()?;
+        let plugin_version = installed_plugin_version(&worker_app);
+        let snapshot = online_update::snapshot(plugin_version.as_deref())?;
+
+        let plugin = if snapshot.plugin.update_available {
+            if !snapshot.plugin.compatible {
+                return Err(AppError::update(
+                    "This plugin update requires a newer Panel updater",
+                ));
+            }
+            let target = csgo.as_deref().ok_or_else(|| {
+                AppError::directory("Select the CS2 game/csgo directory before updating the plugin")
+            })?;
+            Some(install_plugin_update_impl(&worker_app, target)?)
+        } else {
+            None
+        };
+
+        let panel = if snapshot.panel.update_available {
+            if !snapshot.panel.compatible {
+                return Err(AppError::update(
+                    "This Panel update requires a newer updater baseline",
+                ));
+            }
+            Some(online_update::prepare_panel(&worker_app)?)
+        } else {
+            None
+        };
+
+        Ok(online_update::UpdateBatchResult {
+            restart_required: panel.is_some(),
+            panel,
+            plugin,
+        })
+    })
+    .await
+    .map_err(|error| AppError::update(format!("Combined update task failed: {error}")))??;
+
+    if result.restart_required {
+        std::thread::spawn(move || {
+            std::thread::sleep(std::time::Duration::from_millis(500));
+            app.exit(0);
+        });
+    }
     Ok(result)
 }
 
@@ -3146,6 +3220,7 @@ mod tests {
         let state = presets_at(&root, &AppConfig::default(), false);
 
         assert!(state.cfg_present);
+        assert!(state.aim_supported);
         replace_managed_cfg_command(&root, "bot_aim", "bot_aim head").unwrap();
         for canonical in cfg_paths(&root) {
             assert!(!canonical.exists());
@@ -3369,6 +3444,24 @@ mod tests {
     }
 
     #[test]
+    fn release_gate_disables_stickers_without_discarding_saved_slots() {
+        let mut app_config = AppConfig::default();
+        app_config.experimental_stickers_enabled = true;
+        apply_release_feature_gates(&mut app_config);
+        assert!(!app_config.experimental_stickers_enabled);
+
+        let mut cosmetics = KnifeCustomizerConfig::default();
+        cosmetics.stickers_enabled = true;
+        let mut preset = test_preset(661);
+        preset.stickers = vec![test_sticker(0, 1)];
+        cosmetics.loadouts.t.gun_presets.insert("7".into(), preset);
+        normalize_knife_config(&mut cosmetics).unwrap();
+
+        assert!(!cosmetics.stickers_enabled);
+        assert_eq!(cosmetics.loadouts.t.gun_presets["7"].stickers.len(), 1);
+    }
+
+    #[test]
     fn schema_one_cosmetics_exports_remain_importable() {
         let root = test_root();
         fs::create_dir_all(&root).unwrap();
@@ -3500,8 +3593,10 @@ pub fn run() {
             import_cosmetics_preset, get_runtime_snapshot,
             inspect_installation, get_install_plan, install_payload, repair_payload,
             restore_payload, restore_pristine_cs2, export_diagnostics, get_panel_memory, save_panel_memory,
+            appearance::get_appearance, appearance::save_appearance,
+            appearance::export_appearance, appearance::import_appearance,
             record_panel_error, get_update_snapshot, check_online_updates,
-            install_panel_update, install_plugin_update, cancel_update,
+            install_panel_update, install_plugin_update, install_all_updates, cancel_update,
             get_match_catalog, prepare_and_launch_match, finish_active_match, get_active_match, list_match_history,
             get_match_result, delete_match, run_install_checks, play_demo, open_demo_folder])
         .run(tauri::generate_context!())

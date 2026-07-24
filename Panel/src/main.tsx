@@ -9,8 +9,9 @@ import {
 import App from "./App";
 import { ToastProvider } from "./components/Toast";
 import { AppStateProvider } from "./state/store";
+import { AppearanceProvider } from "./state/appearance";
 import { api } from "./lib/api";
-import { isPanelTauriRuntime } from "./lib/runtime";
+import { applyAppearance, DEFAULT_APPEARANCE } from "./lib/appearance";
 import { translate } from "./i18n";
 import "./styles/global.css";
 
@@ -34,18 +35,10 @@ function reveal() {
   if (revealed) return;
   revealed = true;
   document.documentElement.classList.add("app-ready");
-  if (isPanelTauriRuntime) {
-    getCurrentWindow()
-      .show()
-      .catch(() => {});
-  }
+  getCurrentWindow().show().catch(() => {});
 }
 
 async function fitWindowToScreen() {
-  if (!isPanelTauriRuntime) {
-    reveal();
-    return;
-  }
   const win = getCurrentWindow();
   await win.setFullscreen(false).catch(() => {});
   await win.unmaximize().catch(() => {});
@@ -100,6 +93,7 @@ document.addEventListener(
 );
 
 async function bootstrap() {
+  applyAppearance(DEFAULT_APPEARANCE);
   try {
     const memory = await api.getPanelMemory();
     for (const [key, value] of Object.entries(memory.entries)) {
@@ -113,7 +107,9 @@ async function bootstrap() {
     <React.StrictMode>
       <ToastProvider>
         <AppStateProvider>
-          <App />
+          <AppearanceProvider>
+            <App />
+          </AppearanceProvider>
         </AppStateProvider>
       </ToastProvider>
     </React.StrictMode>

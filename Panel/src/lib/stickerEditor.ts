@@ -1,9 +1,12 @@
 import type { AppConfig, CosmeticsTeam, KnifeCustomizerConfig, KnifePreset, StickerPreset } from "./api";
 
 export const STICKER_SLOT_COUNT = 5;
+export const STICKER_RELEASE_ENABLED = false;
 
 export function stickerFeatureEnabled(config: AppConfig | null | undefined): boolean {
-  return !!config?.experimental_features_enabled && !!config?.experimental_stickers_enabled;
+  return STICKER_RELEASE_ENABLED
+    && !!config?.experimental_features_enabled
+    && !!config?.experimental_stickers_enabled;
 }
 
 export function clampStickerValue(value: number, min: number, max: number): number {

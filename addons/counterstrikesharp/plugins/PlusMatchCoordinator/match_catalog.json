@@ -2,7 +2,7 @@
   "schema_version": 1,
   "catalog_version": "2026-07-19-v1",
   "freeze_date": "2026-07-19",
-  "source": "HLTV Top 20 frozen for 1.4.2.5 plus TYLOO and Lynn Vision",
+  "source": "HLTV Top 20 frozen for 1.4.2.6 plus TYLOO and Lynn Vision",
   "maps": [
     { "id": "de_mirage", "display_name": "Mirage", "workshop_name": "de_mirage", "thumbnail": "maps/mirage.webp", "required_vpk": "de_mirage.vpk" },
     { "id": "de_inferno", "display_name": "Inferno", "workshop_name": "de_inferno", "thumbnail": "maps/inferno.webp", "required_vpk": "de_inferno.vpk" },

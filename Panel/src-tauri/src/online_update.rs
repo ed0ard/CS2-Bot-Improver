@@ -17,6 +17,8 @@ const UPDATE_PUBLIC_KEY: &str = "RbIjlfASpYVu740SsmQMLuLO7ExxiDBYTdnYThfqU/4=";
 const CACHE_SECONDS: u64 = 6 * 60 * 60;
 const REQUEST_TIMEOUT: Duration = Duration::from_secs(30);
 const DOWNLOAD_TIMEOUT: Duration = Duration::from_secs(15 * 60);
+const PANEL_EXECUTABLE_NAME: &str = "LocalArena.exe";
+const LEGACY_PANEL_EXECUTABLE_NAME: &str = "CS2BotImproverPlus.exe";
 
 static CANCELLED: AtomicBool = AtomicBool::new(false);
 static RUNTIME: OnceLock<Mutex<RuntimeState>> = OnceLock::new();
@@ -69,6 +71,13 @@ pub struct UpdateResult {
     pub detail: String,
 }
 
+#[derive(Clone, Debug, Serialize)]
+pub struct UpdateBatchResult {
+    pub panel: Option<UpdateResult>,
+    pub plugin: Option<UpdateResult>,
+    pub restart_required: bool,
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 struct CacheMetadata {
     schema_version: u8,
@@ -86,6 +95,7 @@ struct ActivePayload {
 struct PanelUpdatePlan {
     schema_version: u8,
     old_pid: u32,
+    current: String,
     target: String,
     staged: String,
     backup: String,
@@ -111,7 +121,7 @@ fn update_root() -> Result<PathBuf> {
 fn client(timeout: Duration) -> Result<reqwest::blocking::Client> {
     reqwest::blocking::Client::builder()
         .timeout(timeout)
-        .user_agent(format!("CS2BotImproverPlus/{}", app_version::display()))
+        .user_agent(format!("LocalArena/{}", app_version::display()))
         .https_only(true)
         .build()
         .map_err(|error| AppError::update(format!("Cannot initialize update client: {error}")))
@@ -554,7 +564,6 @@ pub fn active_payload_root() -> Option<PathBuf> {
 }
 
 pub fn prepare_panel(app: &AppHandle) -> Result<UpdateResult> {
-    let _busy = OperationGuard::acquire()?;
     let (component, archive) = download_component(app, "panel")?;
     set_progress(
         app,
@@ -572,15 +581,19 @@ pub fn prepare_panel(app: &AppHandle) -> Result<UpdateResult> {
         &directory,
     )
     .map_err(AppError::update)?;
-    let staged = if directory.join("CS2BotImproverPlus.exe").is_file() {
-        directory.join("CS2BotImproverPlus.exe")
+    let staged = if directory.join(PANEL_EXECUTABLE_NAME).is_file() {
+        directory.join(PANEL_EXECUTABLE_NAME)
     } else {
         fs::read_dir(&directory)
             .map_err(AppError::transaction_io)?
             .flatten()
-            .map(|entry| entry.path().join("CS2BotImproverPlus.exe"))
+            .map(|entry| entry.path().join(PANEL_EXECUTABLE_NAME))
             .find(|path| path.is_file())
-            .ok_or_else(|| AppError::payload("Panel update ZIP has no CS2BotImproverPlus.exe"))?
+            .ok_or_else(|| {
+                AppError::payload(format!(
+                    "Panel update ZIP has no {PANEL_EXECUTABLE_NAME}"
+                ))
+            })?
     };
     schedule_panel_replace(&component.version, &staged)?;
     Ok(UpdateResult {
@@ -595,18 +608,26 @@ pub fn prepare_panel(app: &AppHandle) -> Result<UpdateResult> {
 
 fn schedule_panel_replace(version: &str, staged: &Path) -> Result<()> {
     let current = std::env::current_exe().map_err(AppError::transaction_io)?;
-    let target = current
+    let parent = current
         .parent()
-        .ok_or_else(|| AppError::update("Panel executable has no parent directory"))?
-        .join("CS2BotImproverPlus.exe");
-    if !current.eq_ignore_ascii_case(&target) {
+        .ok_or_else(|| AppError::update("Panel executable has no parent directory"))?;
+    let current_name = current.file_name().and_then(|name| name.to_str());
+    if !matches!(
+        current_name,
+        Some(name)
+            if name.eq_ignore_ascii_case(PANEL_EXECUTABLE_NAME)
+                || name.eq_ignore_ascii_case(LEGACY_PANEL_EXECUTABLE_NAME)
+    ) {
         return Err(AppError::update(
-            "Online Panel updates require the stable filename CS2BotImproverPlus.exe",
+            format!(
+                "Online Panel updates require {PANEL_EXECUTABLE_NAME} or the legacy filename {LEGACY_PANEL_EXECUTABLE_NAME}"
+            ),
         ));
     }
+    let target = parent.join(PANEL_EXECUTABLE_NAME);
     let helper_dir = update_root()?.join("helper");
     fs::create_dir_all(&helper_dir).map_err(AppError::transaction_io)?;
-    let helper = helper_dir.join("CS2BotImproverPlus-update-helper.exe");
+    let helper = helper_dir.join("LocalArena-update-helper.exe");
     fs::copy(&current, &helper).map_err(AppError::transaction_io)?;
     let plan_path = helper_dir.join("panel-update-plan.json");
     let backup = update_root()?
@@ -615,6 +636,7 @@ fn schedule_panel_replace(version: &str, staged: &Path) -> Result<()> {
     let plan = serde_json::to_vec_pretty(&PanelUpdatePlan {
         schema_version: 1,
         old_pid: std::process::id(),
+        current: current.to_string_lossy().into_owned(),
         target: target.to_string_lossy().into_owned(),
         staged: staged.to_string_lossy().into_owned(),
         backup: backup.to_string_lossy().into_owned(),
@@ -717,14 +739,24 @@ pub fn maybe_apply_panel_update() -> bool {
             return Err("Timed out waiting for the old Panel process".into());
         }
         let target = PathBuf::from(&plan.target);
+        let current = PathBuf::from(&plan.current);
         let staged = PathBuf::from(&plan.staged);
         let backup = PathBuf::from(&plan.backup);
-        update_core::replace_file_with_backup(&staged, &target, &backup)?;
+        update_core::install_file_with_backup(&staged, &current, &target, &backup)?;
         if let Err(error) = Command::new(&target).spawn() {
-            let rollback = fs::copy(&backup, &target).is_ok();
+            let migrated = !current.eq_ignore_ascii_case(&target);
+            let rollback = if migrated {
+                let target_removed = !target.exists() || fs::remove_file(&target).is_ok();
+                target_removed && fs::copy(&backup, &current).is_ok()
+            } else {
+                fs::copy(&backup, &target).is_ok()
+            };
             return Err(format!(
                 "Panel updated but could not restart; rollback_succeeded={rollback}: {error}"
             ));
+        }
+        if !current.eq_ignore_ascii_case(&target) {
+            let _ = fs::remove_file(current);
         }
         let _ = fs::remove_file(plan_path);
         Ok(())

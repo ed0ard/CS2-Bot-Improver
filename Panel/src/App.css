@@ -14,12 +14,34 @@
 }
 
 .sidebar {
+  position: relative;
   display: flex;
   flex-direction: column;
   min-width: 0;
+  overflow: hidden;
   padding: 18px 14px 14px;
   background: var(--sidebar-bg);
   color: var(--sidebar-text);
+  isolation: isolate;
+}
+.sidebar::before,
+.sidebar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.sidebar::before {
+  z-index: -2;
+  background-image: var(--personal-bg-image, none);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 18% 50%;
+  filter: saturate(0.82);
+}
+.sidebar::after {
+  z-index: -1;
+  background: var(--personal-sidebar-wash, var(--paper-sunken));
 }
 
 .sidebar__brand {
@@ -39,6 +61,8 @@
   border-radius: 8px;
   box-shadow: var(--sh-card);
 }
+.sidebar__mark--square { border-radius: 0; }
+.sidebar__mark--circle { border-radius: 50%; }
 
 .sidebar__brand-copy {
   min-width: 0;
@@ -75,7 +99,7 @@
 
 .sidebar__item {
   width: 100%;
-  min-height: 38px;
+  min-height: var(--nav-row, 38px);
   display: flex;
   align-items: center;
   gap: 11px;
@@ -123,14 +147,40 @@
 .sidebar__footer small {
   font-family: var(--mono);
   font-size: 11px;
-  color: var(--text-quaternary);
+  color: var(--text-tertiary);
 }
 
 .workspace {
+  position: relative;
   min-width: 0;
   min-height: 0;
   overflow: hidden;
   background: var(--workspace-bg);
+}
+.workspace::before,
+.workspace::after {
+  content: "";
+  position: absolute;
+  inset: calc(var(--personal-bg-blur, 0px) * -1);
+  pointer-events: none;
+}
+.workspace::before {
+  z-index: 0;
+  background-image: var(--personal-bg-image, none);
+  background-repeat: no-repeat;
+  background-size: var(--personal-bg-size, cover);
+  background-position: var(--personal-bg-position, 50% 50%);
+  filter: blur(var(--personal-bg-blur, 0px));
+  box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, var(--personal-bg-dim, 0));
+}
+.workspace::after {
+  z-index: 0;
+  inset: 0;
+  background: var(--personal-bg-wash, transparent);
+}
+.workspace > * {
+  position: relative;
+  z-index: 1;
 }
 
 .workspace__loading {
@@ -150,6 +200,7 @@
   flex-direction: column;
   gap: var(--gap-card);
 }
+
 .dashboard > * {
   width: 100%;
   max-width: 980px;

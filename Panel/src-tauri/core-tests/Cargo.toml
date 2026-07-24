@@ -1,6 +1,6 @@
 [package]
 name = "cs2bi-core-tests"
-version = "1.4.2-preview.1+6"
+version = "1.4.2-preview.2+6"
 edition = "2024"
 publish = false
 

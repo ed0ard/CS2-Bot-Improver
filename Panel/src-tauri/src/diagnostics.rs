@@ -243,6 +243,45 @@ fn crash_dump_metadata() -> serde_json::Value {
     serde_json::Value::Array(dumps)
 }
 
+fn appearance_metadata(state_root: &Path) -> serde_json::Value {
+    let path = state_root.join("personalization/appearance.json");
+    let Ok(bytes) = fs::read(&path) else {
+        return serde_json::json!({ "present": false });
+    };
+    let Ok(value) = serde_json::from_slice::<serde_json::Value>(&bytes) else {
+        return serde_json::json!({ "present": true, "valid_json": false, "size_bytes": bytes.len() });
+    };
+    let asset = |name: &str| {
+        let entry = value.get(name);
+        let data_url = entry.and_then(|item| item.get("data_url")).and_then(serde_json::Value::as_str);
+        serde_json::json!({
+            "present": entry.is_some_and(|item| !item.is_null()),
+            "mime": data_url.and_then(|data| data.strip_prefix("data:")).and_then(|data| data.split_once(';')).map(|(mime, _)| mime),
+            "encoded_chars": data_url.map(str::len),
+            "fit": entry.and_then(|item| item.get("fit")),
+            "position_x": entry.and_then(|item| item.get("position_x")),
+            "position_y": entry.and_then(|item| item.get("position_y")),
+            "dim": entry.and_then(|item| item.get("dim")),
+            "blur": entry.and_then(|item| item.get("blur")),
+            "shape": entry.and_then(|item| item.get("shape")),
+        })
+    };
+    serde_json::json!({
+        "present": true,
+        "valid_json": true,
+        "size_bytes": bytes.len(),
+        "schema_version": value.get("schema_version"),
+        "team_theme": value.get("team_theme"),
+        "style": value.get("style"),
+        "palette": value.get("palette"),
+        "font": value.get("font"),
+        "density": value.get("density"),
+        "background": asset("background"),
+        "logo": asset("logo"),
+        "custom_font_present": value.get("custom_font").is_some_and(|item| !item.is_null()),
+    })
+}
+
 fn wer_reports() -> Vec<PathBuf> {
     let mut reports = Vec::new();
     let mut roots = Vec::new();
@@ -352,6 +391,7 @@ pub fn export(state_root: &Path, csgo: Option<&Path>, snapshot: &serde_json::Val
         "csgo": csgo.map(|path| path.to_string_lossy()),
     }))?;
     collector.add_json("report/crash-dumps.json", &crash_dump_metadata())?;
+    collector.add_json("report/appearance.json", &appearance_metadata(state_root))?;
     add_windows_event_logs(&mut collector)?;
 
     for (name, path) in [
@@ -431,6 +471,7 @@ mod tests {
         assert!(zip.by_name("report/runtime-snapshot.json").is_ok());
         assert!(zip.by_name("report/windows-event-logs.json").is_ok());
         assert!(zip.by_name("report/runtime-mounts.json").is_ok());
+        assert!(zip.by_name("report/appearance.json").is_ok());
         assert!(zip.by_name("logs/panel/00-panel-current.jsonl").is_ok());
         assert!(zip.by_name("logs/cs2/recent/00-console.log").is_ok());
         assert!(zip.by_name("matches/recent/00-request.json").is_ok());

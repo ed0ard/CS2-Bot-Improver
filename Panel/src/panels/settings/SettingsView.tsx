@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BadgeInfo, Download, FileCheck2, FlaskConical, FolderOpen, Info, Languages, type LucideIcon } from "lucide-react";
+import { BadgeInfo, Download, FileCheck2, FlaskConical, FolderOpen, Languages, Palette, type LucideIcon } from "lucide-react";
 import { BackIcon, ChevronRight } from "../../components/icons";
 import AboutPage, { type AboutTarget } from "./AboutPage";
 import AboutDetailPage from "./AboutDetailPage";
@@ -8,13 +8,14 @@ import DirectoryPage from "./DirectoryPage";
 import InstallationPage from "./InstallationPage";
 import OnlineUpdatePage from "./OnlineUpdatePage";
 import ExperimentalPage from "./ExperimentalPage";
+import PersonalizationPage from "./PersonalizationPage";
 import { api, type OnlineUpdateSnapshot } from "../../lib/api";
 import { useStore } from "../../state/store";
 import { LANGUAGES } from "../../data/languages";
 import { useT, type I18nKey } from "../../i18n";
 import "./settings.css";
 
-type SettingsEntry = "about" | "languages" | "directory" | "installation" | "updates" | "experimental";
+type SettingsEntry = "about" | "languages" | "personalization" | "directory" | "installation" | "updates" | "experimental";
 type Page = "root" | SettingsEntry | AboutTarget;
 
 const TITLE_KEYS: Record<Page, I18nKey> = {
@@ -24,6 +25,7 @@ const TITLE_KEYS: Record<Page, I18nKey> = {
   aboutAgreement: "set.userAgreement",
   aboutPrivacy: "set.privacyPolicy",
   languages: "set.languages",
+  personalization: "personal.title",
   directory: "set.directory",
   installation: "set.installation",
   updates: "set.updates",
@@ -35,6 +37,7 @@ const DESC_KEYS: Record<SettingsEntry, I18nKey> = {
   installation: "set.installationDesc",
   directory: "set.directoryDesc",
   languages: "set.languagesDesc",
+  personalization: "personal.settingsDesc",
   about: "set.aboutDesc",
   experimental: "experimental.settingsDesc",
 };
@@ -44,6 +47,7 @@ const ICONS: Record<SettingsEntry, LucideIcon> = {
   installation: FileCheck2,
   directory: FolderOpen,
   languages: Languages,
+  personalization: Palette,
   about: BadgeInfo,
   experimental: FlaskConical,
 };
@@ -80,6 +84,7 @@ export default function SettingsView({ onClose }: { onClose?: () => void }) {
       ? { text: directory.selected, tone: "blue" }
       : { text: t("set.noCsgo"), tone: "yellow" },
     languages: language ? { text: language.native, tone: "blue" } : null,
+    personalization: { text: t("personal.live"), tone: "blue" },
     about: null,
     experimental: config?.experimental_features_enabled
       ? { text: t("cosmetics.enabled"), tone: "yellow" }
@@ -102,7 +107,7 @@ export default function SettingsView({ onClose }: { onClose?: () => void }) {
           {page === "root" && (
             <>
               <div className="settings-list">
-                {(["updates", "installation", "directory", "languages", "experimental", "about"] as SettingsEntry[]).map((p) => {
+                {(["updates", "installation", "directory", "languages", "personalization", "experimental"] as SettingsEntry[]).map((p) => {
                   const Icon = ICONS[p];
                   const status = STATUS[p];
                   return (
@@ -120,13 +125,11 @@ export default function SettingsView({ onClose }: { onClose?: () => void }) {
                   );
                 })}
               </div>
-              <aside className="set-disclaimer">
-                <span className="set-disclaimer__icon" aria-hidden="true"><Info size={17} /></span>
-                <span className="set-disclaimer__body">
-                  <strong>{t("set.disclaimerTitle")}</strong>
-                  <p>{t("set.disclaimerBody")}</p>
-                </span>
-              </aside>
+              <button className="set-card set-card--about" onClick={() => setPage("about")}>
+                <span className="set-card__icon set-card__icon--about" aria-hidden="true"><BadgeInfo size={20} strokeWidth={1.9} /></span>
+                <span className="set-card__body"><strong>{t("set.about")}</strong><small>{t("set.aboutDesc")}</small></span>
+                <ChevronRight size={18} className="set-card__chevron" />
+              </button>
             </>
           )}
           {page === "about" && <AboutPage onOpen={setPage} onOpenUpdates={() => setPage("updates")} />}
@@ -134,6 +137,7 @@ export default function SettingsView({ onClose }: { onClose?: () => void }) {
             <AboutDetailPage kind={page} />
           )}
           {page === "languages" && <LanguagesPage />}
+          {page === "personalization" && <PersonalizationPage />}
           {page === "directory" && <DirectoryPage />}
           {page === "installation" && <InstallationPage />}
           {page === "updates" && <OnlineUpdatePage />}

@@ -46,6 +46,7 @@ export default function PresetsPanel({ onBack }: { onBack?: () => void }) {
   const cfgPresent = presets?.cfg_present ?? false;
   const running = presets?.cs2_running ?? false;
   const disabled = !csgoPath || !cfgPresent;
+  const aimSupported = presets?.aim_supported ?? false;
 
   // aimPending / nadesPending live in the global store, so each section's
   // pending-restart flag survives leaving and returning to this panel. A section
@@ -75,16 +76,16 @@ export default function PresetsPanel({ onBack }: { onBack?: () => void }) {
   return (
     <SubPage title={t("pre.title")} onBack={onBack}>
       <div className="presets__controls">
-        <Section title={t("pre.aim")} status={statusFor(aimPending)}>
+        <Section title={t("pre.aim")} status={aimSupported ? statusFor(aimPending) : "off"}>
           <Segmented
             ariaLabel={t("pre.aim")}
             value={aim}
             onChange={(v) => applyAim(v)}
-            disabled={disabled}
+            disabled={disabled || !aimSupported}
             options={AIM.map(({ value, labelKey }) => ({ value, label: t(labelKey) }))}
           />
           <p className="selection-detail" aria-live="polite">
-            {t(aimOption.descriptionKey)}
+            {aimSupported ? t(aimOption.descriptionKey) : t("pre.aimUnavailable")}
           </p>
         </Section>
 

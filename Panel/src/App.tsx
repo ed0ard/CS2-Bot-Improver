@@ -28,6 +28,7 @@ import { useT, type I18nKey } from "./i18n";
 import appLogo from "./assets/app-logo.png";
 import { stickerFeatureEnabled } from "./lib/stickerEditor";
 import { APP_DISPLAY_VERSION } from "./lib/version";
+import { useAppearance } from "./state/appearance";
 import "./App.css";
 
 type View = "main" | "stickers" | DashboardTarget;
@@ -37,6 +38,7 @@ const VIEW_KEY = "cs2bi.view";
 
 export default function App() {
   const { error, clearError, ready, config, exportDiagnostics } = useStore();
+  const { appearance } = useAppearance();
   const t = useT();
   // Remember the open view in the portable Panel memory.
   const [view, setView] = useState<View>(() => {
@@ -76,6 +78,7 @@ export default function App() {
   return (
     <div className="shell">
       <TitleBar
+        title={`${appearance.brand_name} v${APP_DISPLAY_VERSION}`}
         showSettings
         onSettings={() => setView((v) => (v === "settings" ? "main" : "settings"))}
       />
@@ -83,9 +86,15 @@ export default function App() {
       <div className="shell__frame">
         <aside className="sidebar">
           <div className="sidebar__brand">
-            <img className="sidebar__mark" src={appLogo} alt="" aria-hidden="true" />
+            <img
+              className={`sidebar__mark sidebar__mark--${appearance.logo?.shape ?? "rounded"}`}
+              src={appearance.logo?.data_url || appLogo}
+              style={{ objectFit: appearance.logo?.fit ?? "cover" }}
+              alt=""
+              aria-hidden="true"
+            />
             <span className="sidebar__brand-copy">
-              <strong>Local Arena</strong>
+              <strong>{appearance.brand_name}</strong>
             </span>
           </div>
 

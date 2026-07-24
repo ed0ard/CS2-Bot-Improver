@@ -1,10 +1,7 @@
 import { invoke as tauriInvoke } from "@tauri-apps/api/core";
-import { browserMockInvoke } from "./browserMock";
-import { isPanelTauriRuntime } from "./runtime";
 
 function invoke<T>(command: string, args?: Record<string, unknown>) {
-  if (isPanelTauriRuntime) return tauriInvoke<T>(command, args);
-  return browserMockInvoke<T>(command, args ?? {});
+  return tauriInvoke<T>(command, args);
 }
 
 /** Mirrors Rust `AppError` (error.rs). Codes are stable & not localized. */
@@ -203,6 +200,7 @@ export type NadesValue = "max" | "more" | "normal" | "off";
 
 export type PresetsState = {
   aim: AimValue | null;
+  aim_supported: boolean;
   nades: NadesValue | null;
   cfg_present: boolean;
   cs2_running: boolean;
@@ -322,6 +320,53 @@ export type AppConfig = {
   experimental_stickers_enabled?: boolean;
 };
 
+export type AppearanceStyle = "paper" | "clean" | "compact" | "immersive";
+export type AppearancePalette = "terracotta" | "sky" | "monochrome" | "grass" | "mist" | "berry" | "custom";
+export type AppearanceFont = "humanist" | "modern" | "clear" | "classic" | "technical" | "custom";
+export type AppearanceDensity = "compact" | "standard" | "relaxed";
+export type AppearanceLevel = "none" | "subtle" | "soft" | "strong";
+export type AppearanceMotion = "off" | "reduced" | "full";
+
+export type AppearanceBackground = {
+  data_url: string;
+  fit: "cover" | "contain";
+  position_x: number;
+  position_y: number;
+  dim: number;
+  blur: number;
+};
+
+export type AppearanceLogo = {
+  data_url: string;
+  fit: "cover" | "contain";
+  shape: "rounded" | "square" | "circle";
+};
+
+export type AppearanceCustomFont = {
+  data_url: string;
+  file_name: string;
+  format: "ttf" | "otf" | "woff" | "woff2";
+};
+
+export type AppearanceConfig = {
+  schema_version: 1;
+  team_theme: string | null;
+  brand_name: string;
+  style: AppearanceStyle;
+  palette: AppearancePalette;
+  accent_color: string;
+  font: AppearanceFont;
+  density: AppearanceDensity;
+  radius: AppearanceLevel;
+  shadow: AppearanceLevel;
+  motion: AppearanceMotion;
+  custom_font: AppearanceCustomFont | null;
+  background: AppearanceBackground | null;
+  logo: AppearanceLogo | null;
+};
+
+export type AppearanceExportResult = { path: string; size_bytes: number };
+
 export type UpdateComponentState = {
   current_version: string;
   latest_version: string | null;
@@ -357,6 +402,12 @@ export type UpdateResult = {
   restart_required: boolean;
   rollback_succeeded: boolean | null;
   detail: string;
+};
+
+export type UpdateBatchResult = {
+  panel: UpdateResult | null;
+  plugin: UpdateResult | null;
+  restart_required: boolean;
 };
 
 export type RuntimeSnapshot = {
@@ -541,6 +592,12 @@ export type InstallCheckReport = {
 export const api = {
   getConfig: () => invoke<AppConfig>("get_config"),
   saveConfig: (config: AppConfig) => invoke<void>("save_config", { config }),
+  getAppearance: () => invoke<AppearanceConfig>("get_appearance"),
+  saveAppearance: (config: AppearanceConfig) => invoke<AppearanceConfig>("save_appearance", { config }),
+  exportAppearance: (destination: string) =>
+    invoke<AppearanceExportResult>("export_appearance", { destination }),
+  importAppearance: (source: string) =>
+    invoke<AppearanceConfig>("import_appearance", { source }),
   getPanelMemory: () => invoke<UiMemory>("get_panel_memory"),
   savePanelMemory: (entries: Record<string, string>) =>
     invoke<UiMemory>("save_panel_memory", { entries }),
@@ -615,5 +672,7 @@ export const api = {
   installPanelUpdate: () => invoke<UpdateResult>("install_panel_update"),
   installPluginUpdate: (csgo: string) =>
     invoke<UpdateResult>("install_plugin_update", { csgo }),
+  installAllUpdates: (csgo: string | null) =>
+    invoke<UpdateBatchResult>("install_all_updates", { csgo }),
   cancelUpdate: () => invoke<void>("cancel_update"),
 };

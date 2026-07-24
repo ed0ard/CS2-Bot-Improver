@@ -84,6 +84,8 @@ public static class StickerAttributePlanner
 
 public sealed class PlayerKnifeCustomizerPlugin : BasePlugin
 {
+    private static readonly bool StickerReleaseEnabled = false;
+
     public override string ModuleName => "PlayerCosmetics";
     public override string ModuleVersion => "0.4.1";
     public override string ModuleAuthor => "CS2BotImproverPlus contributors";
@@ -169,10 +171,7 @@ public sealed class PlayerKnifeCustomizerPlugin : BasePlugin
             if (!CanApplyToPlayer(player)) return HookResult.Continue;
             nint playerHandle = player!.Handle;
             long generation = _applyTracker.Begin(playerHandle, CosmeticApplyPhase.Guns);
-            var weapon = hook.GetReturn<CBasePlayerWeapon>();
-            var team = GetCosmeticTeam(player);
-            if (weapon is { IsValid: true } && team.HasValue && ApplyPresetForCurrentDefinition(weapon, team.Value))
-                _applyTracker.Complete(playerHandle, generation, CosmeticApplyPhase.Guns);
+            // The returned econ item is not safe for native attribute writes while this hook is active.
             ScheduleApplyCallbacks(playerHandle, generation);
         }
         catch (Exception ex)
@@ -399,7 +398,7 @@ public sealed class PlayerKnifeCustomizerPlugin : BasePlugin
 
     private void TryControlledReequip(CCSPlayerController player, CCSPlayerPawn pawn, CosmeticTeam team, long generation)
     {
-        if (!_config.StickersEnabled) return;
+        if (!StickerReleaseEnabled || !_config.StickersEnabled) return;
         var active = pawn.WeaponServices?.ActiveWeapon.Value;
         if (active == null || !active.IsValid || IsKnifeName(active.DesignerName)) return;
         ushort defIndex = active.AttributeManager?.Item?.ItemDefinitionIndex ?? 0;
@@ -413,13 +412,6 @@ public sealed class PlayerKnifeCustomizerPlugin : BasePlugin
             var current = ResolvePlayer(playerHandle);
             if (CanApplyToPlayer(current)) current!.ExecuteClientCommand("lastinv");
         });
-    }
-
-    private bool ApplyPresetForCurrentDefinition(CBasePlayerWeapon weapon, CosmeticTeam team)
-    {
-        ushort defIndex = weapon.AttributeManager?.Item?.ItemDefinitionIndex ?? 0;
-        if (defIndex == 0 || !TryGetPreset(defIndex, team, out var preset)) return false;
-        return ApplyPreset(weapon, defIndex, preset);
     }
 
     private bool TryGetPreset(ushort defIndex, CosmeticTeam team, out KnifePreset preset)
@@ -453,7 +445,8 @@ public sealed class PlayerKnifeCustomizerPlugin : BasePlugin
             SetTextureAttributes(item.NetworkedDynamicAttributes.Handle, preset);
             SetTextureAttributes(item.AttributeList.Handle, preset);
             if (preset.StatTrakEnabled && !preset.SouvenirEnabled) ApplyStatTrak(weapon, preset);
-            if (StickerFailurePolicy.ShouldRestoreBaseSkin(TryApplyStickers(defIndex, item, preset)))
+            if (StickerReleaseEnabled &&
+                StickerFailurePolicy.ShouldRestoreBaseSkin(TryApplyStickers(defIndex, item, preset)))
                 RestoreBaseAttributes(weapon, item, preset);
 
             Utilities.SetStateChanged(weapon, "CEconEntity", "m_AttributeManager");
@@ -521,6 +514,9 @@ public sealed class PlayerKnifeCustomizerPlugin : BasePlugin
 
     private bool TryApplyStickers(ushort defIndex, CEconItemView item, KnifePreset preset)
     {
+        // Keep the preview framework compiled, but never enter its native-write path in 1.4.2.6.
+        if (!StickerReleaseEnabled) return true;
+
         if (!StickerAttributePlanner.TryBuild(
                 defIndex, _config.StickersEnabled, preset.Stickers, _validStickers, _validStickerWeapons,
                 out var attributes, out string error))
@@ -925,12 +921,12 @@ public sealed class PlayerKnifeCustomizerPlugin : BasePlugin
         LoadStickerWeaponCatalog();
         LoadConfig();
         string restart = _config.Enabled && _setAttrByName == null ? "; restart CS2 to initialize runtime hooks" : string.Empty;
-        command.ReplyToCommand($"[PlayerKnifeCustomizer] reloaded; enabled={_config.Enabled}, stickers={_config.StickersEnabled}, sticker_catalog={_validStickers.Count}, ct_knives={_config.Loadouts.Ct.KnifePresets.Count}, t_knives={_config.Loadouts.T.KnifePresets.Count}, ct_guns={_config.Loadouts.Ct.GunPresets.Count}, t_guns={_config.Loadouts.T.GunPresets.Count}, music={_config.MusicKitId}{restart}");
+        command.ReplyToCommand($"[PlayerKnifeCustomizer] reloaded; enabled={_config.Enabled}, stickers={StickerReleaseEnabled && _config.StickersEnabled}, sticker_catalog={_validStickers.Count}, ct_knives={_config.Loadouts.Ct.KnifePresets.Count}, t_knives={_config.Loadouts.T.KnifePresets.Count}, ct_guns={_config.Loadouts.Ct.GunPresets.Count}, t_guns={_config.Loadouts.T.GunPresets.Count}, music={_config.MusicKitId}{restart}");
     }
 
     private void OnStatusCommand(CCSPlayerController? player, CommandInfo command)
     {
-        command.ReplyToCommand($"[PlayerKnifeCustomizer] enabled={_config.Enabled}, stickers={_config.StickersEnabled}, signature={(_setAttrByName == null ? "missing" : "loaded")}, ct_knives={_config.Loadouts.Ct.KnifePresets.Count}, t_knives={_config.Loadouts.T.KnifePresets.Count}, ct_guns={_config.Loadouts.Ct.GunPresets.Count}, t_guns={_config.Loadouts.T.GunPresets.Count}, music={_config.MusicKitId}, catalog={_skinCatalog.Values.Sum(skins => skins.Count)}, sticker_catalog={_validStickers.Count}, active_generations={_applyTracker.ActiveCount}, schedules={_applyTracker.Schedules}, phase_completions={_applyTracker.PhaseCompletions}, retry_exhaustions={_applyTracker.RetryExhaustions}, context_invalidations={_applyTracker.ContextInvalidations}");
+        command.ReplyToCommand($"[PlayerKnifeCustomizer] enabled={_config.Enabled}, stickers={StickerReleaseEnabled && _config.StickersEnabled}, signature={(_setAttrByName == null ? "missing" : "loaded")}, ct_knives={_config.Loadouts.Ct.KnifePresets.Count}, t_knives={_config.Loadouts.T.KnifePresets.Count}, ct_guns={_config.Loadouts.Ct.GunPresets.Count}, t_guns={_config.Loadouts.T.GunPresets.Count}, music={_config.MusicKitId}, catalog={_skinCatalog.Values.Sum(skins => skins.Count)}, sticker_catalog={_validStickers.Count}, active_generations={_applyTracker.ActiveCount}, schedules={_applyTracker.Schedules}, phase_completions={_applyTracker.PhaseCompletions}, retry_exhaustions={_applyTracker.RetryExhaustions}, context_invalidations={_applyTracker.ContextInvalidations}");
     }
 
     private void LogApplyError(string operation, Exception ex)

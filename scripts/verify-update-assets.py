@@ -3,9 +3,25 @@ import base64
 import hashlib
 import json
 from pathlib import Path, PurePosixPath
+import re
 import zipfile
 
 from nacl.signing import VerifyKey
+
+
+DISPLAY_VERSION = re.compile(r"^(\d+)\.(\d+)\.(\d+)\.(\d+)(?:-Preview\.(\d+))?$")
+
+
+def version_key(value: str) -> tuple[int, int, int, int, int, int]:
+    match = DISPLAY_VERSION.fullmatch(value)
+    if not match:
+        raise SystemExit(f"Invalid display version: {value}")
+    major, minor, patch, revision, preview = match.groups()
+    return (
+        int(major), int(minor), int(patch), int(revision),
+        1 if preview is None else 0,
+        0 if preview is None else int(preview),
+    )
 
 
 def sha256(path: Path) -> str:
@@ -47,8 +63,17 @@ def main() -> None:
     manifest = json.loads(document)
     if manifest.get("schema_version") != 1:
         raise SystemExit("Unsupported latest.json schema")
+    release_version = manifest.get("release_version", "")
+    version_key(release_version)
     for name in ("panel", "plugin"):
         component = manifest["components"][name]
+        if component.get("version") != release_version:
+            raise SystemExit(f"{name} version does not match release_version")
+        minimum = component.get("min_panel_version", "")
+        if version_key(minimum) >= version_key(component["version"]):
+            raise SystemExit(
+                f"{name} min_panel_version must accept at least one older Panel release"
+            )
         asset = args.directory / component["url"].rsplit("/", 1)[-1]
         if not asset.is_file():
             raise SystemExit(f"Missing update asset: {asset.name}")

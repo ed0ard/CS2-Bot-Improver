@@ -30,7 +30,7 @@
 
 <div align="center">
 
-The current `main` branch targets **1.4.2.5**
+The current `main` branch targets **1.4.2.6**
 
 **Guide:** [First installation](#four-step-first-installation) · [Existing installation](#updating-an-existing-installation) · [Launch modes](#choose-the-correct-mode) · [Cosmetics](#player-cosmetic-presets) · [Recovery](#installation-updates-and-recovery) · [Troubleshooting](#troubleshooting)
 

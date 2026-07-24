@@ -41,13 +41,11 @@ export default function OnlineUpdatePage() {
     finally { setWorking(null); }
   };
 
-  const install = async (component: "panel" | "plugin") => {
-    if (component === "plugin" && !csgoPath) return;
-    setWorking(component);
+  const installAll = async () => {
+    setWorking("all");
     setLocalError(null);
     try {
-      if (component === "panel") await api.installPanelUpdate();
-      else await api.installPluginUpdate(csgoPath!);
+      await api.installAllUpdates(snapshot?.plugin.update_available ? csgoPath : null);
       await refreshSnapshot();
     } catch (error) {
       setLocalError(toAppError(error).detail);
@@ -61,13 +59,24 @@ export default function OnlineUpdatePage() {
   };
 
   const blocked = !!process?.running && (process.matches_selected || !process.path_accessible);
+  const panelAvailable = !!snapshot?.panel.update_available;
+  const pluginAvailable = !!snapshot?.plugin.update_available;
+  const hasUpdates = panelAvailable || pluginAvailable;
+  const pluginNeedsDirectory = pluginAvailable && !csgoPath;
+  const pluginIncompatible = pluginAvailable && snapshot?.plugin.compatible === false;
+  const panelIncompatible = panelAvailable && snapshot?.panel.compatible === false;
+  const canInstallAll = hasUpdates && !snapshot?.busy && !working
+    && !pluginNeedsDirectory && !(pluginAvailable && blocked)
+    && !pluginIncompatible && !panelIncompatible;
+  const blockingNote = pluginNeedsDirectory ? t("update.selectDirectory")
+    : pluginAvailable && blocked ? t("update.closeCs2")
+      : pluginIncompatible || panelIncompatible ? t("update.incompatible")
+        : null;
   const componentSection = (component: "panel" | "plugin") => {
     const state = snapshot?.[component];
     const progress = state?.total_bytes
       ? Math.min(100, Math.round((state.downloaded_bytes / state.total_bytes) * 100)) : 0;
-    const installing = working === component || (snapshot?.busy && state?.status === "downloading");
-    const canInstall = !!state?.update_available && state.compatible && !snapshot?.busy && !working
-      && (component === "panel" || (!!csgoPath && !blocked));
+    const installing = !!snapshot?.busy && ["downloading", "extracting"].includes(state?.status ?? "");
     const available = !!state?.update_available;
     return (
       <section className="upd-card" key={component}>
@@ -114,12 +123,6 @@ export default function OnlineUpdatePage() {
           <p className="upd-note"><AlertTriangle size={14} aria-hidden="true" />{t("update.panelRequired")}</p>
         )}
 
-        <div className="update-actions">
-          <button className="is-primary" disabled={!canInstall} onClick={() => install(component)}>
-            <Download size={16} />{t(component === "panel" ? "update.installPanel" : "update.installPlugin")}
-          </button>
-          {installing && <button onClick={cancel}><X size={16} />{t("update.cancel")}</button>}
-        </div>
       </section>
     );
   };
@@ -140,6 +143,20 @@ export default function OnlineUpdatePage() {
         </div>
       </div>
       {(localError || snapshot?.error) && <div className="update-error">{localError ?? snapshot?.error}</div>}
+      <section className="update-primary-action">
+        <span>
+          <strong>{t("update.allTitle")}</strong>
+          <small>{t("update.allDesc")}</small>
+        </span>
+        <div>
+          <button className="is-primary" disabled={!canInstallAll} onClick={installAll}>
+            <Download size={16} />
+            {working === "all" ? t("update.updatingAll") : hasUpdates ? t("update.installAll") : t("update.current")}
+          </button>
+          {working === "all" && <button onClick={cancel}><X size={16} />{t("update.cancel")}</button>}
+        </div>
+      </section>
+      {blockingNote && <p className="upd-note update-primary-note"><AlertTriangle size={14} aria-hidden="true" />{blockingNote}</p>}
       <div className="upd-grid">
         {componentSection("panel")}
         {componentSection("plugin")}

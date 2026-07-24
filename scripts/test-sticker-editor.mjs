@@ -19,7 +19,8 @@ const preset = { paint: 661, seed: 0, wear: 0.01, name_tag: "", stattrak_enabled
 const loadout = () => ({ default_knife_defindex: 0, knife_presets: {}, glove: { enabled: false, defindex: 5030, paint: 10048, seed: 0, wear: 0.01 }, gun_presets: { "9": { ...preset } } });
 const config = { schema_version: 3, enabled: true, apply_to_human_players: true, apply_on_pickup: true, music_kit_id: 0, loadouts: { ct: loadout(), t: loadout() }, shared_weapon_links: { "9": true }, stickers_enabled: true };
 
-assert.equal(editor.stickerFeatureEnabled({ experimental_features_enabled: true, experimental_stickers_enabled: true }), true);
+assert.equal(editor.STICKER_RELEASE_ENABLED, false);
+assert.equal(editor.stickerFeatureEnabled({ experimental_features_enabled: true, experimental_stickers_enabled: true }), false);
 assert.equal(editor.stickerFeatureEnabled({ experimental_features_enabled: false, experimental_stickers_enabled: true }), false);
 
 const entries = [{ id: 1, name: "Alpha" }, { id: 22, name: "Bravo" }, { id: 3, name: "Charlie" }];
@@ -45,4 +46,4 @@ const unlinkedConfig = { ...config, shared_weapon_links: { "9": false } };
 const unlinked = editor.updateGunPresetStickers(unlinkedConfig, "ct", 9, "shared", unlinkedConfig.loadouts.ct.gun_presets["9"], [sticker(0, 10)]);
 assert.equal(unlinked.loadouts.t.gun_presets["9"].stickers.length, 0);
 
-console.log("Sticker editor gate, catalog, slot, bounds, and shared-link tests passed.");
+console.log("Sticker editor release gate, catalog, slot, bounds, and shared-link tests passed.");

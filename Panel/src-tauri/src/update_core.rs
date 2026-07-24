@@ -243,6 +243,41 @@ pub fn replace_file_with_backup(
     result
 }
 
+pub fn install_file_with_backup(
+    staged: &Path,
+    current: &Path,
+    target: &Path,
+    backup: &Path,
+) -> std::result::Result<(), String> {
+    if current == target {
+        return replace_file_with_backup(staged, target, backup);
+    }
+    if !staged.is_file() {
+        return Err("Staged update file is missing".into());
+    }
+    if !current.is_file() {
+        return Err("Current Panel executable is missing".into());
+    }
+    if let Some(parent) = backup.parent() {
+        fs::create_dir_all(parent)
+            .map_err(|error| format!("Cannot create Panel backup directory: {error}"))?;
+    }
+    fs::copy(current, backup).map_err(|error| format!("Cannot back up current Panel: {error}"))?;
+    let temporary = crate::atomic_fs::temporary_path(target).map_err(|error| error.to_string())?;
+    let result = (|| -> std::result::Result<(), String> {
+        fs::copy(staged, &temporary)
+            .map_err(|error| format!("Cannot stage Panel replacement: {error}"))?;
+        crate::atomic_fs::sync(&temporary)
+            .map_err(|error| format!("Cannot flush Panel replacement: {error}"))?;
+        crate::atomic_fs::replace(&temporary, target)
+            .map_err(|error| format!("Cannot install Panel executable: {error}"))
+    })();
+    if result.is_err() {
+        let _ = fs::remove_file(&temporary);
+    }
+    result
+}
+
 fn safe_entry_path(name: &str) -> std::result::Result<PathBuf, String> {
     if name.contains('\0') || name.contains('\\') || name.starts_with('/') {
         return Err(format!("Unsafe ZIP entry path: {name}"));
@@ -420,7 +455,7 @@ mod tests {
     fn panel_replacement_creates_backup_and_is_atomic() {
         let directory = root();
         fs::create_dir_all(&directory).unwrap();
-        let target = directory.join("CS2BotImproverPlus.exe");
+        let target = directory.join("LocalArena.exe");
         let staged = directory.join("new.exe");
         let backup = directory.join("backup/previous.exe");
         fs::write(&target, b"old").unwrap();
@@ -435,7 +470,7 @@ mod tests {
     fn missing_panel_stage_leaves_current_executable_unchanged() {
         let directory = root();
         fs::create_dir_all(&directory).unwrap();
-        let target = directory.join("CS2BotImproverPlus.exe");
+        let target = directory.join("LocalArena.exe");
         fs::write(&target, b"old").unwrap();
         assert!(
             replace_file_with_backup(
@@ -447,6 +482,23 @@ mod tests {
         );
         assert_eq!(fs::read(target).unwrap(), b"old");
         assert!(!directory.join("backup.exe").exists());
+        fs::remove_dir_all(directory).unwrap();
+    }
+
+    #[test]
+    fn panel_replacement_migrates_legacy_executable_name() {
+        let directory = root();
+        fs::create_dir_all(&directory).unwrap();
+        let current = directory.join("CS2BotImproverPlus.exe");
+        let target = directory.join("LocalArena.exe");
+        let staged = directory.join("new.exe");
+        let backup = directory.join("backup/previous.exe");
+        fs::write(&current, b"old").unwrap();
+        fs::write(&staged, b"new").unwrap();
+        install_file_with_backup(&staged, &current, &target, &backup).unwrap();
+        assert_eq!(fs::read(target).unwrap(), b"new");
+        assert_eq!(fs::read(current).unwrap(), b"old");
+        assert_eq!(fs::read(backup).unwrap(), b"old");
         fs::remove_dir_all(directory).unwrap();
     }
 }

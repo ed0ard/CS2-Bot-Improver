@@ -1,44 +1,20 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link2, Sticker } from "lucide-react";
 import Toggle from "../../components/Toggle";
-import { api, type KnifeCustomizerConfig } from "../../lib/api";
 import { useStore } from "../../state/store";
 import { useT } from "../../i18n";
 
 export default function ExperimentalPage() {
-  const { config, updateConfig, csgoPath, process, reportError } = useStore();
-  const [cosmetics, setCosmetics] = useState<KnifeCustomizerConfig | null>(null);
+  const { config, updateConfig, process, reportError } = useStore();
   const [working, setWorking] = useState(false);
   const t = useT();
   const running = !!process?.running;
   const master = !!config?.experimental_features_enabled;
-  const stickerPreference = !!config?.experimental_stickers_enabled;
-
-  useEffect(() => {
-    if (!csgoPath) return setCosmetics(null);
-    void api.getKnifeCustomizer(csgoPath).then((state) => setCosmetics(state.config)).catch(reportError);
-  }, [csgoPath, reportError]);
-
-  const persist = async (nextMaster: boolean, nextStickers: boolean) => {
+  const persist = async (nextMaster: boolean) => {
     if (working || running) return;
     setWorking(true);
-    const previousCosmetics = cosmetics;
     try {
-      if (csgoPath && cosmetics) {
-        const state = await api.saveKnifeCustomizer(csgoPath, {
-          ...cosmetics,
-          stickers_enabled: nextMaster && nextStickers,
-        });
-        setCosmetics(state.config);
-      }
-      const saved = await updateConfig({
-        experimental_features_enabled: nextMaster,
-        experimental_stickers_enabled: nextStickers,
-      });
-      if (!saved && csgoPath && previousCosmetics) {
-        const restored = await api.saveKnifeCustomizer(csgoPath, previousCosmetics);
-        setCosmetics(restored.config);
-      }
+      await updateConfig({ experimental_features_enabled: nextMaster });
     } catch (error) {
       reportError(error);
     } finally {
@@ -55,7 +31,7 @@ export default function ExperimentalPage() {
       <Toggle
         checked={master}
         disabled={working || running}
-        onChange={(next) => void persist(next, next ? true : stickerPreference)}
+        onChange={(next) => void persist(next)}
         ariaLabel={t("experimental.master")}
       />
     </section>
@@ -63,11 +39,10 @@ export default function ExperimentalPage() {
     <div className="experimental-features">
       <section className={!master ? "is-locked" : ""}>
         <i><Sticker size={20} /></i>
-        <span><strong>{t("stickers.title")}</strong><small>{t("experimental.stickersDesc")}</small></span>
+        <span><strong>{t("stickers.title")}</strong><small>{t("experimental.stickersUnavailable")}</small></span>
         <Toggle
-          checked={master && stickerPreference}
-          disabled={!master || working || running || !csgoPath}
-          onChange={(next) => void persist(master, next)}
+          checked={false}
+          disabled
           ariaLabel={t("stickers.title")}
         />
       </section>

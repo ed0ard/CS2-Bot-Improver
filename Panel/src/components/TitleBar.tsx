@@ -1,7 +1,6 @@
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { Minus, Settings, X } from "lucide-react";
 import { useT } from "../i18n";
-import { isPanelTauriRuntime } from "../lib/runtime";
 import { useStore } from "../state/store";
 import { APP_DISPLAY_VERSION } from "../lib/version";
 import "./TitleBar.css";
@@ -13,7 +12,7 @@ type Props = {
 };
 
 export default function TitleBar({ title = `Local Arena v${APP_DISPLAY_VERSION}`, onSettings, showSettings = true }: Props) {
-  const appWindow = isPanelTauriRuntime ? getCurrentWindow() : null;
+  const appWindow = getCurrentWindow();
   const t = useT();
   const { reportError } = useStore();
 
@@ -29,7 +28,6 @@ export default function TitleBar({ title = `Local Arena v${APP_DISPLAY_VERSION}`
     <header className="titlebar" data-tauri-drag-region>
       <span className="titlebar__identity" data-tauri-drag-region>
         <span className="titlebar__title" data-tauri-drag-region>{title}</span>
-        {!isPanelTauriRuntime && <span className="titlebar__demo">{t("tb.browserDemo")}</span>}
       </span>
       <div className="titlebar__controls">
         {showSettings && <button

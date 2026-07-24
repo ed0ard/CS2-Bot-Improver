@@ -88,11 +88,9 @@ End
 Template SniperPro
 		WeaponPreference = awp
 		WeaponPreference = ak47
-		WeaponPreference = aug
 		WeaponPreference = galilar
 		WeaponPreference = deagle
 		WeaponPreference = m4a1
-		WeaponPreference = sg556
 		WeaponPreference = m4a1_silencer
 		WeaponPreference = p90
 		WeaponPreference = mac10
@@ -104,8 +102,6 @@ End
 
 Template RiflePro
 		WeaponPreference = ak47
-		WeaponPreference = aug
-		WeaponPreference = sg556
 		WeaponPreference = famas
 		WeaponPreference = galilar
 		WeaponPreference = m4a1_silencer
@@ -144,7 +140,6 @@ Template SniperPure
         WeaponPreference = fiveseven
         WeaponPreference = tec9
         WeaponPreference = m4a1
-        WeaponPreference = sg556
         WeaponPreference = m4a1_silencer
         WeaponPreference = p90
         WeaponPreference = mac10
@@ -155,7 +150,6 @@ End
 
 Template Duelist
 		WeaponPreference = ak47
-		WeaponPreference = aug
 		WeaponPreference = p90
 		WeaponPreference = tec9
 		WeaponPreference = fiveseven
@@ -165,7 +159,6 @@ Template Duelist
 		WeaponPreference = mp9
 		WeaponPreference = xm1014
 		WeaponPreference = m4a1_silencer
-		WeaponPreference = sg556
 		WeaponPreference = m4a1
 		WeaponPreference = elite
 End
@@ -196,7 +189,6 @@ Template Fastshot
         WeaponPreference = m4a1
         WeaponPreference = ak47
         WeaponPreference = m4a1_silencer
-        WeaponPreference = sg556
         WeaponPreference = mag7
         WeaponPreference = sawedoff
         WeaponPreference = p90
@@ -215,7 +207,6 @@ Template Camper
     	WeaponPreference = awp
     	WeaponPreference = ak47
     	WeaponPreference = m4a1_silencer
-    	WeaponPreference = sg556
     	WeaponPreference = fiveseven
 		WeaponPreference = tec9
     	WeaponPreference = elite		

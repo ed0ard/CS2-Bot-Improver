@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [string]$PackageRoot,
-    [string]$ExpectedPackageVersion = "1.4.2.6-Preview.1"
+    [string]$ExpectedPackageVersion = "1.4.2.6-Preview.2"
 )
 
 $ErrorActionPreference = "Stop"
@@ -130,10 +130,19 @@ if ($botAiProject -match 'Tmp\\ArchiveV02\\Common') {
 }
 
 $botAimImprover = Get-Content -LiteralPath (Join-Path $repo "addons/counterstrikesharp/plugins/BotAimImprover/BotAimImprover.cs") -Raw
-if ($botAimImprover -notmatch 'if \(win\)\s*\{' -or
-    $botAimImprover -notmatch 'Windows native aim hook disabled by PLUS P0 safety policy' -or
-    $botAimImprover -notmatch 'Logger\.LogCritical\([^\r\n]+\);\s*return;') {
-    Add-Failure "BotAimImprover no longer disables its unsafe Windows native hook."
+if ($botAimImprover -match 'MemoryFunction|DynamicHook|\.Hook\(' -or
+    $botAimImprover -match 'WindowsOffsets|LinuxOffsets|ReadIntPtr|ReadInt32|ReadByte' -or
+    $botAimImprover -notmatch 'RegisterListener<Listeners\.OnTick>\(OnTick\)' -or
+    $botAimImprover -notmatch 'pawn\?\.Bot' -or
+    $botAimImprover -notmatch 'bot\.TargetSpot' -or
+    $botAimImprover -notmatch 'AimMode\.HEAD => _priorityHead' -or
+    $botAimImprover -notmatch 'CachedAimTarget') {
+    Add-Failure "BotAimImprover must use managed CCSBot schema targeting without native function hooks or manual offsets."
+}
+$panelBackend = Get-Content -LiteralPath (Join-Path $repo "Panel/src-tauri/src/lib.rs") -Raw
+if ($panelBackend -notmatch 'aim_supported: true' -or
+    $panelBackend -match 'Native bot aim overrides are disabled on Windows') {
+    Add-Failure "Panel backend must expose the managed bot aim modes on Windows."
 }
 
 $botBuy = Get-Content -LiteralPath (Join-Path $repo "addons/counterstrikesharp/plugins/BotBuy/BotBuy.cs") -Raw
@@ -148,6 +157,22 @@ if ($nadeSystem -notmatch 'if \(!bot\.IsValid\) return;' -or
     $nadeSystem -notmatch 'botPawn = bot\.PlayerPawn\?\.Value;' -or
     $nadeSystem -notmatch 'catch \(Exception\)\s*\{\s*return;\s*\}') {
     Add-Failure "NadeSystem no longer guards delayed callbacks against disconnected bot pawns."
+}
+$nadeDataRoot = Join-Path $repo "addons/counterstrikesharp/plugins/NadeSystem/grenades"
+$nadeDataFiles = @(Get-ChildItem -LiteralPath $nadeDataRoot -Filter "*.json" -File -ErrorAction SilentlyContinue)
+if ($nadeDataFiles.Count -ne 48) {
+    Add-Failure "NadeSystem must ship the frozen 48-file grenade catalog; found $($nadeDataFiles.Count)."
+}
+foreach ($nadeDataFile in $nadeDataFiles) {
+    try {
+        $nadeEntries = @(Get-Content -LiteralPath $nadeDataFile.FullName -Raw | ConvertFrom-Json)
+        if ($nadeEntries.Count -eq 0) {
+            Add-Failure "NadeSystem grenade catalog is empty: $($nadeDataFile.Name)"
+        }
+    }
+    catch {
+        Add-Failure "NadeSystem grenade catalog is invalid: $($nadeDataFile.Name): $($_.Exception.Message)"
+    }
 }
 
 $matchCoordinator = Get-Content -LiteralPath (Join-Path $repo "addons/counterstrikesharp/plugins/PlusMatchCoordinator/PlusMatchCoordinator.cs") -Raw
@@ -203,11 +228,11 @@ if ($giveHookStart -lt 0 -or $nextMethodStart -le $giveHookStart) {
 }
 else {
     $giveHook = $playerCosmetics.Substring($giveHookStart, $nextMethodStart - $giveHookStart)
-    if ($giveHook -notmatch "hook\.GetReturn<CBasePlayerWeapon>\(\)" -or
-        $giveHook -notmatch "ApplyPresetForCurrentDefinition\(weapon, team\.Value\)" -or
-        $giveHook -notmatch "_applyTracker\.Complete\(playerHandle, generation, CosmeticApplyPhase\.Guns\)" -or
-        $giveHook -notmatch "ScheduleApplyCallbacks\(playerHandle, generation\)") {
-        Add-Failure "PlayerCosmetics no longer applies the returned weapon before first transmit with bounded retry fallback."
+    if ($giveHook -notmatch "_applyTracker\.Begin\(playerHandle, CosmeticApplyPhase\.Guns\)" -or
+        $giveHook -notmatch "ScheduleApplyCallbacks\(playerHandle, generation\)" -or
+        $giveHook -match "ApplyPreset\(" -or
+        $giveHook -match "_setAttrByName.*Invoke") {
+        Add-Failure "PlayerCosmetics GiveNamedItem hook must defer native writes into the bounded generation pipeline."
     }
 }
 if ($playerCosmetics -notmatch "Server\.NextFrame\(\(\) => RunApplyPipeline\(playerHandle, generation, false\)\)" -or
@@ -375,13 +400,33 @@ if ($PackageRoot) {
         "addons/counterstrikesharp/shared/BotHiderApi/BotHiderApi.dll",
         "addons/counterstrikesharp/shared/BotControllerApi/BotControllerApi.dll",
         "plus-payload-manifest.json",
-        "CS2BotImproverPlus.exe",
+        "LocalArena.exe",
         "README.md",
         "README.zh-CN.md",
         "LICENSE"
     )
     foreach ($relative in $requiredPackageFiles) {
         Assert-File (Join-Path $package $relative) "package file $relative"
+    }
+    $packagedNadeDataRoot = Join-Path $package "addons/counterstrikesharp/plugins/NadeSystem/grenades"
+    $packagedNadeDataFiles = @(
+        Get-ChildItem -LiteralPath $packagedNadeDataRoot -Filter "*.json" -File -ErrorAction SilentlyContinue
+    )
+    $sourceNadeNames = @($nadeDataFiles.Name | Sort-Object)
+    $packagedNadeNames = @($packagedNadeDataFiles.Name | Sort-Object)
+    $nadeNameDifference = @(Compare-Object $sourceNadeNames $packagedNadeNames)
+    if ($nadeNameDifference.Count -gt 0) {
+        Add-Failure "Package grenade catalog does not match the frozen source file set."
+    }
+    foreach ($nadeDataFile in $packagedNadeDataFiles) {
+        try {
+            if (@(Get-Content -LiteralPath $nadeDataFile.FullName -Raw | ConvertFrom-Json).Count -eq 0) {
+                Add-Failure "Packaged grenade catalog is empty: $($nadeDataFile.Name)"
+            }
+        }
+        catch {
+            Add-Failure "Packaged grenade catalog is invalid: $($nadeDataFile.Name): $($_.Exception.Message)"
+        }
     }
     $previewNotice = Join-Path $package "PREVIEW-NOTICE.txt"
     if ($ExpectedPackageVersion -match '-Preview\.\d+$') {
@@ -390,7 +435,7 @@ if ($PackageRoot) {
     elseif (Test-Path -LiteralPath $previewNotice) {
         Add-Failure "Official package must not contain PREVIEW-NOTICE.txt."
     }
-    $packagedPanel = Join-Path $package "CS2BotImproverPlus.exe"
+    $packagedPanel = Join-Path $package "LocalArena.exe"
     $builtPanel = Join-Path $repo "Panel/src-tauri/target/release/cs2-bot-improver-plus-panel.exe"
     if ((Test-Path -LiteralPath $packagedPanel) -and (Test-Path -LiteralPath $builtPanel) -and
         ((Get-FileHash -LiteralPath $packagedPanel -Algorithm SHA256).Hash -ne

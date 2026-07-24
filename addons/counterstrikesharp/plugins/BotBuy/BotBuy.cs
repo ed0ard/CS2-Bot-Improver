@@ -12,6 +12,8 @@ namespace BotBuyPatch;
 
 public sealed class BotBuyPatch : BasePlugin
 {
+    private const float ScopedRifleKeepChance = 0.06f;
+
     public override string ModuleName        => "BotBuyPatch";
     public override string ModuleVersion     => "1.0.12";
     public override string ModuleAuthor      => "ed0ard";
@@ -50,6 +52,32 @@ public sealed class BotBuyPatch : BasePlugin
         {
             ClearPreviousInventory(player);
         }
+        return HookResult.Continue;
+    }
+
+    [GameEventHandler]
+    public HookResult OnItemPurchase(EventItemPurchase @event, GameEventInfo info)
+    {
+        var player = @event.Userid;
+        string purchased = @event.Weapon;
+        if (player == null || !player.IsValid || !player.IsBot ||
+            (purchased != "weapon_aug" && purchased != "weapon_sg556") ||
+            Random.Shared.NextSingle() < ScopedRifleKeepChance)
+            return HookResult.Continue;
+
+        AddTimer(0.10f, () =>
+        {
+            if (!player.IsValid || !player.IsBot) return;
+            if (purchased == "weapon_aug")
+            {
+                string replacement = Random.Shared.Next(2) == 0 ? "weapon_m4a1" : "weapon_m4a1_silencer";
+                Swap(player, purchased, replacement);
+            }
+            else
+            {
+                Swap(player, purchased, "weapon_ak47");
+            }
+        }, TimerFlags.STOP_ON_MAPCHANGE);
         return HookResult.Continue;
     }
 
@@ -188,32 +216,6 @@ public sealed class BotBuyPatch : BasePlugin
                     Refund(copyPlayer, currentGun);
                 }
             });
-        }
-        // Swap AUG
-        foreach (var player in allPlayers.Where(p => p.IsValid && p.IsBot))
-        {
-            var copyPlayer = player;
-            float rand = Random.Shared.NextSingle();
-
-            if (rand < 0.06f)
-            {
-            }
-            else if (rand < 0.53f)
-            {
-                AddTimer(0.4f, () =>
-                {
-                    if (!copyPlayer.IsValid) return;
-                    Swap(copyPlayer, "weapon_aug", "weapon_m4a1");
-                });
-            }
-            else
-            {
-                AddTimer(0.4f, () =>
-                {
-                    if (!copyPlayer.IsValid) return;
-                    Swap(copyPlayer, "weapon_aug", "weapon_m4a1_silencer");
-                });
-            }
         }
         // Swap P90
         AddTimer(0.4f, () =>

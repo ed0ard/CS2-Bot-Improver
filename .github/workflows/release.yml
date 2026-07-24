@@ -3,7 +3,7 @@ name: Build signed release
 on:
   push:
     tags:
-      - "v1.4.2.5"
+      - "v1.4.2.6"
 
 permissions:
   contents: write
@@ -51,7 +51,7 @@ jobs:
         run: |
           $llvm = Join-Path $env:ProgramFiles "LLVM/bin"
           if (-not (Test-Path (Join-Path $llvm "lld-link.exe"))) { throw "LLVM linker is unavailable: $llvm" }
-          ./scripts/package.ps1 -ReleaseVersion 1.4.2.5 -LlvmBin $llvm -XwinCache (Join-Path $PWD ".cache/xwin") -OutputDirectory (Join-Path $PWD "artifacts")
+          ./scripts/package.ps1 -ReleaseVersion 1.4.2.6 -LlvmBin $llvm -XwinCache (Join-Path $PWD ".cache/xwin") -OutputDirectory (Join-Path $PWD "artifacts")
 
       - name: Verify signed update assets
         shell: pwsh
@@ -65,9 +65,9 @@ jobs:
           draft: true
           generate_release_notes: false
           files: |
-            artifacts/CS2BotImproverPlus-v1.4.2.5-windows.zip
-            artifacts/CS2BotImproverPlus-panel-v1.4.2.5-windows.zip
-            artifacts/CS2BotImproverPlus-plugin-v1.4.2.5-windows.zip
+            artifacts/LocalArena-v1.4.2.6-windows.zip
+            artifacts/LocalArena-panel-v1.4.2.6-windows.zip
+            artifacts/LocalArena-plugin-v1.4.2.6-windows.zip
             artifacts/latest.json
             artifacts/latest.json.sig
             artifacts/SHA256SUMS.txt
