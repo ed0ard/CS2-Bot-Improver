@@ -130,4 +130,41 @@ finally
     Directory.Delete(gameInstall, recursive: true);
 }
 
+Check(BotBuyPolicy.NormalizeWeaponName("aug") == "weapon_aug", "short AUG purchase name must normalize");
+Check(BotBuyPolicy.NormalizeWeaponName("weapon_aug") == "weapon_aug", "full AUG purchase name must normalize");
+Check(BotBuyPolicy.NormalizeWeaponName("sg556") == "weapon_sg556", "short SG purchase name must normalize");
+Check(BotBuyPolicy.NormalizeWeaponName("weapon_sg556") == "weapon_sg556", "full SG purchase name must normalize");
+Check(BotBuyPolicy.SelectScopedRifleAction("aug", 0.059f, 0.9f) == ScopedRifleAction.Keep,
+    "the upstream six-percent AUG keep window must be preserved");
+Check(BotBuyPolicy.SelectScopedRifleAction("aug", 0.06f, 0.49f) == ScopedRifleAction.ReplaceWithM4A4,
+    "AUG replacement must select M4A4 in the lower half");
+Check(BotBuyPolicy.SelectScopedRifleAction("weapon_aug", 0.9f, 0.5f) == ScopedRifleAction.ReplaceWithM4A1S,
+    "AUG replacement must select M4A1-S in the upper half");
+Check(BotBuyPolicy.SelectScopedRifleAction("sg556", 0.9f, 0.0f) == ScopedRifleAction.ReplaceWithAk47,
+    "SG 553 replacement must select AK-47");
+
+Check(BotAimPolicy.SelectPriority(BotAimMode.Head, "weapon_ak47") == BotAimPriority.Head,
+    "forced head mode must remain head-first for rifles");
+Check(BotAimPolicy.SelectPriority(BotAimMode.Head, "weapon_awp") == BotAimPriority.Body,
+    "forced head mode must preserve the upstream AWP body-first exception");
+Check(BotAimPolicy.SelectPriority(BotAimMode.Mixed, "weapon_xm1014") == BotAimPriority.Body,
+    "mixed mode must keep spread weapons body-first");
+Check(BotAimPolicy.SelectPriority(BotAimMode.Mixed, "weapon_m4a1") == BotAimPriority.Jaw,
+    "mixed mode must keep normal rifles jaw-first");
+
+var staleRound = new BotCallbackGeneration(3, 8);
+Check(staleRound.IsCurrent(3, 8), "matching callback generation must execute");
+Check(!staleRound.IsCurrent(3, 9), "a prior-round callback must be cancelled");
+Check(!staleRound.IsCurrent(4, 8), "a prior-map callback must be cancelled");
+
+var readyRuntime = new ManagedMatchRuntime(
+    ManagedMatchRuntime.CurrentSchemaVersion, "session-a", ManagedRosterPhase.Ready, 1);
+Check(ManagedMatchRuntimeStore.IsPurchasingAllowed("session-a", readyRuntime),
+    "managed purchases must resume after roster binding is ready");
+Check(!ManagedMatchRuntimeStore.IsPurchasingAllowed("session-b", readyRuntime),
+    "a stale runtime session must not enable purchasing");
+Check(!ManagedMatchRuntimeStore.IsPurchasingAllowed(
+        "session-a", readyRuntime with { RosterPhase = ManagedRosterPhase.Binding }),
+    "purchasing must remain paused while roster identities are binding");
+
 Console.WriteLine("MatchCore tests passed");

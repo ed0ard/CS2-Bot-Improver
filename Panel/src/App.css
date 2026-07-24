@@ -35,8 +35,8 @@
   z-index: -2;
   background-image: var(--personal-bg-image, none);
   background-repeat: no-repeat;
-  background-size: cover;
-  background-position: 18% 50%;
+  background-size: var(--personal-bg-size, cover);
+  background-position: var(--personal-bg-position, 18% 50%);
   filter: saturate(0.82);
 }
 .sidebar::after {

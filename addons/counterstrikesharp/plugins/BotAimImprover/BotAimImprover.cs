@@ -5,6 +5,7 @@ using CounterStrikeSharp.API.Modules.Utils;
 using CounterStrikeSharp.API.Core.Capabilities;
 using RayTraceAPI;
 using Microsoft.Extensions.Logging;
+using MatchCore;
 
 
 namespace BotAimImprover;
@@ -13,7 +14,7 @@ namespace BotAimImprover;
 public class BotAimImprover : BasePlugin
 {
     public override string ModuleName => "BotAimImprover";
-    public override string ModuleVersion => "2.2.0";
+    public override string ModuleVersion => "2.2.1";
     public override string ModuleAuthor => "ed0ard & htfy96 & XBribo";
     public override string ModuleDescription => "Restores intelligent aim part selection for CS2 bots.";
 
@@ -96,26 +97,25 @@ public class BotAimImprover : BasePlugin
     //   Mixed = priority logic; snipers + spread weapons aim body-first, others head-first
     //   Head  = always head-first
     //   Body  = always body-first
-    private enum AimMode { MIXED, HEAD, BODY }
     private readonly record struct CachedAimTarget(
         IntPtr BotHandle,
         IntPtr EnemyHandle,
-        float X,
-        float Y,
-        float Z);
+        int AimPointIndex);
 
-    private AimMode _aimMode = AimMode.MIXED;
+    private BotAimMode _aimMode = BotAimMode.Mixed;
     private bool _managedAimActive;
     private float _nextAimUpdate;
     private float _lastErrorLog = float.NegativeInfinity;
+    private long _overrideCount;
+    private long _headPointCount;
+    private long _bodyPointCount;
+    private long _errorCount;
+    private long _loggedOverrideCount;
+    private long _loggedHeadPointCount;
+    private long _loggedBodyPointCount;
+    private long _loggedErrorCount;
     private readonly Dictionary<int, CachedAimTarget> _cachedTargets = new();
-
-    // Weapons that aim body-first when in Mixed mode (snipers + high-spread / shotguns).
-    private static readonly HashSet<string> _bodyFirstWeapons = new()
-    {
-        "weapon_awp", "weapon_ssg08", "weapon_p90", "weapon_bizon",
-        "weapon_nova", "weapon_xm1014", "weapon_sawedoff", "weapon_mag7", "weapon_revolver"
-    };
+    private readonly Dictionary<int, int> _consecutiveErrorsByController = new();
 
     // One-shot flag so we log a single confirmation that overrides are actually firing.
     private bool _firstOverrideLogged = false;
@@ -130,11 +130,14 @@ public class BotAimImprover : BasePlugin
         RegisterListener<Listeners.OnTick>(OnTick);
         RegisterEventHandler<EventRoundStart>((_, _) =>
         {
+            LogRoundCounters();
             _nextAimUpdate = 0;
             _cachedTargets.Clear();
+            _consecutiveErrorsByController.Clear();
             return HookResult.Continue;
         });
         _managedAimActive = true;
+        PublishRuntimeStatus();
         Logger.LogInformation("[BotAimImprover] Loaded with managed CCSBot schema targeting.");
     }
 
@@ -143,6 +146,7 @@ public class BotAimImprover : BasePlugin
         RemoveListener<Listeners.OnTick>(OnTick);
         _managedAimActive = false;
         _cachedTargets.Clear();
+        _consecutiveErrorsByController.Clear();
     }
 
     private void OnAimCommand(CCSPlayerController? caller, CounterStrikeSharp.API.Modules.Commands.CommandInfo info)
@@ -152,12 +156,13 @@ public class BotAimImprover : BasePlugin
         {
             _aimMode = arg switch
             {
-                "head" => AimMode.HEAD,
-                "body" => AimMode.BODY,
-                _ => AimMode.MIXED,
+                "head" => BotAimMode.Head,
+                "body" => BotAimMode.Body,
+                _ => BotAimMode.Mixed,
             };
         }
 
+        PublishRuntimeStatus();
         string reply = !_managedAimActive
             ? $"[BotAimImprover] Managed aim override is inactive; requested mode {_aimMode} was not applied."
             : $"[BotAimImprover] aim mode -> {_aimMode}";
@@ -186,10 +191,23 @@ public class BotAimImprover : BasePlugin
             }
             catch (Exception ex)
             {
+                _errorCount++;
+                int controllerIndex = (int)controller.Index;
+                int consecutiveErrors = _consecutiveErrorsByController.GetValueOrDefault(controllerIndex) + 1;
+                _consecutiveErrorsByController[controllerIndex] = consecutiveErrors;
                 if (now - _lastErrorLog >= 5.0f || now < _lastErrorLog)
                 {
                     _lastErrorLog = now;
                     Logger.LogError(ex, "[BotAimImprover] Managed aim update failed for {Player}", controller.PlayerName);
+                }
+                if (consecutiveErrors >= 8)
+                {
+                    _managedAimActive = false;
+                    _cachedTargets.Clear();
+                    Logger.LogCritical(
+                        "[BotAimImprover] Managed targeting disabled after repeated schema failures; native BotAI remains active.");
+                    PublishRuntimeStatus();
+                    return;
                 }
             }
         }
@@ -215,12 +233,12 @@ public class BotAimImprover : BasePlugin
 
         if (refreshTarget)
         {
-            if (!TrySelectTarget(pawn, bot, enemyPawn, out var selected, out int chosenIdx, out string? weapon))
+            if (!TrySelectTarget(pawn, enemyPawn, out int chosenIdx, out string? weapon))
             {
                 _cachedTargets.Remove(controllerIndex);
                 return;
             }
-            _cachedTargets[controllerIndex] = selected;
+            _cachedTargets[controllerIndex] = new CachedAimTarget(bot.Handle, enemyPawn.Handle, chosenIdx);
 
             if (!_firstOverrideLogged)
             {
@@ -228,6 +246,7 @@ public class BotAimImprover : BasePlugin
                 Logger.LogInformation(
                     "[BotAimImprover] Active: first managed override (weapon={Weapon} point={Point}).",
                     weapon ?? "(none)", _aimPoints[chosenIdx].Name);
+                PublishRuntimeStatus();
             }
         }
 
@@ -235,50 +254,101 @@ public class BotAimImprover : BasePlugin
             target.BotHandle != bot.Handle || target.EnemyHandle != enemyPawn.Handle)
             return;
 
+        if (!TryComputePartPos(enemyPawn, target.AimPointIndex, out float x, out float y, out float z))
+        {
+            _cachedTargets.Remove(controllerIndex);
+            return;
+        }
+
         Vector targetSpot = bot.TargetSpot;
-        targetSpot.X = target.X;
-        targetSpot.Y = target.Y;
-        targetSpot.Z = target.Z;
+        targetSpot.X = x;
+        targetSpot.Y = y;
+        targetSpot.Z = z;
+
+        Vector readback = bot.TargetSpot;
+        if (!NearlyEqual(readback.X, x) || !NearlyEqual(readback.Y, y) || !NearlyEqual(readback.Z, z))
+            throw new InvalidOperationException("CCSBot.TargetSpot write verification failed");
+
+        _consecutiveErrorsByController.Remove(controllerIndex);
+        _overrideCount++;
+        if (target.AimPointIndex <= 2) _headPointCount++;
+        else _bodyPointCount++;
     }
 
     private bool TrySelectTarget(
         CCSPlayerPawn pawn,
-        CCSBot bot,
         CCSPlayerPawn enemyPawn,
-        out CachedAimTarget target,
         out int chosenIdx,
         out string? weapon)
     {
-        target = default;
         chosenIdx = -1;
         weapon = null;
         if (!TryGetBotEyePosition(pawn, out var botEye)) return false;
 
         weapon = pawn.WeaponServices?.ActiveWeapon?.Value?.DesignerName;
-        bool isBodyWeapon = weapon != null && _bodyFirstWeapons.Contains(weapon);
-        int[] order = _aimMode switch
+        int[] order = BotAimPolicy.SelectPriority(_aimMode, weapon) switch
         {
-            AimMode.HEAD => _priorityHead,
-            AimMode.BODY => _priorityBody,
-            _ => isBodyWeapon ? _priorityBody : _priorityJaw,
+            BotAimPriority.Head => _priorityHead,
+            BotAimPriority.Body => _priorityBody,
+            _ => _priorityJaw,
         };
 
-        float targetX = 0f, targetY = 0f, targetZ = 0f;
         foreach (int idx in order)
         {
             if (!TryComputePartPos(enemyPawn, idx, out float x, out float y, out float z) ||
                 !PointVisibleFromEye(botEye, x, y, z))
                 continue;
             chosenIdx = idx;
-            targetX = x;
-            targetY = y;
-            targetZ = z;
             break;
         }
-        if (chosenIdx < 0) return false;
+        return chosenIdx >= 0;
+    }
 
-        target = new CachedAimTarget(bot.Handle, enemyPawn.Handle, targetX, targetY, targetZ);
-        return true;
+    private static bool NearlyEqual(float actual, float expected) =>
+        float.IsFinite(actual) && Math.Abs(actual - expected) <= 0.01f;
+
+    private void LogRoundCounters()
+    {
+        long overrides = _overrideCount - _loggedOverrideCount;
+        long headPoints = _headPointCount - _loggedHeadPointCount;
+        long bodyPoints = _bodyPointCount - _loggedBodyPointCount;
+        long errors = _errorCount - _loggedErrorCount;
+        if (overrides > 0 || errors > 0)
+        {
+            Logger.LogInformation(
+                "[BotAimImprover] round counters: overrides={Overrides} head_points={HeadPoints} body_points={BodyPoints} errors={Errors} mode={Mode}",
+                overrides,
+                headPoints,
+                bodyPoints,
+                errors,
+                _aimMode);
+        }
+        _loggedOverrideCount = _overrideCount;
+        _loggedHeadPointCount = _headPointCount;
+        _loggedBodyPointCount = _bodyPointCount;
+        _loggedErrorCount = _errorCount;
+        PublishRuntimeStatus();
+    }
+
+    private void PublishRuntimeStatus()
+    {
+        try
+        {
+            if (!PlusManagedPaths.TryResolveCsgoRoot(Server.GameDirectory, out var csgoRoot)) return;
+            BotRuntimeStatusStore.WriteAim(
+                csgoRoot,
+                "managed_ccsbot_schema",
+                _managedAimActive,
+                _aimMode,
+                _overrideCount,
+                _headPointCount,
+                _bodyPointCount,
+                _errorCount);
+        }
+        catch (Exception error)
+        {
+            Logger.LogWarning(error, "[BotAimImprover] Failed to publish managed targeting status");
+        }
     }
 
     // Bot eye position = bot pawn origin + view offset Z.

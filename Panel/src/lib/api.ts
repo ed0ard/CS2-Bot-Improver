@@ -201,6 +201,10 @@ export type NadesValue = "max" | "more" | "normal" | "off";
 export type PresetsState = {
   aim: AimValue | null;
   aim_supported: boolean;
+  aim_active: boolean | null;
+  aim_transport: string | null;
+  aim_override_count: number | null;
+  aim_error_count: number | null;
   nades: NadesValue | null;
   cfg_present: boolean;
   cs2_running: boolean;

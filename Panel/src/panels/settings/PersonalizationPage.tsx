@@ -1,5 +1,6 @@
 import { useRef, useState, type ChangeEvent } from "react";
 import { Check, Download, Image, LoaderCircle, RotateCcw, Shield, Type, Upload, X } from "lucide-react";
+import Modal from "../../components/Modal";
 import Segmented from "../../components/Segmented";
 import { useToast } from "../../components/Toast";
 import { useT, type I18nKey } from "../../i18n";
@@ -55,16 +56,52 @@ const FONT_FORMATS = {
   woff2: "font/woff2",
 } as const;
 
-function imageData(file: File, maxBytes: number): Promise<string> {
-  if (!(["image/png", "image/jpeg", "image/webp"] as string[]).includes(file.type) || file.size <= 0 || file.size > maxBytes) {
-    return Promise.reject(new Error("unsupported-image"));
-  }
+function readDataUrl(blob: Blob): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => typeof reader.result === "string" ? resolve(reader.result) : reject(new Error("image-read"));
     reader.onerror = () => reject(reader.error ?? new Error("image-read"));
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(blob);
   });
+}
+
+async function imageData(file: File, kind: "background" | "logo"): Promise<string> {
+  if (!(["image/png", "image/jpeg", "image/webp"] as string[]).includes(file.type) || file.size <= 0) {
+    throw new Error("unsupported-image");
+  }
+  const maxBytes = kind === "background" ? 8 * 1024 * 1024 : 2 * 1024 * 1024;
+  const maxSide = kind === "background" ? 1920 : 512;
+  const bitmap = await createImageBitmap(file).catch(() => null);
+  if (!bitmap || bitmap.width <= 0 || bitmap.height <= 0) {
+    bitmap?.close();
+    throw new Error("unsupported-image");
+  }
+  const largestSide = Math.max(bitmap.width, bitmap.height);
+  if (file.size <= maxBytes && largestSide <= maxSide) {
+    bitmap.close();
+    return readDataUrl(file);
+  }
+  const scale = Math.min(1, maxSide / largestSide);
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+  canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+  const context = canvas.getContext("2d");
+  if (!context) {
+    bitmap.close();
+    throw new Error("unsupported-image");
+  }
+  context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  bitmap.close();
+  let quality = kind === "background" ? 0.85 : 0.92;
+  let blob: Blob | null = null;
+  for (let attempt = 0; attempt < 3 && !blob; attempt += 1) {
+    const encoded = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/webp", quality));
+    if (!encoded) throw new Error("unsupported-image");
+    if (encoded.size <= maxBytes) blob = encoded;
+    else quality *= 0.7;
+  }
+  if (!blob) throw new Error("unsupported-image");
+  return readDataUrl(blob);
 }
 
 async function fontData(file: File): Promise<AppearanceCustomFont> {
@@ -96,6 +133,7 @@ export default function PersonalizationPage() {
   const { appearance, updateAppearance, replaceAppearance, resetAppearance } = useAppearance();
   const [busy, setBusy] = useState<"import" | "export" | null>(null);
   const [teamBusy, setTeamBusy] = useState<string | null>(null);
+  const [pendingTheme, setPendingTheme] = useState<string | null>(null);
   const teamBusyRef = useRef(false);
 
   const update = <K extends keyof AppearanceConfig>(key: K, value: AppearanceConfig[K]) => {
@@ -107,7 +145,7 @@ export default function PersonalizationPage() {
     event.target.value = "";
     if (!file) return;
     try {
-      const dataUrl = await imageData(file, kind === "background" ? 8 * 1024 * 1024 : 2 * 1024 * 1024);
+      const dataUrl = await imageData(file, kind);
       if (kind === "background") {
         updateAppearance((current) => ({
           ...current,
@@ -179,7 +217,7 @@ export default function PersonalizationPage() {
     toast.show(t("personal.resetDone"), "green");
   };
 
-  const chooseTeamTheme = async (themeId: string) => {
+  const applyTheme = async (themeId: string) => {
     if (teamBusyRef.current) return;
     const theme = TEAM_THEMES.find((entry) => entry.id === themeId);
     if (!theme) return;
@@ -197,8 +235,17 @@ export default function PersonalizationPage() {
     }
   };
 
+  const chooseTeamTheme = (themeId: string) => {
+    if (teamBusyRef.current) return;
+    if (themeId !== appearance.team_theme && (appearance.logo || appearance.background)) {
+      setPendingTheme(themeId);
+      return;
+    }
+    void applyTheme(themeId);
+  };
+
   const previewStyle = appearance.background ? {
-    backgroundImage: `linear-gradient(rgba(20, 19, 17, ${appearance.background.dim / 100}), rgba(20, 19, 17, ${appearance.background.dim / 100})), url("${appearance.background.data_url}")`,
+    backgroundImage: `linear-gradient(rgba(0, 0, 0, ${appearance.background.dim / 100}), rgba(0, 0, 0, ${appearance.background.dim / 100})), url("${appearance.background.data_url}")`,
     backgroundSize: appearance.background.fit,
     backgroundPosition: `${appearance.background.position_x}% ${appearance.background.position_y}%`,
   } : undefined;
@@ -349,5 +396,17 @@ export default function PersonalizationPage() {
       <button onClick={() => void importTheme()} disabled={!!busy}><Upload size={15} />{busy === "import" ? t("personal.importing") : t("personal.import")}</button>
       <button className="is-primary" onClick={() => void exportTheme()} disabled={!!busy}><Download size={15} />{busy === "export" ? t("personal.exporting") : t("personal.export")}</button>
     </footer>
+
+    <Modal
+      open={!!pendingTheme}
+      title={TEAM_THEMES.find((entry) => entry.id === pendingTheme)?.name ?? t("personal.teamThemes")}
+      onClose={() => setPendingTheme(null)}
+      footer={<>
+        <button className="btn-secondary" onClick={() => setPendingTheme(null)}>{t("common.cancel")}</button>
+        <button className="btn-primary" onClick={() => { const themeId = pendingTheme; setPendingTheme(null); if (themeId) void applyTheme(themeId); }}>{t("personal.teamApply")}</button>
+      </>}
+    >
+      <p className="personal-confirm-copy">{t("personal.teamOverwriteConfirm")}</p>
+    </Modal>
   </div>;
 }

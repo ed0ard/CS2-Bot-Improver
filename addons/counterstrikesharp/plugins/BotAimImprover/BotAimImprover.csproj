@@ -18,4 +18,10 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="..\..\shared\MatchCore\BotBehaviorPolicy.cs" Link="BotBehaviorPolicy.cs" />
+    <Compile Include="..\..\shared\MatchCore\BotRuntimeStatus.cs" Link="BotRuntimeStatus.cs" />
+    <Compile Include="..\..\shared\MatchCore\PlusManagedPaths.cs" Link="PlusManagedPaths.cs" />
+  </ItemGroup>
+
 </Project>

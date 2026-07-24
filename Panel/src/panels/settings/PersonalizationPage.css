@@ -35,7 +35,7 @@
   display: grid;
   align-content: start;
   gap: 11px;
-  background: color-mix(in srgb, var(--paper-sunken) 94%, transparent);
+  background: var(--personal-sidebar-wash, color-mix(in srgb, var(--paper-sunken) 94%, transparent));
 }
 .personal-preview__brand {
   min-width: 0;
@@ -70,7 +70,7 @@
 }
 .personal-preview__workspace {
   padding: 38px 30px 26px;
-  background: color-mix(in srgb, var(--app-surface) 86%, transparent);
+  background: var(--personal-bg-wash, color-mix(in srgb, var(--app-surface) 86%, transparent));
 }
 .personal-preview__workspace > small {
   display: block;
@@ -465,13 +465,13 @@
 .personal-actions button.is-primary:hover { background: var(--c-ink-hover); }
 .personal-actions button:disabled { opacity: .5; cursor: default; }
 
+.personal-confirm-copy { margin: 0; color: var(--text-secondary); font-size: 13px; line-height: 1.55; }
+
 html[data-appearance-style="clean"] .personal-preview,
 html[data-appearance-style="clean"] .set-card,
 html[data-appearance-style="clean"] .card { box-shadow: none; border-color: var(--line); }
 html[data-appearance-style="compact"] .personal-preview__workspace { padding-block: 30px 20px; }
 html[data-appearance-style="immersive"] .personal-preview { border-color: color-mix(in srgb, var(--c-accent) 20%, transparent); }
-html[data-appearance-style="immersive"] .personal-preview__rail { background: color-mix(in srgb, var(--paper-sunken) 72%, transparent); }
-html[data-appearance-style="immersive"] .personal-preview__workspace { background: color-mix(in srgb, var(--app-surface) 46%, transparent); }
 html[data-appearance-motion="off"] *,
 html[data-appearance-motion="off"] *::before,
 html[data-appearance-motion="off"] *::after { animation-duration: 0ms !important; transition-duration: 0ms !important; }

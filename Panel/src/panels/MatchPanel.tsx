@@ -6,6 +6,7 @@ import { useStore } from "../state/store";
 import { listenAppEvent } from "../lib/platform";
 import Toggle from "../components/Toggle";
 import Dropdown from "../components/Dropdown";
+import Modal from "../components/Modal";
 import MatchResultView from "./MatchResultView";
 import { MAP_IMAGES, MAP_LABELS } from "../data/maps";
 import { teamLogoPath } from "../data/matchVisuals";
@@ -27,6 +28,7 @@ export default function MatchPanel({ onOpenInstallation, onOpenHistory }: Props)
   const [difficulty, setDifficulty] = useState<PrepareMatchInput["difficulty"]>(() => (localStorage.getItem("cs2bi.matchDifficulty") as PrepareMatchInput["difficulty"]) || "medium");
   const [recordDemo, setRecordDemo] = useState(localStorage.getItem("cs2bi.matchDemoV2") === "1");
   const [busy, setBusy] = useState(false);
+  const [finishConfirmOpen, setFinishConfirmOpen] = useState(false);
 
   useEffect(() => {
     if (!csgo) return;
@@ -97,7 +99,8 @@ export default function MatchPanel({ onOpenInstallation, onOpenHistory }: Props)
   };
 
   const finishEarly = async () => {
-    if (!csgo || !activeMatch || !window.confirm(t("match.finishEarlyConfirm"))) return;
+    if (!csgo || !activeMatch) return;
+    setFinishConfirmOpen(false);
     setBusy(true);
     try {
       await api.finishActiveMatch(csgo, activeMatch.session_id);
@@ -130,11 +133,22 @@ export default function MatchPanel({ onOpenInstallation, onOpenHistory }: Props)
           <strong>{activeMatch.opponent_name}</strong>
           <span>5v5 · MR12</span>
         </div>
-        <button className="match-finish-early" disabled={busy} onClick={finishEarly}>
+        <button className="match-finish-early" disabled={busy} onClick={() => setFinishConfirmOpen(true)}>
           {busy ? <RotateCcw className="is-spinning" size={17} /> : <Square size={15} fill="currentColor" />}
           {busy ? t("match.finishingEarly") : t("match.finishEarly")}
         </button>
       </section>
+      <Modal
+        open={finishConfirmOpen}
+        title={t("match.finishEarly")}
+        onClose={() => setFinishConfirmOpen(false)}
+        footer={<>
+          <button className="btn-secondary" onClick={() => setFinishConfirmOpen(false)}>{t("common.cancel")}</button>
+          <button className="match-confirm-accept" onClick={() => void finishEarly()}>{t("match.finishEarly")}</button>
+        </>}
+      >
+        <p className="match-dialog-copy">{t("match.finishEarlyConfirm")}</p>
+      </Modal>
     </div>
   );
 

@@ -210,9 +210,22 @@ struct BotItemsState {
 struct PresetsState {
     aim: Option<String>,
     aim_supported: bool,
+    aim_active: Option<bool>,
+    aim_transport: Option<String>,
+    aim_override_count: Option<u64>,
+    aim_error_count: Option<u64>,
     nades: Option<String>,
     cfg_present: bool,
     cs2_running: bool,
+}
+
+#[derive(Deserialize)]
+struct AimRuntimeStatus {
+    schema_version: u8,
+    transport: String,
+    active: bool,
+    override_count: u64,
+    error_count: u64,
 }
 #[derive(Serialize)]
 struct DropKnivesState {
@@ -1619,9 +1632,19 @@ fn get_presets(app: AppHandle, csgo: String) -> Result<PresetsState> {
 }
 
 fn presets_at(root: &Path, config: &AppConfig, running: bool) -> PresetsState {
+    let aim_plugin = root.join("addons/counterstrikesharp/plugins/BotAimImprover/BotAimImprover.dll");
+    let aim_supported = aim_plugin.is_file() || mode_layout::disabled_path(&aim_plugin).is_file();
+    let aim_runtime = fs::read(root.join(".csbip/aim-runtime.json"))
+        .ok()
+        .and_then(|bytes| serde_json::from_slice::<AimRuntimeStatus>(&bytes).ok())
+        .filter(|status| status.schema_version == 1);
     PresetsState {
         aim: config.aim.clone(),
-        aim_supported: true,
+        aim_supported,
+        aim_active: aim_runtime.as_ref().map(|status| status.active),
+        aim_transport: aim_runtime.as_ref().map(|status| status.transport.clone()),
+        aim_override_count: aim_runtime.as_ref().map(|status| status.override_count),
+        aim_error_count: aim_runtime.as_ref().map(|status| status.error_count),
         nades: config.nades.clone(),
         cfg_present: cfg_files_present(root),
         cs2_running: running,
@@ -3211,6 +3234,15 @@ mod tests {
     #[test]
     fn preview_disabled_cfg_files_remain_available_to_presets() {
         let root = test_root();
+        let aim_plugin = root.join("addons/counterstrikesharp/plugins/BotAimImprover/BotAimImprover.dll");
+        let disabled_aim_plugin = mode_layout::disabled_path(&aim_plugin);
+        fs::create_dir_all(disabled_aim_plugin.parent().unwrap()).unwrap();
+        fs::write(disabled_aim_plugin, b"managed").unwrap();
+        fs::create_dir_all(root.join(".csbip")).unwrap();
+        fs::write(
+            root.join(".csbip/aim-runtime.json"),
+            br#"{"schema_version":1,"transport":"managed_ccsbot_schema","active":true,"mode":"head","override_count":42,"head_point_count":40,"body_point_count":2,"error_count":0,"updated_at_unix_ms":1}"#,
+        ).unwrap();
         for path in cfg_paths(&root) {
             let disabled = mode_layout::disabled_path(&path);
             fs::create_dir_all(disabled.parent().unwrap()).unwrap();
@@ -3221,6 +3253,10 @@ mod tests {
 
         assert!(state.cfg_present);
         assert!(state.aim_supported);
+        assert_eq!(state.aim_active, Some(true));
+        assert_eq!(state.aim_transport.as_deref(), Some("managed_ccsbot_schema"));
+        assert_eq!(state.aim_override_count, Some(42));
+        assert_eq!(state.aim_error_count, Some(0));
         replace_managed_cfg_command(&root, "bot_aim", "bot_aim head").unwrap();
         for canonical in cfg_paths(&root) {
             assert!(!canonical.exists());

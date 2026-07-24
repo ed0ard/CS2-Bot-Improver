@@ -416,6 +416,9 @@ pub fn export(state_root: &Path, csgo: Option<&Path>, snapshot: &serde_json::Val
         collector.add_json("matches/metadata.json", &match_metadata(csgo))?;
         add_named_files(&mut collector, "matches/recent", recent_match_records(csgo))?;
         for (name, path) in [
+            ("runtime/match-runtime.json", csgo.join(".csbip/match-runtime.json")),
+            ("runtime/aim-runtime.json", csgo.join(".csbip/aim-runtime.json")),
+            ("runtime/purchase-runtime.json", csgo.join(".csbip/purchase-runtime.json")),
             ("logs/cs2/console.log", csgo.join("console.log")),
             ("logs/cs2/console-history.txt", csgo.join("console_history.txt")),
             ("logs/metamod/metamod-fatal.log", csgo.join("addons/metamod/metamod-fatal.log")),

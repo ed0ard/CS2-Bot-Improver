@@ -138,6 +138,9 @@
 .match-dialog-cancel, .match-dialog-delete { min-height: 36px; padding: 0 14px; border: 0; border-radius: var(--r-sm); font-size: 12px; font-weight: 650; }
 .match-dialog-cancel { background: rgba(120,120,128,.12); color: var(--text-secondary); }
 .match-dialog-delete { background: var(--st-red-soft); color: var(--st-red); }
+.match-confirm-accept { min-height: 36px; padding: 0 14px; border: 0; border-radius: var(--r-sm); background: var(--st-red); color: var(--text-on-accent); font-size: 13px; font-weight: 600; transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease); }
+.match-confirm-accept:hover { opacity: .9; }
+.match-confirm-accept:active { transform: translateY(1px); }
 
 /* Result hero */
 .mr-hero { position: relative; min-height: 168px; overflow: hidden; border-radius: var(--r-lg); box-shadow: var(--sh-card); animation: mh-in 280ms var(--ease) backwards; }

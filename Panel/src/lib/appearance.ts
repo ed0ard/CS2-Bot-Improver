@@ -76,6 +76,19 @@ const HEX_PATTERN = /^#[0-9a-f]{6}$/i;
 const FONT_DATA_PATTERN = /^data:font\/(ttf|otf|woff|woff2);base64,[a-z0-9+/=]+$/i;
 const IMAGE_DATA_PATTERN = /^data:image\/(png|jpeg|webp);base64,[a-z0-9+/=]+$/i;
 
+const DATA_URL_CACHE_LIMIT = 6;
+const imageDataUrlCache = new Map<string, boolean>();
+const fontDataUrlCache = new Map<string, boolean>();
+
+function cachedDataUrlTest(cache: Map<string, boolean>, pattern: RegExp, dataUrl: string): boolean {
+  const cached = cache.get(dataUrl);
+  if (cached !== undefined) return cached;
+  const valid = pattern.test(dataUrl);
+  if (cache.size >= DATA_URL_CACHE_LIMIT) cache.clear();
+  cache.set(dataUrl, valid);
+  return valid;
+}
+
 function clampNumber(value: unknown, min: number, max: number, fallback: number): number {
   return typeof value === "number" && Number.isFinite(value)
     ? Math.min(max, Math.max(min, value))
@@ -93,7 +106,7 @@ export function normalizeAppearance(value: unknown): AppearanceConfig {
   const rawFont = candidate.custom_font;
   const customFont = rawFont
     && typeof rawFont.data_url === "string"
-    && FONT_DATA_PATTERN.test(rawFont.data_url)
+    && cachedDataUrlTest(fontDataUrlCache, FONT_DATA_PATTERN, rawFont.data_url)
     && typeof rawFont.file_name === "string"
     && rawFont.file_name.trim().length > 0
     && ["ttf", "otf", "woff", "woff2"].includes(rawFont.format)
@@ -107,7 +120,7 @@ export function normalizeAppearance(value: unknown): AppearanceConfig {
   const rawBackground = candidate.background;
   const background = rawBackground
     && typeof rawBackground.data_url === "string"
-    && IMAGE_DATA_PATTERN.test(rawBackground.data_url)
+    && cachedDataUrlTest(imageDataUrlCache, IMAGE_DATA_PATTERN, rawBackground.data_url)
     ? {
       data_url: rawBackground.data_url,
       fit: rawBackground.fit === "contain" ? "contain" as const : "cover" as const,
@@ -120,7 +133,7 @@ export function normalizeAppearance(value: unknown): AppearanceConfig {
   const rawLogo = candidate.logo;
   const logo = rawLogo
     && typeof rawLogo.data_url === "string"
-    && IMAGE_DATA_PATTERN.test(rawLogo.data_url)
+    && cachedDataUrlTest(imageDataUrlCache, IMAGE_DATA_PATTERN, rawLogo.data_url)
     ? {
       data_url: rawLogo.data_url,
       fit: rawLogo.fit === "cover" ? "cover" as const : "contain" as const,
@@ -157,6 +170,8 @@ function rgba(hex: string, alpha: number) {
   return `rgba(${channels.join(", ")}, ${alpha})`;
 }
 
+let appliedBackgroundImage: string | null = null;
+
 export function applyAppearance(raw: AppearanceConfig) {
   const appearance = normalizeAppearance(raw);
   const root = document.documentElement;
@@ -173,8 +188,8 @@ export function applyAppearance(raw: AppearanceConfig) {
   else delete root.dataset.teamTheme;
   root.style.setProperty("--app-surface", palette.surface);
   root.style.setProperty("--paper-sunken", palette.sunken);
-  root.style.setProperty("--card", immersive ? rgba(palette.card, 0.91) : palette.card);
-  root.style.setProperty("--card-warm", immersive ? rgba(palette.cardWarm, 0.9) : palette.cardWarm);
+  root.style.setProperty("--card", immersive ? rgba(palette.card, 0.96) : palette.card);
+  root.style.setProperty("--card-warm", immersive ? rgba(palette.cardWarm, 0.95) : palette.cardWarm);
   root.style.setProperty("--text-primary", palette.text);
   root.style.setProperty("--text-secondary", palette.textSecondary);
   root.style.setProperty("--text-tertiary", mix(palette.textTertiary, palette.text, 0.18));
@@ -236,9 +251,12 @@ export function applyAppearance(raw: AppearanceConfig) {
 
   root.style.setProperty("--dur", appearance.motion === "off" ? "0ms" : appearance.motion === "reduced" ? "100ms" : "180ms");
   if (appearance.background) {
-    const washAlpha = immersive ? 0.46 : teamTheme ? 0.72 : 0.66;
-    const sidebarWashAlpha = immersive ? 0.72 : 0.82;
-    root.style.setProperty("--personal-bg-image", `url("${appearance.background.data_url}")`);
+    const washAlpha = immersive ? 0.78 : teamTheme ? 0.72 : 0.66;
+    const sidebarWashAlpha = immersive ? 0.85 : 0.82;
+    if (appliedBackgroundImage !== appearance.background.data_url) {
+      root.style.setProperty("--personal-bg-image", `url("${appearance.background.data_url}")`);
+      appliedBackgroundImage = appearance.background.data_url;
+    }
     root.style.setProperty("--personal-bg-size", appearance.background.fit);
     root.style.setProperty("--personal-bg-position", `${appearance.background.position_x}% ${appearance.background.position_y}%`);
     root.style.setProperty("--personal-bg-dim", String(appearance.background.dim / 100));
@@ -246,7 +264,10 @@ export function applyAppearance(raw: AppearanceConfig) {
     root.style.setProperty("--personal-bg-wash", rgba(palette.surface, washAlpha));
     root.style.setProperty("--personal-sidebar-wash", rgba(palette.sunken, sidebarWashAlpha));
   } else {
-    root.style.setProperty("--personal-bg-image", "none");
+    if (appliedBackgroundImage !== null) {
+      root.style.setProperty("--personal-bg-image", "none");
+      appliedBackgroundImage = null;
+    }
     root.style.setProperty("--personal-bg-dim", "0");
     root.style.setProperty("--personal-bg-blur", "0px");
     root.style.setProperty("--personal-bg-wash", "transparent");

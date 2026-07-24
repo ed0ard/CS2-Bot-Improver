@@ -130,25 +130,35 @@ if ($botAiProject -match 'Tmp\\ArchiveV02\\Common') {
 }
 
 $botAimImprover = Get-Content -LiteralPath (Join-Path $repo "addons/counterstrikesharp/plugins/BotAimImprover/BotAimImprover.cs") -Raw
+$botBehaviorPolicy = Get-Content -LiteralPath (Join-Path $repo "addons/counterstrikesharp/shared/MatchCore/BotBehaviorPolicy.cs") -Raw
 if ($botAimImprover -match 'MemoryFunction|DynamicHook|\.Hook\(' -or
     $botAimImprover -match 'WindowsOffsets|LinuxOffsets|ReadIntPtr|ReadInt32|ReadByte' -or
     $botAimImprover -notmatch 'RegisterListener<Listeners\.OnTick>\(OnTick\)' -or
     $botAimImprover -notmatch 'pawn\?\.Bot' -or
     $botAimImprover -notmatch 'bot\.TargetSpot' -or
-    $botAimImprover -notmatch 'AimMode\.HEAD => _priorityHead' -or
-    $botAimImprover -notmatch 'CachedAimTarget') {
+    $botAimImprover -notmatch 'BotAimPolicy\.SelectPriority' -or
+    $botAimImprover -notmatch 'AimPointIndex' -or
+    $botAimImprover -notmatch 'TargetSpot write verification failed' -or
+    $botBehaviorPolicy -notmatch 'BotAimMode\.Head when string\.Equals\(weapon, "weapon_awp"' -or
+    $botBehaviorPolicy -notmatch 'BotAimMode\.Head => BotAimPriority\.Head') {
     Add-Failure "BotAimImprover must use managed CCSBot schema targeting without native function hooks or manual offsets."
 }
 $panelBackend = Get-Content -LiteralPath (Join-Path $repo "Panel/src-tauri/src/lib.rs") -Raw
-if ($panelBackend -notmatch 'aim_supported: true' -or
-    $panelBackend -match 'Native bot aim overrides are disabled on Windows') {
+if ($panelBackend -match 'aim_supported: true' -or
+    $panelBackend -notmatch 'aim_supported,' -or
+    $panelBackend -notmatch '\.csbip/aim-runtime\.json' -or
+    $panelBackend -notmatch 'aim_override_count') {
     Add-Failure "Panel backend must expose the managed bot aim modes on Windows."
 }
 
 $botBuy = Get-Content -LiteralPath (Join-Path $repo "addons/counterstrikesharp/plugins/BotBuy/BotBuy.cs") -Raw
-if ($botBuy -notmatch 'PLUS P0 safety: delayed callbacks must revalidate captured controllers before schema access' -or
-    ([regex]::Matches($botBuy, 'if \(!p\.IsValid\) continue;').Count -lt 6) -or
-    ([regex]::Matches($botBuy, 'if \(!bot\.IsValid\) continue;').Count -lt 2)) {
+if (([regex]::Matches($botBuy, 'AddTimer\(').Count -ne 1) -or
+    ([regex]::Matches($botBuy, 'ScheduleRound\(').Count -lt 12) -or
+    $botBuy -notmatch 'BotCallbackGeneration' -or
+    $botBuy -notmatch 'TimerFlags\.STOP_ON_MAPCHANGE' -or
+    $botBuy -notmatch 'ResolvePlayer\(userId\)' -or
+    $botBuy -notmatch 'ManagedMatchRuntimeStore\.IsPurchasingAllowed' -or
+    $botBuy -notmatch 'HasWeapon\(player, oldItem\)') {
     Add-Failure "BotBuy no longer guards delayed callbacks against invalid CounterStrikeSharp controllers."
 }
 

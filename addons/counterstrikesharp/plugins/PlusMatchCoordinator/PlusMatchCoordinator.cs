@@ -12,8 +12,6 @@ namespace PlusMatchCoordinator;
 
 public sealed class PlusMatchCoordinatorPlugin : BasePlugin
 {
-    private enum RosterSetupPhase { Cleaning, Reconciling, Binding, Ready }
-
     private static readonly PluginCapability<IBotHiderApi> BotHiderCapability = new("bothider:api");
 
     public override string ModuleName => "PLUS Match Coordinator";
@@ -43,7 +41,7 @@ public sealed class PlusMatchCoordinatorPlugin : BasePlugin
     private int _rosterSyncRemaining;
     private int _cleanRosterStableTicks;
     private int _boundRosterStableTicks;
-    private RosterSetupPhase _rosterSetupPhase;
+    private ManagedRosterPhase _rosterSetupPhase;
     private int _activationRemaining;
     private int _mapGeneration;
     private string? _activatedSessionId;
@@ -275,7 +273,7 @@ public sealed class PlusMatchCoordinatorPlugin : BasePlugin
             _demoRecordingStarted = false;
             _liveNotBefore = DateTimeOffset.UtcNow.AddSeconds(2);
             _activatedSessionId = request.SessionId;
-            _rosterSetupPhase = RosterSetupPhase.Cleaning;
+            _rosterSetupPhase = ManagedRosterPhase.Cleaning;
             _cleanRosterStableTicks = 0;
             _boundRosterStableTicks = 0;
             _acceptedControlSessionId = null;
@@ -292,6 +290,7 @@ public sealed class PlusMatchCoordinatorPlugin : BasePlugin
         Server.ExecuteCommand("bot_quota 0");
         Server.ExecuteCommand("bot_kick");
 
+        PublishRosterPhase(request.SessionId, ManagedRosterPhase.Cleaning);
         StartRosterSync();
         StartControlWatcher(request);
     }
@@ -361,7 +360,7 @@ public sealed class PlusMatchCoordinatorPlugin : BasePlugin
             return;
         }
 
-        if (_rosterSetupPhase == RosterSetupPhase.Cleaning)
+        if (_rosterSetupPhase == ManagedRosterPhase.Cleaning)
         {
             var bots = CurrentBots();
             if (bots.Length > 0)
@@ -375,19 +374,28 @@ public sealed class PlusMatchCoordinatorPlugin : BasePlugin
                 return;
             }
             if (++_cleanRosterStableTicks < 2) return;
-            _rosterSetupPhase = RosterSetupPhase.Reconciling;
+            _rosterSetupPhase = ManagedRosterPhase.Reconciling;
+            PublishRosterPhase(_request.SessionId, _rosterSetupPhase);
             Logger.LogInformation("[PlusMatchCoordinator] Previous Bot roster cleared; creating requested teams");
         }
 
-        if (_rosterSetupPhase is RosterSetupPhase.Reconciling or RosterSetupPhase.Binding)
+        if (_rosterSetupPhase is ManagedRosterPhase.Reconciling or ManagedRosterPhase.Binding)
         {
             if (!ReconcileRequestedRoster())
             {
-                _rosterSetupPhase = RosterSetupPhase.Reconciling;
+                if (_rosterSetupPhase != ManagedRosterPhase.Reconciling)
+                {
+                    _rosterSetupPhase = ManagedRosterPhase.Reconciling;
+                    PublishRosterPhase(_request.SessionId, _rosterSetupPhase);
+                }
                 _boundRosterStableTicks = 0;
                 return;
             }
-            _rosterSetupPhase = RosterSetupPhase.Binding;
+            if (_rosterSetupPhase != ManagedRosterPhase.Binding)
+            {
+                _rosterSetupPhase = ManagedRosterPhase.Binding;
+                PublishRosterPhase(_request.SessionId, _rosterSetupPhase);
+            }
         }
 
         EnsureInitialHumanSide();
@@ -458,14 +466,15 @@ public sealed class PlusMatchCoordinatorPlugin : BasePlugin
     private void CompleteRosterSetup()
     {
         var request = _request;
-        if (request == null || _finalizing || _rosterSetupPhase == RosterSetupPhase.Ready) return;
-        _rosterSetupPhase = RosterSetupPhase.Ready;
+        if (request == null || _finalizing || _rosterSetupPhase == ManagedRosterPhase.Ready) return;
+        _rosterSetupPhase = ManagedRosterPhase.Ready;
         _rosterValidated = true;
         _liveNotBefore = DateTimeOffset.UtcNow.AddSeconds(2);
         EnsureInitialHumanSide();
         RegisterPlayers();
         StopRosterSync();
         StartDemoRecording(request);
+        PublishRosterPhase(request.SessionId, ManagedRosterPhase.Ready);
         Logger.LogInformation(
             "[PlusMatchCoordinator] Roster validated and bound: {Players}",
             string.Join(",", request.PlayerTeam.Concat(request.OpponentTeam).Select(player => player.Name)));
@@ -755,6 +764,7 @@ public sealed class PlusMatchCoordinatorPlugin : BasePlugin
 
         StopRosterSync();
         StopControlWatcher();
+        PublishRosterPhase(request.SessionId, ManagedRosterPhase.Inactive);
 
         if (_demoRecordingStarted)
         {
@@ -836,6 +846,22 @@ public sealed class PlusMatchCoordinatorPlugin : BasePlugin
         }
         Logger.LogError(lastError, "[PlusMatchCoordinator] Result write failed after retries: {Path}", path);
         return false;
+    }
+
+    private void PublishRosterPhase(string sessionId, ManagedRosterPhase phase)
+    {
+        try
+        {
+            ManagedMatchRuntimeStore.Write(CsgoRoot, sessionId, phase);
+        }
+        catch (Exception error)
+        {
+            Logger.LogError(
+                error,
+                "[PlusMatchCoordinator] Failed to publish roster phase {Phase} for {SessionId}",
+                phase,
+                sessionId);
+        }
     }
 
     private string? IdFor(CCSPlayerController? player)
