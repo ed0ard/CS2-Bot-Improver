@@ -162,6 +162,28 @@ Point at the ground and press `\` on your keyboard to generate all kinds of kniv
 `scouts_off`  
 Input the command after a match begins to turn on/off Flying Scoutsman
 
+### Map Rotation
+
+Map rotation is disabled by default.
+
+`css_map_rotation 1`
+
+Enable fixed map rotation
+
+`css_map_rotation 0`
+
+Disable fixed map rotation
+
+`css_map_rotation`
+
+Show current rotation status
+
+`css_map_next`
+
+Change to the next map immediately
+
+Current rotation order: `de_anubis`, `de_overpass`, `de_inferno`, `de_mirage`, `de_dust2`, `de_nuke`, `de_ancient`, `de_train`, `de_vertigo`, `de_cache`
+
 ## Panel Guide (Windows-Only)
 
 ### Status Lights
