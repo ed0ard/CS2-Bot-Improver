@@ -154,6 +154,10 @@ public class NadeSystemPlugin : BasePlugin
     private int _nextSlot = 0;
     // Per-team last throw time to stagger nades
     private Dictionary<int, float> _teamLastThrowTime = new();
+    // Per-team playstyle — changes every round
+    private enum TeamStyle { SoloQueue, FiveStack, DryPeek, DefaultSlow, EcoSave }
+    private Dictionary<int, TeamStyle> _teamStyle = new();
+    private static readonly string[] StyleNames = { "路人单排", "五排车队", "干拉莽夫", "默认控图", "ECO省钱" };
     // ── Information system (sound trail + vision) ──────────────
     // Plain value-type coordinate: avoids allocating a CSS Vector (managed wrapper
     // + native memory) per recorded sound point.
@@ -398,6 +402,11 @@ public class NadeSystemPlugin : BasePlugin
             // In case the bot has been taken over
             bool isTakenOver = bot.HasBeenControlledByPlayerThisRound;
             if (isTakenOver) continue;
+
+            // Skip nade logic for DryPeek/EcoSave teams
+            if (_teamStyle.TryGetValue(bot.TeamNum, out var ts)
+                && (ts == TeamStyle.DryPeek || ts == TeamStyle.EcoSave))
+                continue;
 
             if (!bot.PawnIsAlive) continue;
             if (_replayBots.Contains((uint)bot.Index)) continue;
@@ -872,15 +881,28 @@ public class NadeSystemPlugin : BasePlugin
         if (!BotHasNadeType(bot, gtype)) return;
 
         // ── Team coordination gates ────────────────────────────
-        // Stagger: don't let two bots on same team throw within 1.5s
-        if (_teamLastThrowTime.TryGetValue(bot.TeamNum, out float lastThrow)
-            && Server.CurrentTime - lastThrow < 1.5f) return;
-        // Slot-based timing: higher slot = waits longer
-        if (_botSlot.TryGetValue((uint)bot.Index, out int slot) && slot >= 1
-            && _freezeEndTime > 0f)
+        _teamStyle.TryGetValue(bot.TeamNum, out var style);
+        switch (style)
         {
-            float waitTime = slot * 2.5f;
-            if (Server.CurrentTime - _freezeEndTime < waitTime) return;
+            case TeamStyle.DryPeek:
+            case TeamStyle.EcoSave:
+                return;  // no nades at all
+            case TeamStyle.SoloQueue:
+                // Uncoordinated: 50% chance to skip, no slot/stagger
+                if (Random.Shared.NextDouble() < 0.5f) return;
+                break;
+            case TeamStyle.FiveStack:
+            case TeamStyle.DefaultSlow:
+                // Coordinated: strict slots + stagger
+                if (_teamLastThrowTime.TryGetValue(bot.TeamNum, out float lastThrow)
+                    && Server.CurrentTime - lastThrow < 1.5f) return;
+                if (_botSlot.TryGetValue((uint)bot.Index, out int slot) && slot >= 1
+                    && _freezeEndTime > 0f)
+                {
+                    float waitTime = slot * 2.5f;
+                    if (Server.CurrentTime - _freezeEndTime < waitTime) return;
+                }
+                break;
         }
 
         // ── Round limit checks ─────────────────────────────────
@@ -1371,7 +1393,7 @@ public class NadeSystemPlugin : BasePlugin
                     _poorBots.Add((uint)bot.Index);
             }
         }
-        // ── Team coordination: assign slots ────────────────────────
+        // ── Team coordination: assign slots & pick style ──────
         _botSlot.Clear();
         _teamLastThrowTime.Clear();
         _nextSlot = 0;
@@ -1384,6 +1406,31 @@ public class NadeSystemPlugin : BasePlugin
                 .ToList();
             foreach (var bot in teamBots)
                 _botSlot[(uint)bot.Index] = _nextSlot++;
+
+            // Pick team playstyle based on economy
+            float totalMoney = teamBots.Sum(b => b.InGameMoneyServices?.Account ?? 0);
+            int count = teamBots.Count;
+            float avgMoney = count > 0 ? totalMoney / count : 0;
+
+            TeamStyle style;
+            if (avgMoney < 2800)
+            {
+                style = TeamStyle.EcoSave;
+            }
+            else
+            {
+                float roll = (float)Random.Shared.NextDouble();
+                style = roll switch
+                {
+                    < 0.25f => TeamStyle.FiveStack,
+                    < 0.60f => TeamStyle.SoloQueue,
+                    < 0.75f => TeamStyle.DryPeek,
+                    _       => TeamStyle.DefaultSlow,
+                };
+            }
+            _teamStyle[team] = style;
+            string teamName = team == (int)CsTeam.Terrorist ? "T" : "CT";
+            Server.PrintToChatAll($" \x0C[Bot]\x01 {teamName}方风格: \x04{StyleNames[(int)style]}");
         }
         return HookResult.Continue;
     }
