@@ -146,6 +146,14 @@ public class NadeSystemPlugin : BasePlugin
     // Normal Mode: post-throw probability window for flash
     // key = botIndex, value = (windowExpiresAt, blindRatio)
     private Dictionary<uint, (float ExpiresAt, float Ratio)> _botFlashRatioWindow = new();
+    // ── Team coordination ────────────────────────────────────
+    // Each bot gets a slot at round start. Lower slot = goes first.
+    // Slot 0-1: "support" — throw smokes/flashes early
+    // Slot 2+:   "rifler"  — hold nades, push after execute
+    private Dictionary<uint, int> _botSlot = new();
+    private int _nextSlot = 0;
+    // Per-team last throw time to stagger nades
+    private Dictionary<int, float> _teamLastThrowTime = new();
     // ── Information system (sound trail + vision) ──────────────
     // Plain value-type coordinate: avoids allocating a CSS Vector (managed wrapper
     // + native memory) per recorded sound point.
@@ -863,6 +871,18 @@ public class NadeSystemPlugin : BasePlugin
         // Bot must actually have this grenade type in inventory
         if (!BotHasNadeType(bot, gtype)) return;
 
+        // ── Team coordination gates ────────────────────────────
+        // Stagger: don't let two bots on same team throw within 1.5s
+        if (_teamLastThrowTime.TryGetValue(bot.TeamNum, out float lastThrow)
+            && Server.CurrentTime - lastThrow < 1.5f) return;
+        // Slot-based timing: higher slot = waits longer
+        if (_botSlot.TryGetValue((uint)bot.Index, out int slot) && slot >= 1
+            && _freezeEndTime > 0f)
+        {
+            float waitTime = slot * 2.5f;
+            if (Server.CurrentTime - _freezeEndTime < waitTime) return;
+        }
+
         // ── Round limit checks ─────────────────────────────────
         // Less mode: per-bot limits (1 smoke, 1 molotov, 1 HE,
         // ammo_grenade_limit_flashbang flashes, total <= 4 per round).
@@ -952,6 +972,7 @@ public class NadeSystemPlugin : BasePlugin
             _earlySmokeCountByTeam[bot.TeamNum] = cnt + 1;
         }
         SpawnProjectile(bot, g);
+        _teamLastThrowTime[bot.TeamNum] = Server.CurrentTime;
 
         // Allow bot to throw another grenade after this window
         AddTimer(1f, () => _replayBots.Remove((uint)bot.Index));
@@ -1349,6 +1370,20 @@ public class NadeSystemPlugin : BasePlugin
                 if (bot.InGameMoneyServices?.Account < 2800)
                     _poorBots.Add((uint)bot.Index);
             }
+        }
+        // ── Team coordination: assign slots ────────────────────────
+        _botSlot.Clear();
+        _teamLastThrowTime.Clear();
+        _nextSlot = 0;
+        // Shuffle bots within each team, assign sequential slots
+        foreach (var team in new[] { (int)CsTeam.Terrorist, (int)CsTeam.CounterTerrorist })
+        {
+            var teamBots = Utilities.FindAllEntitiesByDesignerName<CCSPlayerController>("cs_player_controller")
+                .Where(b => b.IsValid && b.IsBot && b.TeamNum == team)
+                .OrderBy(_ => Random.Shared.Next())
+                .ToList();
+            foreach (var bot in teamBots)
+                _botSlot[(uint)bot.Index] = _nextSlot++;
         }
         return HookResult.Continue;
     }
