@@ -824,6 +824,33 @@ public class NadeSystemPlugin : BasePlugin
         return new Vector(vx, vy, vz);
     }
 
+    /// Check if bot actually has this grenade type in inventory.
+    private static bool BotHasNadeType(CCSPlayerController bot, string gtype)
+    {
+        var pawn = bot.PlayerPawn?.Value;
+        var weaponServices = pawn?.WeaponServices;
+        if (weaponServices == null) return false;
+
+        string weaponName = gtype switch
+        {
+            "flash"   => "weapon_flashbang",
+            "smoke"   => "weapon_smokegrenade",
+            "he"      => "weapon_hegrenade",
+            "molotov" => bot.TeamNum == 3 ? "weapon_incgrenade" : "weapon_molotov",
+            "incgrenade" => "weapon_incgrenade",
+            "decoy"   => "weapon_decoy",
+            _ => null,
+        };
+        if (weaponName == null) return false;
+
+        foreach (var wpn in weaponServices.MyWeapons)
+        {
+            if (wpn?.Value?.DesignerName == weaponName)
+                return true;
+        }
+        return false;
+    }
+
     private void TryReplay(CCSPlayerController bot, GrenadeData g, List<CCSPlayerController> allControllers)
     {
         if (_botNadesMode == "off") return;
@@ -832,6 +859,9 @@ public class NadeSystemPlugin : BasePlugin
         if (isTakenOver) return;
 
         var gtype = g.GrenadeType; // lowercase since LoadDb
+
+        // Bot must actually have this grenade type in inventory
+        if (!BotHasNadeType(bot, gtype)) return;
 
         // ── Round limit checks ─────────────────────────────────
         // Less mode: per-bot limits (1 smoke, 1 molotov, 1 HE,
@@ -961,7 +991,14 @@ public class NadeSystemPlugin : BasePlugin
         var teamNum  = bot.TeamNum;
         var itemDef  = (int)GetItemIndex(gtype);
 
-        Server.NextFrame(() =>
+        // Human-like reaction delay + velocity inaccuracy
+        float reactionDelay = 0.3f + (float)Random.Shared.NextDouble() * 0.5f;
+        float inaccuracy   = 0.97f + (float)Random.Shared.NextDouble() * 0.06f;
+        velocity.X *= inaccuracy;
+        velocity.Y *= inaccuracy;
+        velocity.Z *= inaccuracy;
+
+        AddTimer(reactionDelay, () =>
         {
             try
             {
@@ -1767,6 +1804,8 @@ public class NadeSystemPlugin : BasePlugin
         // In case the bot has been taken over
         bool isTakenOver = bot.HasBeenControlledByPlayerThisRound;
         if (isTakenOver) return;
+        // Bot must actually have this grenade type in inventory
+        if (!BotHasNadeType(bot, gtype)) return;
         bool hasLiveEnemy = Utilities
             .FindAllEntitiesByDesignerName<CCSPlayerController>("cs_player_controller")
             .Any(p => p.IsValid && p.PawnIsAlive
@@ -2009,25 +2048,14 @@ public class NadeSystemPlugin : BasePlugin
             if (_retaliationCooldown.TryGetValue(teamNum, out float cdExpiry)
                 && Server.CurrentTime < cdExpiry) return;
         }
-        // less / normal / more mode: limit total he+molotov spawned per hurt event
-        int retaliationLimit = int.MaxValue;
-        if (_botNadesMode == "normal" || _botNadesMode == "more" || _botNadesMode == "less")
-        {
-            var vPos = victimPawn.AbsOrigin;
-            int aliveTeamSize = Utilities
-                .FindAllEntitiesByDesignerName<CCSPlayerController>("cs_player_controller")
-                .Count(p =>
-                {
-                    if (!p.IsValid || (int)p.TeamNum != victim.TeamNum) return false;
-                    if (vPos == null) return false;
-                    var pp = GetActiveLivePawn(p)?.AbsOrigin;
-                    if (pp == null) return false;
-                    return Dist3D(vPos.X, vPos.Y, vPos.Z, pp.X, pp.Y, pp.Z) <= 800f;
-                });
-            retaliationLimit = aliveTeamSize < 1 ? 1 : aliveTeamSize;
-        }
+        // Always limit retaliation to 1 nade — human doesn't spam back 3 nades
+        int retaliationLimit = 1;
         int retaliationSpawned = 0;
 
+        // Human-like reaction delay 0.5-1.5s
+        float delay = 0.5f + (float)Random.Shared.NextDouble() * 1.0f;
+        AddTimer(delay, () =>
+        {
         // Build candidate list (single pass: filter then sort)
         // primary  : satisfies both direction and distance check  -> first
         // secondary: nearest projectilePosition to victim         -> ascending
@@ -2089,6 +2117,7 @@ public class NadeSystemPlugin : BasePlugin
                 IncrementBotCount(gt, botIdx);
             retaliationSpawned++;
         }
+        });
         // Write cooldown after retaliation completes (less / normal / more)
         if ((_botNadesMode == "normal" || _botNadesMode == "more" || _botNadesMode == "less") && retaliationSpawned > 0)
             _retaliationCooldown[teamNum] = Server.CurrentTime + 7f;

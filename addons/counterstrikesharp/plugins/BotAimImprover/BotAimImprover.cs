@@ -304,7 +304,24 @@ public class BotAimImprover : BasePlugin
             if (chosenIdx < 0)
                 return HookResult.Continue;
 
-            // 6) Overwrite only m_targetSpot.xyz.
+            // 6) Overwrite only m_targetSpot.xyz with human-like imprecision.
+            // Offset scales with distance — tighter for headshots, looser for body.
+            float distToTarget = MathF.Sqrt(
+                (rx - botEye.X) * (rx - botEye.X) +
+                (ry - botEye.Y) * (ry - botEye.Y) +
+                (rz - botEye.Z) * (rz - botEye.Z));
+            float jitterScale = chosenIdx switch
+            {
+                0 => 0.005f,  // HEAD:  0.5%  (2.5u @ 500u)
+                1 or 2 => 0.007f,  // NECK/JAW: 0.7%
+                12 or 13 or 14 or 15 or 16 => 0.015f,  // LIMBS: 1.5%
+                _ => 0.01f,  // BODY: 1%
+            };
+            float jitter = distToTarget * jitterScale;
+            rx += ((float)Random.Shared.NextDouble() * 2f - 1f) * jitter;
+            ry += ((float)Random.Shared.NextDouble() * 2f - 1f) * jitter;
+            rz += ((float)Random.Shared.NextDouble() * 2f - 1f) * jitter;
+
             unsafe
             {
                 float* dst = (float*)(pCCSBot + _off.TargetSpot).ToPointer();
