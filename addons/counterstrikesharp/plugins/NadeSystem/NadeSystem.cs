@@ -798,6 +798,31 @@ public class NadeSystemPlugin : BasePlugin
     // ═══════════════════════════════════════════════════════════
     //  Grenade Replay
     // ═══════════════════════════════════════════════════════════
+    
+    /// Compute velocity from start to recorded landing position,
+    /// preserving the original travel time so the trajectory matches.
+    private static Vector ComputeTrajectory(Vector start, GrenadeData g)
+    {
+        float origDx = g.LandingPosition.X - g.ProjectilePosition.X;
+        float origDy = g.LandingPosition.Y - g.ProjectilePosition.Y;
+        float origHSpeed = MathF.Sqrt(
+            g.ProjectileVelocity.X * g.ProjectileVelocity.X +
+            g.ProjectileVelocity.Y * g.ProjectileVelocity.Y);
+        float origHDist = MathF.Sqrt(origDx * origDx + origDy * origDy);
+        // Clamp minimum travel time to avoid degenerate trajectories
+        float travelTime = origHDist > 1f ? origHDist / origHSpeed : 1.5f;
+        
+        float newDx = g.LandingPosition.X - start.X;
+        float newDy = g.LandingPosition.Y - start.Y;
+        float newDz = g.LandingPosition.Z - start.Z;
+        const float gravity = -800f;
+        
+        float vx = newDx / travelTime;
+        float vy = newDy / travelTime;
+        float vz = (newDz - 0.5f * gravity * travelTime * travelTime) / travelTime;
+        
+        return new Vector(vx, vy, vz);
+    }
 
     private void TryReplay(CCSPlayerController bot, GrenadeData g, List<CCSPlayerController> allControllers)
     {
@@ -915,12 +940,17 @@ public class NadeSystemPlugin : BasePlugin
         };
 
         var gtype    = g.GrenadeType.ToLowerInvariant();
-        var origin   = new Vector(g.ProjectilePosition.X,
-                                  g.ProjectilePosition.Y,
-                                  g.ProjectilePosition.Z);
-        var velocity = new Vector(g.ProjectileVelocity.X,
-                                  g.ProjectileVelocity.Y,
-                                  g.ProjectileVelocity.Z);
+        var botPawn  = bot.PlayerPawn?.Value;
+        if (botPawn == null || !botPawn.IsValid || botPawn.AbsOrigin == null) return;
+        
+        // Spawn from bot's position, not recorded coordinates
+        float eyeZ    = botPawn.ViewOffset?.Z ?? 64.0f;
+        var botOrigin = new Vector(
+            botPawn.AbsOrigin.X,
+            botPawn.AbsOrigin.Y,
+            botPawn.AbsOrigin.Z + eyeZ - 10f);  // slightly below eyes (hand level)
+        var velocity = ComputeTrajectory(botOrigin, g);
+        var origin   = botOrigin;
 
         // Angles derived from velocity (nade model orientation only, not trajectory)
         float yaw   =  MathF.Atan2(velocity.Y, velocity.X) * (180f / MathF.PI);
