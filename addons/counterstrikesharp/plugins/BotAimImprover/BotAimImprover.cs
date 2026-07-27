@@ -430,6 +430,16 @@ public class BotAimImprover : BasePlugin
     {
         try
         {
+            // ponytail: smoke check — CS2 smoke radius ~144u
+            foreach (var smoke in Utilities.FindAllEntitiesByDesignerName<CSmokeGrenadeProjectile>("smokegrenade_projectile"))
+            {
+                if (!smoke.IsValid || !smoke.DidSmokeEffect) continue;
+                var sp = smoke.AbsOrigin;
+                if (sp == null) continue;
+                float dx = tx - sp.X, dy = ty - sp.Y, dz = tz - sp.Z;
+                if (dx * dx + dy * dy + dz * dz < 144f * 144f) return false;
+            }
+            
             var rt = _rayTraceCapability.Get();
             if (rt == null) return true; // RayTrace not loaded -> don't block
             var end = new Vector(tx, ty, tz);
