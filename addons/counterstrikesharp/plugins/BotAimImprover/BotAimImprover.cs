@@ -304,7 +304,22 @@ public class BotAimImprover : BasePlugin
             if (chosenIdx < 0)
                 return HookResult.Continue;
 
-            // 6) Overwrite only m_targetSpot.xyz with human-like imprecision.
+            // 6a) Acquisition penalty: if bot was looking far away (180° turn),
+            //     add massive jitter — no instant lock-on after spinbot turn.
+            float nativeRx = 0, nativeRy = 0, nativeRz = 0;
+            unsafe
+            {
+                float* origSpot = (float*)(pCCSBot + _off.TargetSpot).ToPointer();
+                nativeRx = origSpot[0]; nativeRy = origSpot[1]; nativeRz = origSpot[2];
+            }
+            float aimDelta = MathF.Sqrt(
+                (rx - nativeRx) * (rx - nativeRx) +
+                (ry - nativeRy) * (ry - nativeRy) +
+                (rz - nativeRz) * (rz - nativeRz));
+            // aimDelta > 100 = bot was aiming somewhere else entirely
+            float acquisitionFactor = Math.Clamp(aimDelta / 150f, 0f, 1f);
+
+            // 6b) Overwrite only m_targetSpot.xyz with human-like imprecision.
             // Offset scales with distance — tighter for headshots, looser for body.
             float distToTarget = MathF.Sqrt(
                 (rx - botEye.X) * (rx - botEye.X) +
@@ -317,7 +332,8 @@ public class BotAimImprover : BasePlugin
                 12 or 13 or 14 or 15 or 16 => 0.015f,  // LIMBS: 1.5%
                 _ => 0.01f,  // BODY: 1%
             };
-            float jitter = distToTarget * jitterScale;
+            // Acquisition penalty: +0-4% extra jitter when bot wasn't looking at target
+            float jitter = distToTarget * (jitterScale + acquisitionFactor * 0.04f);
             rx += ((float)Random.Shared.NextDouble() * 2f - 1f) * jitter;
             ry += ((float)Random.Shared.NextDouble() * 2f - 1f) * jitter;
             rz += ((float)Random.Shared.NextDouble() * 2f - 1f) * jitter;
