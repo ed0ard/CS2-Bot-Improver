@@ -146,6 +146,18 @@ public class NadeSystemPlugin : BasePlugin
     // Normal Mode: post-throw probability window for flash
     // key = botIndex, value = (windowExpiresAt, blindRatio)
     private Dictionary<uint, (float ExpiresAt, float Ratio)> _botFlashRatioWindow = new();
+    // ── Team coordination ────────────────────────────────────
+    // Each bot gets a slot at round start. Lower slot = goes first.
+    // Slot 0-1: "support" — throw smokes/flashes early
+    // Slot 2+:   "rifler"  — hold nades, push after execute
+    private Dictionary<uint, int> _botSlot = new();
+    private int _nextSlot = 0;
+    // Per-team last throw time to stagger nades
+    private Dictionary<int, float> _teamLastThrowTime = new();
+    // Per-team playstyle — changes every round
+    private enum TeamStyle { SoloQueue, FiveStack, DryPeek, DefaultSlow, EcoSave }
+    private Dictionary<int, TeamStyle> _teamStyle = new();
+    private static readonly string[] StyleNames = { "路人单排", "五排车队", "干拉莽夫", "默认控图", "ECO省钱" };
     // ── Information system (sound trail + vision) ──────────────
     // Plain value-type coordinate: avoids allocating a CSS Vector (managed wrapper
     // + native memory) per recorded sound point.
@@ -390,6 +402,11 @@ public class NadeSystemPlugin : BasePlugin
             // In case the bot has been taken over
             bool isTakenOver = bot.HasBeenControlledByPlayerThisRound;
             if (isTakenOver) continue;
+
+            // Skip nade logic for DryPeek/EcoSave teams
+            if (_teamStyle.TryGetValue(bot.TeamNum, out var ts)
+                && (ts == TeamStyle.DryPeek || ts == TeamStyle.EcoSave))
+                continue;
 
             if (!bot.PawnIsAlive) continue;
             if (_replayBots.Contains((uint)bot.Index)) continue;
@@ -798,6 +815,58 @@ public class NadeSystemPlugin : BasePlugin
     // ═══════════════════════════════════════════════════════════
     //  Grenade Replay
     // ═══════════════════════════════════════════════════════════
+    
+    /// Compute velocity from start to recorded landing position,
+    /// preserving the original travel time so the trajectory matches.
+    private static Vector ComputeTrajectory(Vector start, GrenadeData g)
+    {
+        float origDx = g.LandingPosition.X - g.ProjectilePosition.X;
+        float origDy = g.LandingPosition.Y - g.ProjectilePosition.Y;
+        float origHSpeed = MathF.Sqrt(
+            g.ProjectileVelocity.X * g.ProjectileVelocity.X +
+            g.ProjectileVelocity.Y * g.ProjectileVelocity.Y);
+        float origHDist = MathF.Sqrt(origDx * origDx + origDy * origDy);
+        // Clamp minimum travel time to avoid degenerate trajectories
+        float travelTime = origHDist > 1f ? origHDist / origHSpeed : 1.5f;
+        
+        float newDx = g.LandingPosition.X - start.X;
+        float newDy = g.LandingPosition.Y - start.Y;
+        float newDz = g.LandingPosition.Z - start.Z;
+        const float gravity = -800f;
+        
+        float vx = newDx / travelTime;
+        float vy = newDy / travelTime;
+        float vz = (newDz - 0.5f * gravity * travelTime * travelTime) / travelTime;
+        
+        return new Vector(vx, vy, vz);
+    }
+
+    /// Check if bot actually has this grenade type in inventory.
+    private static bool BotHasNadeType(CCSPlayerController bot, string gtype)
+    {
+        var pawn = bot.PlayerPawn?.Value;
+        var weaponServices = pawn?.WeaponServices;
+        if (weaponServices == null) return false;
+
+        string weaponName = gtype switch
+        {
+            "flash"   => "weapon_flashbang",
+            "smoke"   => "weapon_smokegrenade",
+            "he"      => "weapon_hegrenade",
+            "molotov" => bot.TeamNum == 3 ? "weapon_incgrenade" : "weapon_molotov",
+            "incgrenade" => "weapon_incgrenade",
+            "decoy"   => "weapon_decoy",
+            _ => null,
+        };
+        if (weaponName == null) return false;
+
+        foreach (var wpn in weaponServices.MyWeapons)
+        {
+            if (wpn?.Value?.DesignerName == weaponName)
+                return true;
+        }
+        return false;
+    }
 
     private void TryReplay(CCSPlayerController bot, GrenadeData g, List<CCSPlayerController> allControllers)
     {
@@ -807,6 +876,34 @@ public class NadeSystemPlugin : BasePlugin
         if (isTakenOver) return;
 
         var gtype = g.GrenadeType; // lowercase since LoadDb
+
+        // Bot must actually have this grenade type in inventory
+        if (!BotHasNadeType(bot, gtype)) return;
+
+        // ── Team coordination gates ────────────────────────────
+        _teamStyle.TryGetValue(bot.TeamNum, out var style);
+        switch (style)
+        {
+            case TeamStyle.DryPeek:
+            case TeamStyle.EcoSave:
+                return;  // no nades at all
+            case TeamStyle.SoloQueue:
+                // Uncoordinated: 50% chance to skip, no slot/stagger
+                if (Random.Shared.NextDouble() < 0.5f) return;
+                break;
+            case TeamStyle.FiveStack:
+            case TeamStyle.DefaultSlow:
+                // Coordinated: strict slots + stagger
+                if (_teamLastThrowTime.TryGetValue(bot.TeamNum, out float lastThrow)
+                    && Server.CurrentTime - lastThrow < 1.5f) return;
+                if (_botSlot.TryGetValue((uint)bot.Index, out int slot) && slot >= 1
+                    && _freezeEndTime > 0f)
+                {
+                    float waitTime = slot * 2.5f;
+                    if (Server.CurrentTime - _freezeEndTime < waitTime) return;
+                }
+                break;
+        }
 
         // ── Round limit checks ─────────────────────────────────
         // Less mode: per-bot limits (1 smoke, 1 molotov, 1 HE,
@@ -897,6 +994,7 @@ public class NadeSystemPlugin : BasePlugin
             _earlySmokeCountByTeam[bot.TeamNum] = cnt + 1;
         }
         SpawnProjectile(bot, g);
+        _teamLastThrowTime[bot.TeamNum] = Server.CurrentTime;
 
         // Allow bot to throw another grenade after this window
         AddTimer(1f, () => _replayBots.Remove((uint)bot.Index));
@@ -915,12 +1013,17 @@ public class NadeSystemPlugin : BasePlugin
         };
 
         var gtype    = g.GrenadeType.ToLowerInvariant();
-        var origin   = new Vector(g.ProjectilePosition.X,
-                                  g.ProjectilePosition.Y,
-                                  g.ProjectilePosition.Z);
-        var velocity = new Vector(g.ProjectileVelocity.X,
-                                  g.ProjectileVelocity.Y,
-                                  g.ProjectileVelocity.Z);
+        var botPawn  = bot.PlayerPawn?.Value;
+        if (botPawn == null || !botPawn.IsValid || botPawn.AbsOrigin == null) return;
+        
+        // Spawn from bot's position, not recorded coordinates
+        float eyeZ    = botPawn.ViewOffset?.Z ?? 64.0f;
+        var botOrigin = new Vector(
+            botPawn.AbsOrigin.X,
+            botPawn.AbsOrigin.Y,
+            botPawn.AbsOrigin.Z + eyeZ - 10f);  // slightly below eyes (hand level)
+        var velocity = ComputeTrajectory(botOrigin, g);
+        var origin   = botOrigin;
 
         // Angles derived from velocity (nade model orientation only, not trajectory)
         float yaw   =  MathF.Atan2(velocity.Y, velocity.X) * (180f / MathF.PI);
@@ -931,7 +1034,14 @@ public class NadeSystemPlugin : BasePlugin
         var teamNum  = bot.TeamNum;
         var itemDef  = (int)GetItemIndex(gtype);
 
-        Server.NextFrame(() =>
+        // Human-like reaction delay + velocity inaccuracy
+        float reactionDelay = 0.3f + (float)Random.Shared.NextDouble() * 0.5f;
+        float inaccuracy   = 0.97f + (float)Random.Shared.NextDouble() * 0.06f;
+        velocity.X *= inaccuracy;
+        velocity.Y *= inaccuracy;
+        velocity.Z *= inaccuracy;
+
+        AddTimer(reactionDelay, () =>
         {
             try
             {
@@ -1282,6 +1392,45 @@ public class NadeSystemPlugin : BasePlugin
                 if (bot.InGameMoneyServices?.Account < 2800)
                     _poorBots.Add((uint)bot.Index);
             }
+        }
+        // ── Team coordination: assign slots & pick style ──────
+        _botSlot.Clear();
+        _teamLastThrowTime.Clear();
+        _nextSlot = 0;
+        // Shuffle bots within each team, assign sequential slots
+        foreach (var team in new[] { (int)CsTeam.Terrorist, (int)CsTeam.CounterTerrorist })
+        {
+            var teamBots = Utilities.FindAllEntitiesByDesignerName<CCSPlayerController>("cs_player_controller")
+                .Where(b => b.IsValid && b.IsBot && b.TeamNum == team)
+                .OrderBy(_ => Random.Shared.Next())
+                .ToList();
+            foreach (var bot in teamBots)
+                _botSlot[(uint)bot.Index] = _nextSlot++;
+
+            // Pick team playstyle based on economy
+            float totalMoney = teamBots.Sum(b => b.InGameMoneyServices?.Account ?? 0);
+            int count = teamBots.Count;
+            float avgMoney = count > 0 ? totalMoney / count : 0;
+
+            TeamStyle style;
+            if (avgMoney < 2800)
+            {
+                style = TeamStyle.EcoSave;
+            }
+            else
+            {
+                float roll = (float)Random.Shared.NextDouble();
+                style = roll switch
+                {
+                    < 0.25f => TeamStyle.FiveStack,
+                    < 0.60f => TeamStyle.SoloQueue,
+                    < 0.75f => TeamStyle.DryPeek,
+                    _       => TeamStyle.DefaultSlow,
+                };
+            }
+            _teamStyle[team] = style;
+            string teamName = team == (int)CsTeam.Terrorist ? "T" : "CT";
+            Server.PrintToChatAll($" \x0C[Bot]\x01 {teamName}方风格: \x04{StyleNames[(int)style]}");
         }
         return HookResult.Continue;
     }
@@ -1737,6 +1886,8 @@ public class NadeSystemPlugin : BasePlugin
         // In case the bot has been taken over
         bool isTakenOver = bot.HasBeenControlledByPlayerThisRound;
         if (isTakenOver) return;
+        // Bot must actually have this grenade type in inventory
+        if (!BotHasNadeType(bot, gtype)) return;
         bool hasLiveEnemy = Utilities
             .FindAllEntitiesByDesignerName<CCSPlayerController>("cs_player_controller")
             .Any(p => p.IsValid && p.PawnIsAlive
@@ -1979,25 +2130,14 @@ public class NadeSystemPlugin : BasePlugin
             if (_retaliationCooldown.TryGetValue(teamNum, out float cdExpiry)
                 && Server.CurrentTime < cdExpiry) return;
         }
-        // less / normal / more mode: limit total he+molotov spawned per hurt event
-        int retaliationLimit = int.MaxValue;
-        if (_botNadesMode == "normal" || _botNadesMode == "more" || _botNadesMode == "less")
-        {
-            var vPos = victimPawn.AbsOrigin;
-            int aliveTeamSize = Utilities
-                .FindAllEntitiesByDesignerName<CCSPlayerController>("cs_player_controller")
-                .Count(p =>
-                {
-                    if (!p.IsValid || (int)p.TeamNum != victim.TeamNum) return false;
-                    if (vPos == null) return false;
-                    var pp = GetActiveLivePawn(p)?.AbsOrigin;
-                    if (pp == null) return false;
-                    return Dist3D(vPos.X, vPos.Y, vPos.Z, pp.X, pp.Y, pp.Z) <= 800f;
-                });
-            retaliationLimit = aliveTeamSize < 1 ? 1 : aliveTeamSize;
-        }
+        // Always limit retaliation to 1 nade — human doesn't spam back 3 nades
+        int retaliationLimit = 1;
         int retaliationSpawned = 0;
 
+        // Human-like reaction delay 0.5-1.5s
+        float delay = 0.5f + (float)Random.Shared.NextDouble() * 1.0f;
+        AddTimer(delay, () =>
+        {
         // Build candidate list (single pass: filter then sort)
         // primary  : satisfies both direction and distance check  -> first
         // secondary: nearest projectilePosition to victim         -> ascending
@@ -2059,6 +2199,7 @@ public class NadeSystemPlugin : BasePlugin
                 IncrementBotCount(gt, botIdx);
             retaliationSpawned++;
         }
+        });
         // Write cooldown after retaliation completes (less / normal / more)
         if ((_botNadesMode == "normal" || _botNadesMode == "more" || _botNadesMode == "less") && retaliationSpawned > 0)
             _retaliationCooldown[teamNum] = Server.CurrentTime + 7f;

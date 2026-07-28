@@ -95,6 +95,22 @@ public sealed class BotBuyPatch : BasePlugin
         _poorPlayersByTeam[CsTeam.CounterTerrorist] = poorCT;
         _poorPlayersByTeam[CsTeam.Terrorist] = poorT;
 
+        // ponytail: Eco detection — if most bots poor, kevlar-only
+        foreach (var team in new[] { (CsTeam.CounterTerrorist, allCT), (CsTeam.Terrorist, allT) })
+        {
+            var teamPlayers = team.Item2;
+            int botCount = teamPlayers.Count(p => p.IsBot);
+            int poorCount = teamPlayers.Count(p => p.IsBot && p.InGameMoneyServices?.Account < 2800);
+            if (botCount > 0 && poorCount > botCount / 2)
+            {
+                AddTimer(0.3f, () =>
+                {
+                    foreach (var bot in teamPlayers.Where(p => p.IsValid && p.IsBot))
+                        Buy(bot, "item_kevlar");
+                });
+            }
+        }
+
         ConVar? botLoadout = ConVar.Find("bot_loadout");
         if (botLoadout != null && !string.IsNullOrEmpty(botLoadout.StringValue))
         {

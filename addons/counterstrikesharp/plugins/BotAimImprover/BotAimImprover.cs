@@ -304,7 +304,40 @@ public class BotAimImprover : BasePlugin
             if (chosenIdx < 0)
                 return HookResult.Continue;
 
-            // 6) Overwrite only m_targetSpot.xyz.
+            // 6a) Acquisition penalty: if bot was looking far away (180° turn),
+            //     add massive jitter — no instant lock-on after spinbot turn.
+            float nativeRx = 0, nativeRy = 0, nativeRz = 0;
+            unsafe
+            {
+                float* origSpot = (float*)(pCCSBot + _off.TargetSpot).ToPointer();
+                nativeRx = origSpot[0]; nativeRy = origSpot[1]; nativeRz = origSpot[2];
+            }
+            float aimDelta = MathF.Sqrt(
+                (rx - nativeRx) * (rx - nativeRx) +
+                (ry - nativeRy) * (ry - nativeRy) +
+                (rz - nativeRz) * (rz - nativeRz));
+            // aimDelta > 100 = bot was aiming somewhere else entirely
+            float acquisitionFactor = Math.Clamp(aimDelta / 150f, 0f, 1f);
+
+            // 6b) Overwrite only m_targetSpot.xyz with human-like imprecision.
+            // Offset scales with distance — tighter for headshots, looser for body.
+            float distToTarget = MathF.Sqrt(
+                (rx - botEye.X) * (rx - botEye.X) +
+                (ry - botEye.Y) * (ry - botEye.Y) +
+                (rz - botEye.Z) * (rz - botEye.Z));
+            float jitterScale = chosenIdx switch
+            {
+                0 => 0.005f,  // HEAD:  0.5%  (2.5u @ 500u)
+                1 or 2 => 0.007f,  // NECK/JAW: 0.7%
+                12 or 13 or 14 or 15 or 16 => 0.015f,  // LIMBS: 1.5%
+                _ => 0.01f,  // BODY: 1%
+            };
+            // Acquisition penalty: +0-4% extra jitter when bot wasn't looking at target
+            float jitter = distToTarget * (jitterScale + acquisitionFactor * 0.04f);
+            rx += ((float)Random.Shared.NextDouble() * 2f - 1f) * jitter;
+            ry += ((float)Random.Shared.NextDouble() * 2f - 1f) * jitter;
+            rz += ((float)Random.Shared.NextDouble() * 2f - 1f) * jitter;
+
             unsafe
             {
                 float* dst = (float*)(pCCSBot + _off.TargetSpot).ToPointer();
@@ -413,6 +446,16 @@ public class BotAimImprover : BasePlugin
     {
         try
         {
+            // ponytail: smoke check — CS2 smoke radius ~144u
+            foreach (var smoke in Utilities.FindAllEntitiesByDesignerName<CSmokeGrenadeProjectile>("smokegrenade_projectile"))
+            {
+                if (!smoke.IsValid || !smoke.DidSmokeEffect) continue;
+                var sp = smoke.AbsOrigin;
+                if (sp == null) continue;
+                float dx = tx - sp.X, dy = ty - sp.Y, dz = tz - sp.Z;
+                if (dx * dx + dy * dy + dz * dz < 144f * 144f) return false;
+            }
+            
             var rt = _rayTraceCapability.Get();
             if (rt == null) return true; // RayTrace not loaded -> don't block
             var end = new Vector(tx, ty, tz);
