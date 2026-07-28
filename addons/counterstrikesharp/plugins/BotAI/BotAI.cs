@@ -25,7 +25,7 @@ public static class BotOffsets
 public class BotAI : BasePlugin
 {
     public override string ModuleName => "Patches - Bot AI";
-    public override string ModuleVersion => "1.8.7";
+    public override string ModuleVersion => "1.8.8";
     public override string ModuleAuthor => "K4ryuu & Austin (updated by ed0ard & Misaka17032 & XBribo & AmagiReina)";
     public override string ModuleDescription =>
         "Improve and fix bots' behavior comprehensively";
@@ -40,10 +40,48 @@ public class BotAI : BasePlugin
         Logger.LogInformation("Bot AI Patches loading...");
         var patchDefinitions = _isLinux ? LinuxPatchDefinitions.All : WindowsPatchDefinitions.All;
 
+        // "<name>_Cave" entries build a code cave that their "<name>" partner then
+        // jumps into with a fixed displacement. The pair must be applied atomically:
+        // if the cave is missing (e.g. its signature no longer matches after a game
+        // update), the partner's jump lands in unpatched bytes and the server
+        // segfaults as soon as a bot takes that code path.
+        var caveNames = patchDefinitions.Keys.Where(n => n.EndsWith("_Cave")).ToHashSet();
+        var appliedCaves = new HashSet<string>();
+
+        foreach (var name in caveNames)
+        {
+            if (ApplyPatch(name, _isLinux)) { appliedCaves.Add(name); Logger.LogInformation($"{name}: applied."); }
+            else Logger.LogError($"{name}: FAILED.");
+        }
+
         foreach (var name in patchDefinitions.Keys)
         {
+            if (caveNames.Contains(name)) continue;
+
+            string caveName = $"{name}_Cave";
+            if (caveNames.Contains(caveName) && !appliedCaves.Contains(caveName))
+            {
+                Logger.LogWarning($"{name}: skipped, its cave partner '{caveName}' did not apply.");
+                continue;
+            }
+
             if (ApplyPatch(name, _isLinux)) Logger.LogInformation($"{name}: applied.");
-            else Logger.LogError($"{name}: FAILED.");
+            else
+            {
+                Logger.LogError($"{name}: FAILED.");
+                // Roll back the now-orphaned cave so we never leave half a pair behind.
+                if (appliedCaves.Contains(caveName))
+                {
+                    var cave = _appliedPatches.FirstOrDefault(p => p.Name == caveName);
+                    if (cave != null)
+                    {
+                        RestorePatch(cave);
+                        _appliedPatches.Remove(cave);
+                        appliedCaves.Remove(caveName);
+                        Logger.LogWarning($"{caveName}: rolled back, its partner '{name}' did not apply.");
+                    }
+                }
+            }
         }
 
         RegisterEventHandler<EventPlayerSpawn>((@event, info) =>
