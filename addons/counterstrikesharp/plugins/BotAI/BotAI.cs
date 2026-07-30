@@ -14,7 +14,10 @@ public record PatchInfo(string Name, nint Address, List<byte> OriginalBytes);
 
 public static class BotOffsets
 {
-    public const int m_gameState = 0x5100;   // 14172: CCSBot+0x5100 (lea r14,[rbx+5100h]); was 0x5128 (=CSGameState+0x28, a float field)
+    // Differs by platform: Windows = 0x5128, Linux  = 0x5100.
+    public static readonly int m_gameState =
+        RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? 0x5100 : 0x5128;
+    // Offsets inside CSGameState
     public const int m_isRoundOver = 0x08;
     public const int m_bombState = 0x0C;
     public const int m_plantedBombsite = 0x68;
@@ -25,7 +28,7 @@ public static class BotOffsets
 public class BotAI : BasePlugin
 {
     public override string ModuleName => "Patches - Bot AI";
-    public override string ModuleVersion => "1.8.7";
+    public override string ModuleVersion => "1.8.8";
     public override string ModuleAuthor => "K4ryuu & Austin (updated by ed0ard & Misaka17032 & XBribo & AmagiReina)";
     public override string ModuleDescription =>
         "Improve and fix bots' behavior comprehensively";
