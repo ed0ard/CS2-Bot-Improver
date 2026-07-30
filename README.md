@@ -2,35 +2,55 @@
 
 # CS2-Bot-Improver
 
-[![Latest release](https://img.shields.io/github/v/release/ed0ard/CS2-Bot-Improver?display_name=tag&sort=semver)](https://github.com/ed0ard/CS2-Bot-Improver/releases/latest)
-[![Release downloads](https://img.shields.io/github/downloads/ed0ard/CS2-Bot-Improver/total)](https://github.com/ed0ard/CS2-Bot-Improver/releases)
-[![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](LICENSE)
-![Platforms: Windows and Linux](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-5c6bc0)
+<p>
+  <a href="https://github.com/ed0ard/CS2-Bot-Improver/releases/latest"><img alt="Download latest release" src="https://img.shields.io/badge/Download-Latest_release-2ea44f?style=for-the-badge&amp;logo=github"></a>
+</p>
 
-**English** · [简体中文](docs/README.zh-CN.md) · [Русский](docs/README.ru.md)
+<p>
+  <a href="https://github.com/ed0ard/CS2-Bot-Improver/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/ed0ard/CS2-Bot-Improver?display_name=tag&amp;sort=semver&amp;style=flat-square"></a>
+  <a href="https://github.com/ed0ard/CS2-Bot-Improver/releases"><img alt="Release downloads" src="https://img.shields.io/github/downloads/ed0ard/CS2-Bot-Improver/total?style=flat-square"></a>
+  <a href="https://github.com/ed0ard/CS2-Bot-Improver/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/ed0ard/CS2-Bot-Improver?style=flat-square"></a>
+  <a href="https://github.com/ed0ard/CS2-Bot-Improver/graphs/contributors"><img alt="Contributors" src="https://img.shields.io/github/contributors/ed0ard/CS2-Bot-Improver?style=flat-square"></a>
+  <a href="LICENSE"><img alt="License: AGPL-3.0" src="https://img.shields.io/badge/license-AGPL--3.0-blue.svg?style=flat-square"></a>
+  <img alt="Platforms: Windows and Linux" src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux-5c6bc0?style=flat-square">
+</p>
 
-[Features](#features) · [Installation](#installation) · [Commands](#commands) · [Panel guide](#panel-guide-windows-only) · [FAQ](#faq)
+<p>
+  <strong>English</strong> · <a href="docs/README.zh-CN.md">简体中文</a> · <a href="docs/README.ru.md">Русский</a>
+</p>
+
+<p>
+  <a href="#features">✨ Features</a> &nbsp;·&nbsp;
+  <a href="#installation">📦 Installation</a> &nbsp;·&nbsp;
+  <a href="#commands">🎮 Commands</a> &nbsp;·&nbsp;
+  <a href="#panel-guide">🖥️ Panel guide</a> &nbsp;·&nbsp;
+  <a href="#faq">❓ FAQ</a>
+</p>
 
 </div>
 
 CS2-Bot-Improver enhances Counter-Strike 2 bots for offline matches and private games with friends. It improves their aim, movement, nade throwing, personalities, strategies, and can be installed on either a client or a dedicated server.
 
-## **Your stars⭐ are my motivation to keep updating**
+---
 
-## Features
+<a id="features"></a>
+## ✨ Features
 
 | Field | Improvements |
 | --- | --- |
-| **Aim and combat** | More accurate, human-like aim; spraying, flicking, smoke spamming, and anti-flash |
-| **Grenades** | Situational Smoke, Flashbang, HE grenade, and Molotov throwing |
-| **Movement** | Better movement and fixes for most bot-stuck situations |
-| **Strategy** | Smarter, more organized bots with improved awareness and decision-making |
-| **Economy** | Expanded weapon purchases and overhauled economy management |
-| **Personalities** | Pro and random player names, with pro characteristics based on [HLTV](https://www.hltv.org/) stats |
-| **Customization** | Per-bot knives, gloves, weapon skins, stickers, charms, agents, music kits, avatars, and profiles |
-| **Game experience** | Bot names without prefixes, bot-friendly rules, and extra console commands for fun |
+| **🎯 Aim and combat** | More accurate, human-like aim; spraying, flicking, smoke spamming, and anti-flash |
+| **💣 Grenades** | Situational Smoke, Flashbang, HE grenade, and Molotov throwing |
+| **🏃 Movement** | Better movement and fixes for most bot-stuck situations |
+| **🧠 Strategy** | Smarter, more organized bots with improved awareness and decision-making |
+| **💰 Economy** | Expanded weapon purchases and overhauled economy management |
+| **🎭 Personalities** | Pro and random player names, with pro characteristics based on [HLTV](https://www.hltv.org/) stats |
+| **🎨 Customization** | Per-bot knives, gloves, weapon skins, stickers, charms, agents, music kits, avatars, and profiles |
+| **🎮 Game experience** | Bot names without prefixes, bot-friendly rules, and extra console commands for fun |
 
-## Installation
+---
+
+<a id="installation"></a>
+## 📦 Installation
 
 Download the package for your operating system from the **[latest release](https://github.com/ed0ard/CS2-Bot-Improver/releases/latest)**.
 
@@ -73,7 +93,10 @@ On Windows, please download **CS2BotImprover_rules_unchanged.zip** to preserve t
    <img width="130" height="153" alt="Opening CS2 properties in Steam" src="https://github.com/user-attachments/assets/4c775e36-3fc3-4a19-9cb1-4f0c9327838c" /><br>
    <img width="625" height="423" alt="Adding -insecure to the CS2 launch options" src="https://github.com/user-attachments/assets/ac0b0c57-ee67-4e33-96fb-146d14714fc8" />
 
-## Commands
+---
+
+<a id="commands"></a>
+## 🎮 Commands
 
 ### Aim
 
@@ -136,7 +159,10 @@ Point at the ground and press `\` on your keyboard to generate all kinds of kniv
 
 After a match begins, use the command `scouts_on` or `scouts_off` to enable or disable Flying Scoutsman mode.
 
-## Panel Guide (Windows Only)
+---
+
+<a id="panel-guide"></a>
+## 🖥️ Panel Guide (Windows Only)
 
 ### Status lights
 
@@ -164,7 +190,10 @@ Click **Commands**, click a block to copy it automatically, or type keywords to 
 
 <img width="350" height="420" alt="Searchable command browser in the Panel" src="https://github.com/user-attachments/assets/957cfafb-900d-4450-b985-13d3e8efc375" />
 
-## FAQ
+---
+
+<a id="faq"></a>
+## ❓ FAQ
 
 <details>
 <summary><strong>How to play bot matches with friends?</strong></summary>
@@ -237,7 +266,9 @@ Run `sv_standable_normal 0.7` in the game console.
 >
 > The [AGPL-3.0 license](LICENSE) does not grant access to third-party services or authorize violations of their rules. To the maximum extent permitted by applicable law, anyone who uses or deploys the project outside the scope described above, modifies it to evade security controls, or otherwise violates third-party terms assumes all resulting risks and responsibilities, including GSLT or server sanctions, FACEIT or community-server bans, VAC or game bans. The maintainers and contributors disclaim liability for those consequences.
 
-## Credits
+---
+
+## 🤝 Credits
 
 - [Metamod:Source](https://github.com/alliedmodders/metamod-source)
 - [CounterStrikeSharp](https://github.com/roflmuffin/CounterStrikeSharp)
@@ -256,6 +287,8 @@ Run `sv_standable_normal 0.7` in the game console.
 - [RoundDamageRecap](https://github.com/YuGeYu/LBTV-CS2-Bot-Enhancer/tree/main/addons/counterstrikesharp/plugins/RoundDamageRecap) by [YuGeYu](https://github.com/YuGeYu)
 - [Apple-Style-GUI](https://github.com/ed0ard/Apple-Style-GUI)
 
-## License
+---
+
+## 📄 License
 
 [GNU Affero General Public License v3.0](LICENSE)
