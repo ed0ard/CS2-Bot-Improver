@@ -15,7 +15,7 @@ namespace BotHiderImpl;
 public class BotHiderImplPlugin : BasePlugin
 {
     public override string ModuleName => "BotHiderImpl";
-    public override string ModuleVersion => "0.3.3";
+    public override string ModuleVersion => "0.3.5";
     public override string ModuleAuthor => "XBribo";
     public override string ModuleDescription =>
         "BotHider CSS Plugin";
@@ -126,6 +126,60 @@ public class BotHiderImplPlugin : BasePlugin
     {
         StartFastApplyWindow();
         return HookResult.Continue;
+    }
+
+    // Schedules managed bots to approve a newly started vote
+    [GameEventHandler]
+    public HookResult OnVoteOptions(EventVoteOptions @event, GameEventInfo info)
+    {
+        Server.NextFrame(AcceptVoteForManagedBots);
+        return HookResult.Continue;
+    }
+
+    // Casts a yes vote from every valid managed bot
+    private void AcceptVoteForManagedBots()
+    {
+        if (_client == null) return;
+
+        var voteController = Utilities
+            .FindAllEntitiesByDesignerName<CVoteController>("vote_controller")
+            .FirstOrDefault(controller => controller.IsValid);
+        if (voteController == null)
+        {
+            Server.PrintToConsole("[BotHider] automatic vote failed: vote controller not found");
+            return;
+        }
+
+        Span<int> votesCast = voteController.VotesCast;
+        Span<int> optionCounts = voteController.VoteOptionCount;
+        int onlyTeam = voteController.OnlyTeamToVote;
+        int accepted = 0;
+
+        foreach (int slot in _client.GetManagedSlots())
+        {
+            if ((uint)slot >= (uint)votesCast.Length) continue;
+
+            var player = Utilities.GetPlayerFromSlot(slot);
+            if (player == null || !player.IsValid) continue;
+            if (onlyTeam >= (int)CsTeam.Terrorist && (int)player.Team != onlyTeam) continue;
+
+            votesCast[slot] = 0;
+            accepted++;
+
+            var voteEvent = new EventVoteCast(true)
+            {
+                Team = onlyTeam,
+                Userid = player,
+                VoteOption = 0
+            };
+            voteEvent.FireEvent(false);
+        }
+
+        if (accepted == 0) return;
+        optionCounts[0] += accepted;
+        Utilities.SetStateChanged(
+            voteController, "CVoteController", "m_nVoteOptionCount");
+        Server.PrintToConsole($"[BotHider] automatic yes votes cast={accepted}");
     }
 
     // Respawn any managed bot that is not alive

@@ -203,8 +203,8 @@ internal static class LinuxPatchDefinitions
         ),
 
         ["Vision_AlwaysWatchApproachPoints_Cave"] = (
-            signature:        "F3 0F 11 4D A8 E9 CD FE FF FF CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC",
-            patch:            "48 83 7B 18 00 0F 84 71 A1 FE FF E9 11 A0 FE FF",
+            signature:        "F3 0F 11 4D A8 E9 ? ? ? ? CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC",
+            patch:            "48 83 7B 18 00 0F 84 D1 8D FE FF E9 71 8C FE FF",   // 14172: back-jumps -0x13A0 (jz 0xBF7686, jmp 0xBF752B)
             expectedOriginal: "CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC",
             patchOffset:      10
         ),
@@ -212,21 +212,21 @@ internal static class LinuxPatchDefinitions
         // CCSBot::UpdateLookAround: skip the skill threshold before approach-body checks.
         ["Vision_AlwaysWatchApproachPoints"] = (
             signature:        "F3 0F 58 85 EC FE FF FF 80 BB F0 54 00 00 00 F3 0F 11 83 28 53 00 00 0F 84 ? ? ? ? F3 0F 10 1D",
-            patch:            "E9 E0 5F 01 00 90",
+            patch:            "E9 80 73 01 00 90",   // 14172: jmp -> cave 0xC0E8AA (was E9 E0 5F 01 00 90 -> 0xC0D50A, live code)
             expectedOriginal: "0F 84 ? ? ? ?",
             patchOffset:      23
         ),
 
         ["Vision_AlwaysWatchApproachPoints_LoopEntry_Cave"] = (
             signature:        "48 8B 07 FF 50 20 E9 26 FF FF FF CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC",
-            patch:            "49 8B 7F 10 48 85 FF 0F 84 7A 2C FE FF 80 BA 24 06 00 00 02 75 05 BE 03 00 00 00 E9 C8 2C FE FF",
+            patch:            "49 8B 7F 10 48 85 FF 0F 84 5A 2C FE FF 80 BA 24 06 00 00 02 75 05 BE 03 00 00 00 E9 A8 2C FE FF",   // 14172: back-jumps -0x20 (jz 0xBF7568, jmp 0xBF75C9)
             expectedOriginal: "CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC",
             patchOffset:      11
         ),
 
         ["Vision_AlwaysWatchApproachPoints_LoopEntry"] = (
             signature:        "49 8B 56 18 BE 02 00 00 00 49 8B 7F 10 80 BA 24 06 00 00 02",
-            patch:            "E9 25 D3 01 00 90 90 90 90 90 90",
+            patch:            "E9 45 D3 01 00 90 90 90 90 90 90",   // 14172: jmp -> cave 0xC14901 (was E9 25 D3 -> 0xC148E1, live code)
             expectedOriginal: "49 8B 7F 10 80 BA 24 06 00 00 02",
             patchOffset:      9
         ),
@@ -285,8 +285,8 @@ internal static class LinuxPatchDefinitions
         // Idle/bomb-search fallback: GetNextBombsiteToSearch() -> GetPlantedBombsite().
         ["TBot_BombsiteSearch_UseKnownPlantedSite"] = (
             signature:        "48 8B BB 08 5E 00 00 E8 ? ? ? ? 4C 89 F7 E8 ? ? ? ? 49 8B 3C 24 31 F6",
-            patch:            "E8 6C 1D F6 FF",
-            expectedOriginal: "E8 5C 20 F6 FF",
+            patch:            "E8 4C 1D F6 FF",   // 14172: call GetPlantedBombsite sub_BE84F0
+            expectedOriginal: "E8 3C 20 F6 FF",   // 14172: call GetNextBombsiteToSearch sub_BE87E0
             patchOffset:      15
         ),
 

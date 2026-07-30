@@ -67,6 +67,12 @@ namespace BotControllerApi
         // Def index of the bot's current active weapon. <0 if unresolved.
         int BotActiveWeaponDef(int slot);
 
+        // Creates an independently cancellable usercmd injection and returns its token
+        long InjectUsercmd(int slot, ulong buttonMask, int durationMs = 0);
+
+        // Cancels one usercmd injection by its token
+        bool CancelUsercmdInjection(int slot, long injectionId);
+
         // ---- profile ----
 
         // Read the BotProfile of the bot on this slot. False if the slot has no

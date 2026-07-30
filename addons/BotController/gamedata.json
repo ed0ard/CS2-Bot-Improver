@@ -1,0 +1,448 @@
+{
+  "CCSBot::EquipBestWeapon": {
+    "signatures": {
+      "library": "server",
+      "windows": "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B F9 84 D2",
+      "linux": "55 48 89 E5 41 57 41 56 41 55 41 54 53 48 89 FB 48 83 EC ? 40 84 F6 75 ? F3 0F 10 8F ? ? ? ?"
+    },
+    "comment": "bot picks and equips its best weapon."
+  },
+  "CCSBot::EquipPistol": {
+    "signatures": {
+      "library": "server",
+      "windows": "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B D9 84 D2",
+      "linux": "55 48 89 E5 53 48 89 FB 48 83 EC ? 40 84 F6 75 ? F3 0F 10 8F ? ? ? ? 66 0F EF C0 0F 2F C8"
+    },
+    "comment": "bot switches to its pistol secondary"
+  },
+  "CCSPlayer_WeaponServices::SelectItem": {
+    "signatures": {
+      "library": "server",
+      "windows": "48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 48 83 EC ? 41 8B E8 48 8B DA 48 8B F1",
+      "linux": "55 48 89 E5 41 57 41 56 41 55 49 89 F5 41 54 53 48 89 FB 48 81 EC ? ? ? ? 48 8B 7F 38 48 85 FF"
+    },
+    "comment": "Funnel for any weapon switch"
+  },
+  "CCSPlayer_WeaponServices::GetSlot": {
+    "signatures": {
+      "library": "server",
+      "windows": "48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 41 54 41 56 41 57 48 83 EC ? 45 33 E4 45 8B F0",
+      "linux": "55 48 89 E5 41 57 41 56 41 55 41 54 53 89 F3 48 83 EC ? 48 63 77 48 85 F6 0F 8E ? ? ? ? 49 89 FE 41 89 D4"
+    },
+    "comment": "Returns the weapon in engine slot N"
+  },
+  "CCSBot::Update": {
+    "signatures": {
+      "library": "server",
+      "windows": "40 55 56 57 41 54 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8D 05 ? ? ? ? C6 81 ? ? ? ? 00",
+      "linux": "55 48 8D 05 ? ? ? ? 48 8D 35 ? ? ? ? 48 89 E5 41 57 41 56 41 55 4C 8D AD ? ? ? ? 41 54 4C 89 EA 53 48 89 FB 48 81 EC"
+    },
+    "comment": "Per-tick decision entry; PathFollower + look-around + reaction + weapon"
+  },
+  "CCSBot::Upkeep": {
+    "signatures": {
+      "library": "server",
+      "windows": "48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 56 48 83 EC ? 4C 8B F1 33 ED 48 8B 49 ? 48 39 A9 ? ? ? ?",
+      "linux": "55 48 8D 05 ? ? ? ? 48 8D 35 ? ? ? ? 48 89 E5 41 55 41 54 48 8D 55 ? 53"
+    },
+    "comment": "Per-frame view mBotntenance; UpdateLookAround + jitter + UpdateLookAngles"
+  },
+  "CCSBot::Jump": {
+    "signatures": {
+      "library": "server",
+      "windows": "48 89 5C 24 ? 57 48 83 EC ? 48 8B D9 0F B6 FA 48 8B 49 ? 48 8B 91",
+      "linux": "55 48 89 E5 53 48 89 FB 48 83 EC ? 48 8B 47 ? 48 8B B0 ? ? ? ? 8B B8 ? ? ? ? E8 ? ? ? ? 31 D2"
+    },
+    "comment": "Bot requests a jump"
+  },
+  "BuyState::OnUpdate": {
+    "signatures": {
+      "library": "server",
+      "windows": "48 89 54 24 ? 48 89 4C 24 ? 55 57 41 54 48 8D AC 24",
+      "linux": "55 48 89 E5 41 57 41 56 41 55 41 54 49 89 FC 53 48 89 F3 48 81 EC ? ? ? ? 80 7F 08 00 74"
+    },
+    "comment": "Bot buy state per-tick ordering; issues buy commands"
+  },
+  "BuyState::InitialDelay": {
+    "offsets": {
+      "windows": 8,
+      "linux": 8
+    },
+    "comment": "m_isInitialDelay"
+  },
+  "BuyState::DoneBuying": {
+    "offsets": {
+      "windows": 24,
+      "linux": 24
+    },
+    "comment": "m_doneBuying"
+  },
+  "CCSBot::UpdateLookAngles": {
+    "signatures": {
+      "library": "server",
+      "windows": "40 55 53 56 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8D 05",
+      "linux": "55 48 8D 05 ? ? ? ? 48 8D 35 ? ? ? ? 48 89 E5 41 55 4C 8D 6D C0 41 54 53 4C 89 EA 48 89 FB 48 8D 3D"
+    },
+    "comment": "Spring-smooths view to m_lookPitch/m_lookYaw"
+  },
+  "CCSPlayerPawn::SetEyeAngles": {
+    "signatures": {
+      "library": "server",
+      "windows": "48 89 5C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 55 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B DA 48 8B F1 48 8D 55",
+      "linux": "55 48 89 E5 41 57 49 89 FF 48 89 F7 41 56 41 55 41 54 53 48 81 EC ? ? ? ? E8 ? ? ? ? 49 8B 8F"
+    },
+    "comment": "Engine eye-angle"
+  },
+  "CCSPlayer_MovementServices::ProcessMovement": {
+    "signatures": {
+      "library": "server",
+      "windows": "40 57 41 57 48 81 EC B8 00 00 00",
+      "linux": "55 48 89 E5 41 57 41 56 41 55 49 89 F5 41 54 53 48 89 FB 48 83 EC ? 48 8B 7F"
+    },
+    "comment": "Per-tick movement entry; 2nd arg is CMoveData"
+  },
+  "CBasePlayerController::OnSimulateUserCommands": {
+    "signatures": {
+      "library": "server",
+      "windows": "40 55 53 56 57 41 55 41 56 48 8D AC 24 08 F9 FF FF",
+      "linux": "55 48 8D 05 ? ? ? ? 48 8D 35 ? ? ? ? 48 89 E5 41 57 41 56 41 55 41 54 53 48 89 FB 48 8D 3D"
+    },
+    "comment": "Per-tick controller usercmd simulation boundary,replay commits cursor after original"
+  },
+  "CCSBot::AiTickedFlag": {
+    "offsets": {
+      "windows": 1552,
+      "linux": 1544
+    },
+    "comment": "AI-ran-this-tick byte flag"
+  },
+  "CCSBot::Pawn": {
+    "offsets": {
+      "windows": 24,
+      "linux": 24
+    },
+    "comment": "CCSBot -> pawn"
+  },
+  "CCSBot::Profile": {
+    "offsets": {
+      "windows": 8,
+      "linux": 8
+    },
+    "comment": "CCSBot -> m_profile"
+  },
+  "BotProfile::Aggression": {
+    "offsets": {
+      "windows": 8,
+      "linux": 8
+    },
+    "comment": "m_aggression"
+  },
+  "BotProfile::Skill": {
+    "offsets": {
+      "windows": 12,
+      "linux": 12
+    },
+    "comment": "m_skill"
+  },
+  "BotProfile::Teamwork": {
+    "offsets": {
+      "windows": 16,
+      "linux": 16
+    },
+    "comment": "m_teamwork"
+  },
+  "BotProfile::WeaponPref": {
+    "offsets": {
+      "windows": 36,
+      "linux": 36
+    },
+    "comment": "m_weaponPreference"
+  },
+  "BotProfile::WeaponPrefCount": {
+    "offsets": {
+      "windows": 68,
+      "linux": 68
+    },
+    "comment": "m_weaponPreferenceCount"
+  },
+  "BotProfile::Cost": {
+    "offsets": {
+      "windows": 72,
+      "linux": 72
+    },
+    "comment": "m_cost"
+  },
+  "BotProfile::Difficulty": {
+    "offsets": {
+      "windows": 80,
+      "linux": 80
+    },
+    "comment": "m_difficultyFlags"
+  },
+  "BotProfile::ReactionTime": {
+    "offsets": {
+      "windows": 88,
+      "linux": 88
+    },
+    "comment": "m_reactionTime"
+  },
+  "BotProfile::AttackDelay": {
+    "offsets": {
+      "windows": 92,
+      "linux": 92
+    },
+    "comment": "m_attackDelay"
+  },
+  "BotProfile::LookAngleMaxAccelAttacking": {
+    "offsets": {
+      "windows": 120,
+      "linux": 120
+    },
+    "comment": "m_lookAngleMaxAccelAttacking"
+  },
+  "BotProfile::LookAngleStiffnessAttacking": {
+    "offsets": {
+      "windows": 124,
+      "linux": 124
+    },
+    "comment": "m_lookAngleStiffnessAttacking"
+  },
+  "BotProfile::LookAngleDampingAttacking": {
+    "offsets": {
+      "windows": 128,
+      "linux": 128
+    },
+    "comment": "m_lookAngleDampingAttacking"
+  },
+  "CBaseEntity::Identity": {
+    "offsets": {
+      "windows": 16,
+      "linux": 16
+    },
+    "comment": "entity -> CEntityIdentity*"
+  },
+  "CEntityIdentity::EHandle": {
+    "offsets": {
+      "windows": 16,
+      "linux": 16
+    },
+    "comment": "m_EHandle"
+  },
+  "CBaseEntity::MoveType": {
+    "offsets": {
+      "windows": 755,
+      "linux": 1491
+    },
+    "comment": "m_MoveType"
+  },
+  "CBaseEntity::ActualMoveType": {
+    "offsets": {
+      "windows": 757,
+      "linux": 1493
+    },
+    "comment": "m_nActualMoveType"
+  },
+  "CBaseEntity::Flags": {
+    "offsets": {
+      "windows": 904,
+      "linux": 1640
+    },
+    "comment": "m_fFlags"
+  },
+  "CBaseEntity::AbsVelocity": {
+    "offsets": {
+      "windows": 908,
+      "linux": 1644
+    },
+    "comment": "m_vecAbsVelocity"
+  },
+  "CBaseEntity::BodyComponent": {
+    "offsets": {
+      "windows": 48,
+      "linux": 48
+    },
+    "comment": "m_CBodyComponent"
+  },
+  "CBodyComponent::SceneNode": {
+    "offsets": {
+      "windows": 8,
+      "linux": 8
+    },
+    "comment": "m_pSceneNode"
+  },
+  "CGameSceneNode::AbsOrigin": {
+    "offsets": {
+      "windows": 200,
+      "linux": 200
+    },
+    "comment": "m_vecAbsOrigin"
+  },
+  "CCSPlayerPawn::WeaponServices": {
+    "offsets": {
+      "windows": 2608,
+      "linux": 3344
+    },
+    "comment": "m_pWeaponServices"
+  },
+  "CBasePlayerPawn::MovementServices": {
+    "offsets": {
+      "windows": 2672,
+      "linux": 3408
+    },
+    "comment": "m_pMovementServices"
+  },
+  "CCSPlayerPawn::Controller": {
+    "offsets": {
+      "windows": 2992,
+      "linux": 3728
+    },
+    "comment": "m_hController"
+  },
+  "CCSPlayerPawn::OriginalController": {
+    "offsets": {
+      "windows": 3364,
+      "linux": 4092
+    },
+    "comment": "m_hOriginalController"
+  },
+  "CCSPlayerPawn::ViewAngle": {
+    "offsets": {
+      "windows": 2792,
+      "linux": 3528
+    },
+    "comment": "v_angle"
+  },
+  "CCSPlayerPawn::ViewAnglePrevious": {
+    "offsets": {
+      "windows": 2804,
+      "linux": 3540
+    },
+    "comment": "v_anglePrevious"
+  },
+  "CCSPlayerPawn::ServerViewAngleChanges": {
+    "offsets": {
+      "windows": 2688,
+      "linux": 3424
+    },
+    "comment": "m_ServerViewAngleChanges"
+  },
+  "CCSPlayerPawn::EyeAngles": {
+    "offsets": {
+      "windows": 4968,
+      "linux": 5688
+    },
+    "comment": "m_angEyeAngles"
+  },
+  "CCSPlayer_WeaponServices::ActiveWeapon": {
+    "offsets": {
+      "windows": 96,
+      "linux": 96
+    },
+    "comment": "m_hActiveWeapon"
+  },
+  "CBasePlayerWeapon::ItemDefIndex": {
+    "offsets": {
+      "windows": 2560,
+      "linux": 3296
+    },
+    "comment": "m_iItemDefinitionIndex"
+  },
+  "CCSPlayer_MovementServices::Pawn": {
+    "offsets": {
+      "windows": 56,
+      "linux": 56
+    },
+    "comment": "m_pawn"
+  },
+  "CCSPlayer_MovementServices::Buttons": {
+    "offsets": {
+      "windows": 88,
+      "linux": 88
+    },
+    "comment": "m_nButtons states[0]"
+  },
+  "CCSPlayer_MovementServices::Buttons1": {
+    "offsets": {
+      "windows": 96,
+      "linux": 96
+    },
+    "comment": "states[1]"
+  },
+  "CCSPlayer_MovementServices::Buttons2": {
+    "offsets": {
+      "windows": 104,
+      "linux": 104
+    },
+    "comment": "states[2]"
+  },
+  "CCSPlayer_MovementServices::LadderNormal": {
+    "offsets": {
+      "windows": 1016,
+      "linux": 1016
+    },
+    "comment": "m_vecLadderNormal"
+  },
+  "CCSPlayer_MovementServices::Ducked": {
+    "offsets": {
+      "windows": 1032,
+      "linux": 1032
+    },
+    "comment": "m_bDucked"
+  },
+  "CCSPlayer_MovementServices::DuckAmount": {
+    "offsets": {
+      "windows": 1036,
+      "linux": 1036
+    },
+    "comment": "m_flDuckAmount"
+  },
+  "CCSPlayer_MovementServices::DuckSpeed": {
+    "offsets": {
+      "windows": 1040,
+      "linux": 1040
+    },
+    "comment": "m_flDuckSpeed"
+  },
+  "CCSPlayer_MovementServices::DesiresDuck": {
+    "offsets": {
+      "windows": 1045,
+      "linux": 1045
+    },
+    "comment": "m_bDesiresDuck"
+  },
+  "CCSPlayer_MovementServices::Ducking": {
+    "offsets": {
+      "windows": 1046,
+      "linux": 1046
+    },
+    "comment": "m_bDucking"
+  },
+  "CMoveData::Velocity": {
+    "offsets": {
+      "windows": 56,
+      "linux": 56
+    },
+    "comment": "m_vecVelocity"
+  },
+  "CMoveData::AbsOrigin": {
+    "offsets": {
+      "windows": 200,
+      "linux": 200
+    },
+    "comment": "m_vecAbsOrigin"
+  },
+  "vtidx::PlayerRunCommand": {
+    "offsets": {
+      "windows": 25,
+      "linux": 26
+    },
+    "comment": "CCSPlayer_MovementServices vtable index."
+  },
+  "vtidx::FinishMove": {
+    "offsets": {
+      "windows": 38,
+      "linux": 40
+    },
+    "comment": "CCSPlayer_MovementServices vtable index."
+  }
+}

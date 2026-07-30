@@ -20,22 +20,30 @@
     "signatures": {
       "library": "server",
       "windows": "48 89 5C 24 ? 44 88 44 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 3D",
-      "linux": ""
+      "linux": "55 48 89 E5 41 57 41 56 41 89 D6 41 55 41 54 41 89 F4 53 48 89 FB 48 81 EC"
     },
     "comment": "handles player team join requests"
+  },
+  "MpHumanTeam_ApplyRestriction": {
+    "signatures": {
+      "library": "server",
+      "windows": "40 55 48 8D 6C 24 ? 48 81 EC ? ? ? ? BA",
+      "linux": "55 48 89 E5 41 57 41 56 41 55 41 54 53 48 81 EC ? ? ? ? E8 ? ? ? ? 89 C3"
+    },
+    "comment": "applies the human team restriction"
   },
   "CNetworkGameServer::PackEntities": {
     "signatures": {
       "library": "engine2",
       "windows": "4C 89 4C 24 ? 44 89 44 24 ? 48 89 54 24 ? 48 89 4C 24 ? 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 4D 63 F8",
-      "linux": ""
+      "linux": "55 48 89 E5 41 57 41 89 D7 41 56 48 8D 85"
     },
     "comment": "packs network entities for clients"
   },
   "CServerSideClient::SetName": {
     "offsets": {
       "windows": 61,
-      "linux": -1
+      "linux": 63
     },
     "comment": "updates the client display name"
   },
@@ -77,7 +85,7 @@
   "CBaseEntity::m_iTeamNum": {
     "offsets": {
       "windows": 836,
-      "linux": -1
+      "linux": 836
     },
     "comment": "reads the current controller team"
   },

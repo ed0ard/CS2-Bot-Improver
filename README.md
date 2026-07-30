@@ -9,7 +9,7 @@
 
 **English** · [简体中文](docs/README.zh-CN.md) · [Русский](docs/README.ru.md)
 
-[Features](#features) · [Installation](#installation) · [Commands](#commands) · [Panel guide](#panel-guide-windows-only) · [FAQ](#faq)
+[Features](#features) · [Installation](#installation) · [Commands](#commands) · [Panel Guide](#panel-guide-windows-only) · [FAQ](#faq)
 
 </div>
 

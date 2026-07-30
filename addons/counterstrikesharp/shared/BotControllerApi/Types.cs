@@ -75,6 +75,47 @@ namespace BotControllerApi
         public float YawDelta;
     }
 
+    /** Optional replay usercmd frame. Must match C++ ReplayCommandFrameData */
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct ReplayCommandFrame
+    {
+        public float ForwardMove;
+        public float LeftMove;
+        public float UpMove;
+        public float Pitch;
+        public float Yaw;
+        public float Roll;
+        public ulong Buttons;
+        public ulong Buttons1;
+        public ulong Buttons2;
+        public int MouseDx;
+        public int MouseDy;
+        public int WeaponSelect;
+        public uint Fields;
+        public byte LeftHandDesired;
+        public byte Pad0;
+        public byte Pad1;
+        public byte Pad2;
+    }
+
+    /** Optional offset-backed replay movement state. Must match C++ ReplayMovementExtra */
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct ReplayMovementExtra
+    {
+        public uint Fields;
+        public float JumpPressedTime;
+        public float LastDuckTime;
+        public int LastActualJumpPressTick;
+        public float LastActualJumpPressFrac;
+        public int LastUsableJumpPressTick;
+        public float LastUsableJumpPressFrac;
+        public int LastLandedTick;
+        public float LastLandedFrac;
+        public float LastLandedVelocityX;
+        public float LastLandedVelocityY;
+        public float LastLandedVelocityZ;
+    }
+
     /** Bot personality / aim / weapon preference. Mirrors C++ BotProfileData */
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct BotProfileData

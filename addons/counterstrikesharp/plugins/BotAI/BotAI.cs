@@ -14,7 +14,7 @@ public record PatchInfo(string Name, nint Address, List<byte> OriginalBytes);
 
 public static class BotOffsets
 {
-    public const int m_gameState = 0x5128;
+    public const int m_gameState = 0x5100;   // 14172: CCSBot+0x5100 (lea r14,[rbx+5100h]); was 0x5128 (=CSGameState+0x28, a float field)
     public const int m_isRoundOver = 0x08;
     public const int m_bombState = 0x0C;
     public const int m_plantedBombsite = 0x68;
