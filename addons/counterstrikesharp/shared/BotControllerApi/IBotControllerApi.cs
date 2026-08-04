@@ -8,7 +8,7 @@ namespace BotControllerApi
 
         // ---- locks ----
 
-        // All / Aim / Jump
+        // All / Aim
         bool Lock(int slot, LockKind kind);
 
         // Weapon: lock the bot onto a specific engine weapon slot.
@@ -18,7 +18,7 @@ namespace BotControllerApi
 
         bool UnlockAll(LockKind kind);
 
-        // For All/Aim/Jump returns true if locked; for Weapon use GetWeaponLock.
+        // For All/Aim returns true if locked; for Weapon use GetWeaponLock.
         bool IsLocked(int slot, LockKind kind);
 
         // Weapon-only query: the locked weapon slot, or None.

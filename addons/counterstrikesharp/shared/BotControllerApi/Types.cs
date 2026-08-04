@@ -8,13 +8,11 @@ namespace BotControllerApi
     //   All    - freezes both CCSBot::Update and CCSBot::Upkeep
     //   Aim    - freezes CCSBot::Upkeep only
     //   Weapon - locks the bot's weapon to a specific engine slot
-    //   Jump   - blocks CCSBot::Jump only
     public enum LockKind
     {
         All = 0,
         Aim = 1,
         Weapon = 2,
-        Jump = 3,
     }
 
     // Engine weapon slots.
