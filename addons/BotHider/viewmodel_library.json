@@ -1,0 +1,5638 @@
+{
+    "source": "来自unicbm的持枪视角礼物",
+    "steamid_format": "32-bit Steam account ID",
+    "viewmodels_by_steamid": {
+        "424467": {
+            "player_name": "FalleN",
+            "left_handed": true,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "1074151": {
+            "player_name": "mawth",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1882779": {
+            "player_name": "NickelBack",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "2445180": {
+            "player_name": "Aerial",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "3011855": {
+            "player_name": "matios",
+            "left_handed": false,
+            "fov": 65.0,
+            "offset_x": 2.0,
+            "offset_y": 1.5,
+            "offset_z": -1.0
+        },
+        "4338476": {
+            "player_name": "birdfromsky",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "7167161": {
+            "player_name": "MAJ3R",
+            "left_handed": false,
+            "fov": 65.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "8124135": {
+            "player_name": "adamS",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "9173024": {
+            "player_name": "ritchiEE",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "11977189": {
+            "player_name": "JACKZ",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "12553831": {
+            "player_name": "delle",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "12874964": {
+            "player_name": "mezii",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "18569432": {
+            "player_name": "flameZ",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "19979131": {
+            "player_name": "twist",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "20679059": {
+            "player_name": "hAdji",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "21875845": {
+            "player_name": "Snax",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "22076121": {
+            "player_name": "nEMANHA",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.5
+        },
+        "25299957": {
+            "player_name": "saffee",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "26563533": {
+            "player_name": "innocenttt",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "26946895": {
+            "player_name": "INS",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "30735103": {
+            "player_name": "IceBerg",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "31006590": {
+            "player_name": "ropz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "31327539": {
+            "player_name": "sausoL",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "32002754": {
+            "player_name": "elem",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "33208850": {
+            "player_name": "fitch",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 1.5,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "33494235": {
+            "player_name": "rem1x",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "34114868": {
+            "player_name": "Tuurtle",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "34587929": {
+            "player_name": "Haz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "34836484": {
+            "player_name": "tatazin",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": -1.5,
+            "offset_z": -1.5
+        },
+        "35794427": {
+            "player_name": "RAALZ",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "36104456": {
+            "player_name": "VINI",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "36412550": {
+            "player_name": "TeSeS",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "36669255": {
+            "player_name": "empathy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "37085479": {
+            "player_name": "rain",
+            "left_handed": true,
+            "fov": 60.0,
+            "offset_x": 1.5,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "37931638": {
+            "player_name": "mopoz",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "38661042": {
+            "player_name": "HooXi",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "40718819": {
+            "player_name": "alex",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "40885967": {
+            "player_name": "NAF",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "41322207": {
+            "player_name": "KAD1M",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "42677035": {
+            "player_name": "acorcs",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "42876435": {
+            "player_name": "WOOD7",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "44842089": {
+            "player_name": "Staehr",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "47524263": {
+            "player_name": "Wolfy",
+            "left_handed": false,
+            "fov": 63.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "50230614": {
+            "player_name": "exit`",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "50368224": {
+            "player_name": "mihai",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "51402911": {
+            "player_name": "Boye",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "51467095": {
+            "player_name": "v$m",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "52262697": {
+            "player_name": "Uli",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 1.0,
+            "offset_y": 0.5,
+            "offset_z": -1.5
+        },
+        "52606325": {
+            "player_name": "huNter-",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "52637737": {
+            "player_name": "cLd",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 1.0,
+            "offset_y": 2.0,
+            "offset_z": -1.5
+        },
+        "52964519": {
+            "player_name": "Summer",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "52977598": {
+            "player_name": "Aleksib",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "53275247": {
+            "player_name": "Xelex....",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "53796389": {
+            "player_name": "Frontsiderr",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "53993406": {
+            "player_name": "FL4MUS",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "54233223": {
+            "player_name": "Noktse",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.5
+        },
+        "55872799": {
+            "player_name": "JBOEN",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "55989477": {
+            "player_name": "Twistzz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "56540556": {
+            "player_name": "ckzao",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "57049253": {
+            "player_name": "Due1yant",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "58038052": {
+            "player_name": "donk",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "58325300": {
+            "player_name": "apocdud",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "60208330": {
+            "player_name": "motm",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "61449372": {
+            "player_name": "JT",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "63539846": {
+            "player_name": "nukkye",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "65746079": {
+            "player_name": "zmb",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "66355043": {
+            "player_name": "arvid",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "66570252": {
+            "player_name": "sugaR",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "67083025": {
+            "player_name": "Forester",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 1.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "68024588": {
+            "player_name": "ERSIN",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "68027030": {
+            "player_name": "HObbit",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "68256934": {
+            "player_name": "Markoś",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "68391216": {
+            "player_name": "asap",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "68938238": {
+            "player_name": "naitte",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "69226768": {
+            "player_name": "szj",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "71288472": {
+            "player_name": "JW",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "71385856": {
+            "player_name": "KRiMZ",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "71463785": {
+            "player_name": "juliustbe",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "71624387": {
+            "player_name": "Lucky",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 0.0,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "71642904": {
+            "player_name": "Krad",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 1.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "73173022": {
+            "player_name": "beastik",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "73566191": {
+            "player_name": "rokilan",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "73906687": {
+            "player_name": "REZ",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "75180042": {
+            "player_name": "tutehen",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "75315373": {
+            "player_name": "afro",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "75800974": {
+            "player_name": "Alv",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "75859856": {
+            "player_name": "Jame",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "78181357": {
+            "player_name": "kiyo",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -1.5
+        },
+        "78413227": {
+            "player_name": "adai",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "79529454": {
+            "player_name": "Noruyp",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "80311472": {
+            "player_name": "sdy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "81151265": {
+            "player_name": "Dycha",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "82869121": {
+            "player_name": "xReal",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "83503844": {
+            "player_name": "arT",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "83853068": {
+            "player_name": "XANTARES",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "84790754": {
+            "player_name": "upe",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "85167576": {
+            "player_name": "Ax1Le",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "85456730": {
+            "player_name": "pancc",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "85474033": {
+            "player_name": "Maka",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "85879672": {
+            "player_name": "ApeX",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -1.5,
+            "offset_z": -2.0
+        },
+        "86933217": {
+            "player_name": "kraghen",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "87563927": {
+            "player_name": "tory",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "87963662": {
+            "player_name": "frazehh",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "88084583": {
+            "player_name": "damyo",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "88360844": {
+            "player_name": "h4rn",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "89467622": {
+            "player_name": "Prime",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": -1.5,
+            "offset_y": -1.5,
+            "offset_z": -2.0
+        },
+        "89528706": {
+            "player_name": "DeStiNy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "90656280": {
+            "player_name": "hades",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "91462071": {
+            "player_name": "MoriiSko meow",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "92089093": {
+            "player_name": "xellow",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "92304643": {
+            "player_name": "prt",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": -1.0,
+            "offset_y": 0.0,
+            "offset_z": -1.0
+        },
+        "92622415": {
+            "player_name": "Vexite",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 1.5,
+            "offset_y": -1.0,
+            "offset_z": -1.9
+        },
+        "92860917": {
+            "player_name": "NertZ",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "92920272": {
+            "player_name": "abr",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "94843300": {
+            "player_name": "ICY",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "97016704": {
+            "player_name": "kyxsan",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "97531747": {
+            "player_name": "yaankz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "97751682": {
+            "player_name": "th0rsteinnf",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "97779736": {
+            "player_name": "Mol011",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "99348674": {
+            "player_name": "zorte",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "99448400": {
+            "player_name": "nafany",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "100650499": {
+            "player_name": "bobeksde",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "101497868": {
+            "player_name": "n1ssim",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "101522203": {
+            "player_name": "nosraC",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "101535513": {
+            "player_name": "dexter",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "101848953": {
+            "player_name": "Blytz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "102440334": {
+            "player_name": "Serendipityy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "103070679": {
+            "player_name": "Spinx",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "103213524": {
+            "player_name": "j0w",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "103323383": {
+            "player_name": "Avou",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "103793230": {
+            "player_name": "junior",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -1.0,
+            "offset_z": -2.0
+        },
+        "103863110": {
+            "player_name": "ArcherAce",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "104087441": {
+            "player_name": "slaxz-",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "105182632": {
+            "player_name": "story",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "105455819": {
+            "player_name": "Dirty",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "105564449": {
+            "player_name": "foggers",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "106428011": {
+            "player_name": "EliGE",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 1.0,
+            "offset_y": 2.0,
+            "offset_z": -1.0
+        },
+        "107271356": {
+            "player_name": "CagXD",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "107498100": {
+            "player_name": "chelo",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "107737265": {
+            "player_name": "HeavyGod",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "108157034": {
+            "player_name": "frozen",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "108241121": {
+            "player_name": "pz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "109301822": {
+            "player_name": "4X1s",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "109372465": {
+            "player_name": "aiMz0R",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "109933575": {
+            "player_name": "ragga",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "110274880": {
+            "player_name": "Haniaa",
+            "left_handed": true,
+            "fov": 60.0,
+            "offset_x": 1.5,
+            "offset_y": -0.5,
+            "offset_z": -1.0
+        },
+        "110830698": {
+            "player_name": "Ro1f",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "112055988": {
+            "player_name": "Liazz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "112851399": {
+            "player_name": "nicoodoz :3",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "114497073": {
+            "player_name": "m0NESY",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "115071471": {
+            "player_name": "r1ch",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "115140055": {
+            "player_name": "roliy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": -0.5,
+            "offset_y": 1.0,
+            "offset_z": -2.0
+        },
+        "115742145": {
+            "player_name": "facecrack",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "116931270": {
+            "player_name": "vinhy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "116979891": {
+            "player_name": "kreaz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "117411943": {
+            "player_name": "Prism",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "117534253": {
+            "player_name": "ad0rfin",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "117592077": {
+            "player_name": "naz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "119155074": {
+            "player_name": "Stx",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "120183772": {
+            "player_name": "cej0t",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "120437415": {
+            "player_name": "malbsMd",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "120516744": {
+            "player_name": "Ianzin",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "120528739": {
+            "player_name": "Muffin",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "121133939": {
+            "player_name": "Tadpole",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "121263183": {
+            "player_name": "misutaaa",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "121444546": {
+            "player_name": "ABM",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "121728571": {
+            "player_name": "amster",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "123219778": {
+            "player_name": "woxic",
+            "left_handed": true,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "123897784": {
+            "player_name": "nbqqq",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "124341526": {
+            "player_name": "TMB",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": -2.0,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "126590797": {
+            "player_name": "teleD",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "128515349": {
+            "player_name": "alxc",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "128640602": {
+            "player_name": "ARTIST-",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "129089888": {
+            "player_name": "Kurama",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "131305548": {
+            "player_name": "Erkast",
+            "left_handed": false,
+            "fov": 64.0,
+            "offset_x": 1.0,
+            "offset_y": 2.0,
+            "offset_z": -1.5
+        },
+        "132424531": {
+            "player_name": "KalubeR",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "132910394": {
+            "player_name": "Beccie",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "133120627": {
+            "player_name": "Bymas",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "135630812": {
+            "player_name": "doc",
+            "left_handed": false,
+            "fov": 62.0,
+            "offset_x": 2.0,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "136442715": {
+            "player_name": "Extinct",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "137805965": {
+            "player_name": "sl3nd",
+            "left_handed": false,
+            "fov": 63.0,
+            "offset_x": 1.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "138078516": {
+            "player_name": "Keoz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "138080982": {
+            "player_name": "aliStair",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "140061138": {
+            "player_name": "Yeda",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "140229234": {
+            "player_name": "saadzin",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "140558273": {
+            "player_name": "imyGDx",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -1.5
+        },
+        "141745324": {
+            "player_name": "SEXYVOVA",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "141998048": {
+            "player_name": "salazarr",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "143656100": {
+            "player_name": "Dementor",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 1.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "144322911": {
+            "player_name": "snk",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "146746760": {
+            "player_name": "Demho",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "146974312": {
+            "player_name": "westmelon",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "147881968": {
+            "player_name": "cerber",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "148394975": {
+            "player_name": "zune",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "148454229": {
+            "player_name": "HeCkBNk",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "148530751": {
+            "player_name": "Mercury",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "149493497": {
+            "player_name": "Infinite",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "149673357": {
+            "player_name": "B1NGO",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "150754997": {
+            "player_name": "Bukhavez",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "150827607": {
+            "player_name": "Crunchy",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "151187898": {
+            "player_name": "Emmsan",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "152916318": {
+            "player_name": "yvro",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "153288627": {
+            "player_name": "Wallz1k",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "153400465": {
+            "player_name": "ZywOo",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "155666238": {
+            "player_name": "Malkiss",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "156015259": {
+            "player_name": "Ryujin",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "156074686": {
+            "player_name": "alicerawr",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -1.0
+        },
+        "158615307": {
+            "player_name": "Dant1k",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "158810137": {
+            "player_name": "realzen",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "158822313": {
+            "player_name": "SELLTER",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "160169964": {
+            "player_name": "Remill",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "160225583": {
+            "player_name": "dav1deuS",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "160291620": {
+            "player_name": "jabbi",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "161584881": {
+            "player_name": "Br4tkO",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "162000467": {
+            "player_name": "Texta",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "164426945": {
+            "player_name": "Brain47",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "165905698": {
+            "player_name": "DemQQ",
+            "left_handed": false,
+            "fov": 65.0,
+            "offset_x": 2.0,
+            "offset_y": 1.0,
+            "offset_z": -2.0
+        },
+        "167304921": {
+            "player_name": "KAISER",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -1.8
+        },
+        "168197870": {
+            "player_name": "nin9",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.5
+        },
+        "168463912": {
+            "player_name": "mEGamN",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "168665390": {
+            "player_name": "podi",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "168818887": {
+            "player_name": "clax",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "169533761": {
+            "player_name": "Anlelele",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "169558739": {
+            "player_name": "K1 - FiDa",
+            "left_handed": false,
+            "fov": 64.0,
+            "offset_x": 2.0,
+            "offset_y": 1.5,
+            "offset_z": -2.0
+        },
+        "169848605": {
+            "player_name": "fREQ",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "170224923": {
+            "player_name": "nython",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "171760452": {
+            "player_name": "fear",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "172148328": {
+            "player_name": "StRoGo",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "173750470": {
+            "player_name": "M1KA",
+            "left_handed": true,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "174136197": {
+            "player_name": "YEKINDAR",
+            "left_handed": true,
+            "fov": 65.0,
+            "offset_x": -0.5,
+            "offset_y": 1.0,
+            "offset_z": -2.0
+        },
+        "174962930": {
+            "player_name": "gafolo",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 1.5,
+            "offset_z": -1.5
+        },
+        "176222286": {
+            "player_name": "cptkurtka023",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "177517735": {
+            "player_name": "z4KR1114",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "177848062": {
+            "player_name": "Rainwaker",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "178562747": {
+            "player_name": "Brollan",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "179354618": {
+            "player_name": "zewts",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -1.5
+        },
+        "180124403": {
+            "player_name": "mhLLL",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "181006324": {
+            "player_name": "xiELO",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "181022384": {
+            "player_name": "gejmzilla",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 0.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "181401491": {
+            "player_name": "lasfas",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "183602582": {
+            "player_name": "lan",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "184660636": {
+            "player_name": "kyuubii",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "184894360": {
+            "player_name": "Lich",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "185334169": {
+            "player_name": "Alisson",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "185937269": {
+            "player_name": "Lack1",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "185941338": {
+            "player_name": "Boombl4",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "187391202": {
+            "player_name": "MagnumZ",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "188295781": {
+            "player_name": "cass1n",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "188721128": {
+            "player_name": "maaryy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -1.5
+        },
+        "188819905": {
+            "player_name": "YumsaN",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "189640934": {
+            "player_name": "fleav",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "190359589": {
+            "player_name": "Sobol__",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "190407632": {
+            "player_name": "siuhy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "191809961": {
+            "player_name": "Duplicate",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "192054688": {
+            "player_name": "levi",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "192112459": {
+            "player_name": "SENER1",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "193533951": {
+            "player_name": "ottob",
+            "left_handed": false,
+            "fov": 65.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "193829435": {
+            "player_name": "drg",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 1.0,
+            "offset_y": 2.0,
+            "offset_z": -1.0
+        },
+        "194638879": {
+            "player_name": "Norwi",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "195407613": {
+            "player_name": "bnc",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "195488719": {
+            "player_name": "volt",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 0.0,
+            "offset_y": 1.0,
+            "offset_z": -2.0
+        },
+        "195797579": {
+            "player_name": "tucks1",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "195932239": {
+            "player_name": "s0und",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "196103646": {
+            "player_name": "SPELLAN",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "196508493": {
+            "player_name": "z1k4",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "196512686": {
+            "player_name": "therealyou21",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "196600807": {
+            "player_name": "k1ssly",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "196885990": {
+            "player_name": "KaiR0N-",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "197122745": {
+            "player_name": "Lucaozy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "197256406": {
+            "player_name": "7tetsu",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "198443782": {
+            "player_name": "pr1metapz",
+            "left_handed": false,
+            "fov": 65.0,
+            "offset_x": 2.5,
+            "offset_y": -1.0,
+            "offset_z": -1.5
+        },
+        "198611567": {
+            "player_name": "BRK",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "199349502": {
+            "player_name": "jernejj",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "200284384": {
+            "player_name": "tomate",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "200790839": {
+            "player_name": "nilo",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "200980216": {
+            "player_name": "Ciocardau",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "203367884": {
+            "player_name": "Djon8",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "203514302": {
+            "player_name": "TjP",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -1.3
+        },
+        "205062167": {
+            "player_name": "sinnopsyy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "205186299": {
+            "player_name": "madenn",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "205840885": {
+            "player_name": "Maniu$",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "206261197": {
+            "player_name": "RCF",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "208115597": {
+            "player_name": "Stepa",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "208135644": {
+            "player_name": "ryu",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "208722159": {
+            "player_name": "k4nfuz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "209294569": {
+            "player_name": "SHOCK",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "210311610": {
+            "player_name": "faydett",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "210384169": {
+            "player_name": "idisbalance",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "211453961": {
+            "player_name": "Cxzi",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "212494163": {
+            "player_name": "omichella",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "212571293": {
+            "player_name": "rigoN",
+            "left_handed": false,
+            "fov": 62.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "213998181": {
+            "player_name": "glowiing",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": -0.5,
+            "offset_y": 1.0,
+            "offset_z": -1.5
+        },
+        "215438719": {
+            "player_name": "fNk",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "216190295": {
+            "player_name": "Raijin",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "216235547": {
+            "player_name": "AlekS",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "216612575": {
+            "player_name": "jL",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -1.5
+        },
+        "217396153": {
+            "player_name": "brokeN",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "218120778": {
+            "player_name": "Jorko",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "218327067": {
+            "player_name": "cerolzin",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "218471701": {
+            "player_name": "jcobbb",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "219272777": {
+            "player_name": "Graviti",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -1.5
+        },
+        "219766182": {
+            "player_name": "ASTRAj",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -1.5
+        },
+        "221902877": {
+            "player_name": "M1key",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "222196859": {
+            "player_name": "k1to",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "222737943": {
+            "player_name": "Swisher",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "223291954": {
+            "player_name": "shaiK",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 1.5,
+            "offset_y": 2.0,
+            "offset_z": -1.3
+        },
+        "223887847": {
+            "player_name": "JBa",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "226613145": {
+            "player_name": "Ag1l",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "227185295": {
+            "player_name": "Sprayy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "228081651": {
+            "player_name": "MistR321",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 1.1,
+            "offset_z": -1.3
+        },
+        "229334739": {
+            "player_name": "ROBER -10-",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "229992323": {
+            "player_name": "makaroff",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": -2.0,
+            "offset_z": -1.0
+        },
+        "230419582": {
+            "player_name": "tAk",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "230662894": {
+            "player_name": "M4SON-",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "230664742": {
+            "player_name": "cabbi",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "230981917": {
+            "player_name": "8Juho8",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "231925561": {
+            "player_name": "atarax1a",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "232086390": {
+            "player_name": "laser",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "232762981": {
+            "player_name": "Miami",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "234059589": {
+            "player_name": "dumau",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "235377137": {
+            "player_name": "meyern",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -1.5,
+            "offset_z": -1.5
+        },
+        "235784889": {
+            "player_name": "melty",
+            "left_handed": true,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "236691769": {
+            "player_name": "ARSPOWER",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -1.5
+        },
+        "236708549": {
+            "player_name": "CrePoW",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "237685818": {
+            "player_name": "X5G7V",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "238977659": {
+            "player_name": "Pump",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 2.5,
+            "offset_y": 1.0,
+            "offset_z": -2.0
+        },
+        "238997989": {
+            "player_name": "Maison",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "239077622": {
+            "player_name": "buda",
+            "left_handed": false,
+            "fov": 63.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "239744905": {
+            "player_name": "dpr",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "241288610": {
+            "player_name": "Dytor62",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "241588545": {
+            "player_name": "fello",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "242151615": {
+            "player_name": "avid",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "242824793": {
+            "player_name": "Jynx",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "242973479": {
+            "player_name": "chop",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "243901303": {
+            "player_name": "h1te",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "244176904": {
+            "player_name": "tripey",
+            "left_handed": false,
+            "fov": 65.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.5
+        },
+        "250181961": {
+            "player_name": "Grizz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "250498109": {
+            "player_name": "El1an",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "250668735": {
+            "player_name": "HexT",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "251942476": {
+            "player_name": "b1elany",
+            "left_handed": true,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "252053056": {
+            "player_name": "discplex",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "252761679": {
+            "player_name": "ChipaaN",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "255168957": {
+            "player_name": "NEOFRAG",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "255500180": {
+            "player_name": "darchevile",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "255956984": {
+            "player_name": "romanovici",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "257144591": {
+            "player_name": "MaSvAl",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "257499248": {
+            "player_name": "danistzz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "258331727": {
+            "player_name": "tomiko",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "258613327": {
+            "player_name": "aNdu",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "259158584": {
+            "player_name": "suonko",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 1.0,
+            "offset_z": -1.5
+        },
+        "259740868": {
+            "player_name": "Tatu",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "260521116": {
+            "player_name": "Labreenc",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "261316840": {
+            "player_name": "Libraa",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "262391008": {
+            "player_name": "oopee",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "264854544": {
+            "player_name": "Frip",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "271283304": {
+            "player_name": "synyx",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "273208592": {
+            "player_name": "ronaldoCR7",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.2,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "278377258": {
+            "player_name": "snav",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "279355756": {
+            "player_name": "lov1kus",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "279847522": {
+            "player_name": "nikitea",
+            "left_handed": false,
+            "fov": 61.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "280611080": {
+            "player_name": "mello",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "280621564": {
+            "player_name": "Dunn",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 0.0,
+            "offset_y": 1.5,
+            "offset_z": -2.0
+        },
+        "282619514": {
+            "player_name": "swiz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "285508264": {
+            "player_name": "mASKED",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "285517906": {
+            "player_name": "Get_Jeka",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -1.5
+        },
+        "285659622": {
+            "player_name": "Qlocuu",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "286341748": {
+            "player_name": "b1t",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "288479674": {
+            "player_name": "puuha",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "288688034": {
+            "player_name": "Buzz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "288859378": {
+            "player_name": "Dobbo",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -0.5,
+            "offset_z": -1.4
+        },
+        "289573880": {
+            "player_name": "Botman",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "291666024": {
+            "player_name": "chay",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -1.0
+        },
+        "292168772": {
+            "player_name": "F1KU",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "292476348": {
+            "player_name": "kisserek",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "293404789": {
+            "player_name": "BELCHONOKK",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "293626183": {
+            "player_name": "shieldHAUS",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 1.0,
+            "offset_z": -2.0
+        },
+        "294421006": {
+            "player_name": "hypex",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "294569870": {
+            "player_name": "ay0k",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "297162589": {
+            "player_name": "diesenwOw",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -1.5
+        },
+        "297505129": {
+            "player_name": "ksloks",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "297779052": {
+            "player_name": "ADRON",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "298103918": {
+            "player_name": "spardausavus",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "298955373": {
+            "player_name": "jkXy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "300693622": {
+            "player_name": "dennyslaw",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "303390740": {
+            "player_name": "CacaNito",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "305720387": {
+            "player_name": "Melavi",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "305758125": {
+            "player_name": "nyezin",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "306024702": {
+            "player_name": "vicu",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "307032635": {
+            "player_name": "dangeR",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "308533011": {
+            "player_name": "vision",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 0.5,
+            "offset_y": 2.0,
+            "offset_z": -1.5
+        },
+        "308807690": {
+            "player_name": "riil3",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "311766666": {
+            "player_name": "deco",
+            "left_handed": false,
+            "fov": 65.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "312643228": {
+            "player_name": "Kralle",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "312823977": {
+            "player_name": "sliimey",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "313169162": {
+            "player_name": "tatm",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "313501392": {
+            "player_name": "hexoq",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "314460869": {
+            "player_name": "G0dtheos",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "316220635": {
+            "player_name": "Banjo",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -1.5
+        },
+        "316818980": {
+            "player_name": "marat2k",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "318176128": {
+            "player_name": "Leomonster",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.35
+        },
+        "323723495": {
+            "player_name": "ultimate",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "323761730": {
+            "player_name": "Bambosh",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "323900070": {
+            "player_name": "ct0m",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "326276268": {
+            "player_name": "Malu",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "327280463": {
+            "player_name": "dekooo_O",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "328275073": {
+            "player_name": "Patsi",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "332333083": {
+            "player_name": "Chr1zN",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "334115362": {
+            "player_name": "r1nkle",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "334672348": {
+            "player_name": "Fitzy",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 0.0,
+            "offset_y": 1.0,
+            "offset_z": -2.0
+        },
+        "335473688": {
+            "player_name": "opdust",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "336043502": {
+            "player_name": "rkt",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "336152206": {
+            "player_name": "kRaSnaL",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "338231248": {
+            "player_name": "Girafffe",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "338268527": {
+            "player_name": "nilsjee",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "340208404": {
+            "player_name": "onic",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "343798846": {
+            "player_name": "Leakz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "344771176": {
+            "player_name": "npl",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "345755879": {
+            "player_name": "CloN7",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "346576119": {
+            "player_name": "Destro_YD",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "346906182": {
+            "player_name": "decenty",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 1.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "347468740": {
+            "player_name": "rdnzao",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 0.0,
+            "offset_y": 1.0,
+            "offset_z": -2.0
+        },
+        "347890047": {
+            "player_name": "hfah",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "348675310": {
+            "player_name": "sirah",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "349573813": {
+            "player_name": "SunPayus",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "350295751": {
+            "player_name": "PR",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "351139506": {
+            "player_name": "gleb86rus",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "357199072": {
+            "player_name": "Divine",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "359457480": {
+            "player_name": "HUASOPEEK",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "364310941": {
+            "player_name": "P3R3IIRA",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "364448100": {
+            "player_name": "Caleyy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 0.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "364544605": {
+            "player_name": "t9rnay",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "365755437": {
+            "player_name": "Cliqq",
+            "left_handed": false,
+            "fov": 66.0,
+            "offset_x": 2.5,
+            "offset_y": 1.0,
+            "offset_z": -1.5
+        },
+        "365906515": {
+            "player_name": "gump",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "366802450": {
+            "player_name": "soulfly",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "368062170": {
+            "player_name": "Mechanical",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "368451237": {
+            "player_name": "lash",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "368881420": {
+            "player_name": "xerolte",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "369268302": {
+            "player_name": "AccuracyTG",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "372579523": {
+            "player_name": "nettik",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "374549101": {
+            "player_name": "reck",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "375395117": {
+            "player_name": "sosyaoai",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "377218468": {
+            "player_name": "Lake",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "377331787": {
+            "player_name": "X1RON",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "377986134": {
+            "player_name": "Markz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "379213704": {
+            "player_name": "ammar",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "379599484": {
+            "player_name": "bevve",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "380119231": {
+            "player_name": "guidimon",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "380710619": {
+            "player_name": "dako",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "382452440": {
+            "player_name": "susp",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "383471275": {
+            "player_name": "rzk",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "383961258": {
+            "player_name": "Gizmy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -1.0
+        },
+        "385712827": {
+            "player_name": "AntyVirus",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "387644025": {
+            "player_name": "adeX",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "388970962": {
+            "player_name": "toto-m",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "390096574": {
+            "player_name": "r3salt",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -1.0
+        },
+        "392390376": {
+            "player_name": "ChildKing",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 1.0,
+            "offset_z": -1.5
+        },
+        "393603607": {
+            "player_name": "jeorge",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "394365601": {
+            "player_name": "BZA",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "394931794": {
+            "player_name": "Moseyuh",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "395473484": {
+            "player_name": "torzsi",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "395986293": {
+            "player_name": "slaxejezzz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "396416110": {
+            "player_name": "Myggis",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "398159133": {
+            "player_name": "rage",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "398968766": {
+            "player_name": "Ltz",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -1.5
+        },
+        "400141913": {
+            "player_name": "Jee",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "400417045": {
+            "player_name": "bnox",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "401347484": {
+            "player_name": "abizz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "402172443": {
+            "player_name": "controlez",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 1.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "402704995": {
+            "player_name": "TRAVIS",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "403941754": {
+            "player_name": "timo",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "404484789": {
+            "player_name": "Lewis",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "404671310": {
+            "player_name": "JamYoung",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "404852560": {
+            "player_name": "try",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "405431972": {
+            "player_name": "shalfey",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "409820733": {
+            "player_name": "MartinezSa",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "409917458": {
+            "player_name": "nardes",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "409998440": {
+            "player_name": "shane",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "410770831": {
+            "player_name": "Kat",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "411384650": {
+            "player_name": "tsug",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "411757486": {
+            "player_name": "Magnojezuz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "412672734": {
+            "player_name": "SPine",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "414474307": {
+            "player_name": "castrz",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "415591875": {
+            "player_name": "FraGuTy",
+            "left_handed": false,
+            "fov": 67.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -1.7
+        },
+        "415811354": {
+            "player_name": "CLASIA",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 2.0,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "416112544": {
+            "player_name": "Hezz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "416288639": {
+            "player_name": "LaiKeXu",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 0.0,
+            "offset_y": 1.0,
+            "offset_z": -2.0
+        },
+        "416990440": {
+            "player_name": "Joey",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "417070118": {
+            "player_name": "snow",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "417702723": {
+            "player_name": "teme",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "418938842": {
+            "player_name": "Neqy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "420752411": {
+            "player_name": "seabraez",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 1.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "423466724": {
+            "player_name": "bogi",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "425391947": {
+            "player_name": "kauez",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "426089708": {
+            "player_name": "174AVA",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "427790854": {
+            "player_name": "drop",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "428610092": {
+            "player_name": "chudy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "436072455": {
+            "player_name": "piriajr",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "436304685": {
+            "player_name": "sh1nejezzz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "436866562": {
+            "player_name": "R4DYX",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "439220479": {
+            "player_name": "mlhz9n",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "440808875": {
+            "player_name": "TorNEX",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "440853447": {
+            "player_name": "blazekinNho",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "444706264": {
+            "player_name": "maaxg1",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "445485290": {
+            "player_name": "EMSTAR",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "447214806": {
+            "player_name": "Nikodeon",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "447933315": {
+            "player_name": "phzy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "449277787": {
+            "player_name": "SYPH0",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "449819483": {
+            "player_name": "nicx",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "450484535": {
+            "player_name": "jottAAA",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "452134916": {
+            "player_name": "Flayy-",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "456122416": {
+            "player_name": "C4LLM3SU3",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "457082328": {
+            "player_name": "dav1g",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "457485519": {
+            "player_name": "Pelle",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "460473944": {
+            "player_name": "Sasiki",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "460563842": {
+            "player_name": "Salazar",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "460930168": {
+            "player_name": "Roninbaby",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "462123965": {
+            "player_name": "m1N1",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "462168316": {
+            "player_name": "tomaszin",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "462441490": {
+            "player_name": "RaY5ive",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "467105698": {
+            "player_name": "h0t",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "469105167": {
+            "player_name": "OneUn1que",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "471152736": {
+            "player_name": "anber",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": -1.5,
+            "offset_z": -2.0
+        },
+        "476343738": {
+            "player_name": "f4stzin",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "480410871": {
+            "player_name": "AwaykeN",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "486179556": {
+            "player_name": "jackasmo",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "488291852": {
+            "player_name": "toshas",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "490817475": {
+            "player_name": "starplajerz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "492538353": {
+            "player_name": "PEEPING",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "492554672": {
+            "player_name": "Schwarz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "768322878": {
+            "player_name": "r3kt",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "801364483": {
+            "player_name": "ligroo",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "838994315": {
+            "player_name": "SiKo",
+            "left_handed": false,
+            "fov": 65.0,
+            "offset_x": 2.5,
+            "offset_y": 1.0,
+            "offset_z": -2.0
+        },
+        "839881894": {
+            "player_name": "AquaRS",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "839943839": {
+            "player_name": "noway",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "839987798": {
+            "player_name": "jambo",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -1.5
+        },
+        "842252962": {
+            "player_name": "dan4o",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "843213541": {
+            "player_name": "dwushka",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "843820708": {
+            "player_name": "LAKSHERi",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -1.5
+        },
+        "849196548": {
+            "player_name": "koala",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "849593548": {
+            "player_name": "twenty3",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "850331718": {
+            "player_name": "Burmy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "851315664": {
+            "player_name": "RoberttMP",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "851417693": {
+            "player_name": "kelieN",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "851603565": {
+            "player_name": "deb0",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 1.5,
+            "offset_y": 2.0,
+            "offset_z": -1.5
+        },
+        "851910095": {
+            "player_name": "aimy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "852248195": {
+            "player_name": "Wicadia",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "855498462": {
+            "player_name": "eskyy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "856041119": {
+            "player_name": "WAST3D--",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "856465673": {
+            "player_name": "EmiliaQAQ",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "858360149": {
+            "player_name": "yab0ku-",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "859530794": {
+            "player_name": "Kaide",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "862045039": {
+            "player_name": "PsychoDoctor",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -1.0,
+            "offset_z": -2.0
+        },
+        "863160115": {
+            "player_name": "sk0R",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 1.0,
+            "offset_y": 0.0,
+            "offset_z": -1.0
+        },
+        "864444621": {
+            "player_name": "Prokiller",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -1.0
+        },
+        "865536485": {
+            "player_name": "tasman",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -1.5
+        },
+        "866891295": {
+            "player_name": "fury5k",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "868936646": {
+            "player_name": "Sdaim",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "871876874": {
+            "player_name": "m1QUSE",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "874407158": {
+            "player_name": "happ",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "878556854": {
+            "player_name": "mzinho",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "879040137": {
+            "player_name": "xant3r",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "879185963": {
+            "player_name": "zock",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "879332262": {
+            "player_name": "dea",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "881198100": {
+            "player_name": "tried",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "882582488": {
+            "player_name": "cool4st",
+            "left_handed": false,
+            "fov": 65.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "883106369": {
+            "player_name": "mag1k3Y",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -1.0,
+            "offset_z": -1.5
+        },
+        "883681120": {
+            "player_name": "karnez",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "885170938": {
+            "player_name": "Kvem",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "885897378": {
+            "player_name": "RQBY",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 1.5,
+            "offset_z": -1.0
+        },
+        "889754458": {
+            "player_name": "latto",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "893346319": {
+            "player_name": "tenzy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "895109597": {
+            "player_name": "Jimpphat",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "897314034": {
+            "player_name": "rainny",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "897500459": {
+            "player_name": "kL1o",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "898415694": {
+            "player_name": "pepe",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "899162551": {
+            "player_name": "d1Ledez",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "899290797": {
+            "player_name": "d1maje",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "899764586": {
+            "player_name": "DSSj",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "901967613": {
+            "player_name": "v1w",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 1.0,
+            "offset_y": 2.0,
+            "offset_z": -1.3
+        },
+        "902103239": {
+            "player_name": "Nightraid",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "905374007": {
+            "player_name": "Jun1",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "908188019": {
+            "player_name": "v1ze111",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "910404232": {
+            "player_name": "Pazini",
+            "left_handed": false,
+            "fov": 63.0,
+            "offset_x": 2.0,
+            "offset_y": 1.5,
+            "offset_z": -2.0
+        },
+        "911747440": {
+            "player_name": "tN1R",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "912057727": {
+            "player_name": "r1pa4",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "912308148": {
+            "player_name": "chengking",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "914042490": {
+            "player_name": "reNTU",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "914124179": {
+            "player_name": "f1NCH",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "915367451": {
+            "player_name": "dem0n",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "920033815": {
+            "player_name": "Starry7",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "920981974": {
+            "player_name": "Ntx",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "928068320": {
+            "player_name": "rendysky",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -1.5,
+            "offset_z": -2.0
+        },
+        "930226076": {
+            "player_name": "L00m1",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "931109844": {
+            "player_name": "fnl",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "934714420": {
+            "player_name": "boke",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "962416899": {
+            "player_name": "lukiz",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "969251765": {
+            "player_name": "wieenN-",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "969309695": {
+            "player_name": "kiytsu",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "977087142": {
+            "player_name": "ROUX",
+            "left_handed": false,
+            "fov": 65.0,
+            "offset_x": 1.0,
+            "offset_y": -1.0,
+            "offset_z": -2.0
+        },
+        "979595590": {
+            "player_name": "nacho",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 1.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "991201920": {
+            "player_name": "khaN",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "996643915": {
+            "player_name": "Zero",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "999558360": {
+            "player_name": "bLitz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1002150936": {
+            "player_name": "957",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1004355471": {
+            "player_name": "sFade8",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.3,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "1004983328": {
+            "player_name": "Tri-Borgg1",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1006074432": {
+            "player_name": "Techno4K",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1006390625": {
+            "player_name": "Flierax",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -1.75
+        },
+        "1011452664": {
+            "player_name": "Neityu",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1012530125": {
+            "player_name": "lauNX",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -1.0,
+            "offset_z": -1.7
+        },
+        "1013261741": {
+            "player_name": "RATiGeR",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1014228401": {
+            "player_name": "AZUWU",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1018971900": {
+            "player_name": "Mané",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "1021028226": {
+            "player_name": "her1tage",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1021035676": {
+            "player_name": "tom1jed",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -1.5
+        },
+        "1028354190": {
+            "player_name": "R4N",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1030983373": {
+            "player_name": "Sqreet",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1031012697": {
+            "player_name": "Krabeni",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "1035615149": {
+            "player_name": "zont1x",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "1036922783": {
+            "player_name": "ivz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1038000482": {
+            "player_name": "xelex",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1038919490": {
+            "player_name": "leo",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1040503293": {
+            "player_name": "Freesies",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1040844183": {
+            "player_name": "H4SAN4TOR",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1046235059": {
+            "player_name": "-kanay",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "1049202927": {
+            "player_name": "ztr",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "1052115620": {
+            "player_name": "F0R3VER-",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1055940590": {
+            "player_name": "L1haNg",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1056251466": {
+            "player_name": "gbb",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1057315195": {
+            "player_name": "Kiy0o",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.0,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "1058571256": {
+            "player_name": "chuzhongT",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1062481712": {
+            "player_name": "danss",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -1.3
+        },
+        "1064318075": {
+            "player_name": "0SAMAS",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "1065818306": {
+            "player_name": "prince",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1068758130": {
+            "player_name": "fluffy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -1.5
+        },
+        "1070706470": {
+            "player_name": "maxxkor",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1071740496": {
+            "player_name": "kyousuke",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1072096917": {
+            "player_name": "bl1x1",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1072344457": {
+            "player_name": "ayuki",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1074229438": {
+            "player_name": "sowalio",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1076020198": {
+            "player_name": "senka",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1078693059": {
+            "player_name": "Mokuj1n",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1082856877": {
+            "player_name": "diozera",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1086212773": {
+            "player_name": "MATYS",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1096785321": {
+            "player_name": "nesh66",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1099351009": {
+            "player_name": "Balency",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "1103215134": {
+            "player_name": "Matz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "1105454906": {
+            "player_name": "me1o",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "1114080057": {
+            "player_name": "mukosssssssss",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1121977145": {
+            "player_name": "abiraju",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.4,
+            "offset_y": 0.8,
+            "offset_z": -1.5
+        },
+        "1125626696": {
+            "player_name": "zypwiz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1135765413": {
+            "player_name": "kye",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1138991898": {
+            "player_name": "NeoLife",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "1139696549": {
+            "player_name": "revoltz",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1140460110": {
+            "player_name": "dziugss",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1143620360": {
+            "player_name": "NickyB",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1144871126": {
+            "player_name": "woozzzi",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1145460884": {
+            "player_name": "dott1",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "1147479079": {
+            "player_name": "Dr3nquu",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1160446281": {
+            "player_name": "robo",
+            "left_handed": false,
+            "fov": 65.0,
+            "offset_x": 2.5,
+            "offset_y": -1.5,
+            "offset_z": -1.5
+        },
+        "1165589427": {
+            "player_name": "ayano",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1165922041": {
+            "player_name": "n1cks",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 1.0,
+            "offset_z": -1.5
+        },
+        "1174445643": {
+            "player_name": "SpavaQu",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "1175963533": {
+            "player_name": "74lor",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1176878177": {
+            "player_name": "yxngstxr",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -1.5
+        },
+        "1184895607": {
+            "player_name": "m1kketye",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "1202122273": {
+            "player_name": "maik",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1203692176": {
+            "player_name": "deemOo",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "1204654669": {
+            "player_name": "xeedo",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1206910926": {
+            "player_name": "kashl1d",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1213057038": {
+            "player_name": "tex1y",
+            "left_handed": false,
+            "fov": 63.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -1.5
+        },
+        "1221094357": {
+            "player_name": "flouzer",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1222059726": {
+            "player_name": "Pedrinho2011",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1228834360": {
+            "player_name": "7kick",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 1.0,
+            "offset_z": -2.0
+        },
+        "1234058633": {
+            "player_name": "OCEANA",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 2.5,
+            "offset_y": 2.0,
+            "offset_z": -2.0
+        },
+        "1243297617": {
+            "player_name": "910",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1254603668": {
+            "player_name": "h1kaN",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1268283122": {
+            "player_name": "turbo",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1273559274": {
+            "player_name": "k1nco",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1274933936": {
+            "player_name": "dex",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1276923255": {
+            "player_name": "next1me",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1278482624": {
+            "player_name": "yuramyata",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1281687642": {
+            "player_name": "CutzMeretz",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1287152892": {
+            "player_name": "efire",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1287162831": {
+            "player_name": "botpa1",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.6
+        },
+        "1317638449": {
+            "player_name": "Suki272",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "1344804078": {
+            "player_name": "meowpop",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1353702531": {
+            "player_name": "cmtry",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1424721159": {
+            "player_name": "relaxxie",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1430173287": {
+            "player_name": "tikuak",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1462253534": {
+            "player_name": "zevy",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1470606075": {
+            "player_name": "cobrazera",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1479724279": {
+            "player_name": "qw1nk1",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1480716299": {
+            "player_name": "meetyoxanaji",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1486844339": {
+            "player_name": "Magic",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1510482160": {
+            "player_name": "Gthug95",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1512214462": {
+            "player_name": "wndrzwer",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1705485859": {
+            "player_name": "ein",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1714727081": {
+            "player_name": "rhitta",
+            "left_handed": true,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1779829011": {
+            "player_name": "pr",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -2.0
+        },
+        "1876739476": {
+            "player_name": "zesta",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        },
+        "1925062664": {
+            "player_name": "bl1tzen",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 2.5,
+            "offset_y": -2.0,
+            "offset_z": -2.0
+        },
+        "1928151202": {
+            "player_name": "aMzZ7y",
+            "left_handed": false,
+            "fov": 60.0,
+            "offset_x": 1.0,
+            "offset_y": 1.0,
+            "offset_z": -1.0
+        },
+        "1928409858": {
+            "player_name": "notorious",
+            "left_handed": false,
+            "fov": 68.0,
+            "offset_x": 2.5,
+            "offset_y": 0.0,
+            "offset_z": -1.5
+        }
+    }
+}
