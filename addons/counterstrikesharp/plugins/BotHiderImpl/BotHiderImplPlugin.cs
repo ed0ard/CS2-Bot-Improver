@@ -15,7 +15,7 @@ namespace BotHiderImpl;
 public class BotHiderImplPlugin : BasePlugin
 {
     public override string ModuleName => "BotHiderImpl";
-    public override string ModuleVersion => "0.3.7";
+    public override string ModuleVersion => "0.3.8";
     public override string ModuleAuthor => "XBribo";
     public override string ModuleDescription =>
         "BotHider CSS Plugin";
@@ -86,13 +86,6 @@ public class BotHiderImplPlugin : BasePlugin
     private void OnClientDisconnect(int slot)
     {
         ResetAppliedSlot(slot, 0UL);
-    }
-
-    // Match end
-    [GameEventHandler]
-    public HookResult OnWinPanelMatch(EventCsWinPanelMatch @event, GameEventInfo info)
-    {
-        return HookResult.Continue;
     }
 
     // Round start — respawn managed bots that ended the prior round dead.

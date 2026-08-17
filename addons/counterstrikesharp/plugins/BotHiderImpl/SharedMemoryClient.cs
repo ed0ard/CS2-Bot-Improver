@@ -64,8 +64,6 @@ public sealed class SharedMemoryClient : IBotHiderApi, IDisposable
     private const byte CmdSetSteamId = 1;
     private const byte CmdSetPersona = 2;
     private const byte CmdSetDisguise = 3;
-    private const byte CmdRebuild = 4;
-    // 5 (KickAll) and 6 (Refill) retired — match-end clean-rebuild removed
     private const byte CmdSetNameSource = 7;
 
     // Sentinel slot for global commands
@@ -417,14 +415,6 @@ public sealed class SharedMemoryClient : IBotHiderApi, IDisposable
         if (_view == null) TryConnect();
         if (_view == null) return false;
         return PostCommand(CmdSetNameSource, SlotAll, useBotInfo ? 1UL : 0UL, null);
-    }
-
-    // Request a clean bot rebuild
-    public bool RequestRebuild()
-    {
-        if (_view == null) TryConnect();
-        if (_view == null) return false;
-        return PostCommand(CmdRebuild, SlotAll, 0UL, null);
     }
 
     private bool PostCommand(byte type, int slot, ulong sid, string? name)
