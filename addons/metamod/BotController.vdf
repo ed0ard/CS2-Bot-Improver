@@ -1,0 +1,5 @@
+"Metamod Plugin"
+{
+	"alias"	"BotController"
+	"file"	"addons/BotController/bin/win64/BotController"
+}

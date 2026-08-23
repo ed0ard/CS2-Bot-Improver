@@ -8,7 +8,7 @@ namespace BotControllerApi
 
         // ---- locks ----
 
-        // All / Aim / Jump
+        // All / Aim
         bool Lock(int slot, LockKind kind);
 
         // Weapon: lock the bot onto a specific engine weapon slot.
@@ -18,7 +18,7 @@ namespace BotControllerApi
 
         bool UnlockAll(LockKind kind);
 
-        // For All/Aim/Jump returns true if locked; for Weapon use GetWeaponLock.
+        // For All/Aim returns true if locked; for Weapon use GetWeaponLock.
         bool IsLocked(int slot, LockKind kind);
 
         // Weapon-only query: the locked weapon slot, or None.
@@ -66,6 +66,12 @@ namespace BotControllerApi
 
         // Def index of the bot's current active weapon. <0 if unresolved.
         int BotActiveWeaponDef(int slot);
+
+        // Creates an independently cancellable usercmd injection and returns its token
+        long InjectUsercmd(int slot, ulong buttonMask, int durationMs = 0);
+
+        // Cancels one usercmd injection by its token
+        bool CancelUsercmdInjection(int slot, long injectionId);
 
         // ---- profile ----
 

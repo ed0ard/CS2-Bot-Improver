@@ -6,22 +6,18 @@
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <AssemblyName>BotControllerImpl</AssemblyName>
-    <!-- CSS loads the plugin DLL directly; no app host needed. -->
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Pinned: CSS plugin API. CopyLocal off so we don't ship the SDK. -->
-    <PackageReference Include="CounterStrikeSharp.API" Version="1.0.365">
+    <PackageReference Include="CounterStrikeSharp.API" Version="1.0.371">
       <Private>false</Private>
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Shared API contract. Deployed to CSS shared/, so don't copy it next to
-         the plugin (Private=false) — both sides must load the one shared DLL. -->
     <ProjectReference Include="../BotControllerApi/BotControllerApi.csproj">
       <Private>false</Private>
     </ProjectReference>

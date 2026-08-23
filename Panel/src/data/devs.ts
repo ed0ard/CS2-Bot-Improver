@@ -13,6 +13,7 @@ export const DEVS: string[] = [
   "htfy96",
   "DANK1NG1I45l4",
   "XYC_KL",
+  "mrc4tt",
   "quachuoi2",
   "WanderDream",
   "Gardevior",
