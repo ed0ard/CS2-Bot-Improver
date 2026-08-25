@@ -25,7 +25,7 @@ public static class BotOffsets
 }
 
 [MinimumApiVersion(304)]
-public class BotAI : BasePlugin
+public class BotAI : BasePlugin, IPluginConfig<BotAIConfig>
 {
     public override string ModuleName => "Patches - Bot AI";
     public override string ModuleVersion => "1.8.8";
@@ -35,16 +35,36 @@ public class BotAI : BasePlugin
 
     private readonly List<PatchInfo> _appliedPatches = [];
     private readonly bool _isLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+    private static readonly HashSet<string> ExtendedAwarenessPatches =
+    [
+        "InViewCone_RemoveOuterFOV",
+        "InViewCone_RemoveInnerFOV",
+        "OnAudibleEvent_GlobalHearRange",
+        "InvestigateNoise_SkipSelfDefenseCheck"
+    ];
 
+    public BotAIConfig Config { get; set; } = new();
 
+    public void OnConfigParsed(BotAIConfig config)
+    {
+        Config = config;
+    }
 
     public override void Load(bool hotReload)
     {
         Logger.LogInformation("Bot AI Patches loading...");
         var patchDefinitions = _isLinux ? LinuxPatchDefinitions.All : WindowsPatchDefinitions.All;
+        var skippedPatches = 0;
 
         foreach (var name in patchDefinitions.Keys)
         {
+            if (Config.CasualAwareness && ExtendedAwarenessPatches.Contains(name))
+            {
+                skippedPatches++;
+                Logger.LogInformation($"{name}: skipped (CasualAwareness enabled).");
+                continue;
+            }
+
             if (ApplyPatch(name, _isLinux)) Logger.LogInformation($"{name}: applied.");
             else Logger.LogError($"{name}: FAILED.");
         }
@@ -70,7 +90,9 @@ public class BotAI : BasePlugin
             return HookResult.Continue;
         });
 
-        Logger.LogInformation($"Applied {_appliedPatches.Count}/{patchDefinitions.Count} patches.");
+        Logger.LogInformation(
+            $"Applied {_appliedPatches.Count}/{patchDefinitions.Count - skippedPatches} enabled patches " +
+            $"({skippedPatches} extended awareness patches skipped).");
     }
 
     public override void Unload(bool hotReload)

@@ -95,6 +95,21 @@ On Windows, please download **CS2BotImprover_rules_unchanged.zip** to preserve t
 | `bot_nades max` | Bots have minimal limitations and think less before throwing nades. |
 | `bot_nades` | Show the current nade mode. |
 
+### Bot awareness
+
+BotAI's extended FOV, global hearing, and aggressive noise-investigation patches are disabled by default. The plugin configuration is generated at:
+
+`game/csgo/addons/counterstrikesharp/configs/plugins/BotAI/BotAI.json`
+
+```json
+{
+  "CasualAwareness": true,
+  "ConfigVersion": 1
+}
+```
+
+Set `CasualAwareness` to `false` to apply the upstream extended-awareness patches. Reload BotAI or restart the server after changing this setting; memory patches are not switched while the plugin is running.
+
 ### Skins
 
 | Command | Description |
