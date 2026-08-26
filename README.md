@@ -95,20 +95,104 @@ On Windows, please download **CS2BotImprover_rules_unchanged.zip** to preserve t
 | `bot_nades max` | Bots have minimal limitations and think less before throwing nades. |
 | `bot_nades` | Show the current nade mode. |
 
-### Bot awareness
+### Bot AI modules
 
-BotAI's extended FOV, global hearing, and aggressive noise-investigation patches are disabled by default. The plugin configuration is generated at:
+Every BotAI patch belongs to a documented module group. Toggle whole groups in the config file, or list individual patch names for fine-grained control:
 
 `game/csgo/addons/counterstrikesharp/configs/plugins/BotAI/BotAI.json`
 
 ```json
 {
-  "CasualAwareness": true,
-  "ConfigVersion": 1
+  "ConfigVersion": 2,
+  "Modules": {
+    "Awareness": false,
+    "BombInfo": false,
+    "CombatForce": true,
+    "Movement": true,
+    "VisionAttention": true,
+    "BombBehavior": true,
+    "StateMachine": true
+  },
+  "DisabledPatches": []
 }
 ```
 
-Set `CasualAwareness` to `false` to apply the upstream extended-awareness patches. Reload BotAI or restart the server after changing this setting; memory patches are not switched while the plugin is running.
+| Module | What it does | Recommended |
+| --- | --- | --- |
+| `Awareness` | Superhuman perception: unlimited vision cones, global hearing, aggressive noise investigation. Makes bots wallhack-ish. | `false` for casual fair play |
+| `BombInfo` | Global C4 intel: pickup/beeps heard anywhere and instant site knowledge on plant. Deletes the post-plant information game. | `false` for casual fair play |
+| `CombatForce` | Forced combat: no fire-rate limit, hold-trigger sprays at any range, 100% dodge chance (dice removed). | `true` if you want strong bots; `false` if gunfights feel unfair |
+| `Movement` | Movement quality fixes: strafing unlocked, dodge while reloading, anti-sniper movement. Vanilla randomness kept. | `true` |
+| `VisionAttention` | Vision/attention enhancements: watching approach points, always noticing enemies. | `true` |
+| `BombBehavior` | Plant/defuse behavioral fixes (stop pulling knife out, fight back while defusing). Pure realism. | `true` |
+| `StateMachine` | Misc state fixes, including removing built-in flash avoidance so bots can be blinded like humans. | `true` |
+
+- `DisabledPatches` lists individual patch names to skip on top of module toggles; unknown names are reported at load time.
+- Legacy `CasualAwareness` (ConfigVersion 1) is still honored: `true` forces the Awareness group off even when `Modules.Awareness` is true. Remove the field to rely on `Modules` alone.
+- Memory patches are applied at load time only — restart or reload the plugin after changing this file.
+
+#### Per-patch reference
+
+<details>
+<summary><strong>All BotAI patches grouped by module</strong></summary>
+
+| Patch | What it changes |
+| --- | --- |
+| **Awareness** ⛔ superhuman perception | |
+| `InViewCone_RemoveOuterFOV` | Removes the outer vision-cone limit (bots see almost all around them) |
+| `InViewCone_RemoveInnerFOV` | Removes the inner vision-cone limit |
+| `OnAudibleEvent_GlobalHearRange` | Bots hear audible events from anywhere on the map |
+| `InvestigateNoise_SkipSelfDefenseCheck` | Bots investigate noises without the self-defense check |
+| **BombInfo** ⛔ global C4 intel | |
+| `BombPickup_CT_GlobalHearRange` | CT bots hear the bomb pickup anywhere on the map |
+| `BombBeep_CT_GlobalHearRange` | CT bots hear bomb beeps anywhere on the map |
+| `OnBombPlanted_AllBotsLearnSite` | Every bot instantly learns the planted site when the bomb goes down |
+| **CombatForce** forced combat | |
+| `AttackState_SkipFireRateCheck` | Removes the fire-rate gate — bots can shoot every simulation tick |
+| `AttackState_SkipSteadyFireShortcut` | No early exit from the steady-fire routine (longer sprays) |
+| `AttackState_SkipZoomFireShortcut` | No early exit from the zoom-fire routine |
+| `SprayAllDistances_ForceHoldTrigger` | Holds the trigger continuously at any range (no burst discipline) |
+| `AttackState_DodgeChance100_Always` | Removes the dodge dice roll — always takes the high-skill dodge path |
+| `AttackState_RetreatOnSniper_Disable` | Stops retreating just because an enemy sniper is visible |
+| `AttackState_SkipSniperSpreadCheck` | Skips extra weapon spread when engaging snipers |
+| **Movement** realism fixes (vanilla randomness kept) | |
+| `AttackState_CanStrafe_jne` | Unlocks strafing while attacking |
+| `AttackState_DodgeDuringReload` | Allows dodging while reloading |
+| `SniperCrouchDodge_jb` | Crouch-dodge reaction against snipers |
+| `SniperDodge_SkipIsSniper_DodgeA` | Any bot can use the anti-sniper dodge moves |
+| `AllSkill_KeepMoving_WhenSeeSniper` | Keeps moving when spotting a sniper (all skill levels) |
+| `LowSKill_JumpChance0` | Removes random jumping for low-skill bots (less silly randomness) |
+| **VisionAttention** | |
+| `Vision_SkipIsMovingGate` | Bots notice targets even while moving themselves |
+| `Vision_AlwaysEnterApproachBody_Cave` | Always enter approach-body attention nodes (cave variant) |
+| `Vision_AlwaysEnterApproachBody` | Always enter approach-body attention nodes |
+| `Vision_AlwaysWatchApproachPoints_Cave` | Always watch approach points (cave variant) |
+| `Vision_AlwaysWatchApproachPoints` | Always watch approach points |
+| `Vision_AlwaysWatchApproachPoints_LoopEntry_Cave` | Always watch approach-point loop entries (cave variant) |
+| `Vision_AlwaysWatchApproachPoints_LoopEntry` | Always watch approach-point loop entries |
+| `Vision_ApproachBody_SkipSkillCheck` | Ignore the skill threshold before approach-body checks (Windows) |
+| `Vision_ApproachBody_SkipHidingSpotCheck` | Watch bodies without hiding-spot filtering |
+| `IsNoticable_AlwaysTrue` | Bots always notice enemies — stealth and flanking lose their effect |
+| **BombBehavior** realism fixes | |
+| `EscapeFromBomb_OnEnter_NoEquipKnife` | Don't pull the knife out when escaping a planted bomb |
+| `EscapeFromBomb_OnUpdate_NoEquipKnife` | Same as above, enforced every update tick |
+| `EscapeFromFlames_OnEnter_NoEquipKnife` | Don't pull the knife out when escaping Molotov flames |
+| `PlantBombLookAtPriorityLow` | Lower look-at priority while planting (watch surroundings instead) |
+| `DefuseBombLookAtPriorityLow` | Lower look-at priority while defusing |
+| `DefuseBomb_SkipIsVisibleCheck` | Can start defusing without a line-of-sight ceremony |
+| `TBot_BombsiteSearch_UseKnownPlantedSite` | T bots search the known planted site first |
+| `CT_Defuse_EngageAndInvestigate` | CTs engage nearby enemies then continue the defuse |
+| `DefuseBombState_OnEnter_EngageAndInvestigate` | Fight back when entering the defuse state |
+| `DefuseBombState_OnUpdate_EngageAndInvestigate` | Fight back throughout the defuse state |
+| **StateMachine** misc fixes | |
+| `HasVisitedEnemySpawn` | Bots remember visited enemy spawns for smarter searching |
+| `GameState_Reset` | Properly reset bot game state between rounds/phases |
+| `Idle_IsSafeAlwaysFalse` | Idle bots no longer assume their spot is safe (stay alert) |
+| `FlashbangAvoidance_Disable` | Removes built-in flash avoidance so bots can be blinded like humans |
+| `Upkeep_BotCOS_ZeroDrift` | Removes cosine-based idle look drift (Windows) |
+| `Upkeep_BotSIN_ZeroDrift` | Removes sine-based idle look drift (Windows) |
+
+</details>
 
 ### Skins
 
