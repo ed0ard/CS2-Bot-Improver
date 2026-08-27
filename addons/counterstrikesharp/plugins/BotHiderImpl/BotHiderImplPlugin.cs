@@ -15,7 +15,7 @@ namespace BotHiderImpl;
 public class BotHiderImplPlugin : BasePlugin
 {
     public override string ModuleName => "BotHiderImpl";
-    public override string ModuleVersion => "0.3.8";
+    public override string ModuleVersion => "0.4.0";
     public override string ModuleAuthor => "XBribo";
     public override string ModuleDescription =>
         "BotHider CSS Plugin";
@@ -574,16 +574,31 @@ public class BotHiderImplPlugin : BasePlugin
             : $"[BotHider] avatar rejected slot={slot}: {error}");
     }
 
-    // bh_disguise <0|1> — toggle the m_bFakePlayer disguise
-    [ConsoleCommand("bh_disguise", "Toggle disguise: bh_disguise <0|1>")]
-    public void OnDisguise(CCSPlayerController? player, CommandInfo cmd)
+    // bh_identity_mode <player|bot> - changes the managed-bot identity mode
+    [ConsoleCommand("bh_identity_mode", "Set identity mode: bh_identity_mode <player|bot>")]
+    public void OnIdentityMode(CCSPlayerController? player, CommandInfo cmd)
     {
         if (_client == null) { cmd.ReplyToCommand("[BotHider] not initialized"); return; }
-        if (cmd.ArgCount < 2 || !int.TryParse(cmd.GetArg(1), out int v))
-        { cmd.ReplyToCommand("usage: bh_disguise <0|1>"); return; }
-        bool enabled = v != 0;
-        bool ok = _client.SetDisguise(enabled);
-        cmd.ReplyToCommand($"[BotHider] disguise -> {(enabled ? "ON" : "OFF")} ({ok})");
+        BotIdentityMode mode;
+        if (cmd.ArgCount < 2)
+        {
+            cmd.ReplyToCommand("usage: bh_identity_mode <player|bot>");
+            return;
+        }
+
+        string value = cmd.GetArg(1);
+        if (value.Equals("player", StringComparison.OrdinalIgnoreCase))
+            mode = BotIdentityMode.Player;
+        else if (value.Equals("bot", StringComparison.OrdinalIgnoreCase))
+            mode = BotIdentityMode.Bot;
+        else
+        {
+            cmd.ReplyToCommand("usage: bh_identity_mode <player|bot>");
+            return;
+        }
+
+        bool ok = _client.SetIdentityMode(mode);
+        cmd.ReplyToCommand($"[BotHider] identity mode -> {mode.ToString().ToLowerInvariant()} ({ok})");
     }
 
     // bh_namesource <0|1> — 0=botprofile name (default), 1=bot_info.json name
@@ -655,8 +670,8 @@ internal sealed class BotHiderCapabilityApi : IBotHiderApi
     public bool SetBotAvatar(int slot, string pngPath) =>
         _client.SetBotAvatar(slot, pngPath);
 
-    // Toggles the global disguise behavior.
-    public bool SetDisguise(bool enabled) => _client.SetDisguise(enabled);
+    // Changes the global managed-bot identity mode
+    public bool SetIdentityMode(BotIdentityMode mode) => _client.SetIdentityMode(mode);
 
     // Toggles the global display-name source behavior.
     public bool SetNameSource(bool useBotInfo) => _client.SetNameSource(useBotInfo);

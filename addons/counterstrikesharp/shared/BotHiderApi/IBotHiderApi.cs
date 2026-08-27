@@ -5,6 +5,12 @@ public static class BotHiderContract
     public const int MaxPlayerNameUtf8Bytes = 31;
 }
 
+public enum BotIdentityMode
+{
+    Player = 0,
+    Bot = 1,
+}
+
 // Slot is the engine player slot (CCSPlayerController.Slot.Value)
 public interface IBotHiderApi
 {
@@ -44,8 +50,8 @@ public interface IBotHiderApi
     // returns false if the slot/flair is invalid
     bool SetScoreboardFlair(int slot, uint itemDefIndex);
 
-    // Global disguise toggle
-    bool SetDisguise(bool enabled);
+    // Changes the global managed-bot identity mode
+    bool SetIdentityMode(BotIdentityMode mode);
 
     // Display-name source toggle; true=bot_info.json name, false=botprofile name (affects newly created bots)
     bool SetNameSource(bool useBotInfo);

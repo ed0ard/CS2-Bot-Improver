@@ -1,0 +1,8 @@
+{
+    "identity_mode": "player",
+    "fake_ping": {
+        "enabled": true,
+        "min": 20,
+        "max": 90
+    }
+}
