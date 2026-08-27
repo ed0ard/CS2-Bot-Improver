@@ -1010,7 +1010,7 @@ End
 ProSlow+RiflePro+FreemanPersonality "AyeZ"
 	VoicePitch = 75
 End
-ProSteady+RiflePro+FreemanPersonality "Techno4K"
+ProSteady+RiflePro+FreemanPersonality "Techno"
 	VoicePitch = 74
 End
 ProSlow+RiflePro+FreemanPersonality "bLitz"
@@ -3968,7 +3968,7 @@ End
 ProFast+RiflePro+RiflePersonality "S5J"
 	VoicePitch = 107
 End
-ProSteady+RiflePro+RiflePersonality "tO0RO"
+ProSteady+SniperPro+SniperPersonality "tO0RO"
 	VoicePitch = 88
 End
 ProSteady+RiflePro+RiflePersonality "HaZR"
@@ -4103,7 +4103,30 @@ ProSlow+SniperPro+SniperPersonality "3gl"
 End
 RankOthers+RiflePro+RiflePersonality "enkay J"
 End
-
+ProSlow+SniperPro+SniperPersonality "dem0n"
+End
+ProSlow+RiflePro+FreemanPersonality "slaxejezzz"
+End
+ProSlow+RiflePro+RiflePersonality "Krabeni"
+End
+ProSlow+RiflePro+RiflePersonality "cmtry"
+End
+ProSteady+RiflePro+FreemanPersonality "tikuak"
+End
+ProSteady+RiflePro+RiflePersonality "dziugss"
+End
+ProSlow+RiflePro+RiflePersonality "DarkMeister"
+End
+ProSlow+RiflePro+RiflePersonality "F0R3VER"
+End
+ProSlow+RiflePro+FreemanPersonality "AquaRS"
+End
+ProSlow+RiflePro+RiflePersonality "Ltz"
+End
+ProSteady+SniperPro+SniperPersonality "MartinezSa"
+End
+ProTop+RiflePro+RiflePersonality "forsaken"
+End
 //----------------------------------------------------------------------------
 
 RankRifler+Rusher+RusherPersonality "NoScopeDad69"
