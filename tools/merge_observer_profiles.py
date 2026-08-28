@@ -29,7 +29,7 @@ BOT_INFO = REPO / "addons" / "BotHider" / "bot_info.json"
 STEAMID64_BASE = 76561197960265728
 LIQUIPEDIA_API = "https://liquipedia.net/counterstrike/api.php"
 USER_AGENT = "CS2-Bot-Improver/1.0 (github.com/ed0ard/CS2-Bot-Improver)"
-REQUEST_PACE_S = 2.2
+REQUEST_PACE_S = 4.0
 CACHE_PATH = Path(r"D:\Temp\opencode\liquipedia_steam_cache.json")
 
 STEAM64_RE = re.compile(
@@ -51,17 +51,67 @@ OBSERVERS = [
 ]
 
 CASTERS = [
-    "Anders Blume", "James Bardolph", "HenryG", "Semmler", "Machine", "Sadokist", "Moses", "Scrawny",
-    "Launders", "Pansy", "Hugo Byron", "Joe Miller", "Deman", "Redeye", "N0thing", "Mauisnake", "Bleh",
-    "Ddk", "Babam", "Ceh9", "Gaules", "QUQU", "Izak", "JustHarry", "Flakes", "Conky", "Dinko",
-    "ManicMunday", "Marcatto", "Pitu Herranz", "Pineapple Philips", "Rizc", "Sakula", "2GD",
-    "Keith LaFortune", "KevinMPV", "KirosZ", "Kyan1te", "Lalok", "LighteRTZ", "Luddie", "Mac", "Mad1",
-    "MagicHelmet", "Malik", "Mare", "Masterplay", "Mett", "MintGod", "Mishek", "MitchMan", "Mito",
-    "Mjpinkman", "Moreira", "Morgen", "Mucha", "MukhaS", "NaoriMizuki", "Ne0kai", "Nessyteras",
-    "Nicolino", "Okroshka", "Olsior", "Olvari", "OnlyJoshinTV", "Oversiard", "Paladin", "Peach",
-    "Peekay", "Petrovich", "Phy", "PIKA", "Pilski", "PRAWUs", "RauleS", "Rdl", "Redulj", "Rema",
-    "ReTr00", "RickyDC", "RobuJohnson", "SanCor", "SandMan", "Sergiz", "Serhman", "SeveralSheep",
-    "Shadye", "Sheyl", "Shiny", "Shoker",
+    "117", "1obockZ'", "1uke", "2GD", "666", "7licious",
+    "Advent", "Affinity", "Aiwa", "Alex", "AllInGaming", "AMD",
+    "Anders Blume", "ANGeldusT", "Anishared", "AnThran", "Anyazita", "Apples",
+    "Ash", "ASkalone", "Atro", "Aunni", "Babam", "BAC9CKOPOCTb",
+    "Bananides", "BanGa", "Bczz", "BDog", "Beatriste", "Benccce",
+    "BENJ", "BhT-", "BiDa", "Bleh", "BLU", "Boggs",
+    "Boogie", "Boq", "Brainstorm", "BTT*", "Buckethead", "BurntSanctuary",
+    "Byfield", "C0sta", "CaptainMo", "CaspeRRR", "Ceh9", "Celowh",
+    "Chef Gree", "CHERRY5", "Chewwy", "Chobra", "CirmaN", "Clover",
+    "Cmd64", "Cnd", "Cobaia", "CodyCasts", "Conky", "Coontag",
+    "Counterfeit", "Craw", "CrystalMay", "Cudder", "CyberFocus", "Da bears",
+    "Dabo0", "Damage", "DanChan", "DarfMike", "DAVEY", "Ddk",
+    "Dean", "DEFINE", "Deman", "Dersor", "DeSraY", "Destru",
+    "Dev1", "DG", "Dinko", "DK", "Dktruman", "Dolan",
+    "Dona", "DONOD", "Drenotur", "Dugaid", "DunN", "DusT",
+    "DutchBoy", "Dweg", "Ed101", "Efecdb", "Elfishguy", "Emenjay",
+    "Emode", "Enkanis", "ExWarrior", "Fakel", "Falba", "FANAT ROCKA",
+    "Feelin", "FF", "Fippe", "Flakes", "Flamboyant", "Fr4son",
+    "Freesty1e", "Fujin", "Fv", "G0tt", "Gabesson", "Gaules",
+    "GETTHEBAGMARK", "GieTe", "God Seven", "GooDW1N", "GORDOx", "GrimyRannarr",
+    "Gromjkeee", "GromoZeka", "Grt", "GuizaO", "H1RO", "Hawka",
+    "HAzE", "Hazza", "Headshinsky", "Heliumbrella", "HenryG", "Hermes",
+    "Herold", "HiyaNoot", "HomeR", "Horstor", "Hoven", "Hugo Byron",
+    "Hyferia", "Hyper", "Ic3-Man", "Index", "Ink-mate", "IpSa",
+    "Izak", "Jacky", "Jacob", "JAEGARN", "James Bardolph", "Jawed",
+    "Jaxi", "JimNeso", "Jitko", "JKaplan", "Joe Miller", "Joshua",
+    "JRT", "JustHarry", "K1smagyar", "KaRath", "KEi", "Keith LaFortune",
+    "KevinMPV", "KirosZ", "Knochen", "KODIAK", "Koty", "KREATIV",
+    "Kremer3", "KRL", "KubiK", "Kuroxy", "KvaN", "Kyan1te",
+    "Lalok", "Launders", "Laz", "Leniniw", "Leq", "Leskisson",
+    "LighteRTZ", "Ljuba", "Loran", "Lore", "Lrz", "LucyLuce",
+    "Luddie", "Lyssan", "Mac", "Machine", "MachineWJQ", "Mad1",
+    "MagicHelmet", "MagiskaAbbas", "Malik", "ManicMunday", "Marcatto", "Mare",
+    "Masterplay", "Mauisnake", "Megaman", "Mett", "MintGod", "Mishek",
+    "Missivy", "MitchMan", "Mito", "Mjpinkman", "Moreira", "Morgen",
+    "Moses", "MPKBK", "Mucha", "MukhaS", "N0thing", "NABOWOW",
+    "NaoriMizuki", "Ne0kai", "Nessyteras", "Nexus", "Nicolino", "Okroshka",
+    "Olsior", "Olvari", "OnlyJoshinTV", "Oversiard", "Paladin", "Pansy",
+    "PCH3LK1N", "Peach", "Peekay", "Petrovich", "Phy", "PIKA",
+    "Pilski", "Pineapple Philips", "Pitu Herranz", "Pm", "Pop", "PRAWUs",
+    "PsYcOrN", "QeP", "QUQU", "Qz", "RauleS", "Rdl",
+    "Redeye", "Redulj", "Rema", "ReTr00", "RickyDC", "Rizc",
+    "RobuJohnson", "Sadokist", "Sakula", "SanCor", "SandMan", "Savage",
+    "Sc0rch", "Scrawny", "Searph", "Semmler", "Sergiz", "Serhman",
+    "SeveralSheep", "Shadye", "Sheyl", "Shiny", "Shoker", "Shoushou",
+    "Silv8", "Sir Danny", "Skriv", "SL4M", "Slam", "SlaxerCast",
+    "Sleepsomewhile", "Slop3", "SLowi", "SneakyBeaky", "Solodana", "Spat1ch",
+    "SpeeDy", "SPUNJ", "Squid", "STORM", "Straty", "Strike",
+    "StrongLegs", "Stunna", "Svojke", "Sxstem", "Syon", "Szeregowy",
+    "T0ks", "Tb", "TeaTime", "Tedd", "Tenshi", "TheCraggy",
+    "TheEternalJay", "Theluchs4363", "TheRA1DER", "ThoreQ", "Thunder", "TIMMO",
+    "Toivo", "Toldersma", "Toll", "Tom Pickering", "Tombizz", "Tomy",
+    "Topical", "TosspoT", "Trav", "Tutsi", "TwoTapTony", "Uber",
+    "Upmind", "Urf", "UzDevice", "V1nson", "V3n0m", "Valencho",
+    "Vansilli", "Vearless", "Veracity", "Viick", "Vince", "Volt",
+    "Voltie", "Voo", "Vuggo", "Vuzzey", "Warclown", "Werty",
+    "WH1TE", "Wildeity", "Wolfy6678", "X9nium", "Xf", "XiaosaGe",
+    "XiTTeN", "Xixi", "Xner", "XppE", "Xrm", "YangZai",
+    "YJ", "YNk", "YnoT", "YouM3", "Yukio", "YXo",
+    "Zais", "Zbr4", "Zerpherr", "Zescht", "Zloba", "Zlynx",
+    "ZolaSMH", "ZoneR", "ZorlaK", "ZZW",
 ]
 
 POOL = OBSERVERS + CASTERS
@@ -89,9 +139,11 @@ def voice_pitch(name: str) -> int:
 
 def merge(path: Path) -> int:
     text = path.read_text(encoding="utf-8", errors="replace")
+
     if MARKER in text:
-        print(f"[skip] {path.name}: already merged")
-        return 0
+        head, _, _ = text.partition(MARKER)
+        head = head.rstrip("\n")
+        text = head
 
     names, combos = parse_db(text)
     if not combos:
@@ -103,8 +155,7 @@ def merge(path: Path) -> int:
         print(f"[skip] {path.name}: nothing new to add")
         return 0
 
-    block_marker = "" if text.endswith("\n") else "\n"
-    section = [block_marker + "\n" + MARKER]
+    section = ["\n" + MARKER]
     for i, name in enumerate(pending):
         combo = combos[i % len(combos)]
         section.append(f'{combo} "{name}"')
@@ -215,7 +266,7 @@ def merge_bot_info(use_network: bool) -> int:
         except LiquipediaRateLimit as e:
             save_cache(cache)
             print(f"[429] rate limited, aborting. Blocked URL: {e}", file=sys.stderr)
-            print("[429] no bot_info.json changes were written; re-run later to resume.", file=sys.stderr)
+            print("[429] progress was saved incrementally; re-run later to resume.", file=sys.stderr)
             return -1
         if sid64:
             account_id = sid64 - STEAMID64_BASE
@@ -237,8 +288,9 @@ def merge_bot_info(use_network: bool) -> int:
         src = f"steam64={sid64}" if sid64 else "synthetic"
         print(f"    + {name} -> {key} ({src})")
 
-    if dirty:
         BOT_INFO.write_text(json.dumps(data, ensure_ascii=False, indent=4) + "\n", encoding="utf-8")
+
+    if dirty:
         save_cache(cache)
     print(f"[ok] bot_info.json: added {added} entries")
     return added
