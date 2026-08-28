@@ -1,7 +1,9 @@
 using System.Collections.Concurrent;
 using System.Text.Json;
+using BotHiderApi;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
+using CounterStrikeSharp.API.Core.Capabilities;
 using CounterStrikeSharp.API.Modules.Commands;
 using CounterStrikeSharp.API.Modules.Utils;
 
@@ -149,8 +151,17 @@ public class BotObserverPlugin : BasePlugin
             return;
         }
 
-        player.PlayerName = name;
-        Utilities.SetStateChanged(player, "CBasePlayerController", "m_iszPlayerName");
+        var api = new PluginCapability<IBotHiderApi>("bothider:api").Get();
+        bool named = false;
+
+        if (api != null && player.Slot >= 0 && api.IsManagedBot(player.Slot))
+            named = api.SetPersonaName(player.Slot, name);
+
+        if (!named)
+        {
+            player.PlayerName = name;
+            Utilities.SetStateChanged(player, "CBasePlayerController", "m_iszPlayerName");
+        }
 
         if (player.TeamNum != (int)CsTeam.Spectator)
             player.ChangeTeam(CsTeam.Spectator);
