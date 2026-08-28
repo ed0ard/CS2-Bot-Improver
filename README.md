@@ -93,7 +93,39 @@ On Windows, please download **CS2BotImprover_rules_unchanged.zip** to preserve t
 | `bot_nades normal` | Use count limits close to those of human players. **(Default)** |
 | `bot_nades more` | Use the same decision logic as normal mode with higher count limits. |
 | `bot_nades max` | Bots have minimal limitations and think less before throwing nades. |
+| `bot_nades native` | Use Valve's native grenade AI and physics; no replay database. |
+| `bot_nades coach_easy` | Native AI with a low grenade-buy profile. |
+| `bot_nades coach_normal` | Native AI with a moderate grenade-buy profile. |
+| `bot_nades coach_hard` | Native AI with a high grenade-buy profile. |
 | `bot_nades` | Show the current nade mode. |
+
+The mode can also be selected in `game/csgo/addons/counterstrikesharp/configs/plugins/NadeSystem/NadeSystem.json`:
+
+```json
+{
+  "Mode": "coach_hard",
+  "CoachHardReplayChances": {
+    "smoke": 30,
+    "flash": 20,
+    "he": 35,
+    "molotov": 40
+  }
+}
+```
+
+`native`, `coach_easy`, and `coach_normal` restore Valve's `bot_allow_grenades`
+path without replay-generated projectiles. `coach_hard` also restores that
+native path, but may rarely reuse a recorded trajectory after its information,
+position, direction, and probability checks. The coach variants differ in
+native grenade purchase probability and type weights; they do not grant extra
+vision, hearing, or hidden enemy positions. The legacy `less`, `normal`, `more`,
+and `max` modes remain available for replay-database behavior. In `coach_hard`,
+`CoachHardReplayChances` controls only the chance of selecting an eligible
+recorded trajectory after the information and position checks; it does not
+control Valve's grenade purchase or native throw decision. A `coach_hard`
+assist also requires the Bot to already own and actively hold the matching
+grenade, consumes one real grenade from its inventory, and respects recent
+fire/throw and defuse state. The assist does not switch weapons or spend money.
 
 ### Bot AI modules
 
@@ -130,6 +162,22 @@ Every BotAI patch belongs to a documented module group. Toggle whole groups in t
 - `DisabledPatches` lists individual patch names to skip on top of module toggles; unknown names are reported at load time.
 - Legacy `CasualAwareness` (ConfigVersion 1) is still honored: `true` forces the Awareness group off even when `Modules.Awareness` is true. Remove the field to rely on `Modules` alone.
 - Memory patches are applied at load time only — restart or reload the plugin after changing this file.
+
+### BotState idle repath
+
+`Smarter-Bot` keeps the native five-second idle-repath threshold by default. To test a shorter threshold without changing the default behavior, edit `game/csgo/addons/counterstrikesharp/configs/plugins/BotState/BotState.json`:
+
+```json
+{
+  "ConfigVersion": 1,
+  "EnableCustomIdleRepath": true,
+  "IdleRepath": {
+    "Seconds": 2.5
+  }
+}
+```
+
+Set `EnableCustomIdleRepath` to `false` to restore the native five-second value. The configured value is clamped to 0.25–30 seconds. This only requests a new native path; it does not forcibly move a Bot or distinguish a valid hold angle from a navigation stall.
 
 #### Per-patch reference
 

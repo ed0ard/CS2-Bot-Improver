@@ -94,21 +94,90 @@ public class RoundCounter
     public int Molotov { get; set; }
 }
 
+public sealed class NadeSystemConfig : BasePluginConfig
+{
+    [JsonPropertyName("Mode")]
+    public string Mode { get; set; } = "normal";
+
+    // coach_hard replay assist chance, expressed as a percentage per eligible
+    // recorded lineup attempt. Native Valve throws are unaffected.
+    [JsonPropertyName("CoachHardReplayChances")]
+    public Dictionary<string, int> CoachHardReplayChances { get; set; } = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["smoke"] = 30,
+        ["flash"] = 20,
+        ["he"] = 35,
+        ["molotov"] = 40,
+    };
+}
+
 // ═══════════════════════════════════════════════════════════════
 //  Plugin
 // ═══════════════════════════════════════════════════════════════
 
-public class NadeSystemPlugin : BasePlugin
+public class NadeSystemPlugin : BasePlugin, IPluginConfig<NadeSystemConfig>
 {
     public override string ModuleName    => "NadeSystem";
-    public override string ModuleVersion => "1.1.7";
+    public override string ModuleVersion => "1.2.0";
     public override string ModuleAuthor  => "ed0ard";
 
     // grenades folder lives inside the plugin directory
     private string DataDir => Path.Combine(ModuleDirectory, "grenades");
     // precache all the nades on this map
     private List<GrenadeData> _mapNades = new();
-    private string _botNadesMode = "normal"; // "off" | "less" | "normal" | "more" | "max"
+    private string _botNadesMode = "normal";
+    public NadeSystemConfig Config { get; set; } = new();
+
+    private static readonly HashSet<string> SupportedModes = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "off", "less", "normal", "more", "max",
+        "native", "coach_easy", "coach_normal", "coach_hard",
+    };
+
+    private bool UsesReplayDatabase => _botNadesMode is "less" or "normal" or "more" or "max" or "coach_hard";
+    private bool UsesLegacyReplayFeatures => _botNadesMode is "less" or "normal" or "more" or "max";
+    private bool UsesNativeBotNades => _botNadesMode is "native" or "coach_easy" or "coach_normal" or "coach_hard";
+
+    public void OnConfigParsed(NadeSystemConfig config)
+    {
+        Config = config ?? new NadeSystemConfig();
+        var mode = (Config.Mode ?? "normal").Trim().ToLowerInvariant();
+        if (!SupportedModes.Contains(mode))
+        {
+            Server.PrintToConsole($"[NadeSystem] Unknown configured mode '{Config.Mode}', using normal.");
+            mode = "normal";
+        }
+
+        _botNadesMode = mode;
+
+        var normalizedChances = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        foreach (var entry in Config.CoachHardReplayChances ?? new Dictionary<string, int>())
+        {
+            var grenadeType = (entry.Key ?? "").Trim().ToLowerInvariant();
+            if (grenadeType is not ("smoke" or "flash" or "he" or "molotov"))
+            {
+                Server.PrintToConsole($"[NadeSystem] Unknown coach_hard grenade chance type '{entry.Key}', ignoring it.");
+                continue;
+            }
+
+            normalizedChances[grenadeType] = Math.Clamp(entry.Value, 0, 100);
+        }
+
+        foreach (var grenadeType in new[] { "smoke", "flash", "he", "molotov" })
+        {
+            if (!normalizedChances.ContainsKey(grenadeType))
+                normalizedChances[grenadeType] = grenadeType switch
+                {
+                    "smoke" => 30,
+                    "flash" => 20,
+                    "he" => 35,
+                    "molotov" => 40,
+                    _ => 0,
+                };
+        }
+
+        Config.CoachHardReplayChances = normalizedChances;
+    }
     // ── State ──────────────────────────────────────────────────
     private List<GrenadeData>     _db                = new();
     private List<CooldownEntry>   _cooldowns         = new();
@@ -155,6 +224,8 @@ public class NadeSystemPlugin : BasePlugin
     private Dictionary<uint, List<SoundPoint>> _soundPoints = new();
     // key = controller index, value = last weapon_fire time (global, all players)
     private Dictionary<uint, float> _botLastFireTime = new();
+    // key = controller index, value = last grenade_thrown time
+    private Dictionary<uint, float> _botLastGrenadeThrowTime = new();
     // Sound trail capture radius (a recorded sound point counts as "info" within this range)
     private const float SoundInfoRadius = 100f;
     // Footstep speed threshold (horizontal velocity above this makes audible footstep sound)
@@ -275,6 +346,7 @@ public class NadeSystemPlugin : BasePlugin
 
     public override void Load(bool hotReload)
     {
+        ApplyModeSettings();
         Directory.CreateDirectory(DataDir);
         LoadDb();
 
@@ -301,9 +373,66 @@ public class NadeSystemPlugin : BasePlugin
             _replayBots.Clear();
         });
         
-        AddCommand("bot_nades", "Control bots' nade throw mode (off/less/normal/more/max)", CmdBotNades);
+        AddCommand("bot_nades", "Control bot nade mode", CmdBotNades);
         
         Server.PrintToConsole($"[NadeSystem] Loaded — {_db.Count} grenades in DB.");
+    }
+
+    // Native and coach modes deliberately leave grenade creation to Valve's
+    // CCSBot. Legacy replay modes keep native grenade purchasing disabled.
+    private void ApplyModeSettings()
+    {
+        if (!UsesNativeBotNades)
+        {
+            Server.ExecuteCommand("bot_allow_grenades 0");
+            Server.ExecuteCommand("sv_bot_buy_grenade_chance 0");
+            return;
+        }
+
+        Server.ExecuteCommand("bot_allow_grenades 1");
+        int chance = _botNadesMode switch
+        {
+            "coach_easy" => 20,
+            "coach_normal" => 45,
+            "coach_hard" => 70,
+            _ => 35,
+        };
+        Server.ExecuteCommand($"sv_bot_buy_grenade_chance {chance}");
+
+        // Keep native buys biased toward utility without forcing a lineup.
+        int smoke = _botNadesMode switch
+        {
+            "coach_easy" => 4,
+            "coach_normal" => 5,
+            "coach_hard" => 6,
+            _ => 5,
+        };
+        int flash = _botNadesMode switch
+        {
+            "coach_easy" => 2,
+            "coach_normal" => 3,
+            "coach_hard" => 4,
+            _ => 3,
+        };
+        int he = _botNadesMode switch
+        {
+            "coach_easy" => 1,
+            "coach_normal" => 3,
+            "coach_hard" => 4,
+            _ => 2,
+        };
+        int molotov = _botNadesMode switch
+        {
+            "coach_easy" => 2,
+            "coach_normal" => 4,
+            "coach_hard" => 6,
+            _ => 3,
+        };
+        Server.ExecuteCommand($"sv_bot_buy_smoke_weight {smoke}");
+        Server.ExecuteCommand($"sv_bot_buy_flash_weight {flash}");
+        Server.ExecuteCommand($"sv_bot_buy_hegrenade_weight {he}");
+        Server.ExecuteCommand($"sv_bot_buy_molotov_weight {molotov}");
+        Server.ExecuteCommand("sv_bot_buy_decoy_weight 0");
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -364,6 +493,7 @@ public class NadeSystemPlugin : BasePlugin
 
     private void CheckBotZones()
     {
+        if (!UsesReplayDatabase) return;
         var rules = Utilities.FindAllEntitiesByDesignerName<CCSGameRulesProxy>("cs_gamerules").FirstOrDefault();
         if (rules?.GameRules?.FreezePeriod == true) return;
         // Don't throw nades if the round is over
@@ -408,7 +538,7 @@ public class NadeSystemPlugin : BasePlugin
                 // DECOY: handled entirely here, bypasses all other checks
                 if (gtype == "decoy")
                 {
-                    if (_botNadesMode == "off") continue;
+                    if (_botNadesMode == "off" || _botNadesMode == "coach_hard") continue;
                     if (IsOnCooldown(g.Id)) continue;
                     if (dx * dx + dy * dy > 200f * 200f) continue;
                     if (MathF.Abs(dz) > 85f) continue;
@@ -425,6 +555,8 @@ public class NadeSystemPlugin : BasePlugin
                 if (gtype is "he" or "molotov" or "flash" && IsOnProbFailCooldown(g.Id)) continue;
                 // Probability attempt cooldown
                 if (gtype == "smoke" && _smokeCooldownBots.Contains((uint)bot.Index)) continue;
+                if (_botNadesMode == "coach_hard"
+                    && !PassesCoachHardReplayGate(bot, g, allControllers)) continue;
                 // Smoke Overlap Check
                 if (gtype == "smoke")
                 {
@@ -443,7 +575,7 @@ public class NadeSystemPlugin : BasePlugin
                 // Direction Judge 90°
                 // normal mode/ less mode/ more mode：smoke and flash
                 // max mode：smoke
-                bool doDirectionCheck = _botNadesMode == "normal" || _botNadesMode == "more" || _botNadesMode == "less"
+                bool doDirectionCheck = _botNadesMode == "normal" || _botNadesMode == "more" || _botNadesMode == "less" || _botNadesMode == "coach_hard"
                     ? (gtype == "smoke" || gtype == "flash")
                     : (gtype == "smoke");
                 if (doDirectionCheck && !FacesThrowDirection(pawn, g)) continue;
@@ -646,6 +778,9 @@ public class NadeSystemPlugin : BasePlugin
 
     private HookResult OnGrenadeThrown(EventGrenadeThrown @event, GameEventInfo info)
     {
+        var player = @event.Userid;
+        if (player != null && player.IsValid && player.IsBot)
+            _botLastGrenadeThrowTime[(uint)player.Index] = Server.CurrentTime;
         RecordSoundPoint(@event.Userid);
         return HookResult.Continue;
     }
@@ -787,12 +922,103 @@ public class NadeSystemPlugin : BasePlugin
         return false;
     }
 
+    // Coach hard may reuse a recorded lineup only when the Bot has current
+    // information about an enemy near that lineup's landing area. The low roll
+    // keeps native Valve behavior dominant and prevents lineup spam.
+    private bool PassesCoachHardReplayGate(CCSPlayerController bot, GrenadeData g,
+        List<CCSPlayerController> allControllers)
+    {
+        if (g.GrenadeType == "decoy") return false;
+        if (IsOnProbFailCooldown(g.Id)) return false;
+
+        var pawn = bot.PlayerPawn?.Value;
+        if (pawn == null || !pawn.IsValid) return false;
+        if (pawn.IsDefusing) return false;
+        if (!TryGetReadyCoachGrenade(pawn, g.GrenadeType, out _)) return false;
+        if (FiredRecently(bot, 0.75f)) return false;
+        if (GrenadeThrownRecently(bot, 1.5f)) return false;
+
+        string chanceType = g.GrenadeType == "incgrenade" ? "molotov" : g.GrenadeType;
+        int chance = Config.CoachHardReplayChances.TryGetValue(chanceType, out var configuredChance)
+            ? configuredChance
+            : chanceType switch
+            {
+                "smoke" => 30,
+                "flash" => 20,
+                "he" => 35,
+                "molotov" => 40,
+                _ => 0,
+            };
+        if (chance <= 0) return false;
+
+        float lx = g.LandingPosition.X, ly = g.LandingPosition.Y, lz = g.LandingPosition.Z;
+        bool hasCurrentInfo = allControllers.Any(enemy =>
+        {
+            if (!enemy.IsValid || (int)enemy.TeamNum == bot.TeamNum) return false;
+            var enemyPawn = GetActiveLivePawn(enemy);
+            var enemyPos = enemyPawn?.AbsOrigin;
+            if (enemyPos == null) return false;
+            if (Dist3D(lx, ly, lz, enemyPos.X, enemyPos.Y, enemyPos.Z) > 1200f) return false;
+            return HasInformationOn(bot, enemy);
+        });
+        if (!hasCurrentInfo) return false;
+
+        if (Random.Shared.Next(100) >= chance)
+        {
+            RegisterProbFailCooldown(g.Id);
+            return false;
+        }
+
+        return true;
+    }
+
     // Recently fired（used to suppress HE/molotov right after shooting）
     private bool FiredRecently(CCSPlayerController player, float seconds)
     {
         if (_botLastFireTime.TryGetValue((uint)player.Index, out float t))
             return Server.CurrentTime - t < seconds;
         return false;
+    }
+
+    private bool GrenadeThrownRecently(CCSPlayerController player, float seconds)
+    {
+        if (_botLastGrenadeThrowTime.TryGetValue((uint)player.Index, out float t))
+            return Server.CurrentTime - t < seconds;
+        return false;
+    }
+
+    // Coach hard only assists a throw that the native Bot has already selected.
+    // This keeps eco rounds and weapon selection authoritative while allowing
+    // the replay layer to choose a recorded trajectory.
+    private static bool TryGetReadyCoachGrenade(CCSPlayerPawn pawn, string gtype,
+        out CCSWeaponBase grenade)
+    {
+        grenade = null!;
+        var active = pawn.WeaponServices?.ActiveWeapon?.Value;
+        if (active == null || !active.IsValid) return false;
+
+        var weapon = new CCSWeaponBase(active.Handle);
+        string name = weapon.DesignerName?.ToLowerInvariant() ?? "";
+        bool matches = gtype switch
+        {
+            "smoke" => name == "weapon_smokegrenade",
+            "flash" => name == "weapon_flashbang",
+            "he" => name == "weapon_hegrenade",
+            "molotov" => name is "weapon_molotov" or "weapon_incgrenade",
+            _ => false,
+        };
+        if (!matches || weapon.Clip1 <= 0) return false;
+
+        grenade = weapon;
+        return true;
+    }
+
+    private static bool ConsumeCoachGrenade(CCSPlayerPawn pawn, string gtype)
+    {
+        if (!TryGetReadyCoachGrenade(pawn, gtype, out var grenade)) return false;
+        grenade.Clip1--;
+        Utilities.SetStateChanged(grenade, "CBasePlayerWeapon", "m_iClip1");
+        return true;
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -808,10 +1034,13 @@ public class NadeSystemPlugin : BasePlugin
 
         var gtype = g.GrenadeType; // lowercase since LoadDb
 
+        var botPawn = bot.PlayerPawn?.Value;
+        if (botPawn == null || !botPawn.IsValid) return;
+
         // ── Round limit checks ─────────────────────────────────
         // Less mode: per-bot limits (1 smoke, 1 molotov, 1 HE,
         // ammo_grenade_limit_flashbang flashes, total <= 4 per round).
-        if (_botNadesMode == "less")
+        if (_botNadesMode == "less" || _botNadesMode == "coach_hard")
         {
             if (!LessModeAllows(gtype, (uint)bot.Index)) return;
         }
@@ -859,12 +1088,12 @@ public class NadeSystemPlugin : BasePlugin
 
         // ── Account check ──────────────────────────────────────────────
         var money = bot.InGameMoneyServices;
-        if (money == null) return;
+        if (money == null && _botNadesMode != "coach_hard") return;
 
         bool isCT     = bot.TeamNum == (int)CsTeam.CounterTerrorist;
         var costTable = isCT ? CostCT : CostT;
         if (!costTable.TryGetValue(gtype, out int cost)) return;
-        if (money.Account < cost) return;
+        if (_botNadesMode != "coach_hard" && money!.Account < cost) return;
 
         // ── Round spend cap check ──────────────────────────────────────
         uint botIdx   = (uint)bot.Index;
@@ -873,21 +1102,29 @@ public class NadeSystemPlugin : BasePlugin
         if (!_roundSpendPerBot.TryGetValue(botIdx, out int alreadySpent))
             alreadySpent = 0;
         // Expensure Limit
-        bool deductMoney = alreadySpent < spendCap;
+        if (_botNadesMode != "coach_hard" && alreadySpent + cost > spendCap) return;
+        bool deductMoney = _botNadesMode != "coach_hard";
 
         // ── All checks passed — commit ─────────────────────────────────
         if (deductMoney)
         {
-            money.Account -= cost;
+            money!.Account -= cost;
             Utilities.SetStateChanged(bot, "CCSPlayerController", "m_pInGameMoneyServices");
             _roundSpendPerBot[botIdx] = alreadySpent + cost;
         }
+
+        // coach_hard never buys, refunds, or creates inventory. It consumes a
+        // grenade that Valve's economy and weapon selection already provided.
+        if (_botNadesMode == "coach_hard"
+            && !ConsumeCoachGrenade(botPawn, gtype)) return;
+        if (_botNadesMode == "coach_hard")
+            _botLastGrenadeThrowTime[botIdx] = Server.CurrentTime;
 
         _replayBots.Add((uint)bot.Index);
         RegisterCooldown(g.Id, gtype);
         IncrementCount(gtype, bot.TeamNum);
         // Less mode: per-bot round count
-        if (_botNadesMode == "less")
+        if (_botNadesMode == "less" || _botNadesMode == "coach_hard")
             IncrementBotCount(gtype, (uint)bot.Index);
         // Normal/Less Mode early smoke limit
         if ((_botNadesMode == "normal" || _botNadesMode == "less") && gtype == "smoke"
@@ -1269,6 +1506,7 @@ public class NadeSystemPlugin : BasePlugin
         // Information System
         _soundPoints.Clear();
         _botLastFireTime.Clear();
+        _botLastGrenadeThrowTime.Clear();
         foreach (var key in _probFailCooldown.Where(kv => kv.Value <= Server.CurrentTime).Select(kv => kv.Key).ToList())
             _probFailCooldown.Remove(key);
         // Save money for poor bots
@@ -1344,6 +1582,7 @@ public class NadeSystemPlugin : BasePlugin
     // Don't blind ourselves and our teammates
     private HookResult OnPlayerBlind(EventPlayerBlind @event, GameEventInfo info)
     {
+        if (!UsesLegacyReplayFeatures) return HookResult.Continue;
         var victim   = @event.Userid;
 
         if (victim is null || !victim.IsValid || !victim.IsBot)
@@ -1384,13 +1623,15 @@ public class NadeSystemPlugin : BasePlugin
             Server.PrintToConsole($"[NadeSystem] bot_nades = {_botNadesMode}");
             return;
         }
-        var val = info.GetArg(1).ToLower();
-        if (val != "off" && val != "less" && val != "normal" && val != "more" && val != "max")
+        var val = info.GetArg(1).Trim().ToLowerInvariant();
+        if (!SupportedModes.Contains(val))
         {
-            Server.PrintToConsole("\x0C[NadeSystem]\x01 Usage: bot_nades <off|less|normal|more|max>");
+            Server.PrintToConsole("\x0C[NadeSystem]\x01 Usage: bot_nades <off|less|normal|more|max|native|coach_easy|coach_normal|coach_hard>");
             return;
         }
         _botNadesMode = val;
+        Config.Mode = val;
+        ApplyModeSettings();
         Server.PrintToConsole($"[NadeSystem] bot_nades set to {_botNadesMode}");
     }
     // ═══════════════════════════════════════════════════════════
@@ -1733,6 +1974,7 @@ public class NadeSystemPlugin : BasePlugin
     // Defuse smoke/flash
     private void TrySpawnInstantGrenade(CCSPlayerController bot, Vector spawnPos, string gtype, Vector? velocity = null)
     {
+        if (!UsesLegacyReplayFeatures) return;
         if (_botNadesMode == "off") return;
         // In case the bot has been taken over
         bool isTakenOver = bot.HasBeenControlledByPlayerThisRound;
@@ -1757,14 +1999,10 @@ public class NadeSystemPlugin : BasePlugin
         int  spendCap = GetRoundSpendCap(isCT, isPoor);
         if (!_roundSpendPerBot.TryGetValue(botIdx, out int alreadySpent))
             alreadySpent = 0;
-        bool deduct = alreadySpent < spendCap;
-
-        if (deduct)
-        {
-            money.Account -= cost;
-            Utilities.SetStateChanged(bot, "CCSPlayerController", "m_pInGameMoneyServices");
-            _roundSpendPerBot[botIdx] = alreadySpent + cost;
-        }
+        if (alreadySpent + cost > spendCap) return;
+        money.Account -= cost;
+        Utilities.SetStateChanged(bot, "CCSPlayerController", "m_pInGameMoneyServices");
+        _roundSpendPerBot[botIdx] = alreadySpent + cost;
 
         var vel = velocity ?? new Vector(0f, 0f, 0f);
         Server.NextFrame(() =>
@@ -1820,6 +2058,7 @@ public class NadeSystemPlugin : BasePlugin
     private HookResult OnBombBeginDefuse(EventBombBegindefuse @event, GameEventInfo info)
     {
         RecordSoundPoint(@event.Userid);
+        if (!UsesLegacyReplayFeatures) return HookResult.Continue;
 
         var bot = @event.Userid;
         if (bot == null || !bot.IsValid || !bot.IsBot) return HookResult.Continue;
@@ -1870,6 +2109,7 @@ public class NadeSystemPlugin : BasePlugin
     private HookResult OnBombBeginPlant(EventBombBeginplant @event, GameEventInfo info)
     {
         RecordSoundPoint(@event.Userid);
+        if (!UsesLegacyReplayFeatures) return HookResult.Continue;
 
         if (_plantSmokeUsed) return HookResult.Continue;
 
@@ -1901,7 +2141,7 @@ public class NadeSystemPlugin : BasePlugin
     // Put out the fire
     private void HandleMolotovEscape(EventPlayerHurt @event)
     {
-        if (_botNadesMode == "off") return;
+        if (!UsesLegacyReplayFeatures || _botNadesMode == "off") return;
         var victim = @event.Userid;
         if (victim == null || !victim.IsValid || !victim.IsBot) return;
         if (victim.HasBeenControlledByPlayerThisRound) return;
@@ -1944,7 +2184,7 @@ public class NadeSystemPlugin : BasePlugin
     // Revenge grenade
     private void HandleRetaliationHE(EventPlayerHurt @event)
     {
-        if (_botNadesMode == "off") return;
+        if (!UsesLegacyReplayFeatures || _botNadesMode == "off") return;
         var victim = @event.Userid;
         if (victim == null || !victim.IsValid || !victim.IsBot) return;
         if (victim.HasBeenControlledByPlayerThisRound) return;
@@ -2041,13 +2281,10 @@ public class NadeSystemPlugin : BasePlugin
             if (_botNadesMode == "less" && !LessModeAllows(gt, botIdx)) continue;
 
             if (!_roundSpendPerBot.TryGetValue(botIdx, out int alreadySpent)) alreadySpent = 0;
-            bool deduct = alreadySpent < spendCap;
-            if (deduct)
-            {
-                money.Account -= cost;
-                Utilities.SetStateChanged(victim, "CCSPlayerController", "m_pInGameMoneyServices");
-                _roundSpendPerBot[botIdx] = alreadySpent + cost;
-            }
+            if (alreadySpent + cost > spendCap) continue;
+            money.Account -= cost;
+            Utilities.SetStateChanged(victim, "CCSPlayerController", "m_pInGameMoneyServices");
+            _roundSpendPerBot[botIdx] = alreadySpent + cost;
 
             RegisterCooldown(g.Id, gt);
             SpawnProjectile(victim, g);
