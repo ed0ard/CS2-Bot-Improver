@@ -180,8 +180,12 @@ public class BotChatPlugin : BasePlugin
         if (victim == null || !victim.IsValid || !victim.IsBot || victim.IsHLTV)
             return HookResult.Continue;
 
-        // 1) Victim: compliment a headshot (ns / nc / nice shot). If it rolls
-        // in, the killer owes a thanks reply (on its death or at round end).
+        string victimName = victim.PlayerName;
+        string attackerName = attacker != null && attacker.IsValid ? attacker.PlayerName : "world";
+
+        // 1) Victim: compliment a headshot (ns / nc / nice shot). Works for
+        // any killer (bot or human). If it rolls in and the killer is a bot,
+        // it owes a thanks reply (on its death or at round end).
         if (@event.Headshot)
         {
             double chance = NiceShotBaseChance;
@@ -190,7 +194,15 @@ public class BotChatPlugin : BasePlugin
             if (@event.Penetrated > 0) chance += NiceShotBuffPerKillType;
             if (@event.Attackerinair) chance += NiceShotBuffPerKillType;
 
-            if (Random.Shared.NextDouble() < chance)
+            double roll = Random.Shared.NextDouble();
+            bool complimented = roll < chance;
+
+            Console.WriteLine(
+                $"[BotChat] death: victim={victimName}(bot) killer={attackerName} headshot " +
+                $"chance={chance:P0} roll={roll:P2} -> {(complimented ? "ns" : "silent")} " +
+                $"(blind={@event.Attackerblind} smoke={@event.Thrusmoke} wall={@event.Penetrated} air={@event.Attackerinair})");
+
+            if (complimented)
             {
                 if (attacker != null && attacker.IsValid && attacker.IsBot
                     && !attacker.IsHLTV
@@ -198,6 +210,8 @@ public class BotChatPlugin : BasePlugin
                     && attacker.Slot != victim.Slot)
                 {
                     _owedThanks.Add(attacker.Slot);
+                    Console.WriteLine(
+                        $"[BotChat] owed-thanks += slot {attacker.Slot} ({attacker.PlayerName})");
                 }
                 AddTimer(0.6f, () => BotSay(victim, PickMessage(NiceShotMessages, uniform: true)));
             }
@@ -210,6 +224,8 @@ public class BotChatPlugin : BasePlugin
             && attacker.Slot != victim.Slot
             && _owedThanks.Remove(attacker.Slot))
         {
+            Console.WriteLine(
+                $"[BotChat] death-thanks: killer={attacker.PlayerName} (slot {attacker.Slot}) replies to {victimName}");
             AddTimer(0.6f, () => BotSay(attacker, PickMessage(ThanksMessages, uniform: true)));
         }
 
@@ -289,14 +305,18 @@ public class BotChatPlugin : BasePlugin
     private static void BotSay(CCSPlayerController bot, string message)
     {
         if (bot == null || !bot.IsValid)
+        {
+            Console.WriteLine($"[BotChat] say skipped: bot invalid");
             return;
+        }
         try
         {
             bot.ExecuteClientCommandFromServer($"say {message}");
+            Console.WriteLine($"[BotChat] said '{message}' as {bot.PlayerName} (slot {bot.Slot})");
         }
-        catch
+        catch (Exception ex)
         {
-            Console.WriteLine($"[BotChat] failed to make bot {bot.PlayerName} say '{message}'");
+            Console.WriteLine($"[BotChat] failed to make bot {bot.PlayerName} say '{message}': {ex.Message}");
         }
     }
 }
