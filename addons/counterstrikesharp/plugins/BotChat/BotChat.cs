@@ -40,6 +40,11 @@ public class BotChatPlugin : BasePlugin
 
     private const int MaxSpeakersPerTeam = 5;
 
+    // Random gap between two bot messages (seconds). Keeps chat from looking
+    // like a scripted burst.
+    private const float MinGap = 1.2f;
+    private const float MaxGap = 3.0f;
+
     public FakeConVar<bool> Enabled = new("botchat_enabled", "Enable bot chat messages", true);
     public FakeConVar<bool> StartEnabled = new("botchat_start_enabled", "Bots greet at match start", true);
     public FakeConVar<bool> EndEnabled = new("botchat_end_enabled", "Bots say goodbye at match end", true);
@@ -94,12 +99,14 @@ public class BotChatPlugin : BasePlugin
                 (bots[i], bots[j]) = (bots[j], bots[i]);
             }
 
+            float delay = baseDelay;
             for (int i = 0; i < speakers; i++)
             {
                 var bot = bots[i];
                 string message = PickMessage(pool, uniform);
-                int delayIdx = i;
-                AddTimer(baseDelay + delayIdx * 0.7f, () => BotSay(bot, message));
+                float scheduled = delay;
+                AddTimer(scheduled, () => BotSay(bot, message));
+                delay += MinGap + (float)Random.Shared.NextDouble() * (MaxGap - MinGap);
             }
         }
     }
