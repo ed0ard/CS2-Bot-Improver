@@ -61,9 +61,10 @@ public class BotChatPlugin : BasePlugin
     private const float MinGap = 1.2f;
     private const float MaxGap = 3.0f;
 
-    // Base chance (0-1) a headshot victim says "ns" after death. Each kill
-    // type (blind, smoke, wallbang, jump) adds this much on top.
+    // Base chance (0-1) a victim says "ns" after any kill. Headshot raises
+    // it, and each kill type (blind, smoke, wallbang, jump) adds on top.
     private const double NiceShotBaseChance = 0.05;
+    private const double NiceShotHeadshotBonus = 0.05;
     private const double NiceShotBuffPerKillType = 0.20;
 
     // Guards the end messages against double-firing: the final round's win
@@ -192,37 +193,37 @@ public class BotChatPlugin : BasePlugin
         string victimName = victim.PlayerName;
         string attackerName = attacker != null && attacker.IsValid ? attacker.PlayerName : "world";
 
-        // 1) Victim: compliment a headshot (ns / nc / nice shot). Works for
-        // any killer (bot or human). If it rolls in and the killer is a bot,
-        // it owes a thanks reply (on its death or at round end).
-        if (@event.Headshot)
+        // 1) Victim: compliment a kill (ns / nc / nice shot). Any kill can
+        // trigger; headshot raises the chance. If it rolls in and the killer
+        // is a bot, it owes a thanks reply (on its death or at round end).
+        double chance = NiceShotBaseChance;
+        if (@event.Headshot) chance += NiceShotHeadshotBonus;
+        if (@event.Attackerblind) chance += NiceShotBuffPerKillType;
+        if (@event.Thrusmoke) chance += NiceShotBuffPerKillType;
+        if (@event.Penetrated > 0) chance += NiceShotBuffPerKillType;
+        if (@event.Attackerinair) chance += NiceShotBuffPerKillType;
+
+        double roll = Random.Shared.NextDouble();
+        bool complimented = roll < chance;
+
+        Console.WriteLine(
+            $"[BotChat] ns roll: victim={victimName} killer={attackerName} " +
+            $"chance={chance:P0} roll={roll:P2} -> {(complimented ? "ns" : "silent")} " +
+            $"(headshot={@event.Headshot} blind={@event.Attackerblind} smoke={@event.Thrusmoke} " +
+            $"wall={@event.Penetrated} air={@event.Attackerinair})");
+
+        if (complimented)
         {
-            double chance = NiceShotBaseChance;
-            if (@event.Attackerblind) chance += NiceShotBuffPerKillType;
-            if (@event.Thrusmoke) chance += NiceShotBuffPerKillType;
-            if (@event.Penetrated > 0) chance += NiceShotBuffPerKillType;
-            if (@event.Attackerinair) chance += NiceShotBuffPerKillType;
-
-            double roll = Random.Shared.NextDouble();
-            bool complimented = roll < chance;
-
-            Console.WriteLine(
-                $"[BotChat] ns roll: victim={victimName} killer={attackerName} " +
-                $"chance={chance:P0} roll={roll:P2} -> {(complimented ? "ns" : "silent")}");
-
-            if (complimented)
+            if (attacker != null && attacker.IsValid && attacker.IsBot
+                && !attacker.IsHLTV
+                && !attacker.HasBeenControlledByPlayerThisRound
+                && attacker.Slot != victim.Slot)
             {
-                if (attacker != null && attacker.IsValid && attacker.IsBot
-                    && !attacker.IsHLTV
-                    && !attacker.HasBeenControlledByPlayerThisRound
-                    && attacker.Slot != victim.Slot)
-                {
-                    _owedThanks.Add(attacker.Slot);
-                    Console.WriteLine(
-                        $"[BotChat] owed-thanks += slot {attacker.Slot} ({attacker.PlayerName})");
-                }
-                AddTimer(0.6f, () => BotSay(victim, PickMessage(NiceShotMessages, uniform: true)));
+                _owedThanks.Add(attacker.Slot);
+                Console.WriteLine(
+                    $"[BotChat] owed-thanks += slot {attacker.Slot} ({attacker.PlayerName})");
             }
+            AddTimer(0.6f, () => BotSay(victim, PickMessage(NiceShotMessages, uniform: true)));
         }
 
         // 2) Complimented killer: reply thanks after dying (one reply only;
