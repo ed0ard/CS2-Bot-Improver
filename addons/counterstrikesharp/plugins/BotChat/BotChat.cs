@@ -172,11 +172,20 @@ public class BotChatPlugin : BasePlugin
     // killer replies thanks after its own death.
     private HookResult OnPlayerDeath(EventPlayerDeath @event, GameEventInfo info)
     {
+        var victim = @event.Userid;
+        var attacker = @event.Attacker;
+
+        // Log EVERY death to the server console so we can tell apart a missed
+        // event from a failed probability roll.
+        Console.WriteLine(
+            $"[BotChat] death event: victim={victim?.PlayerName ?? "?"}(bot={victim?.IsBot}) " +
+            $"killer={attacker?.PlayerName ?? "world"}(bot={attacker?.IsBot}) " +
+            $"headshot={@event.Headshot} blind={@event.Attackerblind} smoke={@event.Thrusmoke} " +
+            $"wall={@event.Penetrated} air={@event.Attackerinair}");
+
         if (!Enabled.Value || !KillReactionsEnabled.Value)
             return HookResult.Continue;
 
-        var victim = @event.Userid;
-        var attacker = @event.Attacker;
         if (victim == null || !victim.IsValid || !victim.IsBot || victim.IsHLTV)
             return HookResult.Continue;
 
@@ -198,9 +207,8 @@ public class BotChatPlugin : BasePlugin
             bool complimented = roll < chance;
 
             Console.WriteLine(
-                $"[BotChat] death: victim={victimName}(bot) killer={attackerName} headshot " +
-                $"chance={chance:P0} roll={roll:P2} -> {(complimented ? "ns" : "silent")} " +
-                $"(blind={@event.Attackerblind} smoke={@event.Thrusmoke} wall={@event.Penetrated} air={@event.Attackerinair})");
+                $"[BotChat] ns roll: victim={victimName} killer={attackerName} " +
+                $"chance={chance:P0} roll={roll:P2} -> {(complimented ? "ns" : "silent")}");
 
             if (complimented)
             {
