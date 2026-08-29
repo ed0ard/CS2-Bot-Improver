@@ -67,6 +67,11 @@ public class BotChatPlugin : BasePlugin
     private const double NiceShotHeadshotBonus = 0.05;
     private const double NiceShotBuffPerKillType = 0.20;
 
+    // Reaction delay after a death (seconds): 1.2 - 3.5s, so replies read
+    // like a human thinking, not an instant script.
+    private const float MinReactionDelay = 1.2f;
+    private const float MaxReactionDelay = 3.5f;
+
     // Guards the end messages against double-firing: the final round's win
     // panel and the match win panel may both be dispatched by the engine.
     private bool _endSaid;
@@ -223,7 +228,7 @@ public class BotChatPlugin : BasePlugin
                 Console.WriteLine(
                     $"[BotChat] owed-thanks += slot {attacker.Slot} ({attacker.PlayerName})");
             }
-            AddTimer(0.6f, () => BotSay(victim, PickMessage(NiceShotMessages, uniform: true)));
+            AddTimer(ReactionDelay(), () => BotSay(victim, PickMessage(NiceShotMessages, uniform: true)));
         }
 
         // 2) This victim, if it owed a thanks reply from an earlier ns, pays
@@ -233,7 +238,7 @@ public class BotChatPlugin : BasePlugin
         {
             Console.WriteLine(
                 $"[BotChat] death-thanks: {victimName} (slot {victim.Slot}) replies to {attackerName}");
-            AddTimer(0.6f, () => BotSay(victim, PickMessage(ThanksMessages, uniform: true)));
+            AddTimer(ReactionDelay(), () => BotSay(victim, PickMessage(ThanksMessages, uniform: true)));
         }
 
         return HookResult.Continue;
@@ -290,6 +295,10 @@ public class BotChatPlugin : BasePlugin
         }
     }
 
+    // Random reaction delay for death-related messages.
+    private static float ReactionDelay() =>
+        MinReactionDelay + (float)Random.Shared.NextDouble() * (MaxReactionDelay - MinReactionDelay);
+
     private static string PickMessage((string message, int weight)[] pool, bool uniform)
     {
         if (uniform)
@@ -327,3 +336,4 @@ public class BotChatPlugin : BasePlugin
         }
     }
 }
+
