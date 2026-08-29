@@ -70,8 +70,9 @@ public class BotChatPlugin : BasePlugin
     // panel and the match win panel may both be dispatched by the engine.
     private bool _endSaid;
 
-    // Bots that killed someone this round, by slot. Used at round end.
-    private readonly HashSet<int> _killersThisRound = new();
+    // Bots that owe a thanks reply this round (their shot got complimented
+    // with "ns"). They thank on their own death, or at round end if alive.
+    private readonly HashSet<int> _owedThanks = new();
 
     public FakeConVar<bool> Enabled = new("botchat_enabled", "Enable bot chat messages", true);
     public FakeConVar<bool> StartEnabled = new("botchat_start_enabled", "Bots greet at match start", true);
@@ -129,35 +130,46 @@ public class BotChatPlugin : BasePlugin
         SayAcrossTeams(EndMessages, uniform: false, baseDelay: 1.5f);
     }
 
-    // Clears per-round kill tracking.
+    // Clears per-round state.
     private HookResult OnRoundStart(EventRoundStart @event, GameEventInfo info)
     {
-        _killersThisRound.Clear();
+        _owedThanks.Clear();
         return HookResult.Continue;
     }
 
-    // Round end: bots that killed this round and are still alive say thanks.
+    // Round end: every bot that got complimented this round and is still
+    // alive replies thanks individually.
     private HookResult OnRoundEnd(EventRoundEnd @event, GameEventInfo info)
     {
         if (!Enabled.Value || !KillReactionsEnabled.Value)
             return HookResult.Continue;
 
-        var aliveKillers = Utilities.FindAllEntitiesByDesignerName<CCSPlayerController>("cs_player_controller")
+        var aliveThankers = Utilities.FindAllEntitiesByDesignerName<CCSPlayerController>("cs_player_controller")
             .Where(p => p.IsValid
                 && p.IsBot
                 && !p.IsHLTV
                 && !p.HasBeenControlledByPlayerThisRound
                 && p.PawnIsAlive
-                && _killersThisRound.Contains(p.Slot))
+                && _owedThanks.Contains(p.Slot))
             .ToList();
-        if (aliveKillers.Count == 0)
+        if (aliveThankers.Count == 0)
             return HookResult.Continue;
 
-        SayRandom(aliveKillers, ThanksMessages, uniform: true, baseDelay: 0.8f);
+        // Every one of them talks, staggered like a natural conversation.
+        float delay = 0.8f;
+        foreach (var bot in aliveThankers)
+        {
+            string message = PickMessage(ThanksMessages, uniform: true);
+            float scheduled = delay;
+            AddTimer(scheduled, () => BotSay(bot, message));
+            delay += MinGap + (float)Random.Shared.NextDouble() * (MaxGap - MinGap);
+        }
+
         return HookResult.Continue;
     }
 
-    // Death reactions: the headshot victim may compliment, the killer thanks.
+    // Death reactions: the headshot victim may compliment, the complimented
+    // killer replies thanks after its own death.
     private HookResult OnPlayerDeath(EventPlayerDeath @event, GameEventInfo info)
     {
         if (!Enabled.Value || !KillReactionsEnabled.Value)
@@ -168,7 +180,8 @@ public class BotChatPlugin : BasePlugin
         if (victim == null || !victim.IsValid || !victim.IsBot || victim.IsHLTV)
             return HookResult.Continue;
 
-        // 1) Victim: compliment a headshot (ns / nc / nice shot).
+        // 1) Victim: compliment a headshot (ns / nc / nice shot). If it rolls
+        // in, the killer owes a thanks reply (on its death or at round end).
         if (@event.Headshot)
         {
             double chance = NiceShotBaseChance;
@@ -179,17 +192,24 @@ public class BotChatPlugin : BasePlugin
 
             if (Random.Shared.NextDouble() < chance)
             {
-                var killer = attacker;
+                if (attacker != null && attacker.IsValid && attacker.IsBot
+                    && !attacker.IsHLTV
+                    && !attacker.HasBeenControlledByPlayerThisRound
+                    && attacker.Slot != victim.Slot)
+                {
+                    _owedThanks.Add(attacker.Slot);
+                }
                 AddTimer(0.6f, () => BotSay(victim, PickMessage(NiceShotMessages, uniform: true)));
             }
         }
 
-        // 2) Killer: thanks after dying.
+        // 2) Complimented killer: reply thanks after dying (one reply only;
+        // the owed entry is consumed here so the round end won't repeat it).
         if (attacker != null && attacker.IsValid && attacker.IsBot && !attacker.IsHLTV
             && !attacker.HasBeenControlledByPlayerThisRound
-            && attacker.Slot != victim.Slot)
+            && attacker.Slot != victim.Slot
+            && _owedThanks.Remove(attacker.Slot))
         {
-            _killersThisRound.Add(attacker.Slot);
             AddTimer(0.6f, () => BotSay(attacker, PickMessage(ThanksMessages, uniform: true)));
         }
 
