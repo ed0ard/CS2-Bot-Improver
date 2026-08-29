@@ -1,10 +1,13 @@
-// BotChat plugin: bots greet at match start ("gl", "hf", ...) and wrap up
-// at match end ("gg", "ggs", ... , occasionally "ez").
+// BotChat plugin: bots greet at match start ("gl", "hf", ...), wrap up at
+// match end ("gg", "ggs", ... , occasionally "ez"), and react to kills:
+// a headshot victim may say "ns", a killer says thanks when dying or when
+// the round ends while still alive.
 //
 // Convars:
-//   botchat_enabled        - master switch (default 1)
-//   botchat_start_enabled  - greetings at match start (default 1)
-//   botchat_end_enabled    - goodbyes at match end (default 1)
+//   botchat_enabled              - master switch (default 1)
+//   botchat_start_enabled        - greetings at match start (default 1)
+//   botchat_end_enabled          - goodbyes at match end (default 1)
+//   botchat_killreactions_enabled - kill reactions (ns / thanks) (default 1)
 
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
@@ -18,10 +21,10 @@ namespace BotChat;
 public class BotChatPlugin : BasePlugin
 {
     public override string ModuleName => "BotChat";
-    public override string ModuleVersion => "1.0.0";
-    public override string ModuleAuthor => "ed0ard";
+    public override string ModuleVersion => "1.1.0";
+    public override string ModuleAuthor => "Fimall";
     public override string ModuleDescription =>
-        "Bots say a greeting at match start and a goodbye at match end";
+        "Bots greet at match start, say gg at match end, and chat about kills";
 
     // Messages a bot can greet with at match start (uniform pick).
     private static readonly (string message, int weight)[] StartMessages =
@@ -38,6 +41,19 @@ public class BotChatPlugin : BasePlugin
         ("ez", 5),
     };
 
+    // A headshot victim can compliment the shot (uniform pick).
+    private static readonly (string message, int weight)[] NiceShotMessages =
+    {
+        ("ns", 1), ("nc", 1), ("nice shot", 1),
+    };
+
+    // A killer thanks someone (uniform pick).
+    private static readonly (string message, int weight)[] ThanksMessages =
+    {
+        ("ty", 1), ("thanks", 1), ("thank u", 1), ("thx", 1),
+        ("life game", 1), ("luck", 1), (":)", 1),
+    };
+
     private const int MaxSpeakersPerTeam = 5;
 
     // Random gap between two bot messages (seconds). Keeps chat from looking
@@ -45,13 +61,22 @@ public class BotChatPlugin : BasePlugin
     private const float MinGap = 1.2f;
     private const float MaxGap = 3.0f;
 
+    // Base chance (0-1) a headshot victim says "ns" after death. Each kill
+    // type (blind, smoke, wallbang, jump) adds this much on top.
+    private const double NiceShotBaseChance = 0.05;
+    private const double NiceShotBuffPerKillType = 0.20;
+
     // Guards the end messages against double-firing: the final round's win
     // panel and the match win panel may both be dispatched by the engine.
     private bool _endSaid;
 
+    // Bots that killed someone this round, by slot. Used at round end.
+    private readonly HashSet<int> _killersThisRound = new();
+
     public FakeConVar<bool> Enabled = new("botchat_enabled", "Enable bot chat messages", true);
     public FakeConVar<bool> StartEnabled = new("botchat_start_enabled", "Bots greet at match start", true);
     public FakeConVar<bool> EndEnabled = new("botchat_end_enabled", "Bots say goodbye at match end", true);
+    public FakeConVar<bool> KillReactionsEnabled = new("botchat_killreactions_enabled", "Bots react to kills (ns / thanks)", true);
 
     public override void Load(bool hotReload)
     {
@@ -63,6 +88,9 @@ public class BotChatPlugin : BasePlugin
         // never be dispatched.
         RegisterEventHandler<EventCsWinPanelRound>(OnCsWinPanelRound);
         RegisterEventHandler<EventCsWinPanelMatch>(OnCsWinPanelMatch);
+        RegisterEventHandler<EventRoundStart>(OnRoundStart);
+        RegisterEventHandler<EventRoundEnd>(OnRoundEnd);
+        RegisterEventHandler<EventPlayerDeath>(OnPlayerDeath);
     }
 
     private HookResult OnBeginNewMatch(EventBeginNewMatch @event, GameEventInfo info)
@@ -101,6 +129,104 @@ public class BotChatPlugin : BasePlugin
         SayAcrossTeams(EndMessages, uniform: false, baseDelay: 1.5f);
     }
 
+    // Clears per-round kill tracking.
+    private HookResult OnRoundStart(EventRoundStart @event, GameEventInfo info)
+    {
+        _killersThisRound.Clear();
+        return HookResult.Continue;
+    }
+
+    // Round end: bots that killed this round and are still alive say thanks.
+    private HookResult OnRoundEnd(EventRoundEnd @event, GameEventInfo info)
+    {
+        if (!Enabled.Value || !KillReactionsEnabled.Value)
+            return HookResult.Continue;
+
+        var aliveKillers = Utilities.FindAllEntitiesByDesignerName<CCSPlayerController>("cs_player_controller")
+            .Where(p => p.IsValid
+                && p.IsBot
+                && !p.IsHLTV
+                && !p.HasBeenControlledByPlayerThisRound
+                && p.PawnIsAlive
+                && _killersThisRound.Contains(p.Slot))
+            .ToList();
+        if (aliveKillers.Count == 0)
+            return HookResult.Continue;
+
+        SayRandom(aliveKillers, ThanksMessages, uniform: true, baseDelay: 0.8f);
+        return HookResult.Continue;
+    }
+
+    // Death reactions: the headshot victim may compliment, the killer thanks.
+    private HookResult OnPlayerDeath(EventPlayerDeath @event, GameEventInfo info)
+    {
+        if (!Enabled.Value || !KillReactionsEnabled.Value)
+            return HookResult.Continue;
+
+        var victim = @event.Userid;
+        var attacker = @event.Attacker;
+        if (victim == null || !victim.IsValid || !victim.IsBot || victim.IsHLTV)
+            return HookResult.Continue;
+
+        // 1) Victim: compliment a headshot (ns / nc / nice shot).
+        if (@event.Headshot)
+        {
+            double chance = NiceShotBaseChance;
+            if (@event.Attackerblind) chance += NiceShotBuffPerKillType;
+            if (@event.Thrusmoke) chance += NiceShotBuffPerKillType;
+            if (@event.Penetrated > 0) chance += NiceShotBuffPerKillType;
+            if (@event.Attackerinair) chance += NiceShotBuffPerKillType;
+
+            if (Random.Shared.NextDouble() < chance)
+            {
+                var killer = attacker;
+                AddTimer(0.6f, () => BotSay(victim, PickMessage(NiceShotMessages, uniform: true)));
+            }
+        }
+
+        // 2) Killer: thanks after dying.
+        if (attacker != null && attacker.IsValid && attacker.IsBot && !attacker.IsHLTV
+            && !attacker.HasBeenControlledByPlayerThisRound
+            && attacker.Slot != victim.Slot)
+        {
+            _killersThisRound.Add(attacker.Slot);
+            AddTimer(0.6f, () => BotSay(attacker, PickMessage(ThanksMessages, uniform: true)));
+        }
+
+        return HookResult.Continue;
+    }
+
+    // Picks 1..N random bots from a given list and staggers one message each.
+    private void SayRandom(
+        List<CCSPlayerController> bots,
+        (string message, int weight)[] pool,
+        bool uniform,
+        float baseDelay)
+    {
+        if (bots.Count == 0)
+            return;
+
+        int count = Math.Min(MaxSpeakersPerTeam, bots.Count);
+        int speakers = Random.Shared.Next(1, count + 1);
+
+        // Fisher-Yates shuffle, take the first `speakers`.
+        for (int i = bots.Count - 1; i > 0; i--)
+        {
+            int j = Random.Shared.Next(i + 1);
+            (bots[i], bots[j]) = (bots[j], bots[i]);
+        }
+
+        float delay = baseDelay;
+        for (int i = 0; i < speakers; i++)
+        {
+            var bot = bots[i];
+            string message = PickMessage(pool, uniform);
+            float scheduled = delay;
+            AddTimer(scheduled, () => BotSay(bot, message));
+            delay += MinGap + (float)Random.Shared.NextDouble() * (MaxGap - MinGap);
+        }
+    }
+
     // Picks 1..5 random bots per team (humans and taken-over bots excluded)
     // and makes each say one message, staggered in time.
     private void SayAcrossTeams((string message, int weight)[] pool, bool uniform, float baseDelay)
@@ -117,25 +243,7 @@ public class BotChatPlugin : BasePlugin
             if (bots.Count == 0)
                 continue;
 
-            int count = Math.Min(MaxSpeakersPerTeam, bots.Count);
-            int speakers = Random.Shared.Next(1, count + 1);
-
-            // Fisher-Yates shuffle, take the first `speakers`.
-            for (int i = bots.Count - 1; i > 0; i--)
-            {
-                int j = Random.Shared.Next(i + 1);
-                (bots[i], bots[j]) = (bots[j], bots[i]);
-            }
-
-            float delay = baseDelay;
-            for (int i = 0; i < speakers; i++)
-            {
-                var bot = bots[i];
-                string message = PickMessage(pool, uniform);
-                float scheduled = delay;
-                AddTimer(scheduled, () => BotSay(bot, message));
-                delay += MinGap + (float)Random.Shared.NextDouble() * (MaxGap - MinGap);
-            }
+            SayRandom(bots, pool, uniform, baseDelay);
         }
     }
 
