@@ -226,16 +226,14 @@ public class BotChatPlugin : BasePlugin
             AddTimer(0.6f, () => BotSay(victim, PickMessage(NiceShotMessages, uniform: true)));
         }
 
-        // 2) Complimented killer: reply thanks after dying (one reply only;
-        // the owed entry is consumed here so the round end won't repeat it).
-        if (attacker != null && attacker.IsValid && attacker.IsBot && !attacker.IsHLTV
-            && !attacker.HasBeenControlledByPlayerThisRound
-            && attacker.Slot != victim.Slot
-            && _owedThanks.Remove(attacker.Slot))
+        // 2) This victim, if it owed a thanks reply from an earlier ns, pays
+        // it back now that it died (one reply only; the owed entry is
+        // consumed so the round end won't repeat it).
+        if (_owedThanks.Remove(victim.Slot))
         {
             Console.WriteLine(
-                $"[BotChat] death-thanks: killer={attacker.PlayerName} (slot {attacker.Slot}) replies to {victimName}");
-            AddTimer(0.6f, () => BotSay(attacker, PickMessage(ThanksMessages, uniform: true)));
+                $"[BotChat] death-thanks: {victimName} (slot {victim.Slot}) replies to {attackerName}");
+            AddTimer(0.6f, () => BotSay(victim, PickMessage(ThanksMessages, uniform: true)));
         }
 
         return HookResult.Continue;
