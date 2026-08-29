@@ -45,18 +45,29 @@ public class BotChatPlugin : BasePlugin
     private const float MinGap = 1.2f;
     private const float MaxGap = 3.0f;
 
+    // Guards the end messages against double-firing: the final round's win
+    // panel and the match win panel may both be dispatched by the engine.
+    private bool _endSaid;
+
     public FakeConVar<bool> Enabled = new("botchat_enabled", "Enable bot chat messages", true);
     public FakeConVar<bool> StartEnabled = new("botchat_start_enabled", "Bots greet at match start", true);
     public FakeConVar<bool> EndEnabled = new("botchat_end_enabled", "Bots say goodbye at match end", true);
 
     public override void Load(bool hotReload)
     {
+        RegisterListener<Listeners.OnMapStart>(_ => _endSaid = false);
         RegisterEventHandler<EventBeginNewMatch>(OnBeginNewMatch);
+        // cs_win_panel_round fires at the end of every round; FinalEvent = 1
+        // marks the final round of the match. More reliable than
+        // cs_win_panel_match in offline bot matches, where that event may
+        // never be dispatched.
+        RegisterEventHandler<EventCsWinPanelRound>(OnCsWinPanelRound);
         RegisterEventHandler<EventCsWinPanelMatch>(OnCsWinPanelMatch);
     }
 
     private HookResult OnBeginNewMatch(EventBeginNewMatch @event, GameEventInfo info)
     {
+        _endSaid = false;
         if (!Enabled.Value || !StartEnabled.Value)
             return HookResult.Continue;
 
@@ -64,13 +75,30 @@ public class BotChatPlugin : BasePlugin
         return HookResult.Continue;
     }
 
-    private HookResult OnCsWinPanelMatch(EventCsWinPanelMatch @event, GameEventInfo info)
+    private HookResult OnCsWinPanelRound(EventCsWinPanelRound @event, GameEventInfo info)
     {
-        if (!Enabled.Value || !EndEnabled.Value)
+        if (@event.FinalEvent == 0)
             return HookResult.Continue;
 
-        SayAcrossTeams(EndMessages, uniform: false, baseDelay: 1.5f);
+        SayEndMessages();
         return HookResult.Continue;
+    }
+
+    private HookResult OnCsWinPanelMatch(EventCsWinPanelMatch @event, GameEventInfo info)
+    {
+        SayEndMessages();
+        return HookResult.Continue;
+    }
+
+    private void SayEndMessages()
+    {
+        if (_endSaid)
+            return;
+        if (!Enabled.Value || !EndEnabled.Value)
+            return;
+
+        _endSaid = true;
+        SayAcrossTeams(EndMessages, uniform: false, baseDelay: 1.5f);
     }
 
     // Picks 1..5 random bots per team (humans and taken-over bots excluded)
