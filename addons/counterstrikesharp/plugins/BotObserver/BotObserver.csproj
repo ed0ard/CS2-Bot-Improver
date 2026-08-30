@@ -8,6 +8,7 @@
     <AssemblyName>BotObserver</AssemblyName>
     <RootNamespace>BotObserver</RootNamespace>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoWarn>CA1416</NoWarn>
   </PropertyGroup>
 

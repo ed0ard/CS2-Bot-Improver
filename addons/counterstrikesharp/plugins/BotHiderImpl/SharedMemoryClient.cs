@@ -72,6 +72,8 @@ public sealed class SharedMemoryClient : IBotHiderApi, IDisposable
     private MemoryMappedFile? _mmf;
     private MemoryMappedViewAccessor? _view;
     private readonly object _writeLock = new();
+    private readonly object _observerLock = new();
+    private readonly HashSet<int> _observerSlots = [];
 
     private readonly Action<int, string>? _onVisibleName;
 
@@ -131,6 +133,26 @@ public sealed class SharedMemoryClient : IBotHiderApi, IDisposable
     {
         if (_view != null) return true;
         return TryConnect();
+    }
+
+    // Observer-only slots are excluded from respawn/team lifecycle logic
+    public void SetObserverSlot(int slot, bool isObserver)
+    {
+        if (slot < 0 || slot >= MaxSlots) return;
+        lock (_observerLock)
+        {
+            if (isObserver) _observerSlots.Add(slot);
+            else _observerSlots.Remove(slot);
+        }
+    }
+
+    public bool IsObserverSlot(int slot)
+    {
+        if (slot < 0 || slot >= MaxSlots) return false;
+        lock (_observerLock)
+        {
+            return _observerSlots.Contains(slot);
+        }
     }
 
     // IBotHiderApi: read side

@@ -5,14 +5,16 @@ using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Capabilities;
 using CounterStrikeSharp.API.Modules.Commands;
+using CounterStrikeSharp.API.Modules.Timers;
 using CounterStrikeSharp.API.Modules.Utils;
+using Microsoft.Extensions.Logging;
 
 namespace BotObserver;
 
 public class BotObserverPlugin : BasePlugin
 {
     public override string ModuleName => "Bot Observer";
-    public override string ModuleVersion => "1.0.1";
+    public override string ModuleVersion => "1.2.0";
     public override string ModuleAuthor => "CS2-Bot-Improver";
     public override string ModuleDescription => "Adds broadcast-style observer bots that appear as spectators on the scoreboard.";
 
@@ -25,18 +27,23 @@ public class BotObserverPlugin : BasePlugin
     {
         LoadPlayerNamesFromBotInfo();
 
-        AddCommand("bot_spec", "Add a broadcast observer bot: bot_spec [name]", OnBotSpec);
-        AddCommand("bot_specs", "List all observer bots", OnBotSpecs);
+        AddCommand("bot_add_spec", "Add a broadcast observer bot: bot_add_spec [name]", OnBotSpec);
         AddCommandListener("bot_kick", OnBotKick, HookMode.Pre);
         RegisterListener<Listeners.OnClientPutInServer>(OnClientPutInServer);
         RegisterListener<Listeners.OnClientDisconnect>(OnClientDisconnect);
+        RegisterEventHandler<EventRoundStart>(OnRoundStart);
     }
 
     public override void Unload(bool hotReload)
     {
-        RemoveCommand("bot_spec", OnBotSpec);
-        RemoveCommand("bot_specs", OnBotSpecs);
+        RemoveCommand("bot_add_spec", OnBotSpec);
         RemoveCommandListener("bot_kick", OnBotKick, HookMode.Pre);
+    }
+
+    private HookResult OnRoundStart(EventRoundStart @event, GameEventInfo info)
+    {
+        LogObserverStateAtRoundStart();
+        return HookResult.Continue;
     }
 
     private void LoadPlayerNamesFromBotInfo()
@@ -46,7 +53,7 @@ public class BotObserverPlugin : BasePlugin
             var path = Path.GetFullPath(Path.Combine(ModuleDirectory, "..", "..", "..", "BotHider", "bot_info.json"));
             if (!File.Exists(path))
             {
-                Server.PrintToConsole("[BotObserver] bot_info.json not found, observer name pool is empty.");
+                Logger.LogWarning("[BotObserver] bot_info.json not found, observer name pool is empty.");
                 return;
             }
 
@@ -65,11 +72,11 @@ public class BotObserverPlugin : BasePlugin
                 }
             }
 
-            Server.PrintToConsole($"[BotObserver] Unified name pool: {_namePool.Count} entries.");
+            Logger.LogInformation("[BotObserver] Unified name pool: {Count} entries.", _namePool.Count);
         }
         catch (Exception e)
         {
-            Server.PrintToConsole($"[BotObserver] Failed to load bot_info.json: {e.Message}");
+            Logger.LogError(e, "[BotObserver] Failed to load bot_info.json.");
         }
     }
 
@@ -90,21 +97,11 @@ public class BotObserverPlugin : BasePlugin
             return;
         }
 
+        // Create a real CCSBot so the profile from botprofile.db applies, then
+        // the bot is moved to Spectator and excluded from BotHider's lifecycle.
         _pendingNames.Enqueue(name);
-        Server.ExecuteCommand("bot_add");
+        Server.ExecuteCommand($"bot_add_t {name}");
         info.ReplyToCommand($"[BotObserver] Adding observer \"{name}\"...");
-    }
-
-    private void OnBotSpecs(CCSPlayerController? caller, CommandInfo info)
-    {
-        var list = _observers.Values.Where(o => o.IsValid).Select(o => o.PlayerName).ToList();
-        if (list.Count == 0)
-        {
-            info.ReplyToCommand("[BotObserver] No observer bots. Use bot_spec [name].");
-            return;
-        }
-
-        info.ReplyToCommand($"[BotObserver] {list.Count} observer(s): {string.Join(", ", list)}");
     }
 
     private HookResult OnBotKick(CCSPlayerController? caller, CommandInfo info)
@@ -126,7 +123,12 @@ public class BotObserverPlugin : BasePlugin
 
     private void OnClientDisconnect(int slot)
     {
-        var stale = _observers.Where(kv => kv.Value == null || !kv.Value.IsValid).Select(kv => kv.Key).ToList();
+        UnregisterObserverSlot(slot);
+
+        var stale = _observers
+            .Where(kv => !kv.Value.IsValid || kv.Value.Slot == slot)
+            .Select(kv => kv.Key)
+            .ToList();
         foreach (var key in stale)
             _observers.TryRemove(key, out _);
     }
@@ -140,16 +142,73 @@ public class BotObserverPlugin : BasePlugin
         if (!_pendingNames.TryDequeue(out var name))
             return;
 
-        AddTimer(0.3f, () => FinalizeObserver(player, name));
+        // Let the controller settle before switching teams (matches the proven 1.0.1 flow)
+        AddTimer(0.3f, () => FinalizeObserver(slot, name), TimerFlags.STOP_ON_MAPCHANGE);
     }
 
-    private void FinalizeObserver(CCSPlayerController player, string name)
+    private void FinalizeObserver(int slot, string name)
     {
+        var player = Utilities.GetPlayerFromSlot(slot);
         if (player == null || !player.IsValid)
         {
-            Server.PrintToConsole($"[BotObserver] Observer \"{name}\" disconnected before setup.");
+            Logger.LogWarning("[BotObserver] Observer \"{Name}\" disconnected before setup.", name);
             return;
         }
+
+        // Keep the slot out of BotHider's respawn/team logic from this point on
+        RegisterObserverSlot(slot);
+
+        ApplyObserverName(player, name);
+
+        player.Connected = PlayerConnectedState.Connected;
+        Utilities.SetStateChanged(player, "CBasePlayerController", "m_iConnected");
+
+        if (player.TeamNum != (int)CsTeam.Spectator)
+            player.ChangeTeam(CsTeam.Spectator);
+
+        if (player.UserId.HasValue)
+            _observers[player.UserId.Value] = player;
+
+        Logger.LogInformation(
+            "[BotObserver] \"{Name}\" is now an observer (slot {Slot}, team {Team}).",
+            name, slot, player.TeamNum);
+    }
+
+    private void LogObserverStateAtRoundStart()
+    {
+        foreach (var observer in _observers.Values)
+        {
+            if (!observer.IsValid)
+                continue;
+
+            Logger.LogInformation(
+                "[BotObserver] round check: name=\"{Name}\" slot={Slot} team={Team}.",
+                observer.PlayerName, observer.Slot, observer.TeamNum);
+        }
+    }
+
+    private void RegisterObserverSlot(int slot)
+    {
+        if (slot < 0)
+            return;
+
+        var api = new PluginCapability<IBotHiderApi>("bothider:api").Get();
+        api?.SetObserverSlot(slot, true);
+    }
+
+    private void UnregisterObserverSlot(int slot)
+    {
+        if (slot < 0)
+            return;
+
+        var api = new PluginCapability<IBotHiderApi>("bothider:api").Get();
+        api?.SetObserverSlot(slot, false);
+    }
+
+    private void ApplyObserverName(CCSPlayerController player, string name)
+    {
+        if (player == null || !player.IsValid)
+            return;
 
         var api = new PluginCapability<IBotHiderApi>("bothider:api").Get();
         bool named = false;
@@ -162,18 +221,12 @@ public class BotObserverPlugin : BasePlugin
             player.PlayerName = name;
             Utilities.SetStateChanged(player, "CBasePlayerController", "m_iszPlayerName");
         }
-
-        if (player.TeamNum != (int)CsTeam.Spectator)
-            player.ChangeTeam(CsTeam.Spectator);
-
-        if (player.UserId.HasValue)
-            _observers[player.UserId.Value] = player;
-
-        Server.PrintToConsole($"[BotObserver] \"{name}\" is now an observer.");
     }
 
     private void KickObserver(CCSPlayerController observer)
     {
+        UnregisterObserverSlot(observer.Slot);
+
         if (observer.UserId.HasValue)
             _observers.TryRemove(observer.UserId.Value, out _);
 
