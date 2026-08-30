@@ -1,12 +1,15 @@
 using System.Collections.Concurrent;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using BotHiderApi;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Capabilities;
 using CounterStrikeSharp.API.Modules.Commands;
+using CounterStrikeSharp.API.Modules.Memory;
 using CounterStrikeSharp.API.Modules.Timers;
 using CounterStrikeSharp.API.Modules.Utils;
+using CounterStrikeSharp.API.ValveConstants.Protobuf;
 using Microsoft.Extensions.Logging;
 
 namespace BotObserver;
@@ -14,14 +17,18 @@ namespace BotObserver;
 public class BotObserverPlugin : BasePlugin
 {
     public override string ModuleName => "Bot Observer";
-    public override string ModuleVersion => "1.2.0";
+    public override string ModuleVersion => "1.2.1";
     public override string ModuleAuthor => "CS2-Bot-Improver";
     public override string ModuleDescription => "Adds broadcast-style observer bots that appear as spectators on the scoreboard.";
 
+    private const int MaxSetupAttempts = 5;
+
     private readonly ConcurrentDictionary<int, CCSPlayerController> _observers = new();
-    private readonly ConcurrentQueue<string> _pendingNames = new();
+    private readonly ConcurrentDictionary<int, string> _pendingObservers = new();
     private readonly Random _rng = new();
-    private readonly HashSet<string> _namePool = new(StringComparer.OrdinalIgnoreCase);
+
+    // Key: lowercase name, Value: canonical spelling from bot_info.json
+    private readonly Dictionary<string, string> _namePool = new(StringComparer.OrdinalIgnoreCase);
 
     public override void Load(bool hotReload)
     {
@@ -29,7 +36,6 @@ public class BotObserverPlugin : BasePlugin
 
         AddCommand("bot_add_spec", "Add a broadcast observer bot: bot_add_spec [name]", OnBotSpec);
         AddCommandListener("bot_kick", OnBotKick, HookMode.Pre);
-        RegisterListener<Listeners.OnClientPutInServer>(OnClientPutInServer);
         RegisterListener<Listeners.OnClientDisconnect>(OnClientDisconnect);
         RegisterEventHandler<EventRoundStart>(OnRoundStart);
     }
@@ -68,7 +74,7 @@ public class BotObserverPlugin : BasePlugin
                 {
                     var name = nameElement.GetString();
                     if (!string.IsNullOrWhiteSpace(name))
-                        _namePool.Add(name);
+                        _namePool[name] = name;
                 }
             }
 
@@ -80,28 +86,53 @@ public class BotObserverPlugin : BasePlugin
         }
     }
 
+    // Fuzzy case-insensitive lookup; the applied name always follows bot_info.json
+    private string ResolveCanonicalName(string input)
+    {
+        return _namePool.TryGetValue(input, out var canonical) ? canonical : input;
+    }
+
     private void OnBotSpec(CCSPlayerController? caller, CommandInfo info)
     {
-        var name = info.ArgCount > 1 ? info.GetArg(1).Trim() : PickDefaultName();
+        var input = info.ArgCount > 1 ? info.GetArg(1).Trim() : PickDefaultName();
 
-        if (string.IsNullOrWhiteSpace(name))
+        if (string.IsNullOrWhiteSpace(input))
         {
             info.ReplyToCommand("[BotObserver] Invalid name.");
             return;
         }
 
+        var name = ResolveCanonicalName(input);
+        if (!ReferenceEquals(name, input))
+            Logger.LogInformation("[BotObserver] Resolved \"{Input}\" to canonical \"{Name}\".", input, name);
+
         if (_observers.Values.Any(o => o.IsValid && o.PlayerName.Equals(name, StringComparison.OrdinalIgnoreCase)) ||
-            _pendingNames.Any(n => n.Equals(name, StringComparison.OrdinalIgnoreCase)))
+            _pendingObservers.Values.Any(n => n.Equals(name, StringComparison.OrdinalIgnoreCase)))
         {
             info.ReplyToCommand($"[BotObserver] Observer \"{name}\" already exists.");
             return;
         }
 
-        // Create a real CCSBot so the profile from botprofile.db applies, then
-        // the bot is moved to Spectator and excluded from BotHider's lifecycle.
-        _pendingNames.Enqueue(name);
-        Server.ExecuteCommand($"bot_add_t {name}");
-        info.ReplyToCommand($"[BotObserver] Adding observer \"{name}\"...");
+        // Empty-shell fake client: never joins T/CT, so the engine never counts
+        // a missing player and never grants shorthanded compensation.
+        int slot = CreateFakeClientNative();
+        if (slot < 0)
+        {
+            info.ReplyToCommand("[BotObserver] Failed to create fake client.");
+            return;
+        }
+
+        if (!_pendingObservers.TryAdd(slot, name))
+        {
+            info.ReplyToCommand("[BotObserver] Failed to track the new fake client.");
+            return;
+        }
+
+        info.ReplyToCommand($"[BotObserver] Creating observer \"{name}\"...");
+        AddTimer(
+            0.1f,
+            () => TryInitializeObserver(slot, name, 0),
+            TimerFlags.STOP_ON_MAPCHANGE);
     }
 
     private HookResult OnBotKick(CCSPlayerController? caller, CommandInfo info)
@@ -124,6 +155,7 @@ public class BotObserverPlugin : BasePlugin
     private void OnClientDisconnect(int slot)
     {
         UnregisterObserverSlot(slot);
+        _pendingObservers.TryRemove(slot, out _);
 
         var stale = _observers
             .Where(kv => !kv.Value.IsValid || kv.Value.Slot == slot)
@@ -133,45 +165,95 @@ public class BotObserverPlugin : BasePlugin
             _observers.TryRemove(key, out _);
     }
 
-    private void OnClientPutInServer(int slot)
+    private void TryInitializeObserver(int slot, string name, int attempt)
     {
-        var player = Utilities.GetPlayerFromSlot(slot);
-        if (player == null || !player.IsValid || !player.IsBot || player.IsHLTV)
+        if (!_pendingObservers.TryGetValue(slot, out var pendingName) ||
+            !pendingName.Equals(name, StringComparison.Ordinal))
             return;
 
-        if (!_pendingNames.TryDequeue(out var name))
-            return;
-
-        // Let the controller settle before switching teams (matches the proven 1.0.1 flow)
-        AddTimer(0.3f, () => FinalizeObserver(slot, name), TimerFlags.STOP_ON_MAPCHANGE);
-    }
-
-    private void FinalizeObserver(int slot, string name)
-    {
         var player = Utilities.GetPlayerFromSlot(slot);
         if (player == null || !player.IsValid)
         {
-            Logger.LogWarning("[BotObserver] Observer \"{Name}\" disconnected before setup.", name);
+            RetryOrFailSetup(slot, name, attempt, "player controller is not ready");
             return;
         }
 
-        // Keep the slot out of BotHider's respawn/team logic from this point on
+        // Exclude the slot from BotHider's respawn/team lifecycle before any
+        // team work happens, so a round start can never pull the observer in.
         RegisterObserverSlot(slot);
 
         ApplyObserverName(player, name);
+        ApplyObserverState(player);
 
-        player.Connected = PlayerConnectedState.Connected;
-        Utilities.SetStateChanged(player, "CBasePlayerController", "m_iConnected");
+        if (player.TeamNum == (int)CsTeam.Spectator)
+        {
+            _pendingObservers.TryRemove(slot, out _);
 
-        if (player.TeamNum != (int)CsTeam.Spectator)
-            player.ChangeTeam(CsTeam.Spectator);
+            if (player.UserId.HasValue)
+                _observers[player.UserId.Value] = player;
 
-        if (player.UserId.HasValue)
-            _observers[player.UserId.Value] = player;
+            Logger.LogInformation(
+                "[BotObserver] \"{Name}\" is now an observer (slot {Slot}, team {Team}).",
+                name, slot, player.TeamNum);
+            return;
+        }
+
+        if (attempt >= MaxSetupAttempts)
+        {
+            FailObserverSetup(slot, name, $"team remained {player.TeamNum}", player);
+            return;
+        }
 
         Logger.LogInformation(
-            "[BotObserver] \"{Name}\" is now an observer (slot {Slot}, team {Team}).",
-            name, slot, player.TeamNum);
+            "[BotObserver] Moving \"{Name}\" to Spectator (slot {Slot}, current team {Team}, attempt {Attempt}/{Max}).",
+            name, slot, player.TeamNum, attempt + 1, MaxSetupAttempts);
+        player.ChangeTeam(CsTeam.Spectator);
+        ApplyObserverState(player);
+
+        AddTimer(
+            0.1f,
+            () => TryInitializeObserver(slot, name, attempt + 1),
+            TimerFlags.STOP_ON_MAPCHANGE);
+    }
+
+    private void RetryOrFailSetup(int slot, string name, int attempt, string reason)
+    {
+        if (attempt >= MaxSetupAttempts)
+        {
+            FailObserverSetup(slot, name, reason);
+            return;
+        }
+
+        AddTimer(
+            0.1f,
+            () => TryInitializeObserver(slot, name, attempt + 1),
+            TimerFlags.STOP_ON_MAPCHANGE);
+    }
+
+    private void FailObserverSetup(
+        int slot,
+        string name,
+        string reason,
+        CCSPlayerController? player = null)
+    {
+        _pendingObservers.TryRemove(slot, out _);
+        UnregisterObserverSlot(slot);
+        Logger.LogWarning("[BotObserver] Failed to create observer \"{Name}\": {Reason}.", name, reason);
+
+        player ??= Utilities.GetPlayerFromSlot(slot);
+        if (player is not { IsValid: true })
+            return;
+
+        if (player.UserId.HasValue)
+            Server.ExecuteCommand($"kickid {player.UserId.Value} \"Observer setup failed\"");
+        else
+            player.Disconnect(NetworkDisconnectionReason.NETWORK_DISCONNECT_KICKED);
+    }
+
+    private static void ApplyObserverState(CCSPlayerController player)
+    {
+        player.Connected = PlayerConnectedState.Connected;
+        Utilities.SetStateChanged(player, "CBasePlayerController", "m_iConnected");
     }
 
     private void LogObserverStateAtRoundStart()
@@ -249,10 +331,41 @@ public class BotObserverPlugin : BasePlugin
                 if (p != null && p.IsValid)
                     used.Add(p.PlayerName);
 
-        foreach (var pending in _pendingNames)
+        foreach (var pending in _pendingObservers.Values)
             used.Add(pending);
 
-        var free = _namePool.Where(n => !used.Contains(n)).ToList();
+        var free = _namePool.Values.Where(n => !used.Contains(n)).ToList();
         return free.Count > 0 ? free[_rng.Next(free.Count)] : $"Observer {_observers.Count + 1}";
+    }
+
+    private unsafe int CreateFakeClientNative()
+    {
+        nint enginePtr = ValveInterface.Engine.Pointer;
+        if (enginePtr == nint.Zero)
+            return -1;
+
+        nint vtable = Marshal.ReadIntPtr(enginePtr);
+        nint cfcFnPtr = Marshal.ReadIntPtr(vtable + 52 * 8);
+
+        nint addrPtr = Marshal.StringToHGlobalAnsi("loopback");
+        nint retBuf = Marshal.AllocHGlobal(8);
+        Marshal.WriteInt64(retBuf, -1);
+
+        try
+        {
+            var createFakeClient =
+                (delegate* unmanaged[Thiscall]<nint, nint, nint, nint>)cfcFnPtr;
+            createFakeClient(enginePtr, retBuf, addrPtr);
+            return Marshal.ReadInt32(retBuf);
+        }
+        catch
+        {
+            return -1;
+        }
+        finally
+        {
+            Marshal.FreeHGlobal(addrPtr);
+            Marshal.FreeHGlobal(retBuf);
+        }
     }
 }
