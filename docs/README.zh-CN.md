@@ -94,7 +94,46 @@ CS2-Bot-Improver 面向喜欢与人机博弈，或想和朋友一起挑战人机
 | `bot_nades normal` | 采用接近真人玩家的投掷物数量上限。**（默认）** |
 | `bot_nades more` | 使用与普通模式相同的决策逻辑，但采用更高的数量上限。 |
 | `bot_nades max` | 减少各种限制，解锁地狱道具。 |
+| `bot_nades native` | 使用 Valve 原生投掷物 AI 和物理，不使用回放数据库。 |
+| `bot_nades coach_easy` | 使用原生 AI，低投掷物购买强度。 |
+| `bot_nades coach_normal` | 使用原生 AI，中等投掷物购买强度。 |
+| `bot_nades coach_hard` | 使用原生 AI，高投掷物购买强度。 |
 | `bot_nades` | 查看当前道具模式。 |
+
+也可以在 `game/csgo/addons/counterstrikesharp/configs/plugins/NadeSystem/NadeSystem.json` 中选择模式：
+
+```json
+{
+  "Mode": "coach_hard",
+  "CoachHardReplayChances": {
+    "smoke": 30,
+    "flash": 20,
+    "he": 35,
+    "molotov": 40
+  }
+}
+```
+
+`native`、`coach_easy` 和 `coach_normal` 会恢复 Valve 的 `bot_allow_grenades` 路径，不从回放数据库生成投掷物实体。`coach_hard` 也恢复原生路径，但在通过情报、位置、方向和概率检查后，可能低频复用预设投掷曲线。当前 coach 模式的差异是原生投掷物购买概率和类型权重，不会提供额外视野、听觉或隐藏敌人位置。旧版 `less`、`normal`、`more` 和 `max` 模式仍保留。
+
+`coach_hard` 中的 `CoachHardReplayChances` 只控制通过当前位置和情报检查后选择预设投掷曲线的概率，不控制 Valve Bot 是否购买或决定投掷该类型道具。
+预设辅助还要求 Bot 已经购买并且当前正手持对应投掷物，通过检查后才会消耗实际库存中的一枚道具；插件不会替 Bot 切换武器或额外扣除金钱，并会避开近期开火、投掷和拆包状态。
+
+### BotState 静止重寻路
+
+`Smarter-Bot` 默认保留原生的 5 秒静止重寻路时间。若要测试更短的时间，可以编辑 `game/csgo/addons/counterstrikesharp/configs/plugins/BotState/BotState.json`：
+
+```json
+{
+  "ConfigVersion": 1,
+  "EnableCustomIdleRepath": true,
+  "IdleRepath": {
+    "Seconds": 2.5
+  }
+}
+```
+
+将 `EnableCustomIdleRepath` 设置为 `false` 即恢复原生的 5 秒。时间会限制在 0.25 到 30 秒。这个选项只会请求 Valve Bot 重新计算路线，不会强制移动 Bot，也无法区分正常架点和导航卡住。
 
 ### 人机饰品
 

@@ -25,7 +25,7 @@ public static class BotOffsets
 }
 
 [MinimumApiVersion(304)]
-public class BotAI : BasePlugin
+public class BotAI : BasePlugin, IPluginConfig<BotAIConfig>
 {
     public override string ModuleName => "Patches - Bot AI";
     public override string ModuleVersion => "1.8.8";
@@ -36,15 +36,31 @@ public class BotAI : BasePlugin
     private readonly List<PatchInfo> _appliedPatches = [];
     private readonly bool _isLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 
+    public BotAIConfig Config { get; set; } = new();
 
+    public void OnConfigParsed(BotAIConfig config)
+    {
+        Config = config ?? new BotAIConfig();
+        Config.Modules ??= new ModuleToggles();
+        Config.DisabledPatches ??= [];
+    }
 
     public override void Load(bool hotReload)
     {
         Logger.LogInformation("Bot AI Patches loading...");
         var patchDefinitions = _isLinux ? LinuxPatchDefinitions.All : WindowsPatchDefinitions.All;
+        var disabledPatches = ResolveDisabledPatches(patchDefinitions.Keys);
+        var skippedPatches = 0;
 
         foreach (var name in patchDefinitions.Keys)
         {
+            if (disabledPatches.Contains(name))
+            {
+                skippedPatches++;
+                Logger.LogInformation($"{name}: skipped (disabled via config).");
+                continue;
+            }
+
             if (ApplyPatch(name, _isLinux)) Logger.LogInformation($"{name}: applied.");
             else Logger.LogError($"{name}: FAILED.");
         }
@@ -70,7 +86,67 @@ public class BotAI : BasePlugin
             return HookResult.Continue;
         });
 
-        Logger.LogInformation($"Applied {_appliedPatches.Count}/{patchDefinitions.Count} patches.");
+        Logger.LogInformation(
+            $"Applied {_appliedPatches.Count}/{patchDefinitions.Count - skippedPatches} enabled patches " +
+            $"({skippedPatches} patches skipped by config).");
+    }
+
+    /// <summary>
+    /// Builds the effective skip set from module toggles, the legacy
+    /// CasualAwareness switch and the explicit DisabledPatches list.
+    /// Unknown names in DisabledPatches are reported (typo protection).
+    /// </summary>
+    private HashSet<string> ResolveDisabledPatches(IEnumerable<string> availablePatchNames)
+    {
+        var available = availablePatchNames.ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var disabled = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        void AddCategory(string category, string source)
+        {
+            if (!BotAIPatchCategories.All.TryGetValue(category, out var patches)) return;
+            var matched = 0;
+            foreach (var name in patches)
+            {
+                if (!available.Contains(name)) continue;
+                disabled.Add(name);
+                matched++;
+            }
+
+            if (matched > 0)
+                Logger.LogInformation($"Module '{category}' disabled via {source} ({matched} patches).");
+        }
+
+        // Legacy switch wins over Modules.Awareness when explicitly present.
+        if (Config.CasualAwareness.HasValue)
+        {
+            if (Config.CasualAwareness.Value)
+                AddCategory("Awareness", "CasualAwareness=true");
+        }
+        else if (!Config.Modules.Awareness)
+        {
+            AddCategory("Awareness", "Modules.Awareness=false");
+        }
+
+        if (!Config.Modules.BombInfo) AddCategory("BombInfo", "Modules.BombInfo=false");
+        if (!Config.Modules.CombatForce) AddCategory("CombatForce", "Modules.CombatForce=false");
+        if (!Config.Modules.Movement) AddCategory("Movement", "Modules.Movement=false");
+        if (!Config.Modules.VisionAttention) AddCategory("VisionAttention", "Modules.VisionAttention=false");
+        if (!Config.Modules.BombBehavior) AddCategory("BombBehavior", "Modules.BombBehavior=false");
+        if (!Config.Modules.StateMachine) AddCategory("StateMachine", "Modules.StateMachine=false");
+
+        foreach (var name in Config.DisabledPatches)
+        {
+            if (string.IsNullOrWhiteSpace(name)) continue;
+            if (!available.Contains(name))
+            {
+                Logger.LogWarning($"DisabledPatches: '{name}' does not match any known patch name (typo?).");
+                continue;
+            }
+
+            disabled.Add(name);
+        }
+
+        return disabled;
     }
 
     public override void Unload(bool hotReload)
