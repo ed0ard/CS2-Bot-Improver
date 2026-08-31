@@ -117,10 +117,12 @@ internal static class LinuxPatchDefinitions
         ),
 
         // AttackState::OnUpdate: skip the CanSeeSniper retreat block.
+        // 1.8.9: only the opcode byte is rewritten (je -> jmp); the rel8 displacement
+        // stays whatever the binary shipped with, so it can never go stale.
         ["AttackState_RetreatOnSniper_Disable"] = (
             signature:        "48 8B 07 48 8D 15 ? ? ? ? 48 8B 80 38 05 00 00 48 39 D0 0F 85 ? ? ? ? 80 BF B8 05 00 00 00 74 73 4C 8D 35",
-            patch:            "EB 73",
-            expectedOriginal: "74 73",
+            patch:            "EB",
+            expectedOriginal: "74",
             patchOffset:      33
         ),
 
@@ -172,6 +174,10 @@ internal static class LinuxPatchDefinitions
         ),
 
         // Keep low-skill bots from delaying dodge transitions.
+        // Deliberately still hardcoded: the new rel8 target (S+0x42) is a third
+        // location ("non-jump path"), not the original branch target or fall-through,
+        // so there is nothing at the site to derive it from. Needs its own anchor
+        // signature to become drift-proof.
         ["LowSKill_JumpChance0"] = (
             signature:        "4C 0F 2F 05 ? ? ? ? 76 11",
             patch:            "EB 40",
@@ -187,9 +193,14 @@ internal static class LinuxPatchDefinitions
             patchOffset:      19
         ),
 
+        // 1.8.9: all `00 00 00 00` rel32 fields in the cave pairs below are COMPUTED at
+        // load time from the resolved addresses of both pair members (see
+        // LinuxDisplacementFixups). The cave<->site distance spans function boundaries
+        // and changes on every game update — hardcoding it is what used to make a
+        // sig-matched pair jump into the wrong bytes after build drift.
         ["Vision_AlwaysEnterApproachBody_Cave"] = (
-            signature:        "48 89 DF FF D0 E9 48 FF FF FF CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC",
-            patch:            "48 83 7B 18 00 0F 84 13 01 00 00 E9 50 01 00 00",
+            signature:        "48 89 DF FF D0 E9 ? ? ? ? CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC",
+            patch:            "48 83 7B 18 00 0F 84 00 00 00 00 E9 00 00 00 00",
             expectedOriginal: "CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC",
             patchOffset:      10
         ),
@@ -197,14 +208,14 @@ internal static class LinuxPatchDefinitions
         // Always take approach-body path in Vision logic.
         ["Vision_AlwaysEnterApproachBody"] = (
             signature:        "80 BB 39 04 00 00 00 0F 85 ? ? ? ? E9 ? ? ? ? 66 0F 1F 44 00 00 48 89 DF",
-            patch:            "E9 0E F7 FF FF 90",
+            patch:            "E9 00 00 00 00 90",
             expectedOriginal: "0F 85 ? ? ? ?",
             patchOffset:      7
         ),
 
         ["Vision_AlwaysWatchApproachPoints_Cave"] = (
             signature:        "F3 0F 11 4D A8 E9 ? ? ? ? CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC",
-            patch:            "48 83 7B 18 00 0F 84 D1 8D FE FF E9 71 8C FE FF",   // 14172: back-jumps -0x13A0 (jz 0xBF7686, jmp 0xBF752B)
+            patch:            "48 83 7B 18 00 0F 84 00 00 00 00 E9 00 00 00 00",
             expectedOriginal: "CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC",
             patchOffset:      10
         ),
@@ -212,21 +223,23 @@ internal static class LinuxPatchDefinitions
         // CCSBot::UpdateLookAround: skip the skill threshold before approach-body checks.
         ["Vision_AlwaysWatchApproachPoints"] = (
             signature:        "F3 0F 58 85 EC FE FF FF 80 BB F0 54 00 00 00 F3 0F 11 83 28 53 00 00 0F 84 ? ? ? ? F3 0F 10 1D",
-            patch:            "E9 80 73 01 00 90",   // 14172: jmp -> cave 0xC0E8AA (was E9 E0 5F 01 00 90 -> 0xC0D50A, live code)
+            patch:            "E9 00 00 00 00 90",
             expectedOriginal: "0F 84 ? ? ? ?",
             patchOffset:      23
         ),
 
+        // Signature pins all 32 padding bytes the patch writes (was 30 — the last two
+        // patch bytes were only covered by expectedOriginal, not the signature).
         ["Vision_AlwaysWatchApproachPoints_LoopEntry_Cave"] = (
-            signature:        "48 8B 07 FF 50 20 E9 26 FF FF FF CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC",
-            patch:            "49 8B 7F 10 48 85 FF 0F 84 5A 2C FE FF 80 BA 24 06 00 00 02 75 05 BE 03 00 00 00 E9 A8 2C FE FF",   // 14172: back-jumps -0x20 (jz 0xBF7568, jmp 0xBF75C9)
+            signature:        "48 8B 07 FF 50 20 E9 ? ? ? ? CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC",
+            patch:            "49 8B 7F 10 48 85 FF 0F 84 00 00 00 00 80 BA 24 06 00 00 02 75 05 BE 03 00 00 00 E9 00 00 00 00",
             expectedOriginal: "CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC",
             patchOffset:      11
         ),
 
         ["Vision_AlwaysWatchApproachPoints_LoopEntry"] = (
             signature:        "49 8B 56 18 BE 02 00 00 00 49 8B 7F 10 80 BA 24 06 00 00 02",
-            patch:            "E9 45 D3 01 00 90 90 90 90 90 90",   // 14172: jmp -> cave 0xC14901 (was E9 25 D3 -> 0xC148E1, live code)
+            patch:            "E9 00 00 00 00 90 90 90 90 90 90",
             expectedOriginal: "49 8B 7F 10 80 BA 24 06 00 00 02",
             patchOffset:      9
         ),
@@ -283,18 +296,26 @@ internal static class LinuxPatchDefinitions
         ),
 
         // Idle/bomb-search fallback: GetNextBombsiteToSearch() -> GetPlantedBombsite().
+        // Deliberately left hardcoded on BOTH sides (values from CS2-BotAI's 14172
+        // revalidation): the call retargets one game function to a sibling function,
+        // so there is nothing at the patch site to compute the new displacement from.
+        // Hardcoding expectedOriginal keeps it fail-safe — on build drift validation
+        // stops matching and the patch is skipped cleanly rather than writing a stale
+        // call target. A future drift-proof version would resolve GetPlantedBombsite
+        // via its own signature and compute the displacement like the cave pairs.
         ["TBot_BombsiteSearch_UseKnownPlantedSite"] = (
             signature:        "48 8B BB 08 5E 00 00 E8 ? ? ? ? 4C 89 F7 E8 ? ? ? ? 49 8B 3C 24 31 F6",
-            patch:            "E8 4C 1D F6 FF",   // 14172: call GetPlantedBombsite sub_BE84F0
-            expectedOriginal: "E8 3C 20 F6 FF",   // 14172: call GetNextBombsiteToSearch sub_BE87E0
+            patch:            "E8 4C 1D F6 FF",   // 14172: call GetPlantedBombsite
+            expectedOriginal: "E8 3C 20 F6 FF",   // 14172: call GetNextBombsiteToSearch
             patchOffset:      15
         ),
 
         // OnBombPickedUp: force the pathfind/hear gate to enter the tracking path.
+        // 1.8.9: opcode-only rewrite (jne -> jmp); rel8 displacement left untouched.
         ["BombPickup_CT_GlobalHearRange"] = (
             signature:        "E8 ? ? ? ? 31 C9 BA 02 00 00 00 48 89 DF F3 0F 10 05 ? ? ? ? 48 89 C6 E8 ? ? ? ? 84 C0 75 84",
-            patch:            "EB 84",
-            expectedOriginal: "75 84",
+            patch:            "EB",
+            expectedOriginal: "75",
             patchOffset:      33
         ),
 
@@ -307,10 +328,13 @@ internal static class LinuxPatchDefinitions
         ),
 
         // CSGameState::OnBombPlanted: all bot-owned game states learn the planted site.
+        // 1.8.9: rel32 computed at load as origRel32 + 1 (jz rel32 is 6 bytes, jmp rel32
+        // is 5 — same target, instruction shrinks by one). expectedOriginal wildcards the
+        // displacement so validation survives game updates.
         ["OnBombPlanted_AllBotsLearnSite"] = (
-            signature:        "48 8B 83 00 51 00 00 48 8B 40 18 80 B8 24 06 00 00 02 0F 84 EF 00 00 00 48 8B 7B 18",
-            patch:            "E9 F0 00 00 00 90",
-            expectedOriginal: "0F 84 EF 00 00 00",
+            signature:        "48 8B 83 00 51 00 00 48 8B 40 18 80 B8 24 06 00 00 02 0F 84 ? ? ? ? 48 8B 7B 18",
+            patch:            "E9 00 00 00 00 90",
+            expectedOriginal: "0F 84 ? ? ? ?",
             patchOffset:      18
         ),
 
