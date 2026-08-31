@@ -1,0 +1,81 @@
+{
+  "CBotManager::IsVisibleThroughSmoke": {
+    "signatures": {
+      "library": "server",
+      "windows": "4C 8B DC 49 89 5B ? 49 89 6B ? 49 89 73 ? 49 89 7B ? 41 54 41 56 41 57 48 81 EC",
+      "linux": "55 48 8D 05 ? ? ? ? 48 89 E5 41 57 49 89 F7 41 56 48 8D 35"
+    }
+  },
+  "g_AutoList_SmokeProj_Head_Server": {
+    "signatures": {
+      "library": "server",
+      "windows": "48 8B 1D ? ? ? ? 48 8B EA 0F 29 74 24",
+      "linux": "48 8B 1D ? ? ? ? 48 85 DB 0F 84 ? ? ? ? 49 89 FD 49 89 F4 EB ?"
+    },
+    "offset": 3,
+    "rel_size": 7,
+    "comment": "cs:g_AutoList_SmokeProj_Head_Server. offset=3: disp32 starts at sig+3; rel_size=7: full mov instruction length."
+  },
+  "GetSmokeDensityInLine": {
+    "signatures": {
+      "library": "server",
+      "windows": "40 55 53 56 41 55 41 57 48 8D 6C 24",
+      "linux": "55 48 89 E5 41 57 41 56 48 8D 45 ? 41 55 49 89 FD 41 54 49 89 F4 53 48 89 D3 48 8D 55 ? 48 83 EC ? 66 48 0F 6E FA"
+    },
+    "comment": "float GetSmokeDensityInLine(const VectorWS& from, const VectorWS& to, VectorWS* outClosest)."
+  },
+  "CHEGrenadeProjectile::Detonate": {
+    "signatures": {
+      "library": "server",
+      "windows": "48 8B C4 55 57 48 8D 68 ? 48 81 EC A8 00 00 00 48 89 58 ? 48 89 70",
+      "linux": "55 48 89 E5 41 57 41 56 41 55 41 54 53 48 89 FB 48 83 EC 58 E8 ? ? ? ? 48 85 C0 0F 84 ? ? ? ? 4C 8D 3D"
+    },
+    "comment": "HE detonate."
+  },
+  "BulletPelletTrace": {
+    "signatures": {
+      "library": "server",
+      "windows": "48 89 54 24 ? 55 56 41 57 48 8D AC 24 ? ? ? ? B8 70 29 00 00",
+      "linux": "48 8B 06 80 78 64 00 75 ? C3 66 0F 1F 44 00 00 55 66 0F EF E4"
+    },
+    "comment": "Per-pellet bullet trace."
+  },
+  "CNavPhysicsInterface::TraceShape": {
+    "offsets": {
+      "windows": 3,
+      "linux": 5
+    },
+    "comment": "CNavPhysicsInterface trace-shape vtable slot."
+  },
+  "CCSPlayer_WeaponServices::GetSlot": {
+    "signatures": {
+      "library": "server",
+      "windows": "48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 41 54 41 56 41 57 48 83 EC 20 45 33 E4 45 8B F0",
+      "linux": "55 48 89 E5 41 57 41 56 41 55 41 54 53 89 F3 48 83 EC ? 48 63 77"
+    },
+    "comment": "Returns weapon in slot N."
+  },
+  "CCSBot::IsVisiblePos": {
+    "signatures": {
+      "library": "server",
+      "windows": "48 89 5C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 55 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC A0 01 00 00 48 8D 05",
+      "linux": "55 48 8D 05 ? ? ? ? 48 89 E5 41 57 4C 8D BD ? ? ? ? 41 56 41 55 41 54 49 89 CC"
+    },
+    "comment": "CCSBot::IsVisible(pos)."
+  },
+  "CCSBot::IsVisiblePlayer": {
+    "signatures": {
+      "library": "server",
+      "windows": "48 89 5C 24 ? 44 88 44 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC 90 00 00 00",
+      "linux": "55 48 8D 05 ? ? ? ? 48 89 E5 41 57 4C 8D 7D ? 41 56 41 89 D6"
+    },
+    "comment": "CCSBot::IsVisible(player)."
+  },
+  "Bot::m_pPlayer": {
+    "offsets": {
+      "windows": 24,
+      "linux": 24
+    },
+    "comment": "CBot base object -> player pawn ptr."
+  }
+}

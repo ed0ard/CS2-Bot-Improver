@@ -1,0 +1,16 @@
+{
+    "smoke": {
+        "mode": 0,
+        "density_threshold": 0.23
+    },
+    "he_holes": {
+        "radius": 250.0,
+        "duration": 5.0
+    },
+    "bullet_holes": {
+        "enabled": true,
+        "radius": 20.0,
+        "shotgun_radius": 80.0,
+        "duration": 1.0
+    }
+}

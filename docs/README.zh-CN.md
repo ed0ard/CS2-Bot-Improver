@@ -264,6 +264,7 @@ negev     m249
 - [CS2-Lib](https://github.com/ianlucas/cs2-lib)，作者 [Lucas](https://github.com/ianlucas)
 - [CS2-Bot-Hider](https://github.com/XBribo/CS2-Bot-Hider)，作者 [XBribo](https://github.com/XBribo)
 - [CS2-Bot-Controller](https://github.com/XBribo/CS2-Bot-Controller)，作者 [XBribo](https://github.com/XBribo)
+- [CS2-Bot-Vision](https://github.com/XBribo/CS2-Bot-Vision) 作者 [XBribo](https://github.com/XBribo)
 - [CSGOBetterBots](https://github.com/manicogaming/CSGOBetterBots/blob/master/addons/sourcemod/data/bot_info.json)，作者 [manico](https://github.com/manicogaming)
 - [CS2-Smarter-Bot](https://github.com/ed0ard/CS2-Smarter-Bot)
 - [CS2-BotAI](https://github.com/ed0ard/CS2-BotAI)，fork 自 [Austin](https://github.com/Austinbots)

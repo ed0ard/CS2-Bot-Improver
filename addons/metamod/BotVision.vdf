@@ -1,0 +1,5 @@
+"Metamod Plugin"
+{
+    "alias"	"BotVision"
+    "file"	"addons/BotVision/bin/win64/BotVision"
+}

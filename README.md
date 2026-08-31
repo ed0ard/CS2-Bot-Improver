@@ -249,6 +249,7 @@ Run `sv_standable_normal 0.7` in the game console.
 - [CS2-Lib](https://github.com/ianlucas/cs2-lib) by [Lucas](https://github.com/ianlucas)
 - [CS2-Bot-Hider](https://github.com/XBribo/CS2-Bot-Hider) by [XBribo](https://github.com/XBribo)
 - [CS2-Bot-Controller](https://github.com/XBribo/CS2-Bot-Controller) by [XBribo](https://github.com/XBribo)
+- [CS2-Bot-Vision](https://github.com/XBribo/CS2-Bot-Vision) by [XBribo](https://github.com/XBribo)
 - [CSGOBetterBots](https://github.com/manicogaming/CSGOBetterBots/blob/master/addons/sourcemod/data/bot_info.json) by [manico](https://github.com/manicogaming)
 - [CS2-Smarter-Bot](https://github.com/ed0ard/CS2-Smarter-Bot)
 - [CS2-BotAI](https://github.com/ed0ard/CS2-BotAI), forked from [Austin](https://github.com/Austinbots)

@@ -63,9 +63,7 @@ public sealed class SharedMemoryClient : IBotHiderApi, IDisposable
     // Command opcodes
     private const byte CmdSetSteamId = 1;
     private const byte CmdSetPersona = 2;
-    private const byte CmdSetDisguise = 3;
-    private const byte CmdRebuild = 4;
-    // 5 (KickAll) and 6 (Refill) retired — match-end clean-rebuild removed
+    private const byte CmdSetIdentityMode = 3;
     private const byte CmdSetNameSource = 7;
 
     // Sentinel slot for global commands
@@ -403,12 +401,13 @@ public sealed class SharedMemoryClient : IBotHiderApi, IDisposable
         return true;
     }
 
-    // Global disguise toggle
-    public bool SetDisguise(bool enabled)
+    // Changes the global managed-bot identity mode
+    public bool SetIdentityMode(BotIdentityMode mode)
     {
+        if (mode is not BotIdentityMode.Player and not BotIdentityMode.Bot) return false;
         if (_view == null) TryConnect();
         if (_view == null) return false;
-        return PostCommand(CmdSetDisguise, SlotAll, enabled ? 1UL : 0UL, null);
+        return PostCommand(CmdSetIdentityMode, SlotAll, (ulong)mode, null);
     }
 
     // Global display-name source toggle (1=bot_info name, 0=botprofile name)
@@ -417,14 +416,6 @@ public sealed class SharedMemoryClient : IBotHiderApi, IDisposable
         if (_view == null) TryConnect();
         if (_view == null) return false;
         return PostCommand(CmdSetNameSource, SlotAll, useBotInfo ? 1UL : 0UL, null);
-    }
-
-    // Request a clean bot rebuild
-    public bool RequestRebuild()
-    {
-        if (_view == null) TryConnect();
-        if (_view == null) return false;
-        return PostCommand(CmdRebuild, SlotAll, 0UL, null);
     }
 
     private bool PostCommand(byte type, int slot, ulong sid, string? name)

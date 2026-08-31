@@ -40,6 +40,18 @@
     },
     "comment": "packs network entities for clients"
   },
+  "CCSGameRules::SameMapTeardown": {
+    "signatures": {
+      "library": "server",
+      "windows": "41 3B DD 0F 84 99 00 00 00 41 8B 80 88 03 00 00 49 8B C8 C1 E8 08 A8 01 74 44",
+      "linux": "4C 8D BD 90 EE FF FF 31 F6 C7 85 90 EE FF FF 00 00 00 00 4C 89 FF E8 ? ? ? ? 49 8B 06 48 8D BD C0 EE FF FF"
+    },
+    "offsets": {
+      "windows": -43,
+      "linux": 22
+    },
+    "comment": "restores bot identity before same-map teardown"
+  },
   "CServerSideClient::SetName": {
     "offsets": {
       "windows": 61,
