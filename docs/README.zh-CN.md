@@ -274,4 +274,4 @@ negev     m249
 
 ## 许可证
 
-[GNU Affero General Public License v3.0](../LICENSE)
+[GNU Affero General Public License v3.0](LICENSE)，但 `Panel/` 除外，该目录适用 [PolyForm Strict 1.0.0](Panel/LICENSE)

@@ -28,7 +28,7 @@ public static class BotOffsets
 public class BotAI : BasePlugin
 {
     public override string ModuleName => "Patches - Bot AI";
-    public override string ModuleVersion => "1.8.8";
+    public override string ModuleVersion => "1.8.9";
     public override string ModuleAuthor => "K4ryuu & Austin (updated by ed0ard & Misaka17032 & XBribo & AmagiReina)";
     public override string ModuleDescription =>
         "Improve and fix bots' behavior comprehensively";
@@ -43,10 +43,79 @@ public class BotAI : BasePlugin
         Logger.LogInformation("Bot AI Patches loading...");
         var patchDefinitions = _isLinux ? LinuxPatchDefinitions.All : WindowsPatchDefinitions.All;
 
+        // "<name>_Cave" entries build a code cave that their "<name>" partner then
+        // jumps into. The pair must be applied atomically: if the cave is missing
+        // (e.g. its signature no longer matches after a game update), the partner's
+        // jump lands in unpatched bytes and the server segfaults as soon as a bot
+        // takes that code path.
+        var caveNames = patchDefinitions.Keys.Where(n => n.EndsWith("_Cave")).ToHashSet();
+        var appliedCaves = new HashSet<string>();
+
+        // Phase 1 — resolve every signature BEFORE any write. A cave's signature is
+        // the CC padding the cave patch itself overwrites, so it cannot be re-resolved
+        // once written, and the displacement math below needs both pair addresses.
+        var sites = new Dictionary<string, nint>();
+        foreach (var (name, def) in patchDefinitions)
+        {
+            nint sigAddr = NativeAPI.FindSignature(GameUtils.GetModulePath("server"), def.signature);
+            if (sigAddr == 0) { Logger.LogError($"'{name}': signature not found."); continue; }
+            sites[name] = sigAddr + def.patchOffset;
+        }
+
+        // Phase 2 — compute rel32 fields from the resolved addresses (Linux cave
+        // pairs; no-op elsewhere). A failed fixup marks the entry unappliable so the
+        // pair dies atomically instead of writing a jump with a wrong displacement.
+        var patchBytes = new Dictionary<string, List<byte>>();
+        foreach (var (name, def) in patchDefinitions)
+        {
+            if (!sites.ContainsKey(name)) continue;
+            var bytes = ParseHex(def.patch);
+            if (_isLinux && !LinuxDisplacementFixups.Apply(name, bytes, sites, Logger))
+            {
+                sites.Remove(name);
+                continue;
+            }
+            patchBytes[name] = bytes;
+        }
+
+        // Phase 3 — write caves first, then partners (1.8.8 atomic ordering).
+        foreach (var name in caveNames)
+        {
+            if (sites.TryGetValue(name, out nint addr) && WritePatch(name, addr, patchBytes[name], patchDefinitions[name].expectedOriginal))
+            { appliedCaves.Add(name); Logger.LogInformation($"{name}: applied."); }
+            else Logger.LogError($"{name}: FAILED.");
+        }
+
         foreach (var name in patchDefinitions.Keys)
         {
-            if (ApplyPatch(name, _isLinux)) Logger.LogInformation($"{name}: applied.");
-            else Logger.LogError($"{name}: FAILED.");
+            if (caveNames.Contains(name)) continue;
+
+            string caveName = $"{name}_Cave";
+            if (caveNames.Contains(caveName) && !appliedCaves.Contains(caveName))
+            {
+                Logger.LogWarning($"{name}: skipped, its cave partner '{caveName}' did not apply.");
+                continue;
+            }
+
+            bool ok = sites.TryGetValue(name, out nint addr)
+                && WritePatch(name, addr, patchBytes[name], patchDefinitions[name].expectedOriginal);
+            if (ok) Logger.LogInformation($"{name}: applied.");
+            else
+            {
+                Logger.LogError($"{name}: FAILED.");
+                // Roll back the now-orphaned cave so we never leave half a pair behind.
+                if (appliedCaves.Contains(caveName))
+                {
+                    var cave = _appliedPatches.FirstOrDefault(p => p.Name == caveName);
+                    if (cave != null)
+                    {
+                        RestorePatch(cave);
+                        _appliedPatches.Remove(cave);
+                        appliedCaves.Remove(caveName);
+                        Logger.LogWarning($"{caveName}: rolled back, its partner '{name}' did not apply.");
+                    }
+                }
+            }
         }
 
         RegisterEventHandler<EventPlayerSpawn>((@event, info) =>
@@ -83,27 +152,21 @@ public class BotAI : BasePlugin
 
     // ── Patch machinery ───────────────────────────────────────────────────────
 
-    private bool ApplyPatch(string name, bool linux = false)
+    // Write-only: the address is resolved (and displacement fields computed) before
+    // any patch is written — see the phased Load above.
+    private bool WritePatch(string name, nint addr, List<byte> patchBytes, string expectedOriginal)
     {
         try
         {
-            var patchDefinitions = linux ? LinuxPatchDefinitions.All : WindowsPatchDefinitions.All;
-            if (!patchDefinitions.TryGetValue(name, out var def)) return false;
-
-            nint sigAddr = NativeAPI.FindSignature(GameUtils.GetModulePath("server"), def.signature);
-            if (sigAddr == 0) { Logger.LogError($"'{name}': signature not found."); return false; }
-
-            nint addr = sigAddr + def.patchOffset;
-            var patchBytes = ParseHex(def.patch);
             if (patchBytes.Count == 0 || !IsValid(addr)) return false;
 
             var origBytes = new List<byte>();
             for (int i = 0; i < patchBytes.Count; i++)
                 origBytes.Add(Marshal.ReadByte(addr, i));
 
-            if (!ValidateOrig(name, origBytes, def.expectedOriginal))
+            if (!ValidateOrig(name, origBytes, expectedOriginal))
             {
-                Logger.LogError($"'{name}': byte mismatch. Expected [{def.expectedOriginal}] " +
+                Logger.LogError($"'{name}': byte mismatch. Expected [{expectedOriginal}] " +
                                 $"got [{string.Join(" ", origBytes.Select(b => $"{b:X2}"))}].");
                 return false;
             }

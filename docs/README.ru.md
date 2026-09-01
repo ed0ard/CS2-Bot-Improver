@@ -261,4 +261,4 @@ negev     m249
 
 ## Лицензия
 
-[GNU Affero General Public License v3.0](../LICENSE)
+[GNU Affero General Public License v3.0](LICENSE), за исключением каталога `Panel/`, на который распространяется [PolyForm Strict 1.0.0](Panel/LICENSE)
