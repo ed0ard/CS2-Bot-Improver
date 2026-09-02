@@ -142,7 +142,7 @@ After a match begins, use the command `scouts_on` or `scouts_off` to enable or d
 
 | Indicator | Meaning |
 | --- | --- |
-| 🟢 Green | No issues detected. |
+| 🟢 Green | No issues detected. Click the green light near Directory to open it. |
 | 🟡 Yellow | Restart CS2 to apply changes. |
 | 🔴 Red | Files missing. Click the red light to view the list of missing files. |
 
@@ -160,7 +160,7 @@ Click the <img width="31" height="32" alt="Settings" src="https://github.com/use
 
 ### Command browser
 
-Click **Commands**, click a block to copy it automatically, or type keywords to search.
+Click **Commands**, **left-click** a block to copy it automatically, **right-click** blocks to copy them consecutively, or type keywords to search.
 
 <img width="350" height="420" alt="Searchable command browser in the Panel" src="https://github.com/user-attachments/assets/957cfafb-900d-4450-b985-13d3e8efc375" />
 
