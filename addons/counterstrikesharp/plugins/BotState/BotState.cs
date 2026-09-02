@@ -5,35 +5,52 @@ using CounterStrikeSharp.API.Core.Attributes;
 using CounterStrikeSharp.API.Modules.Cvars;
 using CounterStrikeSharp.API.Modules.Utils;
 using CounterStrikeSharp.API.Modules.Memory;
+using CounterStrikeSharp.API.Modules.Memory.DynamicFunctions;
 using CounterStrikeSharp.API.Modules.Commands;
 using CounterStrikeSharp.API.Core.Capabilities;
-using RayTraceAPI;
 using BotControllerApi;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace BotState;
 
 public class BotState : BasePlugin
 {
     public override string ModuleName => "Smarter-Bot";
-    public override string ModuleVersion => "1.8.2";
-    public override string ModuleAuthor => "ed0ard & XBribo";
+    public override string ModuleVersion => "1.9.4";
+    public override string ModuleAuthor => "ed0ard & XBribo & unicbm";
     public override string ModuleDescription => "Make bots smarter";
 
-    private const float ExpandedValue = 500f;
-    private const float NormalValue = 50f;
-    private const float RestoreDelay = 1.0f;
+    private const float HurtRevealSeconds = 0.8f;
+    private const float DefuseRevealSeconds = 1.5f;
+    private const float DefuseHiddenSeconds = 3.5f;
     private const int KnifeDefinitionIndex = 9001;
     private const float ReloadInterruptCooldown = 0.75f;
     private const ulong InspectButtonMask = (ulong)PlayerButtons.Inspect;
+    private const ulong UseButtonMask = (ulong)PlayerButtons.Use;
+    private const float FakeDefuseHoldMinSeconds = 0.1f;
+    private const float FakeDefuseHoldMaxSeconds = 0.8f;
+    private const float FakeDefuseSearchMinSeconds = 2.0f;
+    private const float FakeDefuseSearchMaxSeconds = 4.0f;
+    private const string DefuseBombWindowsSignature =
+        "48 8D 91 08 04 00 00 E9 ? ? ? ?";
+    private const string DefuseBombLinuxSignature =
+        "48 8D B7 00 04 00 00 E9 ? ? ? ?";
+    private const string BotBlindWindowsSignature =
+        "40 53 48 81 EC 90 00 00 00 0F 29 B4 24 80 00 00 00 48 8D 15 ? ? ? ? 0F 57 C0 0F 29 7C 24 70";
 
-    private bool _isExpanded = false;
-    private ConVar? _smokeConVar;
+    // 360 FOV patch constants for fake defuse search phase
+    private const uint PageExecuteReadWrite = 0x40;
+
     private bool _isBombBeingDefused = false;
-    private bool _isDefuseExpanded = false;
-    private CounterStrikeSharp.API.Modules.Timers.Timer? _defuseExpandTimer = null;
+    private int _defuserSlot = -1;
+    private float _defuseRevealUntil = 0f;
+    private CounterStrikeSharp.API.Modules.Timers.Timer? _defuseRevealTimer = null;
     private CounterStrikeSharp.API.Modules.Timers.Timer? _gunReequipTimer = null;
+
+    private readonly Dictionary<int, float> _revealUntil = new();
 
     private readonly Random _random = new Random();
 
@@ -51,7 +68,46 @@ public class BotState : BasePlugin
     private readonly Dictionary<int, float> _idleStartTime = new();
     private readonly Dictionary<int, float> _lastRepathTime = new();
     private readonly Dictionary<int, float> _reloadInterruptCooldown = new();
+    private readonly Dictionary<int, float> _fakeDefuseCooldown = new();
+    private readonly Dictionary<nint, float> _fakeDefuseGuardUntil = new();
+    private readonly Dictionary<nint, int> _fakeDefuseCounts = new();
+    private readonly HashSet<int> _fakeDefuseSearchingBots = new();
+    private readonly HashSet<int> _pendingDefuseRestore = new();
+    private readonly Dictionary<int, long> _fakeDefuseSuppressionIds = new();
     private bool _isFreezeTime = false;
+
+    // 360 FOV patch tracking for fake defuse search
+    private sealed record FovPatchDefinition(
+        string Name,
+        string Signature,
+        int Offset,
+        byte[] Expected,
+        byte[] Replacement);
+
+    private sealed record AppliedFovPatch(
+        string Name,
+        nint Address,
+        byte[] Original);
+
+    private static readonly FovPatchDefinition[] FovPatches =
+    [
+        new(
+            "IsVisiblePos_IgnoreFOV",
+            "48 8D 05 ? ? ? ? 48 C7 45 98 1F 01 00 00 48 89 45 90 45 0F B6 E8 0F 10 45 90",
+            19,
+            [0x45, 0x0F, 0xB6, 0xE8],       // movzx r13d, r8b
+            [0x45, 0x33, 0xED, 0x90]),      // xor r13d, r13d; nop
+
+        new(
+            "IsVisiblePlayer_IgnoreFOV",
+            "48 8D 05 ? ? ? ? 48 C7 45 CF 4D 01 00 00 48 89 45 C7 41 0F B6 D8 0F 10 45 C7",
+            19,
+            [0x41, 0x0F, 0xB6, 0xD8],       // movzx ebx, r8b
+            [0x33, 0xDB, 0x90, 0x90]),      // xor ebx, ebx; nop; nop
+    ];
+
+    private readonly List<AppliedFovPatch> _appliedFovPatches = [];
+    private bool _fovPatchesAvailable = false;
 
     private readonly HashSet<int> _hasFiredThisAttack = new();
     private readonly Dictionary<int, bool> _prevIsAttacking = new();
@@ -59,23 +115,23 @@ public class BotState : BasePlugin
     private readonly Dictionary<int, bool> _cachedInAir = new();
     private readonly Dictionary<int, bool> _cachedNearLadder = new();
 
-    // Flashbang avoidance via Ray-Trace
-    private static readonly PluginCapability<CRayTraceInterface> RayTraceCap =
-        new("raytrace:craytraceinterface");
-    private CRayTraceInterface? _rayTrace;
+    // Flashbang avoidance
     private Vector? _scratchEye;
 
     private readonly HashSet<int> _knifeLockedBotSlots = new();
     private object? _botController;
+    private MemoryFunctionVoid<nint>? _defuseBombFunction;
+    private MemoryFunctionVoid<nint, float, float, float>? _botBlindFunction;
     private bool _eliminationHandled;
 
     private const float FlashFuseSeconds = 1.5f;        // CS2 flashbang fuse
     private const float FlashFovHorizDeg = 110f;        // bot horizontal cone (full angle)
     private const float FlashFovVertDeg = 90f;         // bot vertical cone (full angle)
+    private const float FlashMatchSlackSeconds = 0.25f;
     private readonly Dictionary<uint, float> _flashThrownAt = new();   // flash entindex -> server time first seen
     private readonly Dictionary<int, HashSet<uint>> _flashRolledByBot = new(); // bot idx  -> evaluated flashes
 
-    // Per-(bot, flash) decision + sight window. Single source of truth consumed by OnPlayerBlind.
+    // Per-(bot, flash) decision shared by the native blind hook and OnPlayerBlind
     private struct FlashDecision
     {
         public float FirstSeen;
@@ -92,7 +148,9 @@ public class BotState : BasePlugin
     // Registers game events and the per-tick bot behavior listener
     public override void Load(bool hotReload)
     {
-        _smokeConVar = ConVar.Find("bot_max_visible_smoke_length");
+        InstallDefuseBombHook();
+        InstallBotBlindHook();
+        InitializeFovPatches();
         RegisterEventHandler<EventRoundStart>(OnRoundStart);
         RegisterEventHandler<EventPlayerHurt>(OnPlayerHurt);
         RegisterEventHandler<EventPlayerSpawn>(OnPlayerSpawn);
@@ -118,12 +176,7 @@ public class BotState : BasePlugin
     // Resolves capabilities supplied by plugins after every plugin has loaded
     public override void OnAllPluginsLoaded(bool hotReload)
     {
-        try { _rayTrace = RayTraceCap.Get(); } catch { _rayTrace = null; }
-        if (_rayTrace == null)
-            Console.WriteLine("[Smarter-Bot] Ray-Trace not available");
-        else
-            _scratchEye = new Vector();
-
+        _scratchEye = new Vector();
         try { _botController = BotControllerBridge.TryGet(); } catch { _botController = null; }
         if (_botController == null)
             Console.WriteLine("[Smarter-Bot] BotController API not available");
@@ -146,8 +199,7 @@ public class BotState : BasePlugin
         }
 
         cmd.ReplyToCommand($"[Smarter-Bot] flash debug = {_debugFlash}");
-        cmd.ReplyToCommand($"[Smarter-Bot] ray-trace loaded = {_rayTrace != null}");
-        Console.WriteLine($"[Smarter-Bot] flash debug = {_debugFlash}, raytrace = {_rayTrace != null}");
+        Console.WriteLine($"[Smarter-Bot] flash debug = {_debugFlash}");
     }
 
     // Server stdout + every connected human's console. Use only for debug-gated lines
@@ -162,6 +214,8 @@ public class BotState : BasePlugin
         }
     }
     //---------------------------------------------------------------------------------------
+    // Reveals whoever hurt a Bot to every Bot through smoke for 1 second.
+    // Further damage from the same source only pushes the window out. Windows never stack.
     private HookResult OnPlayerHurt(EventPlayerHurt @event, GameEventInfo _)
     {
         try
@@ -169,85 +223,129 @@ public class BotState : BasePlugin
             var victim = @event.Userid;
             if (victim == null || !victim.IsValid || !victim.IsBot) return HookResult.Continue;
 
-            if (!_isExpanded)
-            {
-                _isExpanded = true;
-                SetSmokeLength(ExpandedValue);
-                AddTimer(RestoreDelay, () =>
-                {
-                    SetSmokeLength(NormalValue);
-                    _isExpanded = false;
-                });
-            }
+            // World damage has no attacker, and self damage is nobody hurting
+            // anyone else.
+            var attacker = @event.Attacker;
+            if (attacker == null || !attacker.IsValid || attacker.Slot == victim.Slot)
+                return HookResult.Continue;
+
+            RevealThroughSmoke(attacker.Slot, HurtRevealSeconds);
         }
         catch { }
         return HookResult.Continue;
     }
-
-    private void SetSmokeLength(float value)
+    //---------------------------------------------------------------------------------------
+    // Hands one player slot to BotVision and extends its reveal window.
+    private void RevealThroughSmoke(int slot, float seconds)
     {
-        if (_smokeConVar != null)
-            _smokeConVar.SetValue(value);
-        else
-            Server.ExecuteCommand($"bot_max_visible_smoke_length {value}");
+        if (slot < 0) return;
+
+        float until = Server.CurrentTime + seconds;
+        if (_revealUntil.TryGetValue(slot, out float current))
+        {
+            if (until > current) _revealUntil[slot] = until;
+            return;
+        }
+
+        _revealUntil[slot] = until;
+        Server.ExecuteCommand($"bv_reveal add {slot}");
+    }
+
+    // Drops one reveal in BotVision and locally
+    private void EndReveal(int slot)
+    {
+        if (!_revealUntil.Remove(slot)) return;
+        Server.ExecuteCommand($"bv_reveal remove {slot}");
+    }
+
+    // Releases every reveal whose window has run out
+    private void ExpireReveals(float now)
+    {
+        if (_revealUntil.Count == 0) return;
+
+        List<int>? expired = null;
+        foreach (var kvp in _revealUntil)
+        {
+            if (now < kvp.Value) continue;
+            (expired ??= new List<int>()).Add(kvp.Key);
+        }
+        if (expired == null) return;
+
+        foreach (int slot in expired) EndReveal(slot);
+    }
+
+    // Drops every reveal, including any BotVision still holds for a slot this
+    // plugin has stopped tracking
+    private void ClearReveals()
+    {
+        _revealUntil.Clear();
+        Server.ExecuteCommand("bv_reveal clear");
     }
 
     // Restores plugin-owned state before the plugin unloads
     public override void Unload(bool hotReload)
     {
+        CancelAllFakeDefuseSuppressions();
+        UninstallBotBlindHook();
+        UninstallDefuseBombHook();
+        RestoreAllFovPatches();
         ReleaseKnifeLocks();
-        SetSmokeLength(NormalValue);
-        _defuseExpandTimer?.Kill();
+        ClearReveals();
+        _defuseRevealTimer?.Kill();
         _gunReequipTimer?.Kill();
     }
-    // Spam smoke when an enemy is defusing the bomb
+
     private HookResult OnBombAbortDefuse(EventBombAbortdefuse @event, GameEventInfo info)
     {
-        StopDefuseSmoke();
+        StopDefuseReveal();
         return HookResult.Continue;
     }
 
     private HookResult OnBombDefused(EventBombDefused @event, GameEventInfo info)
     {
-        StopDefuseSmoke();
+        StopDefuseReveal();
         return HookResult.Continue;
     }
 
     private HookResult OnBombExploded(EventBombExploded @event, GameEventInfo info)
     {
-        StopDefuseSmoke();
+        StopDefuseReveal();
         return HookResult.Continue;
     }
 
-    private void StopDefuseSmoke()
+    private void StopDefuseReveal()
     {
         _isBombBeingDefused = false;
-        _defuseExpandTimer?.Kill();
-        _defuseExpandTimer = null;
-        if (_isDefuseExpanded)
+        _defuseRevealTimer?.Kill();
+        _defuseRevealTimer = null;
+
+        // Keep the reveal only when damage extended it past the defuse window
+        if (_defuserSlot >= 0 &&
+            _revealUntil.TryGetValue(_defuserSlot, out float until) &&
+            until <= _defuseRevealUntil)
         {
-            _isDefuseExpanded = false;
-            SetSmokeLength(NormalValue);
+            EndReveal(_defuserSlot);
         }
+        _defuserSlot = -1;
+        _defuseRevealUntil = 0f;
     }
 
-    private void StartDefuseSmokeCycle()
+    // Reveals the bomb-defuser for 1.5s out of every 5s of defusing
+    private void StartDefuseRevealCycle()
     {
-        if (_defuseExpandTimer != null) return;
+        if (_defuseRevealTimer != null) return;
 
-        _defuseExpandTimer = AddTimer(3.5f, () =>
+        _defuseRevealTimer = AddTimer(DefuseHiddenSeconds, () =>
         {
-            _defuseExpandTimer = null;
+            _defuseRevealTimer = null;
             if (!_isBombBeingDefused) return;
 
-            _isDefuseExpanded = true;
-            SetSmokeLength(ExpandedValue);
+            _defuseRevealUntil = Server.CurrentTime + DefuseRevealSeconds;
+            RevealThroughSmoke(_defuserSlot, DefuseRevealSeconds);
 
-            AddTimer(1.5f, () =>
+            AddTimer(DefuseRevealSeconds, () =>
             {
-                _isDefuseExpanded = false;
-                SetSmokeLength(NormalValue);
-                if (_isBombBeingDefused) StartDefuseSmokeCycle();
+                if (_isBombBeingDefused) StartDefuseRevealCycle();
             });
         });
     }
@@ -267,42 +365,23 @@ public class BotState : BasePlugin
         float origBlind = @event.BlindDuration;
         bool isImmune;
 
-        // Match this blind event to the bot's most-recently-detonating tracked flash.
-        // detonateAt should be ~now; allow a 250ms slack since CSS event dispatch and tick
-        // boundaries don't line up exactly.
+        // Match this blind event to the bot's most-recently-detonating tracked flash
         float matchNow = Server.CurrentTime;
-        (int bot, uint flash)? matchedKey = null;
-        FlashDecision matched = default;
-        float bestDelta = float.MaxValue;
-        foreach (var kvp in _flashDecisions)
-        {
-            if (kvp.Key.bot != bidx) continue;
-            float delta = Math.Abs(kvp.Value.DetonateAt - matchNow);
-            if (delta < bestDelta && delta < 0.25f)
-            {
-                bestDelta = delta;
-                matchedKey = kvp.Key;
-                matched = kvp.Value;
-            }
-        }
+        bool hasMatchedDecision = TryMatchFlashDecision(
+            bidx,
+            matchNow,
+            out (int bot, uint flash) matchedKey,
+            out FlashDecision matched);
 
-        if (_rayTrace != null)
+        if (hasMatchedDecision)
         {
-            if (matchedKey.HasValue)
-            {
-                isImmune = matched.Avoided;
-                _flashDecisions.Remove(matchedKey.Value);
-            }
-            else
-            {
-                // Bot never saw this flash through FOV+LOS — should be flashed normally
-                isImmune = false;
-            }
+            isImmune = matched.Avoided;
+            _flashDecisions.Remove(matchedKey);
         }
         else
         {
-            // Fallback when raytrace is unavailable
-            isImmune = _random.NextDouble() <= 0.6;
+            // Bot never saw this flash through FOV+LOS — should be flashed normally
+            isImmune = false;
         }
 
         if (isImmune)
@@ -328,10 +407,10 @@ public class BotState : BasePlugin
         if (_debugFlash)
         {
             string detail;
-            if (matchedKey.HasValue)
+            if (hasMatchedDecision)
             {
                 float visibleMs = (matched.LastSeen - matched.FirstSeen) * 1000f;
-                detail = $"flash#{matchedKey.Value.flash} visible={visibleMs:F0}ms rolled={(matched.Avoided ? "AVOID" : "flash")}";
+                detail = $"flash#{matchedKey.flash} visible={visibleMs:F0}ms rolled={(matched.Avoided ? "AVOID" : "flash")}";
             }
             else
             {
@@ -342,6 +421,34 @@ public class BotState : BasePlugin
         }
 
         return HookResult.Continue;
+    }
+
+    // Finds the tracked flash whose predicted detonation is closest to the blind call
+    private bool TryMatchFlashDecision(
+        int botIndex,
+        float now,
+        out (int bot, uint flash) matchedKey,
+        out FlashDecision matched)
+    {
+        matchedKey = default;
+        matched = default;
+        float bestDelta = float.MaxValue;
+        bool found = false;
+
+        foreach (var kvp in _flashDecisions)
+        {
+            if (kvp.Key.bot != botIndex) continue;
+
+            float delta = Math.Abs(kvp.Value.DetonateAt - now);
+            if (delta >= bestDelta || delta >= FlashMatchSlackSeconds) continue;
+
+            bestDelta = delta;
+            matchedKey = kvp.Key;
+            matched = kvp.Value;
+            found = true;
+        }
+
+        return found;
     }
     //---------------------------------------------------------------------------------------
     [GameEventHandler]
@@ -375,6 +482,7 @@ public class BotState : BasePlugin
     private void OnTick()
     {
         ProcessFlashbangAvoidance();
+        ExpireReveals(Server.CurrentTime);
 
         foreach (var player in Utilities.FindAllEntitiesByDesignerName<CCSPlayerController>("cs_player_controller"))
         {
@@ -803,6 +911,8 @@ public class BotState : BasePlugin
     private HookResult OnRoundStart(EventRoundStart @event, GameEventInfo info)
     {
         ReleaseKnifeLocks();
+        StopDefuseReveal();
+        ClearReveals();
         _eliminationHandled = false;
         _isFreezeTime = true;
 
@@ -822,6 +932,13 @@ public class BotState : BasePlugin
         _idleStartTime.Clear();
         _lastRepathTime.Clear();
         _reloadInterruptCooldown.Clear();
+        _fakeDefuseCooldown.Clear();
+        _fakeDefuseGuardUntil.Clear();
+        _fakeDefuseCounts.Clear();
+        CancelAllFakeDefuseSuppressions();
+        _fakeDefuseSearchingBots.Clear();
+        _pendingDefuseRestore.Clear();
+        RestoreAllFovPatches();
         _hasFiredThisAttack.Clear();
         _prevIsAttacking.Clear();
         _cachedInAir.Clear();
@@ -859,6 +976,7 @@ public class BotState : BasePlugin
 
         bool alreadyHandled = _eliminationHandled;
         HandleTeamElimination(victim.Slot, victimTeam);
+        RestoreDefuseAfterElimination(victim.Slot, victimTeam);
 
         // 10% chance the killer Bot inspects its current weapon. Skip when this
         // exact kill just triggered the elimination switching, since that path
@@ -1010,6 +1128,24 @@ public class BotState : BasePlugin
         {
             return ((BotControllerApi.IBotControllerApi)api)
                 .InjectUsercmd(slot, buttonMask, durationMs);
+        }
+
+        // Starts a cancellable persistent usercmd button suppression
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static long StartUsercmdSuppression(
+            object api, int slot, ulong buttonMask)
+        {
+            return ((BotControllerApi.IBotControllerApi)api)
+                .StartUsercmdSuppression(slot, buttonMask);
+        }
+
+        // Cancels one persistent usercmd suppression by its token
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static bool CancelUsercmdSuppression(
+            object api, int slot, long suppressionId)
+        {
+            return ((BotControllerApi.IBotControllerApi)api)
+                .CancelUsercmdSuppression(slot, suppressionId);
         }
 
         // Applies the knife-slot weapon lock to one Bot
@@ -1199,10 +1335,13 @@ public class BotState : BasePlugin
     private HookResult OnBombBeginDefuse(EventBombBegindefuse @event, GameEventInfo info)
     {
         ResetLookAroundForBot(@event.Userid);
-        _isBombBeingDefused = true;
-        StartDefuseSmokeCycle();
 
         var player = @event.Userid;
+        // The bomb-defuser is revealed
+        _defuserSlot = player != null && player.IsValid ? player.Slot : -1;
+        _isBombBeingDefused = true;
+        StartDefuseRevealCycle();
+
         if (player == null || !player.IsValid || !player.IsBot) return HookResult.Continue;
 
         var pawn = player.PlayerPawn?.Value;
@@ -1227,26 +1366,334 @@ public class BotState : BasePlugin
                 ? new CCSPlayer_ItemServices(pawn.ItemServices!.Handle)
                 : null;
             bool hasDefuser = itemSvc?.HasDefuser ?? false;
-            double fakeChance = hasDefuser ? 0.10 : 0.66;
+            double baseFakeChance = hasDefuser ? 0.20 : 0.66;
+            int fakeDefuseCount = _fakeDefuseCounts.GetValueOrDefault(bot.Handle);
+            double fakeChance = baseFakeChance * Math.Pow(0.66, fakeDefuseCount);
+            int slot = player.Slot;
+            bool fakeDefuseCoolingDown = _fakeDefuseCooldown.TryGetValue(
+                slot, out float cooldownEnd) && Server.CurrentTime < cooldownEnd;
 
-            if (_random.NextDouble() < fakeChance)
+            if (!fakeDefuseCoolingDown && _random.NextDouble() < fakeChance)
             {
-                float yaw = pawn.EyeAngles.Y * MathF.PI / 180f;
-                float rx = -MathF.Sin(yaw);
-                float ry = MathF.Cos(yaw);
-                float side = _random.NextDouble() < 0.5 ? 1f : -1f;
-
-                pawn.AbsVelocity.X += rx * side * 150f;
-                pawn.AbsVelocity.Y += ry * side * 150f;
-                pawn.AbsVelocity.Z += 255f;
-
-                ResetLookAroundForBot(player);
+                ScheduleFakeDefuse(player);
             }
         }
 
         return HookResult.Continue;
     }
 
+    // Keeps the real defuse sound briefly before entering the guard search window
+    private void ScheduleFakeDefuse(CCSPlayerController player)
+    {
+        if (_botController == null || _defuseBombFunction == null) return;
+
+        float holdSeconds = FakeDefuseHoldMinSeconds +
+            (float)_random.NextDouble() *
+            (FakeDefuseHoldMaxSeconds - FakeDefuseHoldMinSeconds);
+        float searchSeconds = FakeDefuseSearchMinSeconds +
+            (float)_random.NextDouble() *
+            (FakeDefuseSearchMaxSeconds - FakeDefuseSearchMinSeconds);
+
+        float now = Server.CurrentTime;
+        int slot = player.Slot;
+        _fakeDefuseCooldown[slot] = now + holdSeconds + searchSeconds;
+
+        AddTimer(
+            holdSeconds,
+            () => FinishFakeDefuse(slot, searchSeconds),
+            CounterStrikeSharp.API.Modules.Timers.TimerFlags.STOP_ON_MAPCHANGE);
+    }
+
+    // Releases Use and leaves the Bot near the bomb to acquire threats normally
+    private void FinishFakeDefuse(int slot, float searchSeconds)
+    {
+        if (_botController == null) return;
+
+        var player = Utilities.GetPlayerFromSlot(slot);
+        if (player == null || !player.IsValid || !player.IsBot ||
+            !player.PawnIsAlive || player.HasBeenControlledByPlayerThisRound)
+            return;
+
+        var pawn = player.PlayerPawn?.Value;
+        if (pawn == null || !pawn.IsValid || !pawn.IsDefusing) return;
+
+        var bot = pawn.Bot;
+        if (bot == null) return;
+
+        long suppressionId = BotControllerBridge.StartUsercmdSuppression(
+            _botController, slot, UseButtonMask);
+        if (suppressionId <= 0) return;
+
+        _fakeDefuseSuppressionIds[slot] = suppressionId;
+
+        _fakeDefuseGuardUntil[bot.Handle] = Server.CurrentTime + searchSeconds;
+        _fakeDefuseCounts[bot.Handle] =
+            _fakeDefuseCounts.GetValueOrDefault(bot.Handle) + 1;
+        _pendingDefuseRestore.Add(slot);
+
+        ref float stateTimestamp = ref bot.StateTimestamp;
+        stateTimestamp = Server.CurrentTime - 2.0f;
+
+        ResetLookAroundForBot(player);
+
+        // Enable 360 FOV for this bot during search phase
+        _fakeDefuseSearchingBots.Add(slot);
+        ApplyFovPatches();
+
+        // Schedule FOV restoration after search completes
+        AddTimer(
+            searchSeconds,
+            () => EndFakeDefuseSearch(slot),
+            CounterStrikeSharp.API.Modules.Timers.TimerFlags.STOP_ON_MAPCHANGE);
+    }
+
+    // Removes bot from search phase and restores FOV if no other bots are searching
+    private void EndFakeDefuseSearch(int slot)
+    {
+        CancelFakeDefuseSuppression(slot);
+        _fakeDefuseSearchingBots.Remove(slot);
+        if (_fakeDefuseSearchingBots.Count == 0)
+        {
+            RestoreAllFovPatches();
+        }
+    }
+
+    // Releases one Bot's fake-defuse +use suppression, if it still holds one
+    private void CancelFakeDefuseSuppression(int slot)
+    {
+        if (!_fakeDefuseSuppressionIds.Remove(slot, out long suppressionId))
+            return;
+        if (_botController == null) return;
+
+        BotControllerBridge.CancelUsercmdSuppression(
+            _botController, slot, suppressionId);
+    }
+
+    // Releases every outstanding fake-defuse +use suppression.
+    private void CancelAllFakeDefuseSuppressions()
+    {
+        foreach (int slot in _fakeDefuseSuppressionIds.Keys.ToList())
+            CancelFakeDefuseSuppression(slot);
+    }
+
+    // Grants each Bot that faked a defuse this round one DefuseBomb re-entry at
+    // the moment its last enemy dies
+    private void RestoreDefuseAfterElimination(int victimSlot, CsTeam victimTeam)
+    {
+        if (_pendingDefuseRestore.Count == 0 || _defuseBombFunction == null)
+            return;
+
+        var players = Utilities
+            .FindAllEntitiesByDesignerName<CCSPlayerController>("cs_player_controller")
+            .ToList();
+
+        // The death victim can still report alive here, so exclude it explicitly
+        bool victimTeamHasSurvivor = players.Any(p =>
+            p.IsValid && p.Slot != victimSlot && p.PawnIsAlive
+            && (int)p.TeamNum == (int)victimTeam);
+        if (victimTeamHasSurvivor) return;
+
+        foreach (int slot in _pendingDefuseRestore.ToList())
+        {
+            var player = Utilities.GetPlayerFromSlot(slot);
+            if (player == null || !player.IsValid || !player.IsBot ||
+                !player.PawnIsAlive || player.HasBeenControlledByPlayerThisRound)
+                continue;
+
+            // Only Bots opposing the wiped team just lost their last enemy
+            if ((int)player.TeamNum == (int)victimTeam) continue;
+
+            _pendingDefuseRestore.Remove(slot);
+            ForceDefuseBombState(slot);
+        }
+    }
+
+    // Pushes the native state machine straight back into DefuseBomb
+    private void ForceDefuseBombState(int slot)
+    {
+        Server.NextFrame(() =>
+        {
+            if (_defuseBombFunction == null) return;
+
+            var player = Utilities.GetPlayerFromSlot(slot);
+            if (player == null || !player.IsValid || !player.IsBot ||
+                !player.PawnIsAlive || player.HasBeenControlledByPlayerThisRound)
+                return;
+
+            var pawn = player.PlayerPawn?.Value;
+            if (pawn == null || !pawn.IsValid) return;
+
+            var bot = pawn.Bot;
+            if (bot == null) return;
+
+            // Re-entering the state is useless while Use is still stripped
+            CancelFakeDefuseSuppression(slot);
+
+            // Our own guard would otherwise stop this state entry
+            _fakeDefuseGuardUntil.Remove(bot.Handle);
+            _defuseBombFunction.Invoke(bot.Handle);
+        });
+    }
+
+    // Installs the verified Windows CCSBot::Blind Pre Hook
+    private void InstallBotBlindHook()
+    {
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            Logger.LogWarning(
+                "[Smarter-Bot] CCSBot::Blind hook is unavailable on this platform; using event fallback");
+            return;
+        }
+
+        try
+        {
+            _botBlindFunction =
+                new MemoryFunctionVoid<nint, float, float, float>(BotBlindWindowsSignature);
+            _botBlindFunction.Hook(OnBotBlindPre, HookMode.Pre);
+        }
+        catch (Exception ex)
+        {
+            _botBlindFunction = null;
+            Logger.LogError(ex,
+                "[Smarter-Bot] CCSBot::Blind hook unavailable; using event fallback");
+        }
+    }
+
+    // Removes the CCSBot::Blind Pre Hook during plugin unload
+    private void UninstallBotBlindHook()
+    {
+        if (_botBlindFunction == null) return;
+
+        try
+        {
+            _botBlindFunction.Unhook(OnBotBlindPre, HookMode.Pre);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogWarning(ex,
+                "[Smarter-Bot] Failed to remove CCSBot::Blind hook cleanly");
+        }
+        _botBlindFunction = null;
+    }
+
+    // Stops native blind AI handling only when this flash was successfully avoided
+    private HookResult OnBotBlindPre(DynamicHook hook)
+    {
+        try
+        {
+            nint botAddress = hook.GetParam<nint>(0);
+            if (botAddress == nint.Zero) return HookResult.Continue;
+
+            CCSPlayerController? player = FindBotControllerByAddress(botAddress);
+            if (player == null || player.HasBeenControlledByPlayerThisRound)
+                return HookResult.Continue;
+
+            int botIndex = (int)player.Index;
+            if (!TryMatchFlashDecision(
+                    botIndex,
+                    Server.CurrentTime,
+                    out (int bot, uint flash) matchedKey,
+                    out FlashDecision matched) ||
+                !matched.Avoided)
+            {
+                return HookResult.Continue;
+            }
+
+            if (_debugFlash)
+            {
+                float holdTime = hook.GetParam<float>(1);
+                float fadeTime = hook.GetParam<float>(2);
+                float alpha = hook.GetParam<float>(3);
+                BroadcastDebug(
+                    $"[Smarter-Bot/Flash] native blind blocked bot={player.PlayerName} flash#{matchedKey.flash} hold={holdTime:F2}s fade={fadeTime:F2}s alpha={alpha:F0}");
+            }
+
+            return HookResult.Stop;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogWarning(ex,
+                "[Smarter-Bot] CCSBot::Blind hook failed open");
+            return HookResult.Continue;
+        }
+    }
+
+    // Resolves a native CCSBot pointer back to its player controller
+    private static CCSPlayerController? FindBotControllerByAddress(nint botAddress)
+    {
+        foreach (var player in Utilities.GetPlayers())
+        {
+            if (!player.IsValid || !player.IsBot) continue;
+
+            var pawn = player.PlayerPawn?.Value;
+            if (pawn == null || !pawn.IsValid) continue;
+
+            var bot = pawn.Bot;
+            if (bot != null && bot.Handle == botAddress) return player;
+        }
+
+        return null;
+    }
+
+    // Installs the Smarter-Bot-owned guard for native DefuseBomb state entry
+    private void InstallDefuseBombHook()
+    {
+        try
+        {
+            string signature = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                ? DefuseBombWindowsSignature
+                : DefuseBombLinuxSignature;
+            _defuseBombFunction = new MemoryFunctionVoid<nint>(signature);
+            _defuseBombFunction.Hook(OnDefuseBombPre, HookMode.Pre);
+        }
+        catch (Exception ex)
+        {
+            _defuseBombFunction = null;
+            Logger.LogError(ex,
+                "[Smarter-Bot] CCSBot::DefuseBomb hook unavailable; fake defuse disabled");
+        }
+    }
+
+    // Removes the Smarter-Bot-owned DefuseBomb state-entry guard
+    private void UninstallDefuseBombHook()
+    {
+        if (_defuseBombFunction == null) return;
+
+        try
+        {
+            _defuseBombFunction.Unhook(OnDefuseBombPre, HookMode.Pre);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogWarning(ex,
+                "[Smarter-Bot] Failed to remove CCSBot::DefuseBomb hook cleanly");
+        }
+        _defuseBombFunction = null;
+    }
+
+    // Stops guarded Bots before the engine can enter DefuseBomb again
+    private HookResult OnDefuseBombPre(DynamicHook hook)
+    {
+        try
+        {
+            nint botAddress = hook.GetParam<nint>(0);
+            if (botAddress == nint.Zero) return HookResult.Continue;
+
+            if (_fakeDefuseGuardUntil.TryGetValue(botAddress, out float guardUntil))
+            {
+                if (Server.CurrentTime < guardUntil) return HookResult.Stop;
+                _fakeDefuseGuardUntil.Remove(botAddress);
+            }
+        }
+        catch
+        {
+            return HookResult.Continue;
+        }
+
+        return HookResult.Continue;
+    }
+
+    // Resets the Bot's look-around bookkeeping so it can reacquire threats
     private static void ResetLookAroundForBot(CCSPlayerController? player)
     {
         if (player == null || !player.IsValid || !player.IsBot) return;
@@ -1470,12 +1917,11 @@ public class BotState : BasePlugin
         return Schema.GetRef<bool>(activeWeapon.Handle, "CCSWeaponBase", "m_bInReload");
     }
     //---------------------------------------------------------------------------------------
-    // Pre-roll flash avoidance per (bot, flash). On the first tick the bot can both see
-    // (FOV + raytrace LOS) the flash projectile, draw against the time-to-detonate tier
-    // probability. The result is consumed in OnPlayerBlind.
+    // Pre-rolls flash avoidance when the bot first sees the projectile through FOV and LOS
+    // The native blind hook reads the result before OnPlayerBlind consumes it
     private void ProcessFlashbangAvoidance()
     {
-        if (_rayTrace == null || _scratchEye == null) return;
+        if (_scratchEye == null) return;
 
         float now = Server.CurrentTime;
 
@@ -1653,7 +2099,7 @@ public class BotState : BasePlugin
 
     private bool BotCanSee(CCSPlayerPawn pawn, Vector target)
     {
-        if (_rayTrace == null || _scratchEye == null) return false;
+        if (_scratchEye == null) return false;
 
         var origin = pawn.AbsOrigin;
         if (origin == null) return false;
@@ -1662,9 +2108,122 @@ public class BotState : BasePlugin
         _scratchEye.Y = origin.Y;
         _scratchEye.Z = origin.Z + pawn.ViewOffset.Z;
 
-        var opts = new TraceOptions(InteractionLayers.MASK_WORLD_ONLY);
-        _rayTrace.TraceEndShape(_scratchEye, target, pawn, opts, out var result);
+        var opts = new TraceOptions { InteractsWith = Masks.SolidBrushOnly };
+        var result = Trace.TraceEndShape(_scratchEye, target, pawn, opts);
         return result.Fraction >= 0.999f;
     }
+
+    //---------------------------------------------------------------------------------------
+    // 360 FOV patch system for fake defuse search phase
+    //---------------------------------------------------------------------------------------
+
+    private void InitializeFovPatches()
+    {
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            _fovPatchesAvailable = false;
+            return;
+        }
+
+        _fovPatchesAvailable = true;
+    }
+
+    private void ApplyFovPatches()
+    {
+        if (!_fovPatchesAvailable || _appliedFovPatches.Count > 0)
+            return;
+
+        foreach (FovPatchDefinition patch in FovPatches)
+        {
+            if (!TryApplyFovPatch(patch))
+            {
+                RestoreAllFovPatches();
+                _fovPatchesAvailable = false;
+                return;
+            }
+        }
+    }
+
+    private bool TryApplyFovPatch(FovPatchDefinition patch)
+    {
+        try
+        {
+            nint signatureAddress = NativeAPI.FindSignature(
+                Addresses.ServerPath,
+                patch.Signature);
+
+            if (signatureAddress == nint.Zero)
+                return false;
+
+            nint address = signatureAddress + patch.Offset;
+            byte[] original = new byte[patch.Replacement.Length];
+            Marshal.Copy(address, original, 0, original.Length);
+
+            if (!original.SequenceEqual(patch.Expected))
+                return false;
+
+            if (!WriteExecutableMemory(address, patch.Replacement))
+            {
+                WriteExecutableMemory(address, original);
+                return false;
+            }
+
+            _appliedFovPatches.Add(new AppliedFovPatch(patch.Name, address, original));
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private void RestoreAllFovPatches()
+    {
+        for (int i = _appliedFovPatches.Count - 1; i >= 0; i--)
+        {
+            AppliedFovPatch patch = _appliedFovPatches[i];
+            WriteExecutableMemory(patch.Address, patch.Original);
+        }
+
+        _appliedFovPatches.Clear();
+    }
+
+    private static bool WriteExecutableMemory(nint address, byte[] bytes)
+    {
+        if (!VirtualProtect(address, (nuint)bytes.Length, PageExecuteReadWrite, out uint oldProtect))
+            return false;
+
+        bool success = false;
+        try
+        {
+            Marshal.Copy(bytes, 0, address, bytes.Length);
+            success = FlushInstructionCache(GetCurrentProcess(), address, (nuint)bytes.Length);
+        }
+        finally
+        {
+            if (!VirtualProtect(address, (nuint)bytes.Length, oldProtect, out _))
+                success = false;
+        }
+
+        return success;
+    }
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool VirtualProtect(
+        nint address,
+        nuint size,
+        uint newProtect,
+        out uint oldProtect);
+
+    [DllImport("kernel32.dll")]
+    private static extern nint GetCurrentProcess();
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool FlushInstructionCache(
+        nint process,
+        nint baseAddress,
+        nuint size);
 }
 //---------------------------------------------------------------------------------------
