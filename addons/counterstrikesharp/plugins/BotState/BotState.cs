@@ -39,7 +39,9 @@ public class BotState : BasePlugin
     private const string DefuseBombLinuxSignature =
         "48 8D B7 00 04 00 00 E9 ? ? ? ?";
     private const string BotBlindWindowsSignature =
-        "40 53 48 81 EC 90 00 00 00 0F 29 B4 24 80 00 00 00 48 8D 15 ? ? ? ? 0F 57 C0 0F 29 7C 24 70";
+        "40 53 48 81 EC ? ? ? ? 0F 29 B4 24 ? ? ? ? 48 8D 15";
+    private const string BotBlindLinuxSignature =
+        "55 48 8D 35 ? ? ? ? B8 ? ? ? ? F3 0F 5A D2";
 
     // 360 FOV patch constants for fake defuse search phase
     private const uint PageExecuteReadWrite = 0x40;
@@ -105,6 +107,30 @@ public class BotState : BasePlugin
             [0x41, 0x0F, 0xB6, 0xD8],       // movzx ebx, r8b
             [0x33, 0xDB, 0x90, 0x90]),      // xor ebx, ebx; nop; nop
     ];
+
+    private static readonly FovPatchDefinition[] LinuxFovPatches =
+    [
+        new(
+            "IsVisiblePos_IgnoreFOV",
+            "80 BD ? ? ? ? 00 74 ? 48 8B 7B 18 48 8B B5 ? ? ? ? 48 8B 07 FF 90 A0 09 00 00 84 C0 74 ?",
+            7,
+            [0x74],                         // je no-FOV path
+            [0xEB]),                        // jmp no-FOV path
+
+        new(
+            "IsVisiblePlayer_IgnoreFOV",
+            "45 84 F6 74 ? 49 8B 54 24 18 48 89 DF 48 8B 0A 48 89 55 98 48 8B 89 A0 09 00 00 48 89 4D A0 FF 90 B8 02 00 00",
+            3,
+            [0x74],                         // je no-FOV path
+            [0xEB]),                        // jmp no-FOV path
+    ];
+
+    private const int LinuxPageRead = 0x1;
+    private const int LinuxPageWrite = 0x2;
+    private const int LinuxPageExecute = 0x4;
+    private const int LinuxPageExecuteReadWrite =
+        LinuxPageRead | LinuxPageWrite | LinuxPageExecute;
+    private const int LinuxPageExecuteRead = LinuxPageRead | LinuxPageExecute;
 
     private readonly List<AppliedFovPatch> _appliedFovPatches = [];
     private bool _fovPatchesAvailable = false;
@@ -1535,10 +1561,16 @@ public class BotState : BasePlugin
         });
     }
 
-    // Installs the verified Windows CCSBot::Blind Pre Hook
+    // Installs the platform-specific CCSBot::Blind Pre Hook
     private void InstallBotBlindHook()
     {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        string? signature = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? BotBlindWindowsSignature
+            : RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                ? BotBlindLinuxSignature
+                : null;
+
+        if (signature == null)
         {
             Logger.LogWarning(
                 "[Smarter-Bot] CCSBot::Blind hook is unavailable on this platform; using event fallback");
@@ -1548,7 +1580,7 @@ public class BotState : BasePlugin
         try
         {
             _botBlindFunction =
-                new MemoryFunctionVoid<nint, float, float, float>(BotBlindWindowsSignature);
+                new MemoryFunctionVoid<nint, float, float, float>(signature);
             _botBlindFunction.Hook(OnBotBlindPre, HookMode.Pre);
         }
         catch (Exception ex)
@@ -2117,9 +2149,11 @@ public class BotState : BasePlugin
     // 360 FOV patch system for fake defuse search phase
     //---------------------------------------------------------------------------------------
 
+    // Enables FOV patching on supported platforms
     private void InitializeFovPatches()
     {
-        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) &&
+            !RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
             _fovPatchesAvailable = false;
             return;
@@ -2128,12 +2162,17 @@ public class BotState : BasePlugin
         _fovPatchesAvailable = true;
     }
 
+    // Applies the platform-specific FOV branch patches
     private void ApplyFovPatches()
     {
         if (!_fovPatchesAvailable || _appliedFovPatches.Count > 0)
             return;
 
-        foreach (FovPatchDefinition patch in FovPatches)
+        FovPatchDefinition[] patches = RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+            ? LinuxFovPatches
+            : FovPatches;
+
+        foreach (FovPatchDefinition patch in patches)
         {
             if (!TryApplyFovPatch(patch))
             {
@@ -2144,6 +2183,7 @@ public class BotState : BasePlugin
         }
     }
 
+    // Applies one FOV patch after validating its original bytes
     private bool TryApplyFovPatch(FovPatchDefinition patch)
     {
         try
@@ -2177,6 +2217,7 @@ public class BotState : BasePlugin
         }
     }
 
+    // Restores all FOV patches applied during the current search phase
     private void RestoreAllFovPatches()
     {
         for (int i = _appliedFovPatches.Count - 1; i >= 0; i--)
@@ -2188,8 +2229,62 @@ public class BotState : BasePlugin
         _appliedFovPatches.Clear();
     }
 
+    // Writes bytes into executable text memory on Linux and restores RX permissions
+    private static bool WriteLinuxExecutableMemory(nint address, byte[] bytes)
+    {
+        if (bytes.Length == 0)
+            return true;
+
+        long pageSize = Environment.SystemPageSize;
+        if (pageSize <= 0 || (pageSize & (pageSize - 1)) != 0)
+            return false;
+
+        long addressValue = address.ToInt64();
+        long endAddress;
+        long pageEnd;
+        try
+        {
+            endAddress = checked(addressValue + bytes.Length);
+            pageEnd = checked((endAddress + pageSize - 1) & ~(pageSize - 1));
+        }
+        catch (OverflowException)
+        {
+            return false;
+        }
+
+        long pageStart = addressValue & ~(pageSize - 1);
+        if (pageEnd <= pageStart)
+            return false;
+
+        nint pageAddress = (nint)pageStart;
+        nuint pageLength = (nuint)(pageEnd - pageStart);
+        if (MProtect(pageAddress, pageLength, LinuxPageExecuteReadWrite) != 0)
+            return false;
+
+        bool success = false;
+        try
+        {
+            Marshal.Copy(bytes, 0, address, bytes.Length);
+            success = true;
+        }
+        finally
+        {
+            if (MProtect(pageAddress, pageLength, LinuxPageExecuteRead) != 0)
+                success = false;
+        }
+
+        return success;
+    }
+
+    // Writes bytes into executable memory and restores platform page permissions
     private static bool WriteExecutableMemory(nint address, byte[] bytes)
     {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            return WriteLinuxExecutableMemory(address, bytes);
+
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            return false;
+
         if (!VirtualProtect(address, (nuint)bytes.Length, PageExecuteReadWrite, out uint oldProtect))
             return false;
 
@@ -2208,6 +2303,7 @@ public class BotState : BasePlugin
         return success;
     }
 
+    // Changes page protection on Windows
     [DllImport("kernel32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool VirtualProtect(
@@ -2216,9 +2312,18 @@ public class BotState : BasePlugin
         uint newProtect,
         out uint oldProtect);
 
+    // Changes page permissions on Linux
+    [DllImport("libc.so.6", EntryPoint = "mprotect", SetLastError = true)]
+    private static extern int MProtect(
+        nint address,
+        nuint size,
+        int protection);
+
+    // Returns the current process handle on Windows
     [DllImport("kernel32.dll")]
     private static extern nint GetCurrentProcess();
 
+    // Flushes modified instruction bytes from the Windows instruction cache
     [DllImport("kernel32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool FlushInstructionCache(
