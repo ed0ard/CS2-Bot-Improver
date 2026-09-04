@@ -41,7 +41,7 @@ CS2-Bot-Improver 面向喜欢与人机博弈，或想和朋友一起挑战人机
 > [!NOTE]
 > 如果你的Windows专用服务器并非只用于人机对局，请下载 **CS2BotImprover_rules_unchanged.zip**，以保留标准游戏规则。
 
-2. 将 **Panel v1.4.3.exe** 放在方便使用的位置。
+2. 将 **Panel v1.4.4.exe** 放在方便使用的位置。
 
    <img width="128" height="128" alt="CS2 Bot Improver Panel 应用图标" src="https://github.com/user-attachments/assets/7271dc7d-2436-484b-8359-6531f4abd710" />
 
@@ -53,7 +53,7 @@ CS2-Bot-Improver 面向喜欢与人机博弈，或想和朋友一起挑战人机
 
    <img width="540" height="181" alt="将 Windows 安装包中的文件复制到 game/csgo" src="https://github.com/user-attachments/assets/6a8645fc-78e7-4f3a-92d3-5d1b6d913918" />
 
-5. 打开 **Panel v1.4.3.exe**，选择**机器人模式**，然后点击**启动 CS2**。
+5. 打开 **Panel v1.4.4.exe**，选择**机器人模式**，然后点击**启动 CS2**。
 
    <img width="339" height="129" alt="在 Panel 中选择 Bot Mode 并启动 CS2" src="https://github.com/user-attachments/assets/dc806991-c940-43cf-a614-f49012fae4a7" />
 
