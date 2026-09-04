@@ -40,7 +40,7 @@ Download the package for your operating system from the **[latest release](https
 > [!NOTE]
 > Running a dedicated server that is not only for bot matches?  
 On Windows, please download **CS2BotImprover_rules_unchanged.zip** to preserve the standard game rules.
-2. Move **Panel v1.4.3.exe** somewhere convenient.
+2. Move **Panel v1.4.4.exe** somewhere convenient.
 
    <img width="128" height="128" alt="CS2 Bot Improver Panel application icon" src="https://github.com/user-attachments/assets/7271dc7d-2436-484b-8359-6531f4abd710" />
 
@@ -52,7 +52,7 @@ On Windows, please download **CS2BotImprover_rules_unchanged.zip** to preserve t
 
    <img width="540" height="181" alt="Copying the Windows package files into game/csgo" src="https://github.com/user-attachments/assets/6a8645fc-78e7-4f3a-92d3-5d1b6d913918" />
 
-5. Open `Panel v1.4.3.exe`, select **Bot Mode**, then click **Launch CS2**.
+5. Open `Panel v1.4.4.exe`, select **Bot Mode**, then click **Launch CS2**.
 
    <img width="339" height="129" alt="Selecting Bot Mode and launching CS2 from the Panel" src="https://github.com/user-attachments/assets/dc806991-c940-43cf-a614-f49012fae4a7" />
 
