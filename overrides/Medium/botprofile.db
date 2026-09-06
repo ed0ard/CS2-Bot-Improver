@@ -409,6 +409,16 @@ ProSlow+SniperPro+SniperPersonality "broky"
 	VoicePitch = 50
 End
 
+ProPrecise+SniperPro+SniperPersonality "JBOEN"
+	VoicePitch = 104
+	LookAngleMaxAccelNormal = 5500.0
+	LookAngleStiffnessNormal = 1150.0
+	LookAngleDampingNormal = 100.0
+	LookAngleMaxAccelAttacking = 20000.0
+	LookAngleStiffnessAttacking = 900.0
+	LookAngleDampingAttacking = 50.0
+End
+
 ProSlow+RiflePro+RiflePersonality "karrigan"
 	VoicePitch = 70
 End
@@ -3338,6 +3348,9 @@ ProFast+RiflePro+RiflePersonality "Luken"
 	LookAngleMaxAccelAttacking = 7000.0
 	LookAngleStiffnessAttacking = 2000.0
 	LookAngleDampingAttacking = 40.0
+End
+ProSlow+RiflePro+RiflePersonality "max"
+	VoicePitch = 90
 End
 ProSteady+RiflePro+RiflePersonality "dgt"
 	VoicePitch = 93
