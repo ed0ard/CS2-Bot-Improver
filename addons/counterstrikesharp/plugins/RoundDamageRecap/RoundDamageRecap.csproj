@@ -12,4 +12,12 @@
     <PackageReference Include="CounterStrikeSharp.API" Version="1.0.367" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="..\..\shared\PluginI18n\PluginI18n.cs" Link="PluginI18n.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="i18n\*.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

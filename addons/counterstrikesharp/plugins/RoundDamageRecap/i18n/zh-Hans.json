@@ -1,0 +1,16 @@
+{
+  "damage_style.usage": "[伤害统计] 用法: css_damage_style <auto|classic|pw>",
+  "damage_style.auto": "[伤害统计] 伤害样式 = 自动，有效 = {0}，语言 = {1}",
+  "damage_style.current": "[伤害统计] 伤害样式 = {0}",
+  "damage_recap.classic": "{Green}{0} [{1}] - 造成: [{2}伤害 {3}次命中] - 承受: [{4}伤害 {5}次命中]{Default}",
+  "damage_recap.hp_left": "剩余 {0} 血量",
+  "damage_recap.dead": "已死亡",
+  "damage_recap.perfect_world": "{Default}命中 {Green}{0}{Default} 次 {Green}{1}{Default} 伤害 承受 {Green}{2}{Default} 次 {Green}{3}{Default} 伤害 剩余 {Green}{4}{Default} 血量 {Lime}{5}{Default}",
+  "difficulty.message": "{Green}BOT 难度: {0} [{1}]{Default}",
+  "difficulty.low": "简单",
+  "difficulty.medium": "中等",
+  "difficulty.high": "困难",
+  "difficulty.unknown_overrides": "未知 - 缺少覆盖目录",
+  "difficulty.unknown_profile": "未知 - 缺少活动的 botprofile.vpk",
+  "difficulty.custom": "自定义 / 未知"
+}

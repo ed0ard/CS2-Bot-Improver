@@ -6,6 +6,7 @@ using CounterStrikeSharp.API.Modules.Cvars;
 using CounterStrikeSharp.API.Modules.Timers;
 using System.Collections.Generic;
 using System.Linq;
+using CS2BotImprover.Localization;
 
 namespace BotBuyPatch;
 
@@ -18,6 +19,9 @@ public sealed class BotBuyPatch : BasePlugin
 
     private Dictionary<int, int> _botUserIdToIndex = new();
     private int _botIndexCounter = 0;
+    private PluginI18n? _i18n;
+
+    private PluginI18n I18n => _i18n ??= new(ModuleDirectory);
 
     Dictionary<CsTeam, List<CCSPlayerController>> _poorPlayersByTeam = new();
 
@@ -510,7 +514,7 @@ public sealed class BotBuyPatch : BasePlugin
                             Utilities.SetStateChanged(rich, "CCSPlayerController", "m_pInGameMoneyServices");
 
                             foreach (var teammate in allPlayers.Where(p => p.IsValid && p.Team == team))
-                                teammate.PrintToChat($"{ChatColors.Green}{rich.PlayerName}{ChatColors.Yellow}: {poorPlayer.PlayerName}, I dropped a weapon for ya");
+                                teammate.PrintToChat(I18n.Get(teammate, "weapon_dropped", rich.PlayerName, poorPlayer.PlayerName));
                             given++;
                         }
                     }

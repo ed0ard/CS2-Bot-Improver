@@ -1,0 +1,16 @@
+{
+  "damage_style.usage": "[RoundDamageRecap] Usage: css_damage_style <auto|classic|pw>",
+  "damage_style.auto": "[RoundDamageRecap] Damage style = auto, effective = {0}, language = {1}",
+  "damage_style.current": "[RoundDamageRecap] Damage style = {0}",
+  "damage_recap.classic": "{Green}{0} [{1}] - Dealt to: [{2} in {3} hits] - Taken from: [{4} in {5} hits]{Default}",
+  "damage_recap.hp_left": "{0} HP left",
+  "damage_recap.dead": "DEAD",
+  "damage_recap.perfect_world": "{Default}Hit {Green}{0}{Default} times {Green}{1}{Default} damage Taken {Green}{2}{Default} times {Green}{3}{Default} damage Remaining {Green}{4}{Default} HP {Lime}{5}{Default}",
+  "difficulty.message": "{Green}BOT Difficulty: {0} [{1}]{Default}",
+  "difficulty.low": "Low",
+  "difficulty.medium": "Medium",
+  "difficulty.high": "High",
+  "difficulty.unknown_overrides": "Unknown - overrides directory missing",
+  "difficulty.unknown_profile": "Unknown - active botprofile.vpk missing",
+  "difficulty.custom": "Custom / Unknown"
+}
