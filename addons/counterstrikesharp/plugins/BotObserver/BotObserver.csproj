@@ -5,8 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
-    <AssemblyName>BotHiderImpl</AssemblyName>
-    <RootNamespace>BotHiderImpl</RootNamespace>
+    <AssemblyName>BotObserver</AssemblyName>
+    <RootNamespace>BotObserver</RootNamespace>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoWarn>CA1416</NoWarn>
@@ -17,18 +17,9 @@
       <Private>false</Private>
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="Lib.Harmony" Version="2.4.2" GeneratePathProperty="true">
-      <Private>false</Private>
-    </PackageReference>
     <ProjectReference Include="..\..\shared\BotHiderApi\BotHiderApi.csproj">
       <Private>false</Private>
     </ProjectReference>
   </ItemGroup>
-
-  <Target Name="CopyHarmony" AfterTargets="Build;Publish">
-    <Copy SourceFiles="$(PkgLib_Harmony)\lib\net10.0\0Harmony.dll"
-          DestinationFolder="$(OutDir)shared\0Harmony"
-          SkipUnchangedFiles="true" />
-  </Target>
 
 </Project>

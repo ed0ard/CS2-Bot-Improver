@@ -140,6 +140,16 @@ negev     m249
 
 对局开始后，使用 `scouts_on` 或 `scouts_off` 开启或关闭 跳狙飞人 模式。
 
+### 观察者（导播位）
+
+添加导播/观察者机器人：它们会进入观察者队伍并显示在计分板上。名字与普通机器人共用同一个统一名池（来自 [Liquipedia](https://liquipedia.net/counterstrike/Category:Casters) 的导播/解说与职业选手）。
+
+| 命令 | 说明 |
+| --- | --- |
+| `bot_spec [名字]` | 添加一个观察者机器人；不带名字则从统一名池随机选取 |
+| `bot_specs` | 列出所有观察者机器人 |
+| `bot_kick <名字>` | 按名字移除观察者机器人（含空格的名字需要加引号） |
+
 ## Panel 使用指南（仅限 Windows）
 
 ### 状态指示灯
