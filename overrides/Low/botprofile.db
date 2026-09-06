@@ -1518,6 +1518,9 @@ End
 ProFast+RiflePro+RiflePersonality "Luken"
 	VoicePitch = 104
 End
+ProSlow+RiflePro+RiflePersonality "max"
+	VoicePitch = 90
+End
 ProSteady+RiflePro+RiflePersonality "dgt"
 	VoicePitch = 93
 End
