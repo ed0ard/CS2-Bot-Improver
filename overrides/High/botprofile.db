@@ -1520,7 +1520,7 @@ End
 ProSteady+RiflePro+RiflePersonality "dgt"
 	VoicePitch = 93
 End
-ProSteady+RiflePro+RiflePersonality "max"
+ProSlow+RiflePro+RiflePersonality "max"
 	VoicePitch = 90
 End
 ProPrecise+SniperPro+SniperPersonality "Martinez"
