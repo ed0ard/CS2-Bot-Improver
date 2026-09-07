@@ -31,15 +31,17 @@ internal sealed class CosmeticRoller
 
     internal BotCosmeticLoadout RollLoadout(byte team, int? preservedMusicKit = null)
     {
-        var modelPool = team == RandomizerAssets.CounterTerroristTeam
-            ? RandomizerAssets.CounterTerroristModels
-            : RandomizerAssets.TerroristModels;
+        var agentPool = team == RandomizerAssets.CounterTerroristTeam
+            ? RandomizerAssets.CounterTerroristAgents
+            : RandomizerAssets.TerroristAgents;
+        var agent = Pick(agentPool);
         var (knife, glove) = RollOutfit();
 
         return new BotCosmeticLoadout
         {
             Team = team,
-            AgentModel = Pick(modelPool),
+            AgentModel = agent.ModelPath,
+            AgentDefIndex = agent.DefIndex,
             MusicKit = preservedMusicKit ?? Pick(_catalog.MusicKits),
             Knife = knife,
             Glove = glove

@@ -21,11 +21,12 @@ public sealed class BotRandomizerPlugin : BasePlugin
     private CosmeticRoller? _roller;
     private CosmeticApplicator? _applicator;
     private WeaponItemViewStore? _weaponItemViews;
+    private TeamIntroPreview? _teamIntro;
     private bool _giveNamedItemHooked;
     private bool _giveNamedItemErrorLogged;
 
     public override string ModuleName => "BotRandomizer";
-    public override string ModuleVersion => "1.3.0";
+    public override string ModuleVersion => "1.3.1";
     public override string ModuleAuthor => "ed0ard, Misaka17032 & unicbm";
     public override string ModuleDescription =>
         "Stable per-bot knives, gloves, weapon skins, stickers, charms, agents and music kits";
@@ -37,6 +38,7 @@ public sealed class BotRandomizerPlugin : BasePlugin
 
         RegisterListener<Listeners.OnMapStart>(OnMapStart);
         RegisterListener<Listeners.OnClientDisconnect>(OnClientDisconnect);
+        RegisterListener<Listeners.OnTick>(OnTick);
         RegisterEventHandler<EventRoundPrestart>(OnRoundPrestart, HookMode.Pre);
         RegisterEventHandler<EventPlayerSpawn>(OnPlayerSpawn);
         RegisterEventHandler<EventRoundMvp>(OnRoundMvp, HookMode.Pre);
@@ -62,6 +64,8 @@ public sealed class BotRandomizerPlugin : BasePlugin
 
         _weaponItemViews?.Dispose();
         _weaponItemViews = null;
+        _teamIntro?.Reset();
+        _teamIntro = null;
     }
 
     private void LoadCatalog()
@@ -128,6 +132,11 @@ public sealed class BotRandomizerPlugin : BasePlugin
             }
         }
         _weaponItemViews = new WeaponItemViewStore(itemViewConstructor, writer, Logger);
+        _teamIntro = new TeamIntroPreview(
+            _applicator,
+            GetOrCreateState,
+            (loadout, defIndex) => _roller?.GetOrCreateWeapon(loadout, defIndex),
+            Logger);
     }
 
     private void OnMapStart(string mapName)
@@ -138,10 +147,11 @@ public sealed class BotRandomizerPlugin : BasePlugin
         // Keep constructed item-view storage alive across map transitions. Each view is
         // fully overwritten before reuse and is freed only at slot teardown or unload.
         _applicator?.Reset();
-        foreach (var model in RandomizerAssets.CounterTerroristModels)
-            Server.PrecacheModel(model);
-        foreach (var model in RandomizerAssets.TerroristModels)
-            Server.PrecacheModel(model);
+        _teamIntro?.Reset();
+        foreach (var agent in RandomizerAssets.CounterTerroristAgents)
+            Server.PrecacheModel(agent.ModelPath);
+        foreach (var agent in RandomizerAssets.TerroristAgents)
+            Server.PrecacheModel(agent.ModelPath);
     }
 
     private void OnClientDisconnect(int playerSlot)
@@ -150,6 +160,12 @@ public sealed class BotRandomizerPlugin : BasePlugin
         _pendingRerolls.Remove(playerSlot);
         _weaponItemViews?.ClearSlot(playerSlot);
         _applicator?.ClearSlot(playerSlot);
+        _teamIntro?.ForgetSlot(playerSlot);
+    }
+
+    private void OnTick()
+    {
+        _teamIntro?.Reconcile();
     }
 
     private HookResult OnRoundPrestart(EventRoundPrestart @event, GameEventInfo info)

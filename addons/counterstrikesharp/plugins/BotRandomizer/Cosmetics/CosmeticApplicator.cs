@@ -175,6 +175,34 @@ internal sealed class CosmeticApplicator
             pawn.AcceptInput("SetBodygroup", value: "first_or_third_person,1");
     }
 
+    internal bool TryPaintPreviewItem(
+        CEconItemView item,
+        ushort defIndex,
+        int paintKit,
+        int seed,
+        float wear,
+        int entityQuality,
+        ulong steamId)
+    {
+        if (_setAttributeByName is null || item.Handle == IntPtr.Zero)
+            return false;
+
+        item.ItemDefinitionIndex = defIndex;
+        item.EntityQuality = entityQuality;
+        item.Initialized = true;
+        item.AccountID = AccountIdFromSteamId(steamId);
+        AssignItemId(item);
+        item.NetworkedDynamicAttributes.Attributes.RemoveAll();
+        item.AttributeList.Attributes.RemoveAll();
+        SetTextureAttributes(
+            item.NetworkedDynamicAttributes,
+            item.AttributeList,
+            paintKit,
+            seed,
+            wear);
+        return true;
+    }
+
     internal void SyncPickedUpKnife(CCSPlayerPawn pawn)
     {
         if (!pawn.IsValid)
