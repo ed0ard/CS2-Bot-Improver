@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.x'
+      - name: Build plugin-only packages
+        shell: pwsh
+        run: ./build/Build.ps1 -Platform All -DownloadDependencies -OutputRoot artifacts
+      - name: Upload Windows package
+        uses: actions/upload-artifact@v4
+        with:
+          name: CS2BotImprover-windows
+          path: artifacts/CS2BotImprover.zip
+          if-no-files-found: error
+      - name: Upload Windows rules-unchanged package
+        uses: actions/upload-artifact@v4
+        with:
+          name: CS2BotImprover-windows-rules-unchanged
+          path: artifacts/CS2BotImprover_rules_unchanged.zip
+          if-no-files-found: error
+      - name: Upload Linux package
+        uses: actions/upload-artifact@v4
+        with:
+          name: CS2BotImprover-linux
+          path: artifacts/CS2BotImprover_for_Linux.zip
+          if-no-files-found: error

@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: Release tag to create or update, for example v1.4.5
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.x'
+      - name: Build release packages with runtimes
+        shell: pwsh
+        run: ./build/Build.ps1 -Platform All -DownloadDependencies -IncludeRuntime -OutputRoot artifacts
+      - name: Publish release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag_name }}
+          target_commitish: ${{ github.sha }}
+          name: ${{ inputs.tag_name }}
+          generate_release_notes: true
+          files: artifacts/*.zip
+          fail_on_unmatched_files: true
