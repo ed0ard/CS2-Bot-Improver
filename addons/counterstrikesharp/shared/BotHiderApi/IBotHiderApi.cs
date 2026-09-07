@@ -55,4 +55,18 @@ public interface IBotHiderApi
 
     // Display-name source toggle; true=bot_info.json name, false=botprofile name (affects newly created bots)
     bool SetNameSource(bool useBotInfo);
+    
+    // Marks/unmarks a managed slot as an observer-only bot which must never be respawned or team-switched.
+    void SetObserverSlot(int slot, bool isObserver);
+    
+    // Returns whether this slot belongs to an observer-only bot.
+    bool IsObserverSlot(int slot);
+}
+
+// Keeps observer slots out of BotHider's normal bot respawn lifecycle.
+public interface IObserverSlotRegistry
+{
+    bool SetObserverSlot(int slot, bool isObserver);
+
+    bool IsObserverSlot(int slot);
 }

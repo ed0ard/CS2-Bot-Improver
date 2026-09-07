@@ -5177,3 +5177,1255 @@ End
 
 ProSteady+RiflePro+FreemanPersonality "damag3"
 End
+// BotObserver: Liquipedia observer/caster profiles (auto-generated, do not edit below)
+ProSlow+SniperPro+SniperPersonality "ANKOR"
+	VoicePitch = 103
+End
+ProSlow+RiflePro+FastshotPersonality "Ashix"
+	VoicePitch = 114
+End
+ProFast+SniperPro+SniperPersonality "Bleq"
+	VoicePitch = 104
+End
+RankRifler+RiflePro+RiflePersonality "Cameron King"
+	VoicePitch = 87
+End
+RankOthers+Camper+CamperPersonality "Chezpuf"
+	VoicePitch = 107
+End
+ProPrecise+RiflePro+CamperPersonality "ControL"
+	VoicePitch = 91
+End
+ProSteady+RiflePro+RiflePersonality "Dokai"
+	VoicePitch = 91
+End
+ProFast+RiflePro+RiflePersonality "ElDoctorMuller"
+	VoicePitch = 112
+End
+ProTop+RiflePro+RiflePersonality "Encg"
+	VoicePitch = 86
+End
+ProSlow+RiflePro+RiflePersonality "Esio"
+	VoicePitch = 95
+End
+ProTop+RiflePro+CamperPersonality "EVAN"
+	VoicePitch = 94
+End
+ProPrecise+SniperPro+SniperPersonality "Focuzz"
+	VoicePitch = 108
+End
+ProPrecise+Scoper+ScoperPersonality "Frazer"
+	VoicePitch = 102
+End
+ProTop+SniperPure+FastshotPersonality "Frosty"
+	VoicePitch = 88
+End
+ProSlow+RiflePro+FreemanPersonality "Goral"
+	VoicePitch = 89
+End
+ProFast+RiflePro+CamperPersonality "Haloflyer"
+	VoicePitch = 113
+End
+ProTop+SniperPro+SniperPersonality "HapCiu"
+	VoicePitch = 107
+End
+ProTop+Duelist+FreemanPersonality "Ikosh"
+	VoicePitch = 90
+End
+ProTop+Duelist+RusherPersonality "ItsRandall"
+	VoicePitch = 90
+End
+ProTop+Duelist+FastshotPersonality "Jak3y"
+	VoicePitch = 104
+End
+ProSlow+Duelist+RusherPersonality "Janixs"
+	VoicePitch = 92
+End
+ProTop+Duelist+RiflePersonality "Jeyrazz"
+	VoicePitch = 103
+End
+ProTop+Scoper+ScoperPersonality "JNZ"
+	VoicePitch = 105
+End
+ProPrecise+RiflePro+RiflePersonality "Kejser"
+	VoicePitch = 91
+End
+ProSteady+RiflePro+FreemanPersonality "Kioshi"
+	VoicePitch = 112
+End
+ProTop+RiflePro+FreemanPersonality "Klusia"
+	VoicePitch = 95
+End
+ProSteady+SniperPro+SniperPersonality "Kojtas"
+	VoicePitch = 85
+End
+ProFast+SniperPure+FastshotPersonality "Komodo"
+	VoicePitch = 95
+End
+ProSteady+Duelist+FastshotPersonality "Kub3"
+	VoicePitch = 85
+End
+ProSlow+SniperPro+FreemanPersonality "KVIN S"
+	VoicePitch = 98
+End
+ProSlow+RiflePro+RusherPersonality "Lancemi"
+	VoicePitch = 97
+End
+ProSlow+RiflePro+CamperPersonality "Lefomit"
+	VoicePitch = 103
+End
+RankOthers+RiflePro+RiflePersonality "Lolbanelor"
+	VoicePitch = 100
+End
+RankRifler+Rusher+RusherPersonality "Loxar"
+	VoicePitch = 115
+End
+RankDuelist+Fastshot+FastshotPersonality "Mata"
+	VoicePitch = 97
+End
+RankRifler+RiflePro+FreemanPersonality "MC"
+	VoicePitch = 101
+End
+RankOthers+SniperPure+ScoperPersonality "Migz1"
+	VoicePitch = 115
+End
+RankDuelist+Duelist+RusherPersonality "MikeR"
+	VoicePitch = 103
+End
+RankRifler+Scoper+ScoperPersonality "MILENK0"
+	VoicePitch = 85
+End
+RankOthers+Rusher+FastshotPersonality "MIRVGE"
+	VoicePitch = 98
+End
+RankDuelist+SniperPro+ScoperPersonality "Misty"
+	VoicePitch = 103
+End
+RankRifler+Camper+CamperPersonality "PAn"
+	VoicePitch = 103
+End
+RankOthers+RiflePro+FreemanPersonality "ParfeN"
+	VoicePitch = 90
+End
+RankRifler+Duelist+RusherPersonality "Pekz"
+	VoicePitch = 103
+End
+RankDuelist+Rusher+RusherPersonality "PiciBear"
+	VoicePitch = 91
+End
+RankOthers+Scoper+ScoperPersonality "Pinqu"
+	VoicePitch = 102
+End
+RankDuelist+RiflePro+FreemanPersonality "Prius"
+	VoicePitch = 113
+End
+RankRifler+Fastshot+FastshotPersonality "PsychoAlexeiz"
+	VoicePitch = 94
+End
+RankOthers+SniperPro+ScoperPersonality "PythianLegume"
+	VoicePitch = 103
+End
+RankDuelist+SniperPure+ScoperPersonality "RaveN"
+	VoicePitch = 100
+End
+RankOthers+Rusher+RusherPersonality "Rollen"
+	VoicePitch = 85
+End
+RankRifler+SniperPure+ScoperPersonality "Rushly"
+	VoicePitch = 88
+End
+RankRifler+Rusher+FastshotPersonality "SapphiRe"
+	VoicePitch = 108
+End
+RankOthers+Duelist+RusherPersonality "Sharley"
+	VoicePitch = 97
+End
+RankOthers+Fastshot+FastshotPersonality "Shev"
+	VoicePitch = 106
+End
+RankRifler+SniperPro+ScoperPersonality "Sliggy"
+	VoicePitch = 106
+End
+ProSteady+RiflePro+RusherPersonality "Swelder"
+	VoicePitch = 114
+End
+ProFast+RiflePro+FreemanPersonality "Szuwar"
+	VoicePitch = 92
+End
+ProSlow+Rusher+FreemanPersonality "UnknownFME"
+	VoicePitch = 103
+End
+ProSlow+Fastshot+SniperPersonality "Wan43r"
+	VoicePitch = 97
+End
+ProSlow+Duelist+FastshotPersonality "Zarx"
+	VoicePitch = 87
+End
+ProSteady+Fastshot+FastshotPersonality "Zsokker"
+	VoicePitch = 92
+End
+RankRifler+Duelist+FreemanPersonality "117"
+	VoicePitch = 102
+End
+RankOthers+Duelist+ScoperPersonality "1obockZ'"
+	VoicePitch = 115
+End
+ProSlow+SniperPro+SniperPersonality "1uke"
+	VoicePitch = 99
+End
+ProSlow+RiflePro+FastshotPersonality "2GD"
+	VoicePitch = 106
+End
+ProFast+SniperPro+SniperPersonality "666"
+	VoicePitch = 103
+End
+RankRifler+RiflePro+RiflePersonality "7licious"
+	VoicePitch = 86
+End
+RankOthers+Camper+CamperPersonality "Affinity"
+	VoicePitch = 101
+End
+ProPrecise+RiflePro+CamperPersonality "Aiwa"
+	VoicePitch = 90
+End
+ProSteady+RiflePro+RiflePersonality "AllInGaming"
+	VoicePitch = 89
+End
+ProFast+RiflePro+RiflePersonality "AMD"
+	VoicePitch = 98
+End
+ProTop+RiflePro+RiflePersonality "Anders Blume"
+	VoicePitch = 115
+End
+ProSlow+RiflePro+RiflePersonality "ANGeldusT"
+	VoicePitch = 99
+End
+ProTop+RiflePro+CamperPersonality "Anishared"
+	VoicePitch = 107
+End
+ProPrecise+SniperPro+SniperPersonality "AnThran"
+	VoicePitch = 99
+End
+ProPrecise+Scoper+ScoperPersonality "Anyazita"
+	VoicePitch = 88
+End
+ProTop+SniperPure+FastshotPersonality "Apples"
+	VoicePitch = 98
+End
+ProSlow+RiflePro+FreemanPersonality "Ash"
+	VoicePitch = 89
+End
+ProFast+RiflePro+CamperPersonality "ASkalone"
+	VoicePitch = 103
+End
+ProTop+SniperPro+SniperPersonality "Atro"
+	VoicePitch = 106
+End
+ProTop+Duelist+FreemanPersonality "Aunni"
+	VoicePitch = 100
+End
+ProTop+Duelist+RusherPersonality "Babam"
+	VoicePitch = 99
+End
+ProTop+Duelist+FastshotPersonality "BAC9CKOPOCTb"
+	VoicePitch = 104
+End
+ProSlow+Duelist+RusherPersonality "Bananides"
+	VoicePitch = 99
+End
+ProTop+Duelist+RiflePersonality "BanGa"
+	VoicePitch = 103
+End
+ProTop+Scoper+ScoperPersonality "Bczz"
+	VoicePitch = 96
+End
+ProPrecise+RiflePro+RiflePersonality "BDog"
+	VoicePitch = 103
+End
+ProSteady+RiflePro+FreemanPersonality "Beatriste"
+	VoicePitch = 92
+End
+ProTop+RiflePro+FreemanPersonality "Benccce"
+	VoicePitch = 98
+End
+ProSteady+SniperPro+SniperPersonality "BENJ"
+	VoicePitch = 110
+End
+ProFast+SniperPure+FastshotPersonality "BhT-"
+	VoicePitch = 101
+End
+ProSteady+Duelist+FastshotPersonality "BiDa"
+	VoicePitch = 112
+End
+ProSlow+SniperPro+FreemanPersonality "Bleh"
+	VoicePitch = 103
+End
+ProSlow+RiflePro+RusherPersonality "BLU"
+	VoicePitch = 93
+End
+ProSlow+RiflePro+CamperPersonality "Boggs"
+	VoicePitch = 99
+End
+RankOthers+RiflePro+RiflePersonality "Boogie"
+	VoicePitch = 110
+End
+RankRifler+Rusher+RusherPersonality "Boq"
+	VoicePitch = 100
+End
+RankDuelist+Fastshot+FastshotPersonality "Brainstorm"
+	VoicePitch = 106
+End
+RankRifler+RiflePro+FreemanPersonality "BTT*"
+	VoicePitch = 95
+End
+RankOthers+SniperPure+ScoperPersonality "Buckethead"
+	VoicePitch = 104
+End
+RankDuelist+Duelist+RusherPersonality "BurntSanctuary"
+	VoicePitch = 101
+End
+RankRifler+Scoper+ScoperPersonality "C0sta"
+	VoicePitch = 86
+End
+RankOthers+Rusher+FastshotPersonality "CaspeRRR"
+	VoicePitch = 105
+End
+RankDuelist+SniperPro+ScoperPersonality "Ceh9"
+	VoicePitch = 94
+End
+RankRifler+Camper+CamperPersonality "Celowh"
+	VoicePitch = 108
+End
+RankOthers+RiflePro+FreemanPersonality "Chef Gree"
+	VoicePitch = 87
+End
+RankRifler+Duelist+RusherPersonality "CHERRY5"
+	VoicePitch = 87
+End
+RankDuelist+Rusher+RusherPersonality "Chewwy"
+	VoicePitch = 100
+End
+RankOthers+Scoper+ScoperPersonality "Chobra"
+	VoicePitch = 99
+End
+RankDuelist+RiflePro+FreemanPersonality "CirmaN"
+	VoicePitch = 107
+End
+RankRifler+Fastshot+FastshotPersonality "Clover"
+	VoicePitch = 109
+End
+RankOthers+SniperPro+ScoperPersonality "Cmd64"
+	VoicePitch = 93
+End
+RankDuelist+SniperPure+ScoperPersonality "Cnd"
+	VoicePitch = 102
+End
+RankOthers+Rusher+RusherPersonality "Cobaia"
+	VoicePitch = 111
+End
+RankRifler+SniperPure+ScoperPersonality "CodyCasts"
+	VoicePitch = 93
+End
+RankRifler+Rusher+FastshotPersonality "Conky"
+	VoicePitch = 101
+End
+RankOthers+Duelist+RusherPersonality "Coontag"
+	VoicePitch = 99
+End
+RankOthers+Fastshot+FastshotPersonality "Counterfeit"
+	VoicePitch = 114
+End
+RankRifler+SniperPro+ScoperPersonality "Craw"
+	VoicePitch = 105
+End
+ProSteady+RiflePro+RusherPersonality "CrystalMay"
+	VoicePitch = 93
+End
+ProFast+RiflePro+FreemanPersonality "Cudder"
+	VoicePitch = 93
+End
+ProSlow+Rusher+FreemanPersonality "CyberFocus"
+	VoicePitch = 108
+End
+ProSlow+Fastshot+SniperPersonality "Da bears"
+	VoicePitch = 86
+End
+ProSlow+Duelist+FastshotPersonality "Dabo0"
+	VoicePitch = 94
+End
+ProSteady+Fastshot+FastshotPersonality "Damage"
+	VoicePitch = 111
+End
+RankRifler+Duelist+FreemanPersonality "DanChan"
+	VoicePitch = 99
+End
+RankOthers+Duelist+ScoperPersonality "DarfMike"
+	VoicePitch = 88
+End
+ProSlow+SniperPro+SniperPersonality "DAVEY"
+	VoicePitch = 89
+End
+ProSlow+RiflePro+FastshotPersonality "Ddk"
+	VoicePitch = 88
+End
+ProFast+SniperPro+SniperPersonality "Dean"
+	VoicePitch = 113
+End
+RankRifler+RiflePro+RiflePersonality "DEFINE"
+	VoicePitch = 98
+End
+RankOthers+Camper+CamperPersonality "Deman"
+	VoicePitch = 101
+End
+ProPrecise+RiflePro+CamperPersonality "Dersor"
+	VoicePitch = 106
+End
+ProSteady+RiflePro+RiflePersonality "DeSraY"
+	VoicePitch = 105
+End
+ProFast+RiflePro+RiflePersonality "Destru"
+	VoicePitch = 100
+End
+ProTop+RiflePro+RiflePersonality "Dev1"
+	VoicePitch = 112
+End
+ProSlow+RiflePro+RiflePersonality "DG"
+	VoicePitch = 97
+End
+ProTop+RiflePro+CamperPersonality "Dinko"
+	VoicePitch = 89
+End
+ProPrecise+SniperPro+SniperPersonality "DK"
+	VoicePitch = 94
+End
+ProPrecise+Scoper+ScoperPersonality "Dktruman"
+	VoicePitch = 92
+End
+ProTop+SniperPure+FastshotPersonality "Dolan"
+	VoicePitch = 102
+End
+ProSlow+RiflePro+FreemanPersonality "Dona"
+	VoicePitch = 90
+End
+ProFast+RiflePro+CamperPersonality "DONOD"
+	VoicePitch = 85
+End
+ProTop+SniperPro+SniperPersonality "Drenotur"
+	VoicePitch = 90
+End
+ProTop+Duelist+FreemanPersonality "Dugaid"
+	VoicePitch = 92
+End
+ProTop+Duelist+RusherPersonality "DunN"
+	VoicePitch = 92
+End
+ProTop+Duelist+FastshotPersonality "DusT"
+	VoicePitch = 107
+End
+ProSlow+Duelist+RusherPersonality "DutchBoy"
+	VoicePitch = 88
+End
+ProTop+Duelist+RiflePersonality "Dweg"
+	VoicePitch = 94
+End
+ProTop+Scoper+ScoperPersonality "Ed101"
+	VoicePitch = 89
+End
+ProPrecise+RiflePro+RiflePersonality "Efecdb"
+	VoicePitch = 100
+End
+ProSteady+RiflePro+FreemanPersonality "Elfishguy"
+	VoicePitch = 90
+End
+ProTop+RiflePro+FreemanPersonality "Emenjay"
+	VoicePitch = 85
+End
+ProSteady+SniperPro+SniperPersonality "Emode"
+	VoicePitch = 105
+End
+ProFast+SniperPure+FastshotPersonality "Enkanis"
+	VoicePitch = 85
+End
+ProSteady+Duelist+FastshotPersonality "ExWarrior"
+	VoicePitch = 92
+End
+ProSlow+SniperPro+FreemanPersonality "Fakel"
+	VoicePitch = 87
+End
+ProSlow+RiflePro+RusherPersonality "Falba"
+	VoicePitch = 89
+End
+ProSlow+RiflePro+CamperPersonality "FANAT ROCKA"
+	VoicePitch = 87
+End
+RankOthers+RiflePro+RiflePersonality "Feelin"
+	VoicePitch = 96
+End
+RankRifler+Rusher+RusherPersonality "FF"
+	VoicePitch = 104
+End
+RankDuelist+Fastshot+FastshotPersonality "Fippe"
+	VoicePitch = 113
+End
+RankRifler+RiflePro+FreemanPersonality "Flakes"
+	VoicePitch = 86
+End
+RankOthers+SniperPure+ScoperPersonality "Flamboyant"
+	VoicePitch = 90
+End
+RankDuelist+Duelist+RusherPersonality "Fr4son"
+	VoicePitch = 90
+End
+RankRifler+Scoper+ScoperPersonality "Freesty1e"
+	VoicePitch = 101
+End
+RankOthers+Rusher+FastshotPersonality "Fujin"
+	VoicePitch = 107
+End
+RankDuelist+SniperPro+ScoperPersonality "Fv"
+	VoicePitch = 99
+End
+RankRifler+Camper+CamperPersonality "G0tt"
+	VoicePitch = 93
+End
+RankOthers+RiflePro+FreemanPersonality "Gabesson"
+	VoicePitch = 107
+End
+RankRifler+Duelist+RusherPersonality "Gaules"
+	VoicePitch = 101
+End
+RankDuelist+Rusher+RusherPersonality "GETTHEBAGMARK"
+	VoicePitch = 101
+End
+RankOthers+Scoper+ScoperPersonality "GieTe"
+	VoicePitch = 95
+End
+RankDuelist+RiflePro+FreemanPersonality "God Seven"
+	VoicePitch = 108
+End
+RankRifler+Fastshot+FastshotPersonality "GooDW1N"
+	VoicePitch = 111
+End
+RankOthers+SniperPro+ScoperPersonality "GORDOx"
+	VoicePitch = 106
+End
+RankDuelist+SniperPure+ScoperPersonality "GrimyRannarr"
+	VoicePitch = 113
+End
+RankOthers+Rusher+RusherPersonality "Gromjkeee"
+	VoicePitch = 115
+End
+RankRifler+SniperPure+ScoperPersonality "GromoZeka"
+	VoicePitch = 107
+End
+RankRifler+Rusher+FastshotPersonality "Grt"
+	VoicePitch = 115
+End
+RankOthers+Duelist+RusherPersonality "GuizaO"
+	VoicePitch = 99
+End
+RankOthers+Fastshot+FastshotPersonality "H1RO"
+	VoicePitch = 106
+End
+RankRifler+SniperPro+ScoperPersonality "Hawka"
+	VoicePitch = 88
+End
+ProSteady+RiflePro+RusherPersonality "HAzE"
+	VoicePitch = 87
+End
+ProFast+RiflePro+FreemanPersonality "Hazza"
+	VoicePitch = 90
+End
+ProSlow+Rusher+FreemanPersonality "Headshinsky"
+	VoicePitch = 85
+End
+ProSlow+Fastshot+SniperPersonality "Heliumbrella"
+	VoicePitch = 102
+End
+ProSlow+Duelist+FastshotPersonality "HenryG"
+	VoicePitch = 85
+End
+ProSteady+Fastshot+FastshotPersonality "Hermes"
+	VoicePitch = 91
+End
+RankRifler+Duelist+FreemanPersonality "Herold"
+	VoicePitch = 111
+End
+RankOthers+Duelist+ScoperPersonality "HiyaNoot"
+	VoicePitch = 89
+End
+ProSlow+SniperPro+SniperPersonality "HomeR"
+	VoicePitch = 93
+End
+ProSlow+RiflePro+FastshotPersonality "Horstor"
+	VoicePitch = 86
+End
+ProFast+SniperPro+SniperPersonality "Hoven"
+	VoicePitch = 104
+End
+RankRifler+RiflePro+RiflePersonality "Hugo Byron"
+	VoicePitch = 88
+End
+RankOthers+Camper+CamperPersonality "Hyferia"
+	VoicePitch = 109
+End
+ProPrecise+RiflePro+CamperPersonality "Hyper"
+	VoicePitch = 98
+End
+ProSteady+RiflePro+RiflePersonality "Ic3-Man"
+	VoicePitch = 105
+End
+ProFast+RiflePro+RiflePersonality "Index"
+	VoicePitch = 110
+End
+ProTop+RiflePro+RiflePersonality "Ink-mate"
+	VoicePitch = 90
+End
+ProSlow+RiflePro+RiflePersonality "IpSa"
+	VoicePitch = 98
+End
+ProTop+RiflePro+CamperPersonality "Izak"
+	VoicePitch = 88
+End
+ProPrecise+SniperPro+SniperPersonality "Jacky"
+	VoicePitch = 99
+End
+ProPrecise+Scoper+ScoperPersonality "Jacob"
+	VoicePitch = 90
+End
+ProTop+SniperPure+FastshotPersonality "JAEGARN"
+	VoicePitch = 110
+End
+ProSlow+RiflePro+FreemanPersonality "James Bardolph"
+	VoicePitch = 103
+End
+ProFast+RiflePro+CamperPersonality "Jawed"
+	VoicePitch = 112
+End
+ProTop+SniperPro+SniperPersonality "Jaxi"
+	VoicePitch = 98
+End
+ProTop+Duelist+FreemanPersonality "JimNeso"
+	VoicePitch = 100
+End
+ProTop+Duelist+RusherPersonality "Jitko"
+	VoicePitch = 111
+End
+ProTop+Duelist+FastshotPersonality "JKaplan"
+	VoicePitch = 115
+End
+ProSlow+Duelist+RusherPersonality "Joe Miller"
+	VoicePitch = 92
+End
+ProTop+Duelist+RiflePersonality "Joshua"
+	VoicePitch = 102
+End
+ProTop+Scoper+ScoperPersonality "JRT"
+	VoicePitch = 91
+End
+ProPrecise+RiflePro+RiflePersonality "JustHarry"
+	VoicePitch = 93
+End
+ProSteady+RiflePro+FreemanPersonality "K1smagyar"
+	VoicePitch = 107
+End
+ProTop+RiflePro+FreemanPersonality "KaRath"
+	VoicePitch = 114
+End
+ProSteady+SniperPro+SniperPersonality "Keith LaFortune"
+	VoicePitch = 94
+End
+ProFast+SniperPure+FastshotPersonality "KevinMPV"
+	VoicePitch = 110
+End
+ProSteady+Duelist+FastshotPersonality "KirosZ"
+	VoicePitch = 108
+End
+ProSlow+SniperPro+FreemanPersonality "Knochen"
+	VoicePitch = 95
+End
+ProSlow+RiflePro+RusherPersonality "KODIAK"
+	VoicePitch = 92
+End
+ProSlow+RiflePro+CamperPersonality "Koty"
+	VoicePitch = 101
+End
+RankOthers+RiflePro+RiflePersonality "KREATIV"
+	VoicePitch = 103
+End
+RankRifler+Rusher+RusherPersonality "Kremer3"
+	VoicePitch = 90
+End
+RankDuelist+Fastshot+FastshotPersonality "KRL"
+	VoicePitch = 104
+End
+RankRifler+RiflePro+FreemanPersonality "KubiK"
+	VoicePitch = 89
+End
+RankOthers+SniperPure+ScoperPersonality "Kuroxy"
+	VoicePitch = 103
+End
+RankDuelist+Duelist+RusherPersonality "KvaN"
+	VoicePitch = 88
+End
+RankRifler+Scoper+ScoperPersonality "Kyan1te"
+	VoicePitch = 87
+End
+RankOthers+Rusher+FastshotPersonality "Lalok"
+	VoicePitch = 106
+End
+RankDuelist+SniperPro+ScoperPersonality "Launders"
+	VoicePitch = 98
+End
+RankRifler+Camper+CamperPersonality "Laz"
+	VoicePitch = 104
+End
+RankOthers+RiflePro+FreemanPersonality "Leniniw"
+	VoicePitch = 114
+End
+RankRifler+Duelist+RusherPersonality "Leq"
+	VoicePitch = 100
+End
+RankDuelist+Rusher+RusherPersonality "Leskisson"
+	VoicePitch = 105
+End
+RankOthers+Scoper+ScoperPersonality "LighteRTZ"
+	VoicePitch = 98
+End
+RankDuelist+RiflePro+FreemanPersonality "Ljuba"
+	VoicePitch = 102
+End
+RankRifler+Fastshot+FastshotPersonality "Loran"
+	VoicePitch = 107
+End
+RankOthers+SniperPro+ScoperPersonality "Lore"
+	VoicePitch = 109
+End
+RankDuelist+SniperPure+ScoperPersonality "Lrz"
+	VoicePitch = 99
+End
+RankOthers+Rusher+RusherPersonality "LucyLuce"
+	VoicePitch = 85
+End
+RankRifler+SniperPure+ScoperPersonality "Luddie"
+	VoicePitch = 93
+End
+RankRifler+Rusher+FastshotPersonality "Lyssan"
+	VoicePitch = 90
+End
+RankOthers+Duelist+RusherPersonality "Mac"
+	VoicePitch = 105
+End
+RankOthers+Fastshot+FastshotPersonality "Machine"
+	VoicePitch = 100
+End
+RankRifler+SniperPro+ScoperPersonality "MachineWJQ"
+	VoicePitch = 89
+End
+ProSteady+RiflePro+RusherPersonality "Mad1"
+	VoicePitch = 114
+End
+ProFast+RiflePro+FreemanPersonality "MagicHelmet"
+	VoicePitch = 106
+End
+ProSlow+Rusher+FreemanPersonality "MagiskaAbbas"
+	VoicePitch = 88
+End
+ProSlow+Fastshot+SniperPersonality "Malik"
+	VoicePitch = 102
+End
+ProSlow+Duelist+FastshotPersonality "ManicMunday"
+	VoicePitch = 105
+End
+ProSteady+Fastshot+FastshotPersonality "Marcatto"
+	VoicePitch = 108
+End
+RankRifler+Duelist+FreemanPersonality "Mare"
+	VoicePitch = 111
+End
+RankOthers+Duelist+ScoperPersonality "Masterplay"
+	VoicePitch = 113
+End
+ProSlow+SniperPro+SniperPersonality "Mauisnake"
+	VoicePitch = 88
+End
+ProSlow+RiflePro+FastshotPersonality "Megaman"
+	VoicePitch = 107
+End
+ProFast+SniperPro+SniperPersonality "Mett"
+	VoicePitch = 103
+End
+RankRifler+RiflePro+RiflePersonality "MintGod"
+	VoicePitch = 110
+End
+RankOthers+Camper+CamperPersonality "Mishek"
+	VoicePitch = 101
+End
+ProPrecise+RiflePro+CamperPersonality "Missivy"
+	VoicePitch = 107
+End
+ProSteady+RiflePro+RiflePersonality "MitchMan"
+	VoicePitch = 93
+End
+ProFast+RiflePro+RiflePersonality "Mito"
+	VoicePitch = 96
+End
+ProTop+RiflePro+RiflePersonality "Mjpinkman"
+	VoicePitch = 106
+End
+ProSlow+RiflePro+RiflePersonality "Moreira"
+	VoicePitch = 96
+End
+ProTop+RiflePro+CamperPersonality "Morgen"
+	VoicePitch = 88
+End
+ProPrecise+SniperPro+SniperPersonality "Moses"
+	VoicePitch = 91
+End
+ProPrecise+Scoper+ScoperPersonality "MPKBK"
+	VoicePitch = 92
+End
+ProTop+SniperPure+FastshotPersonality "Mucha"
+	VoicePitch = 102
+End
+ProSlow+RiflePro+FreemanPersonality "MukhaS"
+	VoicePitch = 88
+End
+ProFast+RiflePro+CamperPersonality "N0thing"
+	VoicePitch = 114
+End
+ProTop+SniperPro+SniperPersonality "NABOWOW"
+	VoicePitch = 90
+End
+ProTop+Duelist+FreemanPersonality "NaoriMizuki"
+	VoicePitch = 115
+End
+ProTop+Duelist+RusherPersonality "Ne0kai"
+	VoicePitch = 86
+End
+ProTop+Duelist+FastshotPersonality "Nessyteras"
+	VoicePitch = 94
+End
+ProSlow+Duelist+RusherPersonality "Nexus"
+	VoicePitch = 113
+End
+ProTop+Duelist+RiflePersonality "Nicolino"
+	VoicePitch = 108
+End
+ProTop+Scoper+ScoperPersonality "Okroshka"
+	VoicePitch = 95
+End
+ProPrecise+RiflePro+RiflePersonality "Olsior"
+	VoicePitch = 107
+End
+ProSteady+RiflePro+FreemanPersonality "Olvari"
+	VoicePitch = 92
+End
+ProTop+RiflePro+FreemanPersonality "OnlyJoshinTV"
+	VoicePitch = 102
+End
+ProSteady+SniperPro+SniperPersonality "Oversiard"
+	VoicePitch = 114
+End
+ProFast+SniperPure+FastshotPersonality "Paladin"
+	VoicePitch = 97
+End
+ProSteady+Duelist+FastshotPersonality "Pansy"
+	VoicePitch = 88
+End
+ProSlow+SniperPro+FreemanPersonality "PCH3LK1N"
+	VoicePitch = 108
+End
+ProSlow+RiflePro+RusherPersonality "Peach"
+	VoicePitch = 104
+End
+ProSlow+RiflePro+CamperPersonality "Peekay"
+	VoicePitch = 87
+End
+RankOthers+RiflePro+RiflePersonality "Petrovich"
+	VoicePitch = 87
+End
+RankRifler+Rusher+RusherPersonality "Phy"
+	VoicePitch = 112
+End
+RankDuelist+Fastshot+FastshotPersonality "PIKA"
+	VoicePitch = 90
+End
+RankRifler+RiflePro+FreemanPersonality "Pilski"
+	VoicePitch = 85
+End
+RankOthers+SniperPure+ScoperPersonality "Pineapple Philips"
+	VoicePitch = 114
+End
+RankDuelist+Duelist+RusherPersonality "Pitu Herranz"
+	VoicePitch = 99
+End
+RankRifler+Scoper+ScoperPersonality "Pm"
+	VoicePitch = 106
+End
+RankOthers+Rusher+FastshotPersonality "Pop"
+	VoicePitch = 98
+End
+RankDuelist+SniperPro+ScoperPersonality "PRAWUs"
+	VoicePitch = 87
+End
+RankRifler+Camper+CamperPersonality "PsYcOrN"
+	VoicePitch = 106
+End
+RankOthers+RiflePro+FreemanPersonality "QeP"
+	VoicePitch = 90
+End
+RankRifler+Duelist+RusherPersonality "QUQU"
+	VoicePitch = 115
+End
+RankDuelist+Rusher+RusherPersonality "Qz"
+	VoicePitch = 111
+End
+RankOthers+Scoper+ScoperPersonality "RauleS"
+	VoicePitch = 109
+End
+RankDuelist+RiflePro+FreemanPersonality "Rdl"
+	VoicePitch = 100
+End
+RankRifler+Fastshot+FastshotPersonality "Redeye"
+	VoicePitch = 111
+End
+RankOthers+SniperPro+ScoperPersonality "Redulj"
+	VoicePitch = 105
+End
+RankDuelist+SniperPure+ScoperPersonality "Rema"
+	VoicePitch = 111
+End
+RankOthers+Rusher+RusherPersonality "ReTr00"
+	VoicePitch = 107
+End
+RankRifler+SniperPure+ScoperPersonality "RickyDC"
+	VoicePitch = 102
+End
+RankRifler+Rusher+FastshotPersonality "Rizc"
+	VoicePitch = 89
+End
+RankOthers+Duelist+RusherPersonality "RobuJohnson"
+	VoicePitch = 88
+End
+RankOthers+Fastshot+FastshotPersonality "Sadokist"
+	VoicePitch = 95
+End
+RankRifler+SniperPro+ScoperPersonality "Sakula"
+	VoicePitch = 101
+End
+ProSteady+RiflePro+RusherPersonality "SanCor"
+	VoicePitch = 98
+End
+ProFast+RiflePro+FreemanPersonality "Sc0rch"
+	VoicePitch = 101
+End
+ProSlow+Rusher+FreemanPersonality "Scrawny"
+	VoicePitch = 109
+End
+ProSlow+Fastshot+SniperPersonality "Searph"
+	VoicePitch = 115
+End
+ProSlow+Duelist+FastshotPersonality "Semmler"
+	VoicePitch = 107
+End
+ProSteady+Fastshot+FastshotPersonality "Sergiz"
+	VoicePitch = 110
+End
+RankRifler+Duelist+FreemanPersonality "Serhman"
+	VoicePitch = 89
+End
+RankOthers+Duelist+ScoperPersonality "SeveralSheep"
+	VoicePitch = 90
+End
+ProSlow+SniperPro+SniperPersonality "Shadye"
+	VoicePitch = 111
+End
+ProSlow+RiflePro+FastshotPersonality "Sheyl"
+	VoicePitch = 108
+End
+ProFast+SniperPro+SniperPersonality "Shiny"
+	VoicePitch = 88
+End
+RankRifler+RiflePro+RiflePersonality "Shoker"
+	VoicePitch = 85
+End
+RankOthers+Camper+CamperPersonality "Shoushou"
+	VoicePitch = 105
+End
+ProPrecise+RiflePro+CamperPersonality "Silv8"
+	VoicePitch = 89
+End
+ProSteady+RiflePro+RiflePersonality "Sir Danny"
+	VoicePitch = 106
+End
+ProFast+RiflePro+RiflePersonality "Skriv"
+	VoicePitch = 85
+End
+ProTop+RiflePro+RiflePersonality "SL4M"
+	VoicePitch = 86
+End
+ProSlow+RiflePro+RiflePersonality "Slam"
+	VoicePitch = 105
+End
+ProTop+RiflePro+CamperPersonality "SlaxerCast"
+	VoicePitch = 112
+End
+ProPrecise+SniperPro+SniperPersonality "Sleepsomewhile"
+	VoicePitch = 108
+End
+ProPrecise+Scoper+ScoperPersonality "Slop3"
+	VoicePitch = 85
+End
+ProTop+SniperPure+FastshotPersonality "SLowi"
+	VoicePitch = 102
+End
+ProSlow+RiflePro+FreemanPersonality "SneakyBeaky"
+	VoicePitch = 112
+End
+ProFast+RiflePro+CamperPersonality "Solodana"
+	VoicePitch = 100
+End
+ProTop+SniperPro+SniperPersonality "Spat1ch"
+	VoicePitch = 86
+End
+ProTop+Duelist+FreemanPersonality "SpeeDy"
+	VoicePitch = 95
+End
+ProTop+Duelist+RusherPersonality "SPUNJ"
+	VoicePitch = 95
+End
+ProTop+Duelist+FastshotPersonality "Squid"
+	VoicePitch = 115
+End
+ProSlow+Duelist+RusherPersonality "STORM"
+	VoicePitch = 99
+End
+ProTop+Duelist+RiflePersonality "Straty"
+	VoicePitch = 88
+End
+ProTop+Scoper+ScoperPersonality "Strike"
+	VoicePitch = 96
+End
+ProPrecise+RiflePro+RiflePersonality "StrongLegs"
+	VoicePitch = 86
+End
+ProSteady+RiflePro+FreemanPersonality "Stunna"
+	VoicePitch = 114
+End
+ProTop+RiflePro+FreemanPersonality "Svojke"
+	VoicePitch = 96
+End
+ProSteady+SniperPro+SniperPersonality "Sxstem"
+	VoicePitch = 98
+End
+ProFast+SniperPure+FastshotPersonality "Syon"
+	VoicePitch = 115
+End
+ProSteady+Duelist+FastshotPersonality "Szeregowy"
+	VoicePitch = 90
+End
+ProSlow+SniperPro+FreemanPersonality "T0ks"
+	VoicePitch = 114
+End
+ProSlow+RiflePro+RusherPersonality "Tb"
+	VoicePitch = 88
+End
+ProSlow+RiflePro+CamperPersonality "TeaTime"
+	VoicePitch = 109
+End
+RankOthers+RiflePro+RiflePersonality "Tedd"
+	VoicePitch = 114
+End
+RankRifler+Rusher+RusherPersonality "Tenshi"
+	VoicePitch = 109
+End
+RankDuelist+Fastshot+FastshotPersonality "TheCraggy"
+	VoicePitch = 112
+End
+RankRifler+RiflePro+FreemanPersonality "TheEternalJay"
+	VoicePitch = 105
+End
+RankOthers+SniperPure+ScoperPersonality "Theluchs4363"
+	VoicePitch = 111
+End
+RankDuelist+Duelist+RusherPersonality "TheRA1DER"
+	VoicePitch = 115
+End
+RankRifler+Scoper+ScoperPersonality "ThoreQ"
+	VoicePitch = 96
+End
+RankOthers+Rusher+FastshotPersonality "Thunder"
+	VoicePitch = 111
+End
+RankDuelist+SniperPro+ScoperPersonality "TIMMO"
+	VoicePitch = 87
+End
+RankRifler+Camper+CamperPersonality "Toivo"
+	VoicePitch = 99
+End
+RankOthers+RiflePro+FreemanPersonality "Toldersma"
+	VoicePitch = 86
+End
+RankRifler+Duelist+RusherPersonality "Toll"
+	VoicePitch = 110
+End
+RankDuelist+Rusher+RusherPersonality "Tom Pickering"
+	VoicePitch = 101
+End
+RankOthers+Scoper+ScoperPersonality "Tombizz"
+	VoicePitch = 103
+End
+RankDuelist+RiflePro+FreemanPersonality "Tomy"
+	VoicePitch = 115
+End
+RankRifler+Fastshot+FastshotPersonality "Topical"
+	VoicePitch = 106
+End
+RankOthers+SniperPro+ScoperPersonality "TosspoT"
+	VoicePitch = 94
+End
+RankDuelist+SniperPure+ScoperPersonality "Trav"
+	VoicePitch = 93
+End
+RankOthers+Rusher+RusherPersonality "Tutsi"
+	VoicePitch = 93
+End
+RankRifler+SniperPure+ScoperPersonality "TwoTapTony"
+	VoicePitch = 93
+End
+RankRifler+Rusher+FastshotPersonality "Uber"
+	VoicePitch = 112
+End
+RankOthers+Duelist+RusherPersonality "Upmind"
+	VoicePitch = 92
+End
+RankOthers+Fastshot+FastshotPersonality "Urf"
+	VoicePitch = 115
+End
+RankRifler+SniperPro+ScoperPersonality "UzDevice"
+	VoicePitch = 98
+End
+ProSteady+RiflePro+RusherPersonality "V1nson"
+	VoicePitch = 91
+End
+ProFast+RiflePro+FreemanPersonality "V3n0m"
+	VoicePitch = 92
+End
+ProSlow+Rusher+FreemanPersonality "Valencho"
+	VoicePitch = 93
+End
+ProSlow+Fastshot+SniperPersonality "Vansilli"
+	VoicePitch = 95
+End
+ProSlow+Duelist+FastshotPersonality "Vearless"
+	VoicePitch = 85
+End
+ProSteady+Fastshot+FastshotPersonality "Veracity"
+	VoicePitch = 99
+End
+RankRifler+Duelist+FreemanPersonality "Viick"
+	VoicePitch = 96
+End
+RankOthers+Duelist+ScoperPersonality "Vince"
+	VoicePitch = 89
+End
+ProSlow+SniperPro+SniperPersonality "Voltie"
+	VoicePitch = 103
+End
+ProSlow+RiflePro+FastshotPersonality "Voo"
+	VoicePitch = 102
+End
+ProFast+SniperPro+SniperPersonality "Vuggo"
+	VoicePitch = 98
+End
+RankRifler+RiflePro+RiflePersonality "Vuzzey"
+	VoicePitch = 87
+End
+RankOthers+Camper+CamperPersonality "Warclown"
+	VoicePitch = 110
+End
+ProPrecise+RiflePro+CamperPersonality "Werty"
+	VoicePitch = 107
+End
+ProSteady+RiflePro+RiflePersonality "WH1TE"
+	VoicePitch = 101
+End
+ProFast+RiflePro+RiflePersonality "Wildeity"
+	VoicePitch = 96
+End
+ProTop+RiflePro+RiflePersonality "Wolfy6678"
+	VoicePitch = 113
+End
+ProSlow+RiflePro+RiflePersonality "X9nium"
+	VoicePitch = 95
+End
+ProTop+RiflePro+CamperPersonality "Xf"
+	VoicePitch = 113
+End
+ProPrecise+SniperPro+SniperPersonality "XiTTeN"
+	VoicePitch = 114
+End
+ProPrecise+Scoper+ScoperPersonality "Xixi"
+	VoicePitch = 97
+End
+ProTop+SniperPure+FastshotPersonality "Xner"
+	VoicePitch = 93
+End
+ProSlow+RiflePro+FreemanPersonality "XppE"
+	VoicePitch = 86
+End
+ProFast+RiflePro+CamperPersonality "Xrm"
+	VoicePitch = 92
+End
+ProTop+SniperPro+SniperPersonality "YangZai"
+	VoicePitch = 86
+End
+ProTop+Duelist+FreemanPersonality "YJ"
+	VoicePitch = 110
+End
+ProTop+Duelist+RusherPersonality "YNk"
+	VoicePitch = 112
+End
+ProTop+Duelist+FastshotPersonality "YnoT"
+	VoicePitch = 115
+End
+ProSlow+Duelist+RusherPersonality "YouM3"
+	VoicePitch = 100
+End
+ProTop+Duelist+RiflePersonality "Yukio"
+	VoicePitch = 99
+End
+ProTop+Scoper+ScoperPersonality "YXo"
+	VoicePitch = 86
+End
+ProPrecise+RiflePro+RiflePersonality "Zais"
+	VoicePitch = 113
+End
+ProSteady+RiflePro+FreemanPersonality "Zbr4"
+	VoicePitch = 114
+End
+ProTop+RiflePro+FreemanPersonality "Zerpherr"
+	VoicePitch = 114
+End
+ProSteady+SniperPro+SniperPersonality "Zescht"
+	VoicePitch = 89
+End
+ProFast+SniperPure+FastshotPersonality "Zloba"
+	VoicePitch = 110
+End
+ProSteady+Duelist+FastshotPersonality "Zlynx"
+	VoicePitch = 115
+End
+ProSlow+SniperPro+FreemanPersonality "ZolaSMH"
+	VoicePitch = 87
+End
+ProSlow+RiflePro+RusherPersonality "ZoneR"
+	VoicePitch = 102
+End
+ProSlow+RiflePro+CamperPersonality "ZorlaK"
+	VoicePitch = 96
+End
+RankOthers+RiflePro+RiflePersonality "ZZW"
+	VoicePitch = 94
+End

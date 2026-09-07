@@ -28,6 +28,7 @@ public class BotHiderImplPlugin : BasePlugin
     private readonly string[] _appliedCrosshair = new string[64];
     private readonly uint[] _appliedScoreboardFlair = new uint[64];
     private readonly ulong[] _observedIncarnations = new ulong[64];
+    private readonly HashSet<int> _observerSlots = [];
     private CounterStrikeSharp.API.Modules.Timers.Timer? _fastApplyTimer;
     private int _fastApplyRemaining;
     private Harmony? _harmony;
@@ -49,6 +50,7 @@ public class BotHiderImplPlugin : BasePlugin
         IsBotPatch.Api = _client;
         _harmony = new Harmony("net.linyz.bothider.isbot");
         _harmony.PatchAll(typeof(BotHiderImplPlugin).Assembly);
+        _observerSlots.Clear();
 
         RegisterListener<Listeners.OnMapStart>(OnMapStart);
         RegisterListener<Listeners.OnMapEnd>(OnMapEnd);
@@ -86,6 +88,8 @@ public class BotHiderImplPlugin : BasePlugin
     private void OnClientDisconnect(int slot)
     {
         ResetAppliedSlot(slot, 0UL);
+        if (_client != null)
+            _client.SetObserverSlot(slot, false);
     }
 
     // Round start — respawn managed bots that ended the prior round dead.
@@ -150,7 +154,7 @@ public class BotHiderImplPlugin : BasePlugin
 
         foreach (int slot in _client.GetManagedSlots())
         {
-            if ((uint)slot >= (uint)votesCast.Length) continue;
+            if (_client.IsObserverSlot(slot)) continue;
 
             var player = Utilities.GetPlayerFromSlot(slot);
             if (player == null || !player.IsValid) continue;
@@ -191,6 +195,9 @@ public class BotHiderImplPlugin : BasePlugin
 
         foreach (int slot in _client.GetManagedSlots())
         {
+            // Observers stay in Spectator permanently; never re-team or respawn them
+            if (_client.IsObserverSlot(slot)) continue;
+
             var player = Utilities.GetPlayerFromSlot(slot);
             if (player == null || !player.IsValid || player.PawnIsAlive) continue;
 
@@ -675,4 +682,11 @@ internal sealed class BotHiderCapabilityApi : IBotHiderApi
 
     // Toggles the global display-name source behavior.
     public bool SetNameSource(bool useBotInfo) => _client.SetNameSource(useBotInfo);
+
+    // Marks/unmarks a managed slot as an observer-only bot.
+    public void SetObserverSlot(int slot, bool isObserver) =>
+        _client.SetObserverSlot(slot, isObserver);
+
+    // Returns whether the slot belongs to an observer-only bot.
+    public bool IsObserverSlot(int slot) => _client.IsObserverSlot(slot);
 }
