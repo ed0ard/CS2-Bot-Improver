@@ -6,6 +6,7 @@ using CounterStrikeSharp.API.Core.Translations;
 using CounterStrikeSharp.API.Modules.Commands;
 using CounterStrikeSharp.API.Modules.Utils;
 using System.Security.Cryptography;
+using CS2BotImprover.Localization;
 
 namespace RoundDamageRecap;
 
@@ -25,6 +26,9 @@ public sealed class RoundDamageRecapPlugin : BasePlugin
     private readonly Dictionary<int, PlayerSnapshot> _playersByKey = new();
     private DamageRecapStyle _damageStyle = DamageRecapStyle.Auto;
     private bool _announcedDifficultyThisMap;
+    private PluginI18n? _i18n;
+
+    private PluginI18n I18n => _i18n ??= new(ModuleDirectory);
 
     public override void Load(bool hotReload)
     {
@@ -126,7 +130,7 @@ public sealed class RoundDamageRecapPlugin : BasePlugin
         {
             if (!TryParseDamageStyle(command.GetArg(1), out var style))
             {
-                command.ReplyToCommand("[RoundDamageRecap] usage: css_damage_style <auto|classic|pw>");
+                command.ReplyToCommand(I18n.Get(caller, "damage_style.usage"));
                 return;
             }
 
@@ -137,11 +141,11 @@ public sealed class RoundDamageRecapPlugin : BasePlugin
         {
             var language = caller.GetLanguage();
             command.ReplyToCommand(
-                $"[RoundDamageRecap] damage style = auto, effective = {GetDamageStyleName(ResolveDamageStyle(caller))}, language = {language.Name}");
+                I18n.Get(caller, "damage_style.auto", GetDamageStyleName(ResolveDamageStyle(caller)), language.Name));
             return;
         }
 
-        command.ReplyToCommand($"[RoundDamageRecap] damage style = {GetDamageStyleName(_damageStyle)}");
+        command.ReplyToCommand(I18n.Get(caller, "damage_style.current", GetDamageStyleName(_damageStyle)));
     }
 
     private void PrintRecapForPlayer(CCSPlayerController player)
@@ -179,21 +183,24 @@ public sealed class RoundDamageRecapPlugin : BasePlugin
     {
         if (damageStyle == DamageRecapStyle.Classic)
         {
+            var hpStatus = remainingHp > 0 
+                ? I18n.Get(player, "damage_recap.hp_left", remainingHp)
+                : I18n.Get(player, "damage_recap.dead");
+            
             PrintLbtvLine(
                 player,
-                $"{enemyName} [{(remainingHp > 0 ? $"{remainingHp} HP left" : "DEAD")}] - " +
-                $"Dealt to: [{dealt.TotalDamage} in {dealt.HitCount} {(dealt.HitCount <= 1 ? "hit" : "hits")}] - " +
-                $"Taken from: [{taken.TotalDamage} in {taken.HitCount} {(taken.HitCount <= 1 ? "hit" : "hits")}]");
+                I18n.Get(player, "damage_recap.classic", 
+                    enemyName, hpStatus, 
+                    dealt.TotalDamage, dealt.HitCount, 
+                    taken.TotalDamage, taken.HitCount));
             return;
         }
 
         player.PrintToChat(
-            $" {ChatColorDefault}命中{ChatColorGreen}{dealt.HitCount}{ChatColorDefault}次 " +
-            $"{ChatColorGreen}{dealt.TotalDamage}{ChatColorDefault}伤害 " +
-            $"被击中{ChatColorGreen}{taken.HitCount}{ChatColorDefault}次 " +
-            $"{ChatColorGreen}{taken.TotalDamage}{ChatColorDefault}伤害 " +
-            $"剩{ChatColorGreen}{Math.Max(0, remainingHp)}{ChatColorDefault}HP " +
-            $"{ChatColorLime}{enemyName}{ChatColorDefault}");
+            I18n.Get(player, "damage_recap.perfect_world",
+                dealt.HitCount, dealt.TotalDamage,
+                taken.HitCount, taken.TotalDamage,
+                Math.Max(0, remainingHp), enemyName));
     }
 
     private static bool TryParseDamageStyle(string value, out DamageRecapStyle style)
@@ -262,19 +269,15 @@ public sealed class RoundDamageRecapPlugin : BasePlugin
             return;
         }
 
-        var message = BuildDifficultyMessage();
+        var difficulty = DetectDifficulty();
         foreach (var player in recipients)
         {
+            var localizedName = I18n.Get(player, difficulty.LocalizationKey);
+            var message = I18n.Get(player, "difficulty.message", localizedName, difficulty.Level);
             PrintLbtvLine(player, message);
         }
 
         _announcedDifficultyThisMap = true;
-    }
-
-    private string BuildDifficultyMessage()
-    {
-        var difficulty = DetectDifficulty();
-        return $"BOT Difficulty: {difficulty.Name} [{difficulty.Level}]";
     }
 
     private DifficultyResult DetectDifficulty()
@@ -282,21 +285,21 @@ public sealed class RoundDamageRecapPlugin : BasePlugin
         var overridesDir = FindOverridesDirectory();
         if (overridesDir == null)
         {
-            return new DifficultyResult("Unknown - overrides directory missing", "?/3");
+            return new DifficultyResult("difficulty.unknown_overrides", "?/3");
         }
 
         var activePath = Path.Combine(overridesDir, "botprofile.vpk");
         if (!File.Exists(activePath))
         {
-            return new DifficultyResult("Unknown - active botprofile.vpk missing", "?/3");
+            return new DifficultyResult("difficulty.unknown_profile", "?/3");
         }
 
         var activeHash = ComputeSha256(activePath);
         var knownProfiles = new[]
         {
-            new DifficultyProfile("Low", "1/3", Path.Combine(overridesDir, "Low", "botprofile.vpk")),
-            new DifficultyProfile("Medium", "2/3", Path.Combine(overridesDir, "Medium", "botprofile.vpk")),
-            new DifficultyProfile("High", "3/3", Path.Combine(overridesDir, "High", "botprofile.vpk"))
+            new DifficultyProfile("difficulty.low", "1/3", Path.Combine(overridesDir, "Low", "botprofile.vpk")),
+            new DifficultyProfile("difficulty.medium", "2/3", Path.Combine(overridesDir, "Medium", "botprofile.vpk")),
+            new DifficultyProfile("difficulty.high", "3/3", Path.Combine(overridesDir, "High", "botprofile.vpk"))
         };
 
         foreach (var profile in knownProfiles)
@@ -308,11 +311,11 @@ public sealed class RoundDamageRecapPlugin : BasePlugin
 
             if (CryptographicOperations.FixedTimeEquals(activeHash, ComputeSha256(profile.Path)))
             {
-                return new DifficultyResult(profile.Name, profile.Level);
+                return new DifficultyResult(profile.LocalizationKey, profile.Level);
             }
         }
 
-        return new DifficultyResult("Custom / Unknown", "?/3");
+        return new DifficultyResult("difficulty.custom", "?/3");
     }
 
     private static string? FindOverridesDirectory()
@@ -444,9 +447,9 @@ public sealed class RoundDamageRecapPlugin : BasePlugin
 
     private sealed record PlayerSnapshot(string Name, CsTeam Team);
 
-    private sealed record DifficultyProfile(string Name, string Level, string Path);
+    private sealed record DifficultyProfile(string LocalizationKey, string Level, string Path);
 
-    private sealed record DifficultyResult(string Name, string Level);
+    private sealed record DifficultyResult(string LocalizationKey, string Level);
 
     private enum DamageRecapStyle
     {
