@@ -26,7 +26,7 @@ public sealed class BotRandomizerPlugin : BasePlugin
     private bool _giveNamedItemErrorLogged;
 
     public override string ModuleName => "BotRandomizer";
-    public override string ModuleVersion => "1.3.1";
+    public override string ModuleVersion => "1.3.2";
     public override string ModuleAuthor => "ed0ard, Misaka17032 & unicbm";
     public override string ModuleDescription =>
         "Stable per-bot knives, gloves, weapon skins, stickers, charms, agents and music kits";

@@ -139,11 +139,12 @@ internal sealed class TeamIntroPreview
                 continue;
             }
 
-            if (ApplyPreview(preview, bot))
-            {
-                unmatchedBots.Remove(bot);
-                paintedThisPass.Add(preview.Index);
-            }
+            if (!TryClaimPreviewXuid(preview, bot))
+                continue;
+
+            unmatchedBots.Remove(bot);
+            paintedThisPass.Add(preview.Index);
+            ApplyPreview(preview, bot);
         }
 
         foreach (var preview in emptyPreviews)
@@ -156,9 +157,30 @@ internal sealed class TeamIntroPreview
             var bot = unmatchedBots[0];
             unmatchedBots.RemoveAt(0);
             _unassignedPairs[preview.Index] = bot.Slot;
-            if (ApplyPreview(preview, bot))
-                paintedThisPass.Add(preview.Index);
+            if (!TryClaimPreviewXuid(preview, bot))
+                continue;
+
+            paintedThisPass.Add(preview.Index);
+            ApplyPreview(preview, bot);
         }
+    }
+
+    private static bool TryClaimPreviewXuid(
+        CCSGO_TeamPreviewCharacterPosition preview,
+        CCSPlayerController bot)
+    {
+        if (!preview.IsValid || !bot.IsValid || bot.SteamID == 0)
+            return false;
+
+        var current = preview.Xuid;
+        if (current == bot.SteamID)
+            return true;
+        if (current != 0)
+            return false;
+
+        preview.Xuid = bot.SteamID;
+        Utilities.SetStateChanged(preview, "CCSGO_TeamPreviewCharacterPosition", "m_xuid");
+        return true;
     }
 
     private bool ApplyPreview(CCSGO_TeamPreviewCharacterPosition preview, CCSPlayerController bot)
@@ -225,7 +247,6 @@ internal sealed class TeamIntroPreview
 
         try
         {
-            // Do not write m_xuid. Valve already owns the slot assignment.
             if (loadout.AgentDefIndex != 0 && preview.AgentItem.Handle != IntPtr.Zero)
             {
                 preview.AgentItem.ItemDefinitionIndex = loadout.AgentDefIndex;
