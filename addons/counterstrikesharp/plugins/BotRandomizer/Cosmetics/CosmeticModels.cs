@@ -100,10 +100,14 @@ internal sealed record KnifeSelection(ushort DefIndex, int PaintKit, float Wear)
 
 internal sealed record GloveSelection(ushort DefIndex, int PaintKit, float Wear);
 
+internal readonly record struct AgentDefinition(ushort DefIndex, string ModelPath);
+
 internal sealed class BotCosmeticLoadout
 {
     public required byte Team { get; init; }
     public required string AgentModel { get; init; }
+    // 0 = default faction model; team intro must not write AgentItem in that case.
+    public required ushort AgentDefIndex { get; init; }
     public required int MusicKit { get; init; }
     public required KnifeSelection Knife { get; init; }
     public required GloveSelection Glove { get; init; }
