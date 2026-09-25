@@ -1,0 +1,4 @@
+[submodule "external/BotHider"]
+	path = addons/BotHider
+	url = https://github.com/XBribo/CS2-Bot-Hider.git
+	branch = main
