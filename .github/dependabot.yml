@@ -5,4 +5,4 @@ updates:
     schedule:
       interval: "cron"
       cronjob: "0 0 * * *"
-      timezone: "Asia/Shanghai"
+      timezone: "Asia/Singapore"
