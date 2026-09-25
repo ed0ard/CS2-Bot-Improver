@@ -20,7 +20,7 @@
     <PackageReference Include="Lib.Harmony" Version="2.4.2" GeneratePathProperty="true">
       <Private>false</Private>
     </PackageReference>
-    <ProjectReference Include="..\BotHiderApi\BotHiderApi.csproj">
+    <ProjectReference Include="..\..\shared\BotHiderApi\BotHiderApi.csproj">
       <Private>false</Private>
     </ProjectReference>
   </ItemGroup>
