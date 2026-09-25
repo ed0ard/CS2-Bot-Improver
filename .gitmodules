@@ -10,3 +10,27 @@
 	path = addons/BotVision
 	url = https://github.com/XBribo/CS2-Bot-Vision.git
 	branch = main
+[submodule "addons/counterstrikesharp/plugins/BotState"]
+	path = addons/counterstrikesharp/plugins/BotState
+	url = https://github.com/ed0ard/CS2-Smarter-Bot.git
+	branch = main
+[submodule "addons/counterstrikesharp/plugins/BotAimImprover"]
+	path = addons/counterstrikesharp/plugins/BotAimImprover
+	url = https://github.com/ed0ard/CS2-Bullseye-Bot.git
+	branch = main
+[submodule "addons/counterstrikesharp/plugins/BotAI"]
+	path = addons/counterstrikesharp/plugins/BotAI
+	url = https://github.com/ed0ard/CS2-BotAI.git
+	branch = main
+[submodule "addons/counterstrikesharp/plugins/BotRandomizer"]
+	path = addons/counterstrikesharp/plugins/BotRandomizer
+	url = https://github.com/ed0ard/CS2-Bot-Randomizer.git
+	branch = main
+[submodule "addons/counterstrikesharp/plugins/NadeSystem"]
+	path = addons/counterstrikesharp/plugins/NadeSystem
+	url = https://github.com/ed0ard/CS2-Bot-NadeSystem.git
+	branch = main
+[submodule "addons/counterstrikesharp/plugins/BotBuy"]
+	path = addons/counterstrikesharp/plugins/BotBuy
+	url = https://github.com/ed0ard/CS2-Bot-Buy.git
+	branch = main
