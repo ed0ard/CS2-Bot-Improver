@@ -2,3 +2,11 @@
 	path = addons/BotHider
 	url = https://github.com/XBribo/CS2-Bot-Hider.git
 	branch = main
+[submodule "addons/BotController"]
+	path = addons/BotController
+	url = https://github.com/XBribo/CS2-Bot-Controller.git
+	branch = main
+[submodule "addons/BotVision"]
+	path = addons/BotVision
+	url = https://github.com/XBribo/CS2-Bot-Vision.git
+	branch = main
