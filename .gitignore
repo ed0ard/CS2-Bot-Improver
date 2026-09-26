@@ -1,3 +1,13 @@
 **/bin/
 **/obj/
 .gitignore
+
+# Build output
+artifacts/
+
+# Generated archives
+*.zip
+
+# Downloaded compile-time libraries
+**/libs/
+.build-dependencies/

@@ -1,0 +1,14 @@
+{
+    "PublicChatTrigger": [ "!" ],
+    "SilentChatTrigger": [ "/" ],
+    "FollowCS2ServerGuidelines": false,
+    "PluginHotReloadEnabled": true,
+    "PluginAutoLoadEnabled": true,
+    "PluginResolveNugetPackages": false,
+    "ServerLanguage": "en",
+    "UnlockConCommands": true,
+    "UnlockConVars": true,
+    "AutoUpdateEnabled": false,
+    "AutoUpdateURL": "http://gamedata.cssharp.dev",
+    "MaximumFrameTasksExecutedPerTick": 1024
+}
