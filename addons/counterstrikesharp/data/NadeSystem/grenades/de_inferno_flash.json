@@ -1,0 +1,1346 @@
+[
+  {
+    "id": "7bfe1dd7-b1c8-4ddb-b1eb-bbc4aaf5a649",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 308.05685,
+      "y": 647.74615,
+      "z": 109.835205
+    },
+    "projectileVelocity": {
+      "x": 636.4555,
+      "y": -12.289592,
+      "z": 498.07507
+    },
+    "landingPosition": {
+      "x": 1342.2944,
+      "y": 627.7764,
+      "z": 496.70584
+    },
+    "description": null
+  },
+  {
+    "id": "50bbb743-198b-4580-9e6a-0a437128d69f",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 237.8768,
+      "y": 1414.3958,
+      "z": 177.68498
+    },
+    "projectileVelocity": {
+      "x": 121.80915,
+      "y": 297.02783,
+      "z": 299.06274
+    },
+    "landingPosition": {
+      "x": 435.81577,
+      "y": 1897.0715,
+      "z": 241.16156
+    },
+    "description": null
+  },
+  {
+    "id": "c41d5568-a7ce-4895-bdc5-b2187470cf74",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 2479.7666,
+      "y": 356.19284,
+      "z": 280.14673
+    },
+    "projectileVelocity": {
+      "x": -65.77688,
+      "y": 53.857502,
+      "z": 183.79071
+    },
+    "landingPosition": {
+      "x": 2417.2195,
+      "y": 370.78738,
+      "z": 283.46524
+    },
+    "description": null
+  },
+  {
+    "id": "40931ecd-594c-4f15-a3e6-c051153b745e",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1363.8486,
+      "y": 35.428738,
+      "z": 204.43005
+    },
+    "projectileVelocity": {
+      "x": 370.7703,
+      "y": 438.2742,
+      "z": 355.06354
+    },
+    "landingPosition": {
+      "x": 1292.9818,
+      "y": 445.71362,
+      "z": 196.97809
+    },
+    "description": null
+  },
+  {
+    "id": "844f4f96-bb5e-4ed8-a672-a4c10ae301c4",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1498.8525,
+      "y": 1224.9755,
+      "z": 259.25024
+    },
+    "projectileVelocity": {
+      "x": -114.61375,
+      "y": -423.41043,
+      "z": 264.18372
+    },
+    "landingPosition": {
+      "x": 1312.6123,
+      "y": 536.9313,
+      "z": 266.04858
+    },
+    "description": null
+  },
+  {
+    "id": "5ecb9912-e897-4713-b47b-71eb1ceb2823",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 971.0512,
+      "y": 601.8895,
+      "z": 195.34966
+    },
+    "projectileVelocity": {
+      "x": 615.1988,
+      "y": -275.1723,
+      "z": 311.49936
+    },
+    "landingPosition": {
+      "x": 1306.9951,
+      "y": 272.77307,
+      "z": 269.48666
+    },
+    "description": null
+  },
+  {
+    "id": "a2f5c31e-a7a5-4b95-8268-40fa506691e5",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1074.1979,
+      "y": 3251.6345,
+      "z": 202.4452
+    },
+    "projectileVelocity": {
+      "x": -507.98227,
+      "y": -87.48665,
+      "z": 435.80396
+    },
+    "landingPosition": {
+      "x": 248.72528,
+      "y": 3109.447,
+      "z": 488.1278
+    },
+    "description": null
+  },
+  {
+    "id": "b426a05b-0bf3-48e0-9ca4-deb897c96b45",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 564.5944,
+      "y": 3267.237,
+      "z": 243.02278
+    },
+    "projectileVelocity": {
+      "x": -50.844025,
+      "y": -194.58595,
+      "z": 249.96915
+    },
+    "landingPosition": {
+      "x": 481.97333,
+      "y": 2951.0222,
+      "z": 226.72202
+    },
+    "description": null
+  },
+  {
+    "id": "86f68e6a-8ae4-4fac-8fe6-7975c97555b1",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 533.76483,
+      "y": 3078.4111,
+      "z": 302.56387
+    },
+    "projectileVelocity": {
+      "x": -144.41039,
+      "y": -659.24915,
+      "z": 286.27588
+    },
+    "landingPosition": {
+      "x": 299.09775,
+      "y": 2007.1299,
+      "z": 345.26456
+    },
+    "description": null
+  },
+  {
+    "id": "d07f1ec2-59dd-4ce1-a548-4806155d8e30",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 783.621,
+      "y": 3504.6228,
+      "z": 217.06816
+    },
+    "projectileVelocity": {
+      "x": -338.61642,
+      "y": -256.28183,
+      "z": 383.85208
+    },
+    "landingPosition": {
+      "x": 233.36804,
+      "y": 3088.1658,
+      "z": 418.32697
+    },
+    "description": null
+  },
+  {
+    "id": "eef48ed6-b45c-4383-be24-da30db81e0ec",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 203.52039,
+      "y": 449.9592,
+      "z": 154.7319
+    },
+    "projectileVelocity": {
+      "x": -103.19299,
+      "y": 556.12445,
+      "z": 368.37723
+    },
+    "landingPosition": {
+      "x": 42.99754,
+      "y": 1259.1685,
+      "z": 338.95795
+    },
+    "description": null
+  },
+  {
+    "id": "5f366073-55af-4d00-95e8-e2c3d655474a",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1321.5671,
+      "y": 1196.2208,
+      "z": 253.64937
+    },
+    "projectileVelocity": {
+      "x": 714.3801,
+      "y": -285.68335,
+      "z": 364.89536
+    },
+    "landingPosition": {
+      "x": 1454.1613,
+      "y": 1018.7793,
+      "z": 339.95956
+    },
+    "description": null
+  },
+  {
+    "id": "12b9d578-7563-421f-8e63-83be34373d7a",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1257.4132,
+      "y": 26.821314,
+      "z": 314.82907
+    },
+    "projectileVelocity": {
+      "x": -358.59805,
+      "y": 528.6241,
+      "z": -218.14903
+    },
+    "landingPosition": {
+      "x": 1319.4728,
+      "y": 375.906,
+      "z": 138.49191
+    },
+    "description": null
+  },
+  {
+    "id": "6cb16d67-7103-43cf-9fa9-ebf92bd01668",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1920.5898,
+      "y": 1225.3041,
+      "z": 287.5617
+    },
+    "projectileVelocity": {
+      "x": 152.54424,
+      "y": -292.41904,
+      "z": 289.34906
+    },
+    "landingPosition": {
+      "x": 2152.6365,
+      "y": 764.3279,
+      "z": 362.21802
+    },
+    "description": null
+  },
+  {
+    "id": "b46df391-4154-4ebc-ab43-f01c187fd0aa",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1507.2897,
+      "y": 896.9004,
+      "z": 244.09848
+    },
+    "projectileVelocity": {
+      "x": -239.58496,
+      "y": -550.4784,
+      "z": 582.02893
+    },
+    "landingPosition": {
+      "x": 1117.9752,
+      "y": 2.37508,
+      "z": 767.39716
+    },
+    "description": null
+  },
+  {
+    "id": "d40ad15c-2ec5-4543-a620-3e8e71ce3f6d",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1483.0125,
+      "y": 1198.2328,
+      "z": 272.32922
+    },
+    "projectileVelocity": {
+      "x": -300.77866,
+      "y": -752.36566,
+      "z": 554.468
+    },
+    "landingPosition": {
+      "x": 994.2429,
+      "y": -24.361448,
+      "z": 750.84094
+    },
+    "description": null
+  },
+  {
+    "id": "4e043e37-49a4-412d-a2b1-01595deb6d29",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1335.3385,
+      "y": 195.50868,
+      "z": 208.16406
+    },
+    "projectileVelocity": {
+      "x": 560.735,
+      "y": -264.10855,
+      "z": 267.29745
+    },
+    "landingPosition": {
+      "x": 2246.5374,
+      "y": -233.66815,
+      "z": 220.02148
+    },
+    "description": null
+  },
+  {
+    "id": "f9656f00-2e58-446e-a06a-96c324226044",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 463.45142,
+      "y": 664.4295,
+      "z": 166.17603
+    },
+    "projectileVelocity": {
+      "x": 526.3249,
+      "y": 20.771282,
+      "z": 422.10858
+    },
+    "landingPosition": {
+      "x": 1318.7343,
+      "y": 698.18634,
+      "z": 429.60376
+    },
+    "description": null
+  },
+  {
+    "id": "024c4303-6887-4ec6-af86-99af1a85454f",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -600.23114,
+      "y": 585.88806,
+      "z": 50.812794
+    },
+    "projectileVelocity": {
+      "x": 413.44223,
+      "y": 319.0593,
+      "z": 427.6584
+    },
+    "landingPosition": {
+      "x": 71.61241,
+      "y": 1104.3646,
+      "z": 323.25934
+    },
+    "description": null
+  },
+  {
+    "id": "311b6ccb-d46e-4cb1-9332-1ac68511bbd7",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 128.02248,
+      "y": 1607.8092,
+      "z": 199.12448
+    },
+    "projectileVelocity": {
+      "x": 313.75406,
+      "y": 587.256,
+      "z": 384.45523
+    },
+    "landingPosition": {
+      "x": 637.87415,
+      "y": 2562.0906,
+      "z": 401.36685
+    },
+    "description": null
+  },
+  {
+    "id": "562a33ed-f047-43a7-a5d3-1dec3c8dd6f9",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 460.74655,
+      "y": 1848.6173,
+      "z": 222.99524
+    },
+    "projectileVelocity": {
+      "x": 95.39051,
+      "y": 419.79004,
+      "z": 358.21378
+    },
+    "landingPosition": {
+      "x": 615.7563,
+      "y": 2530.7693,
+      "z": 382.59418
+    },
+    "description": null
+  },
+  {
+    "id": "375a1ac2-8fd5-4c8f-80d2-6d6938ea10a8",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 966.00684,
+      "y": 2769.9893,
+      "z": 205.62825
+    },
+    "projectileVelocity": {
+      "x": -336.83676,
+      "y": -421.00992,
+      "z": 406.09933
+    },
+    "landingPosition": {
+      "x": 418.64844,
+      "y": 2085.8643,
+      "z": 443.0372
+    },
+    "description": null
+  },
+  {
+    "id": "07facb3d-eaf5-417f-84a9-b8a3ff568951",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 505.80328,
+      "y": 2453.08,
+      "z": 242.77365
+    },
+    "projectileVelocity": {
+      "x": 288.331,
+      "y": 591.52295,
+      "z": 427.69653
+    },
+    "landingPosition": {
+      "x": 362.7671,
+      "y": 2767.2358,
+      "z": 254.61963
+    },
+    "description": null
+  },
+  {
+    "id": "d6af17e5-57aa-4974-a289-936d61d530aa",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1769.1094,
+      "y": 1231.0983,
+      "z": 242.49037
+    },
+    "projectileVelocity": {
+      "x": -377.8555,
+      "y": -401.10367,
+      "z": 389.82822
+    },
+    "landingPosition": {
+      "x": 1155.0879,
+      "y": 579.3042,
+      "z": 453.4611
+    },
+    "description": null
+  },
+  {
+    "id": "46a5f833-14f9-49a0-a3ed-0133df79d091",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1592.0907,
+      "y": -384.7695,
+      "z": 311.2225
+    },
+    "projectileVelocity": {
+      "x": 471.09512,
+      "y": -286.90674,
+      "z": 389.07446
+    },
+    "landingPosition": {
+      "x": 2076.7434,
+      "y": -427.09094,
+      "z": 418.69864
+    },
+    "description": null
+  },
+  {
+    "id": "93fb78e1-71e6-4ca4-aafe-bd71bed202c6",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 117.01906,
+      "y": -43.325607,
+      "z": 133.66055
+    },
+    "projectileVelocity": {
+      "x": 669.3983,
+      "y": 30.279228,
+      "z": 354.93692
+    },
+    "landingPosition": {
+      "x": 1204.7894,
+      "y": 5.8781886,
+      "z": 287.934
+    },
+    "description": null
+  },
+  {
+    "id": "7797009d-53b8-41c9-9807-9d5b5174b761",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1953.4723,
+      "y": 1224.2786,
+      "z": 243.96927
+    },
+    "projectileVelocity": {
+      "x": 313.78116,
+      "y": -493.17822,
+      "z": 337.55246
+    },
+    "landingPosition": {
+      "x": 2463.3667,
+      "y": 422.8647,
+      "z": 369.98935
+    },
+    "description": null
+  },
+  {
+    "id": "0bbd728c-e6b4-4d24-a9a9-09d26767c7f6",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 386.16412,
+      "y": 682.2387,
+      "z": 151.67728
+    },
+    "projectileVelocity": {
+      "x": 598.86633,
+      "y": -170.31566,
+      "z": 260.72342
+    },
+    "landingPosition": {
+      "x": 1319.0363,
+      "y": 433.95944,
+      "z": 167.96445
+    },
+    "description": null
+  },
+  {
+    "id": "d749ab0f-b0ac-4894-be69-afa8d38e6fee",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1322.1582,
+      "y": 2733.4585,
+      "z": 196.30717
+    },
+    "projectileVelocity": {
+      "x": -606.0559,
+      "y": 18.032606,
+      "z": 296.6412
+    },
+    "landingPosition": {
+      "x": 360.0881,
+      "y": 2766.018,
+      "z": 262.90723
+    },
+    "description": null
+  },
+  {
+    "id": "963a05b4-a59a-4182-b572-e0ddc65a43c1",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 847.6633,
+      "y": 2766.2522,
+      "z": 222.86302
+    },
+    "projectileVelocity": {
+      "x": -202.41637,
+      "y": -375.7482,
+      "z": 375.27722
+    },
+    "landingPosition": {
+      "x": 518.7405,
+      "y": 2155.6584,
+      "z": 410.1887
+    },
+    "description": null
+  },
+  {
+    "id": "10f9d4c6-31bd-4af6-980a-b784ac3f77a5",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 721.477,
+      "y": 1956.7241,
+      "z": 203.51071
+    },
+    "projectileVelocity": {
+      "x": -262.0468,
+      "y": 32.28035,
+      "z": 196.30731
+    },
+    "landingPosition": {
+      "x": 316.22308,
+      "y": 2006.6848,
+      "z": 153.9826
+    },
+    "description": null
+  },
+  {
+    "id": "5c607f93-26eb-4417-853e-cbc5dc59b15c",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 662.99023,
+      "y": 2951.2375,
+      "z": 229.89742
+    },
+    "projectileVelocity": {
+      "x": 108.556435,
+      "y": -423.10333,
+      "z": 314.4824
+    },
+    "landingPosition": {
+      "x": 839.3916,
+      "y": 2263.7102,
+      "z": 318.42834
+    },
+    "description": null
+  },
+  {
+    "id": "6670725e-8ca8-480b-b42d-767bd8546b88",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 2467.2537,
+      "y": 1341.1346,
+      "z": 226.64307
+    },
+    "projectileVelocity": {
+      "x": 710.51025,
+      "y": -452.96918,
+      "z": 139.43004
+    },
+    "landingPosition": {
+      "x": 2293.7534,
+      "y": 1007.433,
+      "z": 168.76079
+    },
+    "description": null
+  },
+  {
+    "id": "10e1a6f9-7fa9-48f4-acce-129f2c01387c",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 220.29604,
+      "y": 450.07718,
+      "z": 193.9518
+    },
+    "projectileVelocity": {
+      "x": -109.92235,
+      "y": 575.32983,
+      "z": 335.46628
+    },
+    "landingPosition": {
+      "x": 41.67289,
+      "y": 1384.9855,
+      "z": 316.58258
+    },
+    "description": "香蕉道李子闪"
+  },
+  {
+    "id": "df697122-7916-4784-ab37-f6573b530615",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 386.1375,
+      "y": 682.3167,
+      "z": 151.7879
+    },
+    "projectileVelocity": {
+      "x": 597.74207,
+      "y": -167.02267,
+      "z": 265.3919
+    },
+    "landingPosition": {
+      "x": 1357.4642,
+      "y": 410.90363,
+      "z": 160.55011
+    },
+    "description": "中路瞬闪（浅）"
+  },
+  {
+    "id": "d99d1321-08f7-4fb2-be27-cc12d5173f09",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 559.66235,
+      "y": 700.8538,
+      "z": 168.38663
+    },
+    "projectileVelocity": {
+      "x": 574.758,
+      "y": -215.78664,
+      "z": 280.5608
+    },
+    "landingPosition": {
+      "x": 1493.6501,
+      "y": 350.19952,
+      "z": 201.79935
+    },
+    "description": "中路瞬闪（深）"
+  },
+  {
+    "id": "9dab5a16-b617-4071-9799-afd36eced0e6",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 289.59705,
+      "y": 5.3147283,
+      "z": 138.04341
+    },
+    "projectileVelocity": {
+      "x": 570.7136,
+      "y": 2.133004,
+      "z": 360.42532
+    },
+    "landingPosition": {
+      "x": 1217.0065,
+      "y": 8.780869,
+      "z": 301.2353
+    },
+    "description": "锅炉房瞬闪"
+  },
+  {
+    "id": "86ed1ab5-0772-4a50-a205-404135ccca67",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1845.195,
+      "y": -347.77966,
+      "z": 327.1955
+    },
+    "projectileVelocity": {
+      "x": 302.1239,
+      "y": 596.4621,
+      "z": 92.623375
+    },
+    "landingPosition": {
+      "x": 2218.2397,
+      "y": 388.67636,
+      "z": 263.4463
+    },
+    "description": "二楼G2闪"
+  },
+  {
+    "id": "83235009-0b0d-4c88-a93f-fbef4ab9994e",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1427.2712,
+      "y": 2980.2495,
+      "z": 217.0904
+    },
+    "projectileVelocity": {
+      "x": -403.0309,
+      "y": -101.95775,
+      "z": 413.5014
+    },
+    "landingPosition": {
+      "x": 772.34546,
+      "y": 2814.5503,
+      "z": 466.8897
+    },
+    "description": "B包回防闪"
+  },
+  {
+    "id": "82ef708b-6722-4715-ad15-1129341512a7",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 832.904,
+      "y": 2484.0718,
+      "z": 231.89032
+    },
+    "projectileVelocity": {
+      "x": -325.6383,
+      "y": -888.2916,
+      "z": 356.48767
+    },
+    "landingPosition": {
+      "x": 473.4041,
+      "y": 2211.9387,
+      "z": 344.17728
+    },
+    "description": "香蕉道自助闪"
+  },
+  {
+    "id": "2543beab-3901-479f-aa8d-e8bd6d75a372",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 467.27814,
+      "y": 1848.8213,
+      "z": 222.79167
+    },
+    "projectileVelocity": {
+      "x": 254.69641,
+      "y": 394.70343,
+      "z": 348.26685
+    },
+    "landingPosition": {
+      "x": 881.0648,
+      "y": 2489.8506,
+      "z": 366.28555
+    },
+    "description": null
+  },
+  {
+    "id": "1fb10aa8-0257-44da-a6c8-6ddf47568513",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 449.39822,
+      "y": 1846.6853,
+      "z": 229.89703
+    },
+    "projectileVelocity": {
+      "x": -331.9755,
+      "y": 564.0964,
+      "z": 438.20593
+    },
+    "landingPosition": {
+      "x": 345.0854,
+      "y": 2482.883,
+      "z": 417.2015
+    },
+    "description": null
+  },
+  {
+    "id": "c0bd3f69-ea89-4f49-9dc7-e115553aa6c0",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 452.11194,
+      "y": 1845.3038,
+      "z": 209.25569
+    },
+    "projectileVelocity": {
+      "x": -217.49059,
+      "y": 505.8175,
+      "z": 390.47598
+    },
+    "landingPosition": {
+      "x": 245.98404,
+      "y": 2438.028,
+      "z": 421.40814
+    },
+    "description": null
+  },
+  {
+    "id": "283efc1d-d759-4ffd-a488-c695c9cb6ea8",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 486.59875,
+      "y": 2444.5654,
+      "z": 221.51833
+    },
+    "projectileVelocity": {
+      "x": -521.8586,
+      "y": 232.68903,
+      "z": 359.3668
+    },
+    "landingPosition": {
+      "x": 758.9478,
+      "y": 2630.272,
+      "z": 143.26881
+    },
+    "description": null
+  },
+  {
+    "id": "e69f0065-7c75-4cd4-b42e-4f34a842004a",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -0.88225436,
+      "y": 2635.747,
+      "z": 234.9415
+    },
+    "projectileVelocity": {
+      "x": -80.60148,
+      "y": 522.7105,
+      "z": 419.40686
+    },
+    "landingPosition": {
+      "x": -20.956137,
+      "y": 2817.9731,
+      "z": 311.0313
+    },
+    "description": null
+  },
+  {
+    "id": "3802d4cb-06ac-4a81-a003-e5a326a5a109",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 315.2802,
+      "y": 459.3532,
+      "z": 162.65933
+    },
+    "projectileVelocity": {
+      "x": 607.4354,
+      "y": 87.86103,
+      "z": 280.94067
+    },
+    "landingPosition": {
+      "x": 1302.3649,
+      "y": 602.1247,
+      "z": 196.68912
+    },
+    "description": null
+  },
+  {
+    "id": "e8939242-a9bc-4d8f-9c2a-903cc680b401",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1772.8125,
+      "y": 2713.139,
+      "z": 196.48491
+    },
+    "projectileVelocity": {
+      "x": -639.9467,
+      "y": 56.506012,
+      "z": 207.1238
+    },
+    "landingPosition": {
+      "x": 805.3316,
+      "y": 2788.7705,
+      "z": 150.53304
+    },
+    "description": null
+  },
+  {
+    "id": "4cc19620-81f0-4c80-b662-ab6b97a1392a",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1840.6521,
+      "y": 2740.8271,
+      "z": 217.29779
+    },
+    "projectileVelocity": {
+      "x": -920.40845,
+      "y": 5.7380586,
+      "z": 417.41656
+    },
+    "landingPosition": {
+      "x": 344.9912,
+      "y": 2750.171,
+      "z": 473.1018
+    },
+    "description": null
+  },
+  {
+    "id": "9517da6f-e375-4ac1-9400-5b9132fae19f",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 140.53317,
+      "y": 1617.8969,
+      "z": 201.98914
+    },
+    "projectileVelocity": {
+      "x": 473.5094,
+      "y": 569.761,
+      "z": 453.24664
+    },
+    "landingPosition": {
+      "x": 909.9839,
+      "y": 2543.7524,
+      "z": 516.01587
+    },
+    "description": null
+  },
+  {
+    "id": "d908e5c4-9b23-4eae-a5a3-cffa0ab3d9f2",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 242.37166,
+      "y": 1413.4667,
+      "z": 177.26765
+    },
+    "projectileVelocity": {
+      "x": 124.26374,
+      "y": 322.73737,
+      "z": 270.0012
+    },
+    "landingPosition": {
+      "x": 444.30307,
+      "y": 1937.91,
+      "z": 193.51898
+    },
+    "description": null
+  },
+  {
+    "id": "83c78fe4-98d4-4ae0-b371-63c2317d6eaf",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 154.36928,
+      "y": 901.0674,
+      "z": 171.94427
+    },
+    "projectileVelocity": {
+      "x": 63.48777,
+      "y": 668.6493,
+      "z": 340.71002
+    },
+    "landingPosition": {
+      "x": 254.84343,
+      "y": 1953.1406,
+      "z": 316.24744
+    },
+    "description": null
+  },
+  {
+    "id": "828ad7f7-e5ca-422b-bd79-097d6c224ecb",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 59.027214,
+      "y": 938.9337,
+      "z": 152.4018
+    },
+    "projectileVelocity": {
+      "x": 204.79552,
+      "y": 557.50323,
+      "z": 320.73965
+    },
+    "landingPosition": {
+      "x": 391.82056,
+      "y": 1844.8712,
+      "z": 251.10236
+    },
+    "description": null
+  },
+  {
+    "id": "8fbdc660-1838-4284-8ab1-84651d6bfc6a",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -645.6663,
+      "y": 448.2485,
+      "z": 134.73505
+    },
+    "projectileVelocity": {
+      "x": 438.81125,
+      "y": 472.19492,
+      "z": 473.86377
+    },
+    "landingPosition": {
+      "x": 67.40286,
+      "y": 1215.5627,
+      "z": 482.26288
+    },
+    "description": null
+  },
+  {
+    "id": "ce4e253e-58ac-4690-9920-d0069aeb0d0a",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -364.71292,
+      "y": 767.0063,
+      "z": 89.2352
+    },
+    "projectileVelocity": {
+      "x": 280.05933,
+      "y": 253.13322,
+      "z": 497.19852
+    },
+    "landingPosition": {
+      "x": 90.382996,
+      "y": 1178.3519,
+      "z": 474.68384
+    },
+    "description": null
+  },
+  {
+    "id": "ddfd0a82-2da5-4606-8f0f-c3e8117d1046",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 965.80914,
+      "y": 603.74994,
+      "z": 174.35968
+    },
+    "projectileVelocity": {
+      "x": 256.1291,
+      "y": -127.84467,
+      "z": 332.49835
+    },
+    "landingPosition": {
+      "x": 1382.014,
+      "y": 396.00385,
+      "z": 292.17163
+    },
+    "description": null
+  },
+  {
+    "id": "816a1308-010c-4834-88bd-26d44a0f7507",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 962.45764,
+      "y": 429.37985,
+      "z": 166.73029
+    },
+    "projectileVelocity": {
+      "x": 233.8883,
+      "y": 122.621666,
+      "z": 350.3737
+    },
+    "landingPosition": {
+      "x": 1342.5299,
+      "y": 628.6428,
+      "z": 313.58908
+    },
+    "description": null
+  },
+  {
+    "id": "cbd75248-5301-4742-95c3-a897f0f2dad0",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 808.3402,
+      "y": 2835.9172,
+      "z": 219.79051
+    },
+    "projectileVelocity": {
+      "x": -237.3864,
+      "y": -491.4473,
+      "z": 397.1804
+    },
+    "landingPosition": {
+      "x": 422.59164,
+      "y": 2037.3309,
+      "z": 442.70752
+    },
+    "description": null
+  },
+  {
+    "id": "adcf27bf-5703-4334-854a-c59db7b2f93d",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 691.737,
+      "y": 2423.06,
+      "z": 219.79645
+    },
+    "projectileVelocity": {
+      "x": 1.7509379,
+      "y": -202.13646,
+      "z": 261.608
+    },
+    "landingPosition": {
+      "x": 694.58075,
+      "y": 2094.607,
+      "z": 222.41109
+    },
+    "description": null
+  },
+  {
+    "id": "77f01db9-c69b-49b8-a579-d887391f2de3",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 540.2039,
+      "y": 3080.0269,
+      "z": 283.0065
+    },
+    "projectileVelocity": {
+      "x": 127.22389,
+      "y": -590.9719,
+      "z": 300.31863
+    },
+    "landingPosition": {
+      "x": 746.9471,
+      "y": 2119.7026,
+      "z": 348.527
+    },
+    "description": null
+  },
+  {
+    "id": "fa8cb1a3-1b09-4f48-b0aa-19bfac9cc524",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 738.77844,
+      "y": 1880.3254,
+      "z": 209.76865
+    },
+    "projectileVelocity": {
+      "x": -253.72905,
+      "y": 8.043799,
+      "z": 357.85248
+    },
+    "landingPosition": {
+      "x": 326.4699,
+      "y": 1893.4016,
+      "z": 368.77744
+    },
+    "description": null
+  },
+  {
+    "id": "b9525a43-c34a-4685-83f4-bd00ab76acd7",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 47.712204,
+      "y": 452.70514,
+      "z": 151.78912
+    },
+    "projectileVelocity": {
+      "x": 113.17042,
+      "y": 619.0071,
+      "z": 244.22891
+    },
+    "landingPosition": {
+      "x": 231.61395,
+      "y": 1458.5874,
+      "z": 126.16046
+    },
+    "description": null
+  },
+  {
+    "id": "01240928-1493-4fba-8911-2c40c7bff938",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 2146.7004,
+      "y": 1211.1249,
+      "z": 248.28671
+    },
+    "projectileVelocity": {
+      "x": 112.26605,
+      "y": -743.56323,
+      "z": 175.71417
+    },
+    "landingPosition": {
+      "x": 2326.943,
+      "y": 13.053152,
+      "z": 123.533226
+    },
+    "description": null
+  },
+  {
+    "id": "09360617-f652-4af2-8589-ba7c8baf4c8f",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 2466.9302,
+      "y": 945.59467,
+      "z": 237.3105
+    },
+    "projectileVelocity": {
+      "x": -353.51205,
+      "y": -527.04156,
+      "z": 229.95961
+    },
+    "landingPosition": {
+      "x": 1892.4857,
+      "y": 89.153595,
+      "z": 188.4963
+    },
+    "description": null
+  },
+  {
+    "id": "de795fe6-4009-4340-9a9e-b47357c4186d",
+    "mapName": "de_inferno",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 963.0084,
+      "y": 2768.1917,
+      "z": 220.48279
+    },
+    "projectileVelocity": {
+      "x": -278.0175,
+      "y": -320.36734,
+      "z": 385.6155
+    },
+    "landingPosition": {
+      "x": 511.23303,
+      "y": 2247.5823,
+      "z": 424.61053
+    },
+    "description": null
+  }
+]

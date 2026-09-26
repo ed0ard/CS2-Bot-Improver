@@ -1,0 +1,1493 @@
+[
+  {
+    "id": "25cd5940-34d6-4c7b-87eb-ad0098498b5e",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -978.28076,
+      "y": -952.53345,
+      "z": 132.05989
+    },
+    "projectileVelocity": {
+      "x": 613.6256,
+      "y": 677.37885,
+      "z": 276.25238
+    },
+    "landingPosition": {
+      "x": 258.55743,
+      "y": 412.80585,
+      "z": 38.84121
+    },
+    "description": "狗洞快火"
+  },
+  {
+    "id": "fc62b9cb-9e84-4480-82dd-02c5d11f5628",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 124.42067,
+      "y": -446.6891,
+      "z": 68.48341
+    },
+    "projectileVelocity": {
+      "x": -348.58304,
+      "y": 849.63025,
+      "z": 284.09955
+    },
+    "landingPosition": {
+      "x": -40.48152,
+      "y": 768.78314,
+      "z": 22.402092
+    },
+    "description": null
+  },
+  {
+    "id": "59254338-ce1f-45f9-9aaf-aee5247c817b",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -253.94371,
+      "y": -100.93646,
+      "z": 126.95765
+    },
+    "projectileVelocity": {
+      "x": 516.5191,
+      "y": 433.6975,
+      "z": 246.41672
+    },
+    "landingPosition": {
+      "x": 190.91833,
+      "y": 583.341,
+      "z": 37.555008
+    },
+    "description": null
+  },
+  {
+    "id": "9c733fc5-4965-493b-949a-665bb51b602b",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 170.58713,
+      "y": 1143.7507,
+      "z": 38.827682
+    },
+    "projectileVelocity": {
+      "x": -399.96924,
+      "y": -869.41736,
+      "z": 179.27821
+    },
+    "landingPosition": {
+      "x": -118.88246,
+      "y": 135.9418,
+      "z": 2.104742
+    },
+    "description": null
+  },
+  {
+    "id": "f1a36d1c-6ad4-4f17-9938-5b246d795010",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -676.67596,
+      "y": -617.6613,
+      "z": 175.91862
+    },
+    "projectileVelocity": {
+      "x": 357.86755,
+      "y": 698.02954,
+      "z": 249.69228
+    },
+    "landingPosition": {
+      "x": -23.039753,
+      "y": 739.22644,
+      "z": 54.648415
+    },
+    "description": null
+  },
+  {
+    "id": "45c43aae-b3be-4e70-b4b8-4c30917fc017",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -537.866,
+      "y": -439.22775,
+      "z": 135.36626
+    },
+    "projectileVelocity": {
+      "x": 663.8089,
+      "y": 655.15955,
+      "z": 251.43774
+    },
+    "landingPosition": {
+      "x": 269.41318,
+      "y": 634.28406,
+      "z": -31.968748
+    },
+    "description": null
+  },
+  {
+    "id": "22cf7017-959a-4a05-a695-9afe802d91a4",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -252.32484,
+      "y": -99.204666,
+      "z": 90.10766
+    },
+    "projectileVelocity": {
+      "x": 546.28143,
+      "y": 458.12646,
+      "z": 268.9688
+    },
+    "landingPosition": {
+      "x": 163.19519,
+      "y": 606.12683,
+      "z": 30.293997
+    },
+    "description": null
+  },
+  {
+    "id": "0cb77297-56b2-4378-beee-2f7df48980b5",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -367.07574,
+      "y": 274.01505,
+      "z": -49.35359
+    },
+    "projectileVelocity": {
+      "x": -460.66156,
+      "y": -700.12585,
+      "z": 280.39554
+    },
+    "landingPosition": {
+      "x": -689.19556,
+      "y": 332.1786,
+      "z": -53.96875
+    },
+    "description": null
+  },
+  {
+    "id": "17901dc6-77b6-4917-9ffa-7ce983591aa5",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -391.5898,
+      "y": 235.99075,
+      "z": -48.70144
+    },
+    "projectileVelocity": {
+      "x": -487.4104,
+      "y": -748.80237,
+      "z": 307.90814
+    },
+    "landingPosition": {
+      "x": -709.39075,
+      "y": 370.56702,
+      "z": -53.96875
+    },
+    "description": null
+  },
+  {
+    "id": "fd1f34b6-f358-41f7-84a1-42e974c46c3c",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -776.7975,
+      "y": 238.72687,
+      "z": -4.060951
+    },
+    "projectileVelocity": {
+      "x": -329.1394,
+      "y": 645.43176,
+      "z": 410.22348
+    },
+    "landingPosition": {
+      "x": -860.807,
+      "y": 1034.7958,
+      "z": 85.8634
+    },
+    "description": null
+  },
+  {
+    "id": "55d62de2-5c5f-4cda-b70e-4261a8231769",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -672.6488,
+      "y": 290.13437,
+      "z": -2.1085248
+    },
+    "projectileVelocity": {
+      "x": -900.40533,
+      "y": 166.14816,
+      "z": 439.7102
+    },
+    "landingPosition": {
+      "x": -591.3497,
+      "y": 621.86774,
+      "z": 38.03125
+    },
+    "description": null
+  },
+  {
+    "id": "207e0ee2-00f5-4dbb-a85e-6c638d0f2345",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 757.774,
+      "y": -44.887394,
+      "z": -43.61354
+    },
+    "projectileVelocity": {
+      "x": 405.79343,
+      "y": 731.01385,
+      "z": 202.13805
+    },
+    "landingPosition": {
+      "x": 1381.7615,
+      "y": 858.3904,
+      "z": -149.96875
+    },
+    "description": null
+  },
+  {
+    "id": "dcc3066e-a2b4-459c-b969-a108959d9d1b",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 894.52734,
+      "y": 927.64453,
+      "z": -118.003876
+    },
+    "projectileVelocity": {
+      "x": 822.39514,
+      "y": -135.4009,
+      "z": 290.7671
+    },
+    "landingPosition": {
+      "x": 1533.4916,
+      "y": 1154.1671,
+      "z": -145.96875
+    },
+    "description": null
+  },
+  {
+    "id": "85d10cb0-491e-4a82-bceb-e18335892ed9",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1279.866,
+      "y": 574.7942,
+      "z": 69.88455
+    },
+    "projectileVelocity": {
+      "x": -423.91022,
+      "y": 629.1288,
+      "z": 200.79346
+    },
+    "landingPosition": {
+      "x": 870.16235,
+      "y": 1586.8866,
+      "z": -85.96875
+    },
+    "description": null
+  },
+  {
+    "id": "99a1d640-f692-43df-a6d9-d68248165e6b",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1238.6509,
+      "y": 665.289,
+      "z": -63.76702
+    },
+    "projectileVelocity": {
+      "x": -336.2759,
+      "y": 477.58298,
+      "z": 338.31644
+    },
+    "landingPosition": {
+      "x": 811.9718,
+      "y": 1492.633,
+      "z": 8.9451885
+    },
+    "description": null
+  },
+  {
+    "id": "704682d4-6bdb-490e-959b-2f7f580d27c2",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1144.2456,
+      "y": 621.93115,
+      "z": -115.831024
+    },
+    "projectileVelocity": {
+      "x": -241.04425,
+      "y": 501.2651,
+      "z": 382.43427
+    },
+    "landingPosition": {
+      "x": 753.938,
+      "y": 1556.9249,
+      "z": 31.662523
+    },
+    "description": null
+  },
+  {
+    "id": "830e6ed7-161c-44c0-b611-9f5f18752545",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1454.7064,
+      "y": 929.2915,
+      "z": -80.61385
+    },
+    "projectileVelocity": {
+      "x": 461.51822,
+      "y": 815.14905,
+      "z": 241.07079
+    },
+    "landingPosition": {
+      "x": 1674.569,
+      "y": 1857.373,
+      "z": -81.96875
+    },
+    "description": null
+  },
+  {
+    "id": "282a144e-ab7d-4da5-bc6e-0762fc717af5",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1667.9613,
+      "y": 1302.9369,
+      "z": -82.1886
+    },
+    "projectileVelocity": {
+      "x": -412.3788,
+      "y": 839.3136,
+      "z": 245.16855
+    },
+    "landingPosition": {
+      "x": 1119.183,
+      "y": 1896.0669,
+      "z": -100.04234
+    },
+    "description": null
+  },
+  {
+    "id": "64ed4a7a-3b4b-446d-afb7-bf5577cb0339",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -1030.4235,
+      "y": -784.69745,
+      "z": 132.53905
+    },
+    "projectileVelocity": {
+      "x": -454.3883,
+      "y": 838.28906,
+      "z": 191.49062
+    },
+    "landingPosition": {
+      "x": -1513.3922,
+      "y": 311.54486,
+      "z": 2.03125
+    },
+    "description": null
+  },
+  {
+    "id": "a31bfa47-d36c-45cd-b8f1-983a2717201e",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -1436.0746,
+      "y": -238.55124,
+      "z": 162.82066
+    },
+    "projectileVelocity": {
+      "x": -271.0228,
+      "y": 928.71765,
+      "z": 87.77867
+    },
+    "landingPosition": {
+      "x": -1294.6251,
+      "y": 340.5753,
+      "z": -4.96875
+    },
+    "description": null
+  },
+  {
+    "id": "51d5346d-7096-476a-be28-7224b8113107",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -1021.563,
+      "y": -819.10986,
+      "z": 159.58617
+    },
+    "projectileVelocity": {
+      "x": -40.869442,
+      "y": 936.6809,
+      "z": 512.3675
+    },
+    "landingPosition": {
+      "x": -1072.7404,
+      "y": 440.13538,
+      "z": 58.266212
+    },
+    "description": null
+  },
+  {
+    "id": "67bf1cdd-206d-41c1-b9fc-2e6c8fbd134d",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -1262.9062,
+      "y": -301.7077,
+      "z": 104.049164
+    },
+    "projectileVelocity": {
+      "x": 212.23299,
+      "y": 534.32574,
+      "z": 626.9075
+    },
+    "landingPosition": {
+      "x": -981.0534,
+      "y": 429.44345,
+      "z": 103.725586
+    },
+    "description": null
+  },
+  {
+    "id": "924cc5aa-c2ff-4678-b3de-24e6f6d9349f",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -1566.4316,
+      "y": 152.0945,
+      "z": 68.51727
+    },
+    "projectileVelocity": {
+      "x": -123.71397,
+      "y": 952.8053,
+      "z": 164.87804
+    },
+    "landingPosition": {
+      "x": -1205.7103,
+      "y": 413.52167,
+      "z": -4.96875
+    },
+    "description": null
+  },
+  {
+    "id": "3a971e89-478a-4fe5-aff4-fc443b5e06c8",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 123.62182,
+      "y": 558.1432,
+      "z": 39.801445
+    },
+    "projectileVelocity": {
+      "x": -549.3796,
+      "y": -490.02832,
+      "z": 323.42905
+    },
+    "landingPosition": {
+      "x": -266.35974,
+      "y": -186.76639,
+      "z": 90.3499
+    },
+    "description": null
+  },
+  {
+    "id": "10eb41e2-01e0-4048-bb54-3ec77b31e241",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 679.13617,
+      "y": 1368.5493,
+      "z": -3.4024231
+    },
+    "projectileVelocity": {
+      "x": 306.46964,
+      "y": -313.1412,
+      "z": 297.03394
+    },
+    "landingPosition": {
+      "x": 1270.1327,
+      "y": 809.379,
+      "z": -28.748024
+    },
+    "description": null
+  },
+  {
+    "id": "99ee31a7-50b6-4a40-8089-71c06b7f7e91",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1683.0354,
+      "y": 1476.9747,
+      "z": -82.24399
+    },
+    "projectileVelocity": {
+      "x": -32.3125,
+      "y": -926.89276,
+      "z": 242.83153
+    },
+    "landingPosition": {
+      "x": 1229.247,
+      "y": 830.0084,
+      "z": -149.96875
+    },
+    "description": null
+  },
+  {
+    "id": "213d65d3-2f4c-4008-ad51-5f7750107a7f",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 883.9563,
+      "y": 1547.6056,
+      "z": -20.239672
+    },
+    "projectileVelocity": {
+      "x": 837.7947,
+      "y": 205.4313,
+      "z": 158.6388
+    },
+    "landingPosition": {
+      "x": 1688.3391,
+      "y": 1422.032,
+      "z": -149.96875
+    },
+    "description": null
+  },
+  {
+    "id": "6b111c93-4426-458a-b856-deebe3565cb4",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1658.5708,
+      "y": 1443.6719,
+      "z": -61.12714
+    },
+    "projectileVelocity": {
+      "x": 20.416668,
+      "y": -979.4719,
+      "z": 320.27243
+    },
+    "landingPosition": {
+      "x": 1047.3828,
+      "y": 867.8978,
+      "z": -165.02083
+    },
+    "description": null
+  },
+  {
+    "id": "60fdd49d-cfd8-498b-acc7-c5f9c470daf3",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 935.8807,
+      "y": 1823.3884,
+      "z": -60.268543
+    },
+    "projectileVelocity": {
+      "x": -85.56996,
+      "y": -972.99744,
+      "z": 351.39203
+    },
+    "landingPosition": {
+      "x": 763.403,
+      "y": -137.81267,
+      "z": -2.0332437
+    },
+    "description": null
+  },
+  {
+    "id": "a30ec3ee-733b-4d76-b1d8-fe900d747c1e",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 848.1502,
+      "y": 1452.8289,
+      "z": -20.681694
+    },
+    "projectileVelocity": {
+      "x": -521.8234,
+      "y": -404.633,
+      "z": 139.99106
+    },
+    "landingPosition": {
+      "x": 454.0471,
+      "y": 1304.8391,
+      "z": -29.96875
+    },
+    "description": null
+  },
+  {
+    "id": "f9535adf-4781-469c-a246-f87e5cddb657",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -1485.9642,
+      "y": 414.40356,
+      "z": 67.77599
+    },
+    "projectileVelocity": {
+      "x": 937.8187,
+      "y": 215.15427,
+      "z": 159.29956
+    },
+    "landingPosition": {
+      "x": -653.6368,
+      "y": 654.73,
+      "z": 38.03125
+    },
+    "description": null
+  },
+  {
+    "id": "d1e54ba4-c014-4b53-94af-e5c4cfda6929",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -1569.8777,
+      "y": 216.26367,
+      "z": 67.66477
+    },
+    "projectileVelocity": {
+      "x": 46.476986,
+      "y": 655.78033,
+      "z": 153.02626
+    },
+    "landingPosition": {
+      "x": -1520.3475,
+      "y": 738.93524,
+      "z": 38.03125
+    },
+    "description": null
+  },
+  {
+    "id": "594603ae-4687-480e-9941-36d15616455b",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -1052.5497,
+      "y": 554.4338,
+      "z": 59.40854
+    },
+    "projectileVelocity": {
+      "x": 702.96735,
+      "y": -612.13385,
+      "z": -24.952269
+    },
+    "landingPosition": {
+      "x": -395.78146,
+      "y": 115.26119,
+      "z": -117.96875
+    },
+    "description": null
+  },
+  {
+    "id": "51bdc4a7-1696-4519-b016-a92ae6b43e22",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 948.72595,
+      "y": 2187.2163,
+      "z": 25.268679
+    },
+    "projectileVelocity": {
+      "x": 574.2186,
+      "y": -581.0449,
+      "z": 53.522415
+    },
+    "landingPosition": {
+      "x": 1653.3333,
+      "y": 1474.234,
+      "z": -149.96875
+    },
+    "description": null
+  },
+  {
+    "id": "b2474e01-ac04-40de-8aef-7e108135a80c",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1705.1992,
+      "y": 1537.5015,
+      "z": -82.62382
+    },
+    "projectileVelocity": {
+      "x": -636.9049,
+      "y": 586.735,
+      "z": 226.80774
+    },
+    "landingPosition": {
+      "x": 952.83826,
+      "y": 2230.6006,
+      "z": -37.96875
+    },
+    "description": null
+  },
+  {
+    "id": "80dbe2cc-e96a-4085-9d84-ce817624d927",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1237.7515,
+      "y": 1615.0159,
+      "z": -82.574356
+    },
+    "projectileVelocity": {
+      "x": -540.9283,
+      "y": -332.60928,
+      "z": 228.89432
+    },
+    "landingPosition": {
+      "x": 542.2758,
+      "y": 1268.1902,
+      "z": -61.71874
+    },
+    "description": null
+  },
+  {
+    "id": "b24055f6-c9cc-4dad-bd21-a7ca5f708c33",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1516.2625,
+      "y": 1693.7312,
+      "z": -83.80848
+    },
+    "projectileVelocity": {
+      "x": -644.2449,
+      "y": -96.46114,
+      "z": 176.82988
+    },
+    "landingPosition": {
+      "x": 796.4628,
+      "y": 1585.9493,
+      "z": -85.96875
+    },
+    "description": null
+  },
+  {
+    "id": "b7ccf274-84e8-467b-94ae-ad44a6bc6331",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1666.8201,
+      "y": 1417.5825,
+      "z": -84.934296
+    },
+    "projectileVelocity": {
+      "x": -549.4445,
+      "y": 797.78577,
+      "z": 129.33437
+    },
+    "landingPosition": {
+      "x": 1102.9943,
+      "y": 1926.3853,
+      "z": -189.96875
+    },
+    "description": null
+  },
+  {
+    "id": "3c87c3f6-e015-483f-800b-38ad7ffb5939",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -1143.0762,
+      "y": 1595.7411,
+      "z": 118.682236
+    },
+    "projectileVelocity": {
+      "x": -128.53572,
+      "y": -599.69336,
+      "z": 281.90683
+    },
+    "landingPosition": {
+      "x": -1402.147,
+      "y": 386.98767,
+      "z": 36.860733
+    },
+    "description": null
+  },
+  {
+    "id": "2ec40013-5075-4620-aa2a-9ac42cc4d026",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -1261.289,
+      "y": 1642.1892,
+      "z": 115.99456
+    },
+    "projectileVelocity": {
+      "x": 196.12314,
+      "y": -887.3644,
+      "z": 168.52028
+    },
+    "landingPosition": {
+      "x": -1057.0925,
+      "y": 956.67816,
+      "z": 18.03125
+    },
+    "description": null
+  },
+  {
+    "id": "bbf71d3a-aee7-40ca-ae1e-1e69e28e3cfa",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -1632.15,
+      "y": 199.39215,
+      "z": 67.87541
+    },
+    "projectileVelocity": {
+      "x": 363.25836,
+      "y": 629.3777,
+      "z": 206.61203
+    },
+    "landingPosition": {
+      "x": -1172.236,
+      "y": 1156.3134,
+      "z": 2.199758
+    },
+    "description": null
+  },
+  {
+    "id": "73fa2c8e-68f2-4703-9cb3-a1f7ae3d61b2",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -1547.5428,
+      "y": 758.8273,
+      "z": 105.52483
+    },
+    "projectileVelocity": {
+      "x": 565.68567,
+      "y": -336.91525,
+      "z": 148.70396
+    },
+    "landingPosition": {
+      "x": -600.49786,
+      "y": 194.78268,
+      "z": -93.96875
+    },
+    "description": null
+  },
+  {
+    "id": "1ef69c88-5532-4a68-82a9-4ed1105c982a",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -1529.0288,
+      "y": 728.1112,
+      "z": 102.69917
+    },
+    "projectileVelocity": {
+      "x": -65.85538,
+      "y": -671.1319,
+      "z": 29.496437
+    },
+    "landingPosition": {
+      "x": -1587.343,
+      "y": 133.8665,
+      "z": 3.3746834
+    },
+    "description": null
+  },
+  {
+    "id": "0da98ff0-f9e5-4c31-ba93-ce022f5428aa",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -682.53503,
+      "y": 564.7803,
+      "z": 106.87027
+    },
+    "projectileVelocity": {
+      "x": -894.7696,
+      "y": -136.30309,
+      "z": 205.4645
+    },
+    "landingPosition": {
+      "x": -1662.9185,
+      "y": 105.26082,
+      "z": 2.03125
+    },
+    "description": null
+  },
+  {
+    "id": "fdaaccc0-dcb3-4f27-bdb5-75a86ac19e16",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -1187.7228,
+      "y": 887.9062,
+      "z": 68.71073
+    },
+    "projectileVelocity": {
+      "x": 773.50104,
+      "y": 442.82877,
+      "z": 198.73393
+    },
+    "landingPosition": {
+      "x": -407.1376,
+      "y": 1093.142,
+      "z": 60.03125
+    },
+    "description": null
+  },
+  {
+    "id": "d4cf7523-2d2e-4781-b1d4-467a1a65dd90",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -3.1867023,
+      "y": 738.6173,
+      "z": 67.653786
+    },
+    "projectileVelocity": {
+      "x": -93.70357,
+      "y": -652.4293,
+      "z": 145.53563
+    },
+    "landingPosition": {
+      "x": -119.328865,
+      "y": -70.047066,
+      "z": 2.2334232
+    },
+    "description": null
+  },
+  {
+    "id": "def4367d-9446-4643-b826-b06388f6d11c",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 176.5782,
+      "y": 475.98584,
+      "z": 33.81918
+    },
+    "projectileVelocity": {
+      "x": 541.3568,
+      "y": -636.10986,
+      "z": -20.152603
+    },
+    "landingPosition": {
+      "x": 707.0086,
+      "y": 203.23773,
+      "z": -186.66118
+    },
+    "description": null
+  },
+  {
+    "id": "8af0b17b-da26-437b-a153-3fbfba011a19",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 651.09955,
+      "y": 133.86638,
+      "z": -79.482704
+    },
+    "projectileVelocity": {
+      "x": -536.9214,
+      "y": 325.88577,
+      "z": 247.26285
+    },
+    "landingPosition": {
+      "x": 301.9646,
+      "y": 471.25647,
+      "z": -28.56625
+    },
+    "description": null
+  },
+  {
+    "id": "5c603c74-09ee-4f51-96e8-f9ebcc699490",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 229.65205,
+      "y": 142.34584,
+      "z": -77.149666
+    },
+    "projectileVelocity": {
+      "x": 14.336814,
+      "y": 583.84906,
+      "z": 338.4371
+    },
+    "landingPosition": {
+      "x": 257.923,
+      "y": 1293.7146,
+      "z": -31.96875
+    },
+    "description": null
+  },
+  {
+    "id": "93337d6c-1920-47ef-94b6-94f0b03c92eb",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1622.4075,
+      "y": 1327.4182,
+      "z": -85.50714
+    },
+    "projectileVelocity": {
+      "x": -98.576,
+      "y": 659.42975,
+      "z": 105.16746
+    },
+    "landingPosition": {
+      "x": 1504.0217,
+      "y": 2119.3584,
+      "z": -189.96875
+    },
+    "description": null
+  },
+  {
+    "id": "ef69a69e-f1b4-47f0-a56a-b60b8e11cd9a",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1655.3071,
+      "y": 1509.2861,
+      "z": -82.448715
+    },
+    "projectileVelocity": {
+      "x": -160.0491,
+      "y": 766.65424,
+      "z": 234.19493
+    },
+    "landingPosition": {
+      "x": 1238.1549,
+      "y": 1619.3696,
+      "z": -149.96875
+    },
+    "description": null
+  },
+  {
+    "id": "d80eb508-52cd-4a15-b0c7-5b373f6847b1",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 924.19336,
+      "y": 2147.5322,
+      "z": 19.903885
+    },
+    "projectileVelocity": {
+      "x": 569.439,
+      "y": -318.59485,
+      "z": -172.80484
+    },
+    "landingPosition": {
+      "x": 1337.7228,
+      "y": 1916.1672,
+      "z": -189.96875
+    },
+    "description": null
+  },
+  {
+    "id": "2cfe0bb4-655e-4f09-8e12-c992fabb0c78",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 800.78186,
+      "y": 1679.5184,
+      "z": 15.805495
+    },
+    "projectileVelocity": {
+      "x": 649.9928,
+      "y": -187.41626,
+      "z": 79.46346
+    },
+    "landingPosition": {
+      "x": 1150.3065,
+      "y": 1677.2781,
+      "z": -149.96875
+    },
+    "description": null
+  },
+  {
+    "id": "309817b7-bbd6-4eed-ab83-7e0e471cc2cc",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 985.62445,
+      "y": 1363.9331,
+      "z": -19.563633
+    },
+    "projectileVelocity": {
+      "x": -288.3493,
+      "y": 580.9054,
+      "z": 187.15921
+    },
+    "landingPosition": {
+      "x": 597.103,
+      "y": 2018.5209,
+      "z": -37.96875
+    },
+    "description": null
+  },
+  {
+    "id": "0fd6f296-f225-4baf-8110-eebc4c13c22f",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -256.958,
+      "y": -225.8664,
+      "z": 66.90192
+    },
+    "projectileVelocity": {
+      "x": 308.82028,
+      "y": 898.7805,
+      "z": 113.86529
+    },
+    "landingPosition": {
+      "x": 94.5067,
+      "y": 478.9207,
+      "z": -29.96875
+    },
+    "description": null
+  },
+  {
+    "id": "9629e6d4-0bc3-4513-9813-fdccc6c6707f",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -1295.2487,
+      "y": 675.4249,
+      "z": 70.20864
+    },
+    "projectileVelocity": {
+      "x": 77.82525,
+      "y": 664.6861,
+      "z": 261.92694
+    },
+    "landingPosition": {
+      "x": -1162.1034,
+      "y": 1812.546,
+      "z": 50.03125
+    },
+    "description": null
+  },
+  {
+    "id": "6c412bc7-cd18-4c57-9b94-676021ac9ea2",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -1551.6882,
+      "y": 379.6188,
+      "z": 66.467766
+    },
+    "projectileVelocity": {
+      "x": 447.45444,
+      "y": 494.5411,
+      "z": 104.108635
+    },
+    "landingPosition": {
+      "x": -1087.0175,
+      "y": 893.1885,
+      "z": 2.03125
+    },
+    "description": null
+  },
+  {
+    "id": "dd58eeaa-cf6a-4207-aff4-311b8dffd5bd",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -1677.6619,
+      "y": 261.1687,
+      "z": 70.754005
+    },
+    "projectileVelocity": {
+      "x": 545.13696,
+      "y": 283.25397,
+      "z": 279.67453
+    },
+    "landingPosition": {
+      "x": -939.0084,
+      "y": 784.7787,
+      "z": 33.255207
+    },
+    "description": null
+  },
+  {
+    "id": "bb2e620d-f9b5-435d-a1f0-bac1cc433c07",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -892.02484,
+      "y": 360.92804,
+      "z": 13.205508
+    },
+    "projectileVelocity": {
+      "x": -5.9841275,
+      "y": 638.7012,
+      "z": 218.289
+    },
+    "landingPosition": {
+      "x": -899.4733,
+      "y": 1155.8936,
+      "z": 37.03125
+    },
+    "description": null
+  },
+  {
+    "id": "c6e12539-0394-4788-bd74-73cf701af068",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1507.6204,
+      "y": 2226.1765,
+      "z": -86.66242
+    },
+    "projectileVelocity": {
+      "x": 85.929245,
+      "y": -662.0077,
+      "z": 99.9348
+    },
+    "landingPosition": {
+      "x": 1594.794,
+      "y": 1554.5326,
+      "z": -149.96875
+    },
+    "description": null
+  },
+  {
+    "id": "beb95243-1c87-43cf-a609-a356281ac34c",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 173.4427,
+      "y": -493.60352,
+      "z": 70.85265
+    },
+    "projectileVelocity": {
+      "x": -373.02234,
+      "y": 818.9225,
+      "z": 273.84628
+    },
+    "landingPosition": {
+      "x": -37.929695,
+      "y": 708.3354,
+      "z": 21.404682
+    },
+    "description": null
+  },
+  {
+    "id": "b5e41b6d-8d76-400a-89bf-363a77409ccb",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -757.72095,
+      "y": -766.2618,
+      "z": 175.88206
+    },
+    "projectileVelocity": {
+      "x": 406.9676,
+      "y": 791.6349,
+      "z": 248.14958
+    },
+    "landingPosition": {
+      "x": -31.105988,
+      "y": 760.258,
+      "z": 56.300625
+    },
+    "description": null
+  },
+  {
+    "id": "16a3eec7-4934-4308-ae12-adf7d9bbd00c",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -1208.8292,
+      "y": -356.31464,
+      "z": 152.7201
+    },
+    "projectileVelocity": {
+      "x": 152.78525,
+      "y": 591.3599,
+      "z": 560.9383
+    },
+    "landingPosition": {
+      "x": -1055.6263,
+      "y": 315.30673,
+      "z": -7.8606186
+    },
+    "description": null
+  },
+  {
+    "id": "dc23ea04-a730-4aef-a407-bd4f86387e43",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -1154.3428,
+      "y": 1631.2349,
+      "z": 116.348885
+    },
+    "projectileVelocity": {
+      "x": 12.84194,
+      "y": -919.18427,
+      "z": 183.46883
+    },
+    "landingPosition": {
+      "x": -1033.564,
+      "y": 492.72073,
+      "z": 2.03125
+    },
+    "description": null
+  },
+  {
+    "id": "a8cc85e1-2253-4868-8935-944f3d1d5872",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 718.0648,
+      "y": 1891.2538,
+      "z": 33.444595
+    },
+    "projectileVelocity": {
+      "x": 487.8951,
+      "y": 303.43008,
+      "z": 354.2789
+    },
+    "landingPosition": {
+      "x": 1320.6425,
+      "y": 1894.6125,
+      "z": -74.82403
+    },
+    "description": null
+  },
+  {
+    "id": "b763f5bb-f187-40be-891a-e520accb2e9e",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 868.7768,
+      "y": 2025.3975,
+      "z": 27.316837
+    },
+    "projectileVelocity": {
+      "x": 197.69016,
+      "y": 876.01556,
+      "z": 139.72539
+    },
+    "landingPosition": {
+      "x": 1060.2374,
+      "y": 1876.8549,
+      "z": -189.96875
+    },
+    "description": null
+  },
+  {
+    "id": "e649cda0-9277-4e23-9aa4-0c838d0b1c23",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 762.7062,
+      "y": 2039.5238,
+      "z": 36.617462
+    },
+    "projectileVelocity": {
+      "x": 123.95983,
+      "y": -159.31142,
+      "z": 257.48254
+    },
+    "landingPosition": {
+      "x": 1012.56494,
+      "y": 1718.4095,
+      "z": -94.43358
+    },
+    "description": null
+  },
+  {
+    "id": "7025b851-9acb-4a47-bca0-af783d4b864e",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 647.2115,
+      "y": 1326.307,
+      "z": -17.872885
+    },
+    "projectileVelocity": {
+      "x": 556.3472,
+      "y": 281.57916,
+      "z": 258.4877
+    },
+    "landingPosition": {
+      "x": 1667.5311,
+      "y": 1842.7137,
+      "z": -81.96875
+    },
+    "description": null
+  },
+  {
+    "id": "fbb3854a-4a38-49d0-94d3-b322ef0b7ef9",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -1906.6346,
+      "y": 268.92035,
+      "z": 126.52577
+    },
+    "projectileVelocity": {
+      "x": 850.28894,
+      "y": 300.59222,
+      "z": 190.93076
+    },
+    "landingPosition": {
+      "x": -684.96606,
+      "y": 566.5908,
+      "z": 38.03125
+    },
+    "description": null
+  },
+  {
+    "id": "7405f000-eb51-4e80-9d3b-fe6190a07053",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -1818.1448,
+      "y": 154.90448,
+      "z": 123.96419
+    },
+    "projectileVelocity": {
+      "x": 707.1724,
+      "y": 412.93475,
+      "z": 231.17934
+    },
+    "landingPosition": {
+      "x": -579.52844,
+      "y": 878.1644,
+      "z": 38.03125
+    },
+    "description": null
+  },
+  {
+    "id": "9b4fa553-1d14-4470-8be0-e631d52b39f9",
+    "mapName": "de_anubis",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -786.2298,
+      "y": 65.14166,
+      "z": 10.329468
+    },
+    "projectileVelocity": {
+      "x": 156.40688,
+      "y": 552.4818,
+      "z": 628.348
+    },
+    "landingPosition": {
+      "x": -619.86536,
+      "y": 652.6419,
+      "z": 38.03125
+    },
+    "description": null
+  }
+]

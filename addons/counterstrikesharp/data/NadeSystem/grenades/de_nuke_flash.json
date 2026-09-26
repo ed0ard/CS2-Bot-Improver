@@ -1,0 +1,4349 @@
+[
+  {
+    "id": "a47f3e79-5cf6-4613-a37b-019f2532cb9b",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1844.4451,
+      "y": -282.68753,
+      "z": -279.04962
+    },
+    "projectileVelocity": {
+      "x": -548.25885,
+      "y": -111.62442,
+      "z": 377.59393
+    },
+    "landingPosition": {
+      "x": 953.51447,
+      "y": -464.07816,
+      "z": -87.95978
+    },
+    "description": null
+  },
+  {
+    "id": "2fd3ec98-ff50-47f2-b822-4f566ff2d825",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1026.2965,
+      "y": -1540.325,
+      "z": -314.87927
+    },
+    "projectileVelocity": {
+      "x": -591.43475,
+      "y": -295.4223,
+      "z": 409.82864
+    },
+    "landingPosition": {
+      "x": 65.213,
+      "y": -2020.3855,
+      "z": -71.40782
+    },
+    "description": null
+  },
+  {
+    "id": "cca2027e-83d0-492d-bd4c-38adcb132a0e",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 769.2309,
+      "y": -1450.8062,
+      "z": -347.99454
+    },
+    "projectileVelocity": {
+      "x": -616.4788,
+      "y": 216.85165,
+      "z": 168.97997
+    },
+    "landingPosition": {
+      "x": -141.6629,
+      "y": -1130.3822,
+      "z": -392.50842
+    },
+    "description": null
+  },
+  {
+    "id": "ddf47b5a-66e6-4f47-9370-297dab1adbef",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 846.2662,
+      "y": -702.00287,
+      "z": -302.49033
+    },
+    "projectileVelocity": {
+      "x": -158.84074,
+      "y": -572.22565,
+      "z": 594.4413
+    },
+    "landingPosition": {
+      "x": 588.1451,
+      "y": -1631.8628,
+      "z": 240.97694
+    },
+    "description": null
+  },
+  {
+    "id": "8e610cea-6121-4b90-aff5-05aa67ea3585",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 937.8538,
+      "y": -320.56406,
+      "z": -66.433685
+    },
+    "projectileVelocity": {
+      "x": -554.94104,
+      "y": -606.4925,
+      "z": -102.67116
+    },
+    "landingPosition": {
+      "x": 185.05515,
+      "y": -1143.2972,
+      "z": -324.77933
+    },
+    "description": null
+  },
+  {
+    "id": "8dc4cdf7-e325-42ce-ab3b-64c0d6f7d521",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1244.6113,
+      "y": -467.5225,
+      "z": -64.81137
+    },
+    "projectileVelocity": {
+      "x": -647.50916,
+      "y": 187.57704,
+      "z": -34.229774
+    },
+    "landingPosition": {
+      "x": 885.03,
+      "y": -330.07074,
+      "z": -252.19235
+    },
+    "description": null
+  },
+  {
+    "id": "2a950501-7670-49ac-b3a3-f0627db98f83",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1272.5742,
+      "y": -318.7366,
+      "z": -54.56696
+    },
+    "projectileVelocity": {
+      "x": 533.1189,
+      "y": -114.19252,
+      "z": 397.95645
+    },
+    "landingPosition": {
+      "x": 902.1277,
+      "y": -403.81796,
+      "z": -171.77058
+    },
+    "description": null
+  },
+  {
+    "id": "6776827c-dab0-40e7-8581-da342cc88dd1",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1256.3391,
+      "y": -335.69202,
+      "z": -67.48002
+    },
+    "projectileVelocity": {
+      "x": -574.12555,
+      "y": -323.1883,
+      "z": -146.81334
+    },
+    "landingPosition": {
+      "x": 935.00195,
+      "y": -427.34885,
+      "z": -164.20839
+    },
+    "description": null
+  },
+  {
+    "id": "f26a3a9c-ea93-4933-8e39-c85cb5475097",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 116.76023,
+      "y": -569.706,
+      "z": -366.24353
+    },
+    "projectileVelocity": {
+      "x": 162.83765,
+      "y": 635.60547,
+      "z": 158.47577
+    },
+    "landingPosition": {
+      "x": 346.21735,
+      "y": 325.93747,
+      "z": -396.60004
+    },
+    "description": null
+  },
+  {
+    "id": "41bd1adf-1dd4-40ea-9e31-ce2da8bb41b3",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 253.41245,
+      "y": -1660.2684,
+      "z": -700.14276
+    },
+    "projectileVelocity": {
+      "x": -430.69382,
+      "y": 493.60687,
+      "z": 162.72707
+    },
+    "landingPosition": {
+      "x": 348.5899,
+      "y": -1279.8579,
+      "z": -745.42377
+    },
+    "description": null
+  },
+  {
+    "id": "b7aabe47-1ba8-4dfc-85b7-4b8c6fc361d1",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 818.5059,
+      "y": -454.31284,
+      "z": -690.74744
+    },
+    "projectileVelocity": {
+      "x": 30.609707,
+      "y": -200.00616,
+      "z": 265.40393
+    },
+    "landingPosition": {
+      "x": 868.24615,
+      "y": -779.3255,
+      "z": -681.9623
+    },
+    "description": null
+  },
+  {
+    "id": "b8704462-d01d-487e-bdd9-8833ea4b02cb",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -40.71826,
+      "y": -1528.5016,
+      "z": 84.75884
+    },
+    "projectileVelocity": {
+      "x": 664.7768,
+      "y": 475.80835,
+      "z": 121.50744
+    },
+    "landingPosition": {
+      "x": 434.74884,
+      "y": -1093.1449,
+      "z": -32.655285
+    },
+    "description": null
+  },
+  {
+    "id": "e7f6d03a-efb6-40ee-b340-01ff238d9594",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -802.6715,
+      "y": -1134.5859,
+      "z": -319.21454
+    },
+    "projectileVelocity": {
+      "x": 611.35504,
+      "y": -299.92377,
+      "z": 477.15942
+    },
+    "landingPosition": {
+      "x": 190.77919,
+      "y": -1621.959,
+      "z": 33.669716
+    },
+    "description": null
+  },
+  {
+    "id": "1dd3fa88-e905-49bc-8a07-385009c39577",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 71.639854,
+      "y": -1475.8125,
+      "z": 21.512482
+    },
+    "projectileVelocity": {
+      "x": 800.2158,
+      "y": -306.70868,
+      "z": -46.593204
+    },
+    "landingPosition": {
+      "x": 1320.5146,
+      "y": -1954.4747,
+      "z": -389.25317
+    },
+    "description": null
+  },
+  {
+    "id": "fb26874f-a785-482f-a690-3fcf77b1a013",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -3.249607,
+      "y": -1465.7959,
+      "z": 27.277191
+    },
+    "projectileVelocity": {
+      "x": 399.20624,
+      "y": 437.92923,
+      "z": 323.2296
+    },
+    "landingPosition": {
+      "x": 645.4602,
+      "y": -754.168,
+      "z": 130.02632
+    },
+    "description": "decoy"
+  },
+  {
+    "id": "115d5b47-d17e-48bd-ab45-d43ad4f12bb0",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 12.687878,
+      "y": -855.8023,
+      "z": 46.314964
+    },
+    "projectileVelocity": {
+      "x": 617.9684,
+      "y": -511.8109,
+      "z": 182.03784
+    },
+    "landingPosition": {
+      "x": 501.22205,
+      "y": -1090.6211,
+      "z": -13.505357
+    },
+    "description": "decoy"
+  },
+  {
+    "id": "70017519-1f1b-4f30-af99-5c8fafdf2d56",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 17.898869,
+      "y": -766.766,
+      "z": -4.472858
+    },
+    "projectileVelocity": {
+      "x": 660.4846,
+      "y": 121.489105,
+      "z": 341.4984
+    },
+    "landingPosition": {
+      "x": 665.66846,
+      "y": -635.92096,
+      "z": -204.17715
+    },
+    "description": "decoy"
+  },
+  {
+    "id": "ed9b2b72-092c-4c07-acd5-4e2e42cb4140",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 17.277252,
+      "y": -766.8636,
+      "z": -4.6630316
+    },
+    "projectileVelocity": {
+      "x": 662.10297,
+      "y": 117.00629,
+      "z": 333.10468
+    },
+    "landingPosition": {
+      "x": 677.28986,
+      "y": -639.66876,
+      "z": -193.92902
+    },
+    "description": null
+  },
+  {
+    "id": "5fc672d9-c6da-446c-9b86-1073532dc66a",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -144.33426,
+      "y": -538.2178,
+      "z": -83.56046
+    },
+    "projectileVelocity": {
+      "x": 285.9107,
+      "y": -308.84158,
+      "z": 397.47763
+    },
+    "landingPosition": {
+      "x": 320.27042,
+      "y": -1040.0889,
+      "z": 139.84138
+    },
+    "description": "decoy"
+  },
+  {
+    "id": "b8242b79-b462-4df6-8817-25c8d28ce4a9",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -193.92853,
+      "y": -542.29913,
+      "z": -16.109766
+    },
+    "projectileVelocity": {
+      "x": 662.8151,
+      "y": -127.665344,
+      "z": 271.86456
+    },
+    "landingPosition": {
+      "x": 423.232,
+      "y": -716.15515,
+      "z": 28.337873
+    },
+    "description": "decoy"
+  },
+  {
+    "id": "17243585-c554-42e3-a10c-0c0fbfc93cb8",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -193.92853,
+      "y": -542.29913,
+      "z": -16.1269
+    },
+    "projectileVelocity": {
+      "x": 662.81525,
+      "y": -127.66476,
+      "z": 271.86276
+    },
+    "landingPosition": {
+      "x": 423.23193,
+      "y": -716.1514,
+      "z": 28.318174
+    },
+    "description": null
+  },
+  {
+    "id": "f6c14eaf-2096-4422-a0c7-49bb029f3ba9",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 0.54968596,
+      "y": -1467.2257,
+      "z": 31.500103
+    },
+    "projectileVelocity": {
+      "x": 559.49005,
+      "y": 377.6106,
+      "z": 274.9265
+    },
+    "landingPosition": {
+      "x": 614.3229,
+      "y": -1032.3333,
+      "z": -81.60523
+    },
+    "description": "decoy"
+  },
+  {
+    "id": "24b9bbe3-cd7d-432c-a979-0d48608ec0e9",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -0.47690153,
+      "y": -1467.9648,
+      "z": 31.470621
+    },
+    "projectileVelocity": {
+      "x": 560.47394,
+      "y": 376.14716,
+      "z": 274.68375
+    },
+    "landingPosition": {
+      "x": 615.45636,
+      "y": -1034.414,
+      "z": -78.65548
+    },
+    "description": null
+  },
+  {
+    "id": "1ed75cbf-b4e0-429c-922b-d0cae578860a",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 230.63148,
+      "y": -315.15546,
+      "z": -348.8201
+    },
+    "projectileVelocity": {
+      "x": -313.19128,
+      "y": 880.6138,
+      "z": 135.17072
+    },
+    "landingPosition": {
+      "x": 420.75845,
+      "y": 17.838737,
+      "z": -394.82874
+    },
+    "description": null
+  },
+  {
+    "id": "050bd3f9-e7ed-4571-9d82-0252bed8df29",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 100.603134,
+      "y": -280.74554,
+      "z": -365.5077
+    },
+    "projectileVelocity": {
+      "x": 327.98508,
+      "y": 558.43964,
+      "z": 190.25233
+    },
+    "landingPosition": {
+      "x": 524.51263,
+      "y": 441.01865,
+      "z": -358.51822
+    },
+    "description": null
+  },
+  {
+    "id": "088c5c4a-1f71-4ff0-8418-d827e29b96f7",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1584.157,
+      "y": -1314.9233,
+      "z": -344.2765
+    },
+    "projectileVelocity": {
+      "x": -435.41785,
+      "y": -702.4209,
+      "z": 325.835
+    },
+    "landingPosition": {
+      "x": 876.5991,
+      "y": -2456.3499,
+      "z": -237.29309
+    },
+    "description": null
+  },
+  {
+    "id": "98b84c74-113d-4b3d-be5e-4e8519c76b75",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -46.459652,
+      "y": -1910.2778,
+      "z": -336.47327
+    },
+    "projectileVelocity": {
+      "x": 238.88356,
+      "y": 2.0090108,
+      "z": 294.7172
+    },
+    "landingPosition": {
+      "x": 341.7256,
+      "y": -1907.0024,
+      "z": -280.05762
+    },
+    "description": null
+  },
+  {
+    "id": "73ed67f4-fc2a-4377-802a-c1b1d7bfb812",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 347.5227,
+      "y": -1767.659,
+      "z": -348.10062
+    },
+    "projectileVelocity": {
+      "x": 893.0551,
+      "y": -181.91989,
+      "z": 164.50545
+    },
+    "landingPosition": {
+      "x": 1656.9053,
+      "y": -2034.3875,
+      "z": -392.1209
+    },
+    "description": null
+  },
+  {
+    "id": "ccffaa46-a416-46ec-9b17-f3ab6b7439c5",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -91.982155,
+      "y": -1751.4111,
+      "z": 21.170465
+    },
+    "projectileVelocity": {
+      "x": 670.12537,
+      "y": 46.26872,
+      "z": 66.4546
+    },
+    "landingPosition": {
+      "x": 996.97107,
+      "y": -1676.2295,
+      "z": -293.34067
+    },
+    "description": null
+  },
+  {
+    "id": "c214f3c4-5236-445d-a0f7-a803ca5dcd6d",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 217.9298,
+      "y": -1111.9235,
+      "z": -352.03357
+    },
+    "projectileVelocity": {
+      "x": 319.54053,
+      "y": 402.9893,
+      "z": 174.46352
+    },
+    "landingPosition": {
+      "x": 692.7962,
+      "y": -513.04156,
+      "z": -393.78726
+    },
+    "description": null
+  },
+  {
+    "id": "4aa9f7d0-0226-4a12-8903-2c861c249f70",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -240.79349,
+      "y": -1017.6433,
+      "z": -348.86322
+    },
+    "projectileVelocity": {
+      "x": 671.47687,
+      "y": -582.4917,
+      "z": 132.85583
+    },
+    "landingPosition": {
+      "x": 388.48874,
+      "y": -1219.6708,
+      "z": -413.29105
+    },
+    "description": null
+  },
+  {
+    "id": "fde28a10-deeb-4564-8d39-e0ce6f711b77",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 440.83194,
+      "y": -928.8175,
+      "z": -334.4207
+    },
+    "projectileVelocity": {
+      "x": -325.91187,
+      "y": 332.2725,
+      "z": 488.87775
+    },
+    "landingPosition": {
+      "x": 524.2019,
+      "y": -625.9116,
+      "z": -236.34837
+    },
+    "description": null
+  },
+  {
+    "id": "71c90bb0-dbac-46aa-82a6-f3db60ddc9d0",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 954.48425,
+      "y": 718.9646,
+      "z": -411.22903
+    },
+    "projectileVelocity": {
+      "x": -439.489,
+      "y": -442.61823,
+      "z": 257.99905
+    },
+    "landingPosition": {
+      "x": 240.78493,
+      "y": 0.18722314,
+      "z": -413.738
+    },
+    "description": null
+  },
+  {
+    "id": "2fc4149e-037e-4134-927c-13a46bb73432",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 497.4849,
+      "y": 52.336697,
+      "z": -573.5249
+    },
+    "projectileVelocity": {
+      "x": -272.51788,
+      "y": -814.6067,
+      "z": 161.13834
+    },
+    "landingPosition": {
+      "x": 535.1748,
+      "y": -726.5782,
+      "z": -753.3302
+    },
+    "description": null
+  },
+  {
+    "id": "bf20fd5c-74c4-4662-8dd6-cfed40e9479e",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1385.5583,
+      "y": -792.9437,
+      "z": -642.73346
+    },
+    "projectileVelocity": {
+      "x": -305.91534,
+      "y": 286.79214,
+      "z": 262.01587
+    },
+    "landingPosition": {
+      "x": 889.4148,
+      "y": -327.824,
+      "z": -637.2952
+    },
+    "description": null
+  },
+  {
+    "id": "7827c55f-4279-4b80-b0d2-ee726c4da166",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1467.7719,
+      "y": -2010.6909,
+      "z": -567.13214
+    },
+    "projectileVelocity": {
+      "x": -559.38116,
+      "y": 92.81203,
+      "z": 366.2016
+    },
+    "landingPosition": {
+      "x": 1127.7118,
+      "y": -1954.2671,
+      "z": -479.96875
+    },
+    "description": null
+  },
+  {
+    "id": "e0d02152-b527-476d-b49c-9a4a8f354cd7",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 555.77606,
+      "y": -2144.236,
+      "z": -343.5037
+    },
+    "projectileVelocity": {
+      "x": 359.21857,
+      "y": 445.0947,
+      "z": 358.43793
+    },
+    "landingPosition": {
+      "x": 1139.5065,
+      "y": -1420.9587,
+      "z": -183.54276
+    },
+    "description": null
+  },
+  {
+    "id": "e147d1c5-4005-48b6-883d-c1ebdf7de419",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 469.31253,
+      "y": -2301.1824,
+      "z": -348.88406
+    },
+    "projectileVelocity": {
+      "x": 780.5795,
+      "y": -109.04759,
+      "z": 131.4541
+    },
+    "landingPosition": {
+      "x": 1557.4921,
+      "y": -2459.4038,
+      "z": -514.07745
+    },
+    "description": null
+  },
+  {
+    "id": "33290fbb-eaf7-4982-a3e0-19ad1c52e2ec",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 54.09507,
+      "y": -823.553,
+      "z": -348.75885
+    },
+    "projectileVelocity": {
+      "x": 551.23413,
+      "y": -793.64905,
+      "z": 141.2709
+    },
+    "landingPosition": {
+      "x": 383.98868,
+      "y": -846.15466,
+      "z": -388.73367
+    },
+    "description": null
+  },
+  {
+    "id": "156c53ce-0302-40b3-b405-f188961e156a",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 9.589531,
+      "y": -498.44873,
+      "z": -365.46173
+    },
+    "projectileVelocity": {
+      "x": 284.01907,
+      "y": 580.5546,
+      "z": 194.71634
+    },
+    "landingPosition": {
+      "x": 442.87305,
+      "y": 391.9947,
+      "z": -423.39346
+    },
+    "description": null
+  },
+  {
+    "id": "d2194838-88a7-4684-9c5b-8045fa0c7a56",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 777.9999,
+      "y": 36.903008,
+      "z": -572.28735
+    },
+    "projectileVelocity": {
+      "x": 374.98264,
+      "y": -756.51575,
+      "z": 164.18068
+    },
+    "landingPosition": {
+      "x": 764.7304,
+      "y": -715.99243,
+      "z": -733.7799
+    },
+    "description": null
+  },
+  {
+    "id": "dc3c4d0a-4ac6-478a-9f0e-1a2de29c4907",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -116.880035,
+      "y": -1956.606,
+      "z": -346.99823
+    },
+    "projectileVelocity": {
+      "x": 656.41614,
+      "y": 4.06371,
+      "z": 218.5638
+    },
+    "landingPosition": {
+      "x": 949.35596,
+      "y": -1950.0072,
+      "z": -413.80362
+    },
+    "description": null
+  },
+  {
+    "id": "4ed34ba4-39a6-4ea6-ac79-30c80d92e407",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -164.29759,
+      "y": -1911.7437,
+      "z": -348.4149
+    },
+    "projectileVelocity": {
+      "x": 760.72394,
+      "y": -565.2888,
+      "z": 158.79958
+    },
+    "landingPosition": {
+      "x": 765.32153,
+      "y": -2378.8247,
+      "z": -399.20615
+    },
+    "description": null
+  },
+  {
+    "id": "574244ad-c6f4-402f-ba75-c49809c0b487",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -479.89694,
+      "y": -1461.1207,
+      "z": -319.6573
+    },
+    "projectileVelocity": {
+      "x": 577.20605,
+      "y": -210.56343,
+      "z": 553.2336
+    },
+    "landingPosition": {
+      "x": 458.06406,
+      "y": -1803.2848,
+      "z": 156.84773
+    },
+    "description": null
+  },
+  {
+    "id": "83d8e0f1-abd5-4e84-abe3-668d5738a386",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1446.136,
+      "y": -1866.8984,
+      "z": -347.7902
+    },
+    "projectileVelocity": {
+      "x": -593.4903,
+      "y": 263.44574,
+      "z": 184.3654
+    },
+    "landingPosition": {
+      "x": 553.5398,
+      "y": -1467.556,
+      "z": -397.1413
+    },
+    "description": null
+  },
+  {
+    "id": "80ea062b-afd4-4af2-951b-1a96b0bd96a0",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1565.9435,
+      "y": -1512.4368,
+      "z": -343.547
+    },
+    "projectileVelocity": {
+      "x": -792.5574,
+      "y": -303.12622,
+      "z": 356.61014
+    },
+    "landingPosition": {
+      "x": 278.03564,
+      "y": -2005.0149,
+      "z": -186.55676
+    },
+    "description": null
+  },
+  {
+    "id": "0cbeed7e-940b-49f5-a8a2-4a3b67c5ed51",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 173.7855,
+      "y": -1108.6404,
+      "z": -348.34735
+    },
+    "projectileVelocity": {
+      "x": 578.83765,
+      "y": 311.1698,
+      "z": 154.09525
+    },
+    "landingPosition": {
+      "x": 341.77124,
+      "y": -823.2837,
+      "z": -378.4428
+    },
+    "description": null
+  },
+  {
+    "id": "c9958612-76f9-4456-bd69-fcfde00e3d50",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1075.924,
+      "y": -1637.6931,
+      "z": -348.02283
+    },
+    "projectileVelocity": {
+      "x": -755.72406,
+      "y": -592.11755,
+      "z": 167.78789
+    },
+    "landingPosition": {
+      "x": 169.19316,
+      "y": -2133.9883,
+      "z": -404.1419
+    },
+    "description": null
+  },
+  {
+    "id": "b1529644-2ebf-4e17-84c1-5aee25b72255",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 66.583145,
+      "y": -1349.3248,
+      "z": -364.6483
+    },
+    "projectileVelocity": {
+      "x": 601.31006,
+      "y": 207.5487,
+      "z": 225.77579
+    },
+    "landingPosition": {
+      "x": 925.1825,
+      "y": -1027.58,
+      "z": -401.44324
+    },
+    "description": null
+  },
+  {
+    "id": "31435dae-3a78-4196-b578-0f8ff3cfbfe4",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 444.6504,
+      "y": -2294.8838,
+      "z": -343.37823
+    },
+    "projectileVelocity": {
+      "x": 367.6515,
+      "y": 433.77145,
+      "z": 363.7303
+    },
+    "landingPosition": {
+      "x": 1042.0802,
+      "y": -1590.0059,
+      "z": -174.81622
+    },
+    "description": null
+  },
+  {
+    "id": "6acca773-74da-4da8-ab93-0d3d5819bd7b",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 189.94821,
+      "y": -2040.4257,
+      "z": -345.2045
+    },
+    "projectileVelocity": {
+      "x": 591.7865,
+      "y": -152.3982,
+      "z": 286.6854
+    },
+    "landingPosition": {
+      "x": 1151.6018,
+      "y": -2288.085,
+      "z": -301.8417
+    },
+    "description": null
+  },
+  {
+    "id": "386a0354-52e7-4412-81ff-9090ae5b3c1b",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 531.9434,
+      "y": -1669.7422,
+      "z": -169.65909
+    },
+    "projectileVelocity": {
+      "x": 371.82404,
+      "y": 90.21581,
+      "z": 214.73128
+    },
+    "landingPosition": {
+      "x": 1136.1538,
+      "y": -1523.1367,
+      "z": -243.22122
+    },
+    "description": null
+  },
+  {
+    "id": "56a86d6b-f889-4ce5-9b7f-9592c7317574",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 40.66105,
+      "y": -1424.5133,
+      "z": 25.202818
+    },
+    "projectileVelocity": {
+      "x": 455.25708,
+      "y": 498.3574,
+      "z": 279.91495
+    },
+    "landingPosition": {
+      "x": 780.4548,
+      "y": -614.6793,
+      "z": 57.56407
+    },
+    "description": "decoy"
+  },
+  {
+    "id": "267d3512-ed58-4105-a7ce-a5374cd1ce54",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 628.57043,
+      "y": -742.9379,
+      "z": -110.79566
+    },
+    "projectileVelocity": {
+      "x": -469.28094,
+      "y": 405.64297,
+      "z": 539.7943
+    },
+    "landingPosition": {
+      "x": 175.39081,
+      "y": -788.8676,
+      "z": 78.62971
+    },
+    "description": null
+  },
+  {
+    "id": "4cf07148-7c6a-4df6-bac5-7a6c89090cff",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 570.80206,
+      "y": -1128.8219,
+      "z": -312.5405
+    },
+    "projectileVelocity": {
+      "x": -136.91084,
+      "y": -331.3038,
+      "z": 845.55237
+    },
+    "landingPosition": {
+      "x": 437.3984,
+      "y": -1451.6423,
+      "z": -566.9674
+    },
+    "description": null
+  },
+  {
+    "id": "8017359a-5e15-409d-8668-ff987f72a034",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 42.948246,
+      "y": -1655.9735,
+      "z": -720.4643
+    },
+    "projectileVelocity": {
+      "x": 244.44707,
+      "y": 300.3702,
+      "z": 206.21568
+    },
+    "landingPosition": {
+      "x": 420.92618,
+      "y": -1191.5149,
+      "z": -752.0647
+    },
+    "description": null
+  },
+  {
+    "id": "16908871-fa1e-474c-b529-fab34d707015",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 383.60938,
+      "y": -1559.487,
+      "z": -660.5514
+    },
+    "projectileVelocity": {
+      "x": 621.4277,
+      "y": -111.20443,
+      "z": 238.92719
+    },
+    "landingPosition": {
+      "x": 1147.9994,
+      "y": -1717.0199,
+      "z": -632.5259
+    },
+    "description": null
+  },
+  {
+    "id": "675c644b-b70f-43d4-9e8c-6f3de4938c30",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 105.0452,
+      "y": -1583.5793,
+      "z": -697.71655
+    },
+    "projectileVelocity": {
+      "x": 768.39185,
+      "y": -76.64239,
+      "z": 265.08353
+    },
+    "landingPosition": {
+      "x": 1193.3303,
+      "y": -1695.8436,
+      "z": -630.40784
+    },
+    "description": null
+  },
+  {
+    "id": "5c10c741-4f19-4a2f-a2f8-80d335d8e3e7",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1517.2148,
+      "y": -2227.0054,
+      "z": -572.85925
+    },
+    "projectileVelocity": {
+      "x": -36.08761,
+      "y": 161.20302,
+      "z": 117.12185
+    },
+    "landingPosition": {
+      "x": 1468.9594,
+      "y": -2011.4813,
+      "z": -626.34576
+    },
+    "description": null
+  },
+  {
+    "id": "16ff7a6e-120a-4601-ae0c-e54b2dd3155a",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 579.5287,
+      "y": -2395.1157,
+      "z": -348.03076
+    },
+    "projectileVelocity": {
+      "x": 653.60956,
+      "y": -19.473305,
+      "z": 167.45248
+    },
+    "landingPosition": {
+      "x": 1578.3138,
+      "y": -2426.0361,
+      "z": -486.20303
+    },
+    "description": null
+  },
+  {
+    "id": "54cb4391-0a59-4e16-8989-8ce16845a33a",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 585.7985,
+      "y": -2317.3833,
+      "z": -354.2204
+    },
+    "projectileVelocity": {
+      "x": 174.80524,
+      "y": 100.27545,
+      "z": 297.3711
+    },
+    "landingPosition": {
+      "x": 869.85614,
+      "y": -2154.4263,
+      "z": -293.49237
+    },
+    "description": null
+  },
+  {
+    "id": "916b58a8-6b7d-4a02-b474-233091179cf4",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -571.7213,
+      "y": -1509.2897,
+      "z": -345.08456
+    },
+    "projectileVelocity": {
+      "x": 550.6169,
+      "y": -358.7493,
+      "z": 291.74515
+    },
+    "landingPosition": {
+      "x": 323.03152,
+      "y": -2092.2583,
+      "z": -293.49716
+    },
+    "description": null
+  },
+  {
+    "id": "b9cec38b-6ced-467a-aa4d-270113a0d99a",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 524.7636,
+      "y": -2146.6777,
+      "z": -346.51785
+    },
+    "projectileVelocity": {
+      "x": 555.36743,
+      "y": 306.10898,
+      "z": 231.27759
+    },
+    "landingPosition": {
+      "x": 1406.9147,
+      "y": -1674.2206,
+      "z": -382.22763
+    },
+    "description": null
+  },
+  {
+    "id": "b6796f93-5f33-4c28-ab86-9884502299cc",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1240.0774,
+      "y": -1862.9387,
+      "z": -596.4568
+    },
+    "projectileVelocity": {
+      "x": -152.66933,
+      "y": 154.15785,
+      "z": 120.78178
+    },
+    "landingPosition": {
+      "x": 1044.6699,
+      "y": -1665.6292,
+      "z": -636.7348
+    },
+    "description": null
+  },
+  {
+    "id": "ed2d53a4-38b6-4941-bc16-6ec4af4afe77",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 334.32715,
+      "y": -1425.2665,
+      "z": -325.5689
+    },
+    "projectileVelocity": {
+      "x": 265.42172,
+      "y": 620.2496,
+      "z": 295.09387
+    },
+    "landingPosition": {
+      "x": 712.62213,
+      "y": -541.24854,
+      "z": -210.6664
+    },
+    "description": null
+  },
+  {
+    "id": "ee44bf1c-c17f-4bcc-b288-73e523e44e9a",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 396.79947,
+      "y": -1452.9764,
+      "z": -331.841
+    },
+    "projectileVelocity": {
+      "x": -4.212581,
+      "y": 476.18454,
+      "z": 279.89667
+    },
+    "landingPosition": {
+      "x": 389.9567,
+      "y": -679.17175,
+      "z": -299.50818
+    },
+    "description": null
+  },
+  {
+    "id": "e8b7e91d-4960-4c92-bab6-2df029a044c2",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 326.33295,
+      "y": -1384.1627,
+      "z": -334.76508
+    },
+    "projectileVelocity": {
+      "x": 67.73272,
+      "y": 186.19102,
+      "z": 315.338
+    },
+    "landingPosition": {
+      "x": 436.4013,
+      "y": -1081.608,
+      "z": -244.84044
+    },
+    "description": null
+  },
+  {
+    "id": "79691a50-fcfd-476e-9aa0-ed463ff01a64",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 324.68216,
+      "y": -1247.9058,
+      "z": -338.59805
+    },
+    "projectileVelocity": {
+      "x": 320.10977,
+      "y": 182.98517,
+      "z": 565.39465
+    },
+    "landingPosition": {
+      "x": 731.40216,
+      "y": -1015.41077,
+      "z": -76.31571
+    },
+    "description": null
+  },
+  {
+    "id": "9ae3a77e-cd0e-4916-ae7b-27febbfe7e89",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 703.03186,
+      "y": -609.7275,
+      "z": -337.2268
+    },
+    "projectileVelocity": {
+      "x": -1.3723798,
+      "y": -358.45587,
+      "z": 253.0001
+    },
+    "landingPosition": {
+      "x": 700.7975,
+      "y": -1192.2139,
+      "z": -348.6018
+    },
+    "description": null
+  },
+  {
+    "id": "0b0ddf76-d066-49df-98d9-6fc4e306af9c",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 704.931,
+      "y": -482.0766,
+      "z": -346.35226
+    },
+    "projectileVelocity": {
+      "x": -1.4677457,
+      "y": -687.9152,
+      "z": 238.26482
+    },
+    "landingPosition": {
+      "x": 702.5443,
+      "y": -1599.9435,
+      "z": -381.67062
+    },
+    "description": null
+  },
+  {
+    "id": "05f02acc-29a2-4286-91a2-3a382e75855a",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -97.531075,
+      "y": -675.85254,
+      "z": -348.99835
+    },
+    "projectileVelocity": {
+      "x": 174.72643,
+      "y": 702.49146,
+      "z": 126.63188
+    },
+    "landingPosition": {
+      "x": 54.28574,
+      "y": -650.5759,
+      "z": -397.0078
+    },
+    "description": null
+  },
+  {
+    "id": "529a9767-98e3-4c86-9be1-cdcf013002b1",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -187.77998,
+      "y": -463.11874,
+      "z": -368.54172
+    },
+    "projectileVelocity": {
+      "x": 366.18323,
+      "y": 185.35794,
+      "z": 204.51996
+    },
+    "landingPosition": {
+      "x": 135.43292,
+      "y": -299.5119,
+      "z": -392.2541
+    },
+    "description": null
+  },
+  {
+    "id": "456126fd-5d1a-4722-9066-0bdbc9d7d666",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 75.20349,
+      "y": -324.4643,
+      "z": -365.1104
+    },
+    "projectileVelocity": {
+      "x": 311.6388,
+      "y": 562.09875,
+      "z": 206.27951
+    },
+    "landingPosition": {
+      "x": 581.61835,
+      "y": 588.9463,
+      "z": -452.40338
+    },
+    "description": null
+  },
+  {
+    "id": "9c5804d6-75b3-43a1-93eb-fa0a8c88ad3f",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 165.61887,
+      "y": -503.9666,
+      "z": -348.11905
+    },
+    "projectileVelocity": {
+      "x": 122.186615,
+      "y": 643.342,
+      "z": 163.72707
+    },
+    "landingPosition": {
+      "x": 319.328,
+      "y": 4.5859756,
+      "z": -402.50183
+    },
+    "description": null
+  },
+  {
+    "id": "675a4db6-4fb5-48a5-9e00-8be5019e280e",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 393.3077,
+      "y": 583.98553,
+      "z": -412.16403
+    },
+    "projectileVelocity": {
+      "x": 402.41867,
+      "y": -541.54297,
+      "z": 20.382948
+    },
+    "landingPosition": {
+      "x": 848.8161,
+      "y": -131.67786,
+      "z": -627.4575
+    },
+    "description": null
+  },
+  {
+    "id": "ab113f49-0952-4f7c-a1e5-938495936a59",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1086.7675,
+      "y": -283.57227,
+      "z": -348.27646
+    },
+    "projectileVelocity": {
+      "x": 261.8764,
+      "y": 846.1699,
+      "z": 157.08698
+    },
+    "landingPosition": {
+      "x": 856.0195,
+      "y": 26.697989,
+      "z": -392.88287
+    },
+    "description": null
+  },
+  {
+    "id": "d9491f22-df65-4428-9bb7-8e11abc8d998",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1059.6343,
+      "y": -739.9614,
+      "z": -349.98474
+    },
+    "projectileVelocity": {
+      "x": -5.1175876,
+      "y": -543.85706,
+      "z": 219.7932
+    },
+    "landingPosition": {
+      "x": 1051.319,
+      "y": -1622.3798,
+      "z": -413.35754
+    },
+    "description": null
+  },
+  {
+    "id": "7b2f4e13-fe05-4294-be53-eba62d966337",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1175.2666,
+      "y": -694.8756,
+      "z": -346.9511
+    },
+    "projectileVelocity": {
+      "x": -130.18294,
+      "y": -824.05914,
+      "z": 212.999
+    },
+    "landingPosition": {
+      "x": 965.93365,
+      "y": -2019.9354,
+      "z": -409.8807
+    },
+    "description": null
+  },
+  {
+    "id": "1bfc04ce-e054-4782-927a-084b994bd4ea",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 526.10583,
+      "y": -2128.007,
+      "z": -344.15002
+    },
+    "projectileVelocity": {
+      "x": 576.76416,
+      "y": 324.4017,
+      "z": 331.1699
+    },
+    "landingPosition": {
+      "x": 1463.35,
+      "y": -1600.8469,
+      "z": -228.49951
+    },
+    "description": null
+  },
+  {
+    "id": "93450789-1937-4aca-bc71-05475aa70327",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1002.62,
+      "y": -1893.9663,
+      "z": -348.92963
+    },
+    "projectileVelocity": {
+      "x": -364.02832,
+      "y": 656.69214,
+      "z": 129.5314
+    },
+    "landingPosition": {
+      "x": 670.56146,
+      "y": -1760.8099,
+      "z": -398.74808
+    },
+    "description": null
+  },
+  {
+    "id": "45ce8ac5-d87f-4e48-a839-bc31758267b8",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 721.87085,
+      "y": -2322.956,
+      "z": -365.07202
+    },
+    "projectileVelocity": {
+      "x": 668.62164,
+      "y": 331.54987,
+      "z": 207.89934
+    },
+    "landingPosition": {
+      "x": 1763.4192,
+      "y": -1806.476,
+      "z": -401.05432
+    },
+    "description": null
+  },
+  {
+    "id": "c7c46666-fe78-47ea-a8c9-849076a65eff",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1391.2831,
+      "y": -618.353,
+      "z": -581.93585
+    },
+    "projectileVelocity": {
+      "x": -186.21864,
+      "y": -397.267,
+      "z": 1.758377
+    },
+    "landingPosition": {
+      "x": 1144.7041,
+      "y": -1144.3865,
+      "z": -729.31903
+    },
+    "description": null
+  },
+  {
+    "id": "3551e144-b20b-4e23-816c-496d37b02922",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 743.99646,
+      "y": 48.93531,
+      "z": -572.04376
+    },
+    "projectileVelocity": {
+      "x": 516.44855,
+      "y": -485.9981,
+      "z": 166.92699
+    },
+    "landingPosition": {
+      "x": 712.76013,
+      "y": -392.96704,
+      "z": -616.75244
+    },
+    "description": null
+  },
+  {
+    "id": "f7c7d553-95dc-4f9b-9dc4-9a0f78e4bc8f",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 790.30444,
+      "y": 75.18278,
+      "z": -585.7579
+    },
+    "projectileVelocity": {
+      "x": -393.82776,
+      "y": 423.81412,
+      "z": 347.71588
+    },
+    "landingPosition": {
+      "x": 352.90067,
+      "y": 681.1966,
+      "z": -431.5602
+    },
+    "description": null
+  },
+  {
+    "id": "8bab1f74-bd5d-4fcc-ae07-9de3e7103089",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1232.1597,
+      "y": -386.9176,
+      "z": -365.1243
+    },
+    "projectileVelocity": {
+      "x": -294.77795,
+      "y": 571.333,
+      "z": 205.69275
+    },
+    "landingPosition": {
+      "x": 753.14014,
+      "y": 541.4976,
+      "z": -453.37576
+    },
+    "description": null
+  },
+  {
+    "id": "cac4c9cd-b59a-4947-a16d-f6903b0aac1e",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1211.4761,
+      "y": -522.017,
+      "z": -369.9425
+    },
+    "projectileVelocity": {
+      "x": -140.77606,
+      "y": 396.46008,
+      "z": 166.10753
+    },
+    "landingPosition": {
+      "x": 1011.1964,
+      "y": 42.003647,
+      "z": -396.39694
+    },
+    "description": null
+  },
+  {
+    "id": "a96649ad-fc61-4e65-a78b-13e952a911e5",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -471.31393,
+      "y": -1647.9434,
+      "z": -345.66525
+    },
+    "projectileVelocity": {
+      "x": 557.2737,
+      "y": -260.66003,
+      "z": 277.7182
+    },
+    "landingPosition": {
+      "x": 434.25543,
+      "y": -2071.5098,
+      "z": -316.87228
+    },
+    "description": null
+  },
+  {
+    "id": "85ee9436-7bb2-4e5a-8169-1abff2b9986e",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -1277.8868,
+      "y": -1062.6971,
+      "z": -346.48672
+    },
+    "projectileVelocity": {
+      "x": -650.6725,
+      "y": -48.354485,
+      "z": 232.59123
+    },
+    "landingPosition": {
+      "x": -2335.2356,
+      "y": -1141.2811,
+      "z": -391.02823
+    },
+    "description": null
+  },
+  {
+    "id": "c67a8531-1fe5-46b0-b10f-2f673fe44aaf",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -1395.2505,
+      "y": -1277.2504,
+      "z": -342.28214
+    },
+    "projectileVelocity": {
+      "x": -756.3079,
+      "y": 278.6474,
+      "z": 214.85515
+    },
+    "landingPosition": {
+      "x": -2621.968,
+      "y": -825.29755,
+      "z": -413.21262
+    },
+    "description": null
+  },
+  {
+    "id": "bfa74a82-b4ea-4ba7-a5cb-88870df92824",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 30.779963,
+      "y": -2048.098,
+      "z": -346.34384
+    },
+    "projectileVelocity": {
+      "x": 746.9999,
+      "y": -218.12445,
+      "z": 251.82422
+    },
+    "landingPosition": {
+      "x": 1244.6549,
+      "y": -2402.551,
+      "z": -359.6295
+    },
+    "description": null
+  },
+  {
+    "id": "02b2b4e7-bd30-4d47-8080-1fcc5d4af70b",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 78.76651,
+      "y": -1565.4174,
+      "z": 41.500576
+    },
+    "projectileVelocity": {
+      "x": 877.18823,
+      "y": -192.0717,
+      "z": -95.556694
+    },
+    "landingPosition": {
+      "x": 1400.6049,
+      "y": -1854.8616,
+      "z": -369.61594
+    },
+    "description": null
+  },
+  {
+    "id": "1e89e611-1bc8-4800-9e5a-3fad4a96920d",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1379.657,
+      "y": -1166.6003,
+      "z": -344.0182
+    },
+    "projectileVelocity": {
+      "x": -523.7705,
+      "y": -568.2588,
+      "z": 349.7444
+    },
+    "landingPosition": {
+      "x": 528.5304,
+      "y": -2090.0308,
+      "z": -198.1834
+    },
+    "description": null
+  },
+  {
+    "id": "72d1e1de-422c-4edc-bcc0-e179974af734",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1164.4451,
+      "y": -1526.5022,
+      "z": -343.35364
+    },
+    "projectileVelocity": {
+      "x": -770.1266,
+      "y": -275.32623,
+      "z": 377.78027
+    },
+    "landingPosition": {
+      "x": -87.008865,
+      "y": -1973.9104,
+      "z": -151.95953
+    },
+    "description": null
+  },
+  {
+    "id": "1add6fab-e84a-45e6-b9be-1fc8aa728296",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -252.71442,
+      "y": -1959.2732,
+      "z": -347.90323
+    },
+    "projectileVelocity": {
+      "x": 801.5123,
+      "y": 54.11564,
+      "z": 185.84602
+    },
+    "landingPosition": {
+      "x": 971.23816,
+      "y": -1876.6436,
+      "z": -396.3218
+    },
+    "description": null
+  },
+  {
+    "id": "492cbf9b-084b-43af-bae3-417faefce248",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 285.76813,
+      "y": -1229.7928,
+      "z": -346.71207
+    },
+    "projectileVelocity": {
+      "x": 298.76294,
+      "y": 46.062912,
+      "z": 317.99445
+    },
+    "landingPosition": {
+      "x": 771.25934,
+      "y": -1154.9413,
+      "z": -252.47092
+    },
+    "description": null
+  },
+  {
+    "id": "732f7bf0-2bbe-4373-a285-0cf33039871f",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 337.98404,
+      "y": -1405.639,
+      "z": -330.96756
+    },
+    "projectileVelocity": {
+      "x": 170.82938,
+      "y": 588.7394,
+      "z": 313.1954
+    },
+    "landingPosition": {
+      "x": 615.5798,
+      "y": -448.93842,
+      "z": -244.52518
+    },
+    "description": null
+  },
+  {
+    "id": "62d55d66-ce14-4413-8fa2-e51723a3cdd8",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 341.8948,
+      "y": -1397.6704,
+      "z": -348.59546
+    },
+    "projectileVelocity": {
+      "x": 344.49854,
+      "y": 326.40588,
+      "z": 315.83386
+    },
+    "landingPosition": {
+      "x": 901.7073,
+      "y": -867.26025,
+      "z": -257.86594
+    },
+    "description": null
+  },
+  {
+    "id": "f5f5f78b-7687-4972-9aa7-9721c9bb510a",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 333.50168,
+      "y": -1398.1112,
+      "z": -345.998
+    },
+    "projectileVelocity": {
+      "x": 388.91006,
+      "y": 496.4356,
+      "z": 266.22272
+    },
+    "landingPosition": {
+      "x": 965.47614,
+      "y": -591.40027,
+      "z": -335.88617
+    },
+    "description": null
+  },
+  {
+    "id": "95a30607-c40f-4ac3-9bf1-9b2d312296d0",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 322.67535,
+      "y": -1378.5148,
+      "z": -341.53452
+    },
+    "projectileVelocity": {
+      "x": 267.4665,
+      "y": 421.30008,
+      "z": 454.52496
+    },
+    "landingPosition": {
+      "x": 757.3093,
+      "y": -693.90735,
+      "z": -25.4315
+    },
+    "description": null
+  },
+  {
+    "id": "481683df-d42f-4a1c-9bdd-f375c04c7c0b",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1485.4506,
+      "y": -1878.1318,
+      "z": -348.388
+    },
+    "projectileVelocity": {
+      "x": -601.2112,
+      "y": 264.1985,
+      "z": 156.10666
+    },
+    "landingPosition": {
+      "x": 618.9706,
+      "y": -1520.5308,
+      "z": -377.60782
+    },
+    "description": null
+  },
+  {
+    "id": "666e1d56-f66c-448c-9f39-81cac70d2bc7",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 816.59296,
+      "y": 14.384332,
+      "z": -573.634
+    },
+    "projectileVelocity": {
+      "x": -72.057175,
+      "y": -948.27356,
+      "z": 99.8166
+    },
+    "landingPosition": {
+      "x": 708.96893,
+      "y": -1345.9371,
+      "z": -754.63605
+    },
+    "description": null
+  },
+  {
+    "id": "87835515-57f2-4540-95f3-e662528c7262",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 466.27377,
+      "y": 59.78859,
+      "z": -576.96
+    },
+    "projectileVelocity": {
+      "x": 14.551602,
+      "y": -559.489,
+      "z": 138.20662
+    },
+    "landingPosition": {
+      "x": 489.81525,
+      "y": -845.4008,
+      "z": -767.76984
+    },
+    "description": null
+  },
+  {
+    "id": "62726fca-d02d-49eb-9d32-a248213bf77f",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 152.94882,
+      "y": -39.994354,
+      "z": -350.16895
+    },
+    "projectileVelocity": {
+      "x": 669.5209,
+      "y": 304.30176,
+      "z": 77.24799
+    },
+    "landingPosition": {
+      "x": 963.282,
+      "y": 329.594,
+      "z": -413.8013
+    },
+    "description": null
+  },
+  {
+    "id": "f813b4b5-7f0a-4f18-b34e-2f936b9316f6",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 127.90604,
+      "y": -608.7395,
+      "z": -353.05704
+    },
+    "projectileVelocity": {
+      "x": 98.7197,
+      "y": 464.014,
+      "z": 135.54529
+    },
+    "landingPosition": {
+      "x": 263.72855,
+      "y": 29.674246,
+      "z": -396.3676
+    },
+    "description": null
+  },
+  {
+    "id": "2dea1332-3d13-4ddd-8658-0b3999eab0ee",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 55.20881,
+      "y": -619.52136,
+      "z": -348.39554
+    },
+    "projectileVelocity": {
+      "x": 209.07263,
+      "y": 623.5308,
+      "z": 152.06238
+    },
+    "landingPosition": {
+      "x": 354.41364,
+      "y": 272.8174,
+      "z": -393.21622
+    },
+    "description": null
+  },
+  {
+    "id": "f9f8de82-db77-4b16-904a-28cbc259184c",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 93.51906,
+      "y": -573.2327,
+      "z": -348.76166
+    },
+    "projectileVelocity": {
+      "x": 190.3715,
+      "y": 633.024,
+      "z": 136.61754
+    },
+    "landingPosition": {
+      "x": 357.8413,
+      "y": 305.6925,
+      "z": -395.91696
+    },
+    "description": null
+  },
+  {
+    "id": "8e186336-96f4-4f66-ad32-ff881a9163cb",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 338.9349,
+      "y": 358.97784,
+      "z": -325.5282
+    },
+    "projectileVelocity": {
+      "x": 683.9685,
+      "y": -249.66594,
+      "z": 593.26587
+    },
+    "landingPosition": {
+      "x": 1002.27814,
+      "y": 114.88095,
+      "z": -383.43887
+    },
+    "description": null
+  },
+  {
+    "id": "a1b958c1-829b-444a-a446-a606bf7795f3",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 293.167,
+      "y": -963.1105,
+      "z": -69.330284
+    },
+    "projectileVelocity": {
+      "x": 156.91289,
+      "y": -466.491,
+      "z": -21.523552
+    },
+    "landingPosition": {
+      "x": 495.56155,
+      "y": -1341.1732,
+      "z": -186.20955
+    },
+    "description": null
+  },
+  {
+    "id": "13b4379b-bf22-41a3-baf7-505fe6f50b84",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 293.1668,
+      "y": -963.11,
+      "z": -70.71063
+    },
+    "projectileVelocity": {
+      "x": 139.74236,
+      "y": -415.44418,
+      "z": -19.486803
+    },
+    "landingPosition": {
+      "x": 480.51627,
+      "y": -1308.4788,
+      "z": -392.22736
+    },
+    "description": null
+  },
+  {
+    "id": "f0b1c85c-3eba-4b43-859e-894e1f892eed",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 692.3886,
+      "y": -1495.3108,
+      "z": -348.47098
+    },
+    "projectileVelocity": {
+      "x": -598.6038,
+      "y": 274.8163,
+      "z": 147.5617
+    },
+    "landingPosition": {
+      "x": -155.95314,
+      "y": -1105.8439,
+      "z": -392.88675
+    },
+    "description": null
+  },
+  {
+    "id": "5610eda2-c840-41ac-a64b-dd2722ef7a0a",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 293.3057,
+      "y": -962.5513,
+      "z": -325.97018
+    },
+    "projectileVelocity": {
+      "x": -155.55586,
+      "y": -651.39734,
+      "z": 84.31453
+    },
+    "landingPosition": {
+      "x": 180.7633,
+      "y": -814.09607,
+      "z": -401.1569
+    },
+    "description": null
+  },
+  {
+    "id": "c3162b84-5fd1-4fa6-aa92-06cddf29575c",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1469.5869,
+      "y": -1713.064,
+      "z": -342.81357
+    },
+    "projectileVelocity": {
+      "x": -709.7556,
+      "y": -47.536488,
+      "z": 316.98193
+    },
+    "landingPosition": {
+      "x": 316.23645,
+      "y": -1790.3022,
+      "z": -250.21777
+    },
+    "description": null
+  },
+  {
+    "id": "35d18a12-fa0f-46c5-b06e-bd3ed2b74499",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 2286.3384,
+      "y": -466.31396,
+      "z": -281.7188
+    },
+    "projectileVelocity": {
+      "x": 600.7472,
+      "y": -156.55417,
+      "z": 264.98782
+    },
+    "landingPosition": {
+      "x": 3262.5571,
+      "y": -720.71533,
+      "z": -273.61285
+    },
+    "description": null
+  },
+  {
+    "id": "4217e4e5-3223-4134-bba1-56132c7d8e07",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 2054.6497,
+      "y": -392.17346,
+      "z": -259.4448
+    },
+    "projectileVelocity": {
+      "x": -972.1322,
+      "y": 0.0019870698,
+      "z": 383.94254
+    },
+    "landingPosition": {
+      "x": 474.94208,
+      "y": -392.1671,
+      "z": -58.037975
+    },
+    "description": null
+  },
+  {
+    "id": "28efc9df-2ff7-4125-a6ae-6b7b6f0e966b",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 242.94633,
+      "y": -1235.0338,
+      "z": -341.1364
+    },
+    "projectileVelocity": {
+      "x": 294.36664,
+      "y": -597.394,
+      "z": 387.36542
+    },
+    "landingPosition": {
+      "x": 522.7722,
+      "y": -1169.0015,
+      "z": -283.87564
+    },
+    "description": null
+  },
+  {
+    "id": "db496e3c-a914-4b0f-ac02-17091423a631",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 503.4438,
+      "y": -2286.103,
+      "z": -348.49347
+    },
+    "projectileVelocity": {
+      "x": 654.4121,
+      "y": -74.06877,
+      "z": 147.93114
+    },
+    "landingPosition": {
+      "x": 1566.8601,
+      "y": -2406.4546,
+      "z": -530.6077
+    },
+    "description": null
+  },
+  {
+    "id": "d8aba250-d688-4904-904d-e0ac0ec33a5b",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1691.3059,
+      "y": -1427.2435,
+      "z": -326.58362
+    },
+    "projectileVelocity": {
+      "x": -859.5675,
+      "y": -472.58887,
+      "z": 251.83214
+    },
+    "landingPosition": {
+      "x": 294.5112,
+      "y": -2195.2083,
+      "z": -339.85657
+    },
+    "description": null
+  },
+  {
+    "id": "6d40dcd1-1d72-4148-8bd4-3b4ae75b1b2d",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1039.3899,
+      "y": -1615.1295,
+      "z": -288.30023
+    },
+    "projectileVelocity": {
+      "x": -579.2149,
+      "y": -234.27618,
+      "z": 322.54053
+    },
+    "landingPosition": {
+      "x": 98.16223,
+      "y": -1995.8365,
+      "z": -186.67128
+    },
+    "description": null
+  },
+  {
+    "id": "0761ae9d-4e8c-4c63-ba24-c8d95592d8c3",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1279.4199,
+      "y": -387.30884,
+      "z": -572.8739
+    },
+    "projectileVelocity": {
+      "x": -505.85233,
+      "y": -427.019,
+      "z": 131.88306
+    },
+    "landingPosition": {
+      "x": 820.12146,
+      "y": -422.35785,
+      "z": -727.818
+    },
+    "description": null
+  },
+  {
+    "id": "ea1c9a67-6bd7-4784-ba97-5406d862cd1a",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1278.3749,
+      "y": -384.92343,
+      "z": -588.87976
+    },
+    "projectileVelocity": {
+      "x": -549.9422,
+      "y": -326.38583,
+      "z": 216.01134
+    },
+    "landingPosition": {
+      "x": 745.1123,
+      "y": -701.4113,
+      "z": -759.2973
+    },
+    "description": null
+  },
+  {
+    "id": "32502eef-2352-4dde-8aae-a9cb27ecc9a0",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 645.2895,
+      "y": -569.5366,
+      "z": -314.65225
+    },
+    "projectileVelocity": {
+      "x": 237.91167,
+      "y": -405.5881,
+      "z": 758.006
+    },
+    "landingPosition": {
+      "x": 881.0197,
+      "y": -971.3995,
+      "z": -392.57104
+    },
+    "description": null
+  },
+  {
+    "id": "464a825d-1571-4c76-9efb-9bc119f170e8",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 771.9006,
+      "y": -596.94604,
+      "z": -309.0668
+    },
+    "projectileVelocity": {
+      "x": -118.49501,
+      "y": -10.556008,
+      "z": 437.11487
+    },
+    "landingPosition": {
+      "x": 579.35077,
+      "y": -614.0974,
+      "z": -21.255157
+    },
+    "description": null
+  },
+  {
+    "id": "11b614bf-f6ea-4228-8ba8-35ca87dc6620",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 455.57797,
+      "y": -376.1871,
+      "z": -342.44513
+    },
+    "projectileVelocity": {
+      "x": 626.0408,
+      "y": -4.0510793,
+      "z": 403.0955
+    },
+    "landingPosition": {
+      "x": 1472.8971,
+      "y": -382.76962,
+      "z": -109.91507
+    },
+    "description": null
+  },
+  {
+    "id": "99b585fd-559e-4f10-9771-87d042135cfb",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1083.3722,
+      "y": -1795.7897,
+      "z": -587.8565
+    },
+    "projectileVelocity": {
+      "x": 84.07349,
+      "y": 667.8085,
+      "z": 50.877823
+    },
+    "landingPosition": {
+      "x": 1179.1033,
+      "y": -1035.3712,
+      "z": -688.39716
+    },
+    "description": null
+  },
+  {
+    "id": "5b3c268e-9ae4-4c83-a1d0-fd275319ff48",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1220.6693,
+      "y": -949.7095,
+      "z": -714.42755
+    },
+    "projectileVelocity": {
+      "x": -148.68839,
+      "y": -575.72644,
+      "z": 319.4617
+    },
+    "landingPosition": {
+      "x": 1007.3607,
+      "y": -1596.2836,
+      "z": -600.5694
+    },
+    "description": null
+  },
+  {
+    "id": "ea357245-9c9c-4942-ad96-ed95dee82a0c",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1242.8207,
+      "y": -1960.778,
+      "z": -572.6578
+    },
+    "projectileVelocity": {
+      "x": -209.55118,
+      "y": 738.9762,
+      "z": 140.99864
+    },
+    "landingPosition": {
+      "x": 1128.1194,
+      "y": -1061.9852,
+      "z": -708.1962
+    },
+    "description": null
+  },
+  {
+    "id": "524c97ba-093d-4e92-84db-4d0deb704723",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 588.2598,
+      "y": 319.64047,
+      "z": -308.42044
+    },
+    "projectileVelocity": {
+      "x": -564.2364,
+      "y": -360.89307,
+      "z": 83.77639
+    },
+    "landingPosition": {
+      "x": 166.97046,
+      "y": -98.129944,
+      "z": -404.83633
+    },
+    "description": null
+  },
+  {
+    "id": "6782d408-353f-47be-8beb-fb71241e4247",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 663.75354,
+      "y": 683.26227,
+      "z": -410.60083
+    },
+    "projectileVelocity": {
+      "x": -427.82452,
+      "y": -730.4949,
+      "z": 227.77768
+    },
+    "landingPosition": {
+      "x": 12.482937,
+      "y": -428.75684,
+      "z": -399.40536
+    },
+    "description": null
+  },
+  {
+    "id": "8895a064-a1e5-4e48-b13f-ce1dd2752bab",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -525.81323,
+      "y": -620.69,
+      "z": -348.83917
+    },
+    "projectileVelocity": {
+      "x": 364.54865,
+      "y": -552.2205,
+      "z": 133.34839
+    },
+    "landingPosition": {
+      "x": -96.00776,
+      "y": -1028.1686,
+      "z": -403.18912
+    },
+    "description": null
+  },
+  {
+    "id": "7031dcf3-70e6-40a6-bf18-9eff75f7b832",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -519.20966,
+      "y": -630.7594,
+      "z": -348.83917
+    },
+    "projectileVelocity": {
+      "x": 417.31738,
+      "y": -633.9986,
+      "z": 133.34839
+    },
+    "landingPosition": {
+      "x": -58.558098,
+      "y": -969.3347,
+      "z": -399.07843
+    },
+    "description": null
+  },
+  {
+    "id": "04928f53-fad3-4ecb-b480-5a2d36de4ea3",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1284.8804,
+      "y": -702.0493,
+      "z": -348.13666
+    },
+    "projectileVelocity": {
+      "x": -224.46796,
+      "y": 615.36615,
+      "z": 162.98358
+    },
+    "landingPosition": {
+      "x": 951.29504,
+      "y": 197.24884,
+      "z": -398.41776
+    },
+    "description": null
+  },
+  {
+    "id": "8e3e6fbe-6a8b-4c13-bf73-b3dff13238dc",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1138.0546,
+      "y": -767.1938,
+      "z": -328.51834
+    },
+    "projectileVelocity": {
+      "x": -96.66478,
+      "y": -968.5283,
+      "z": 170.41685
+    },
+    "landingPosition": {
+      "x": 990.9712,
+      "y": -2240.8108,
+      "z": -395.06738
+    },
+    "description": null
+  },
+  {
+    "id": "15046847-4ae2-4cc8-aef8-806ed92d3569",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1352.8909,
+      "y": -1327.7787,
+      "z": -325.07874
+    },
+    "projectileVelocity": {
+      "x": -783.0725,
+      "y": -559.3771,
+      "z": 315.87576
+    },
+    "landingPosition": {
+      "x": 80.39665,
+      "y": -2236.7632,
+      "z": -234.28186
+    },
+    "description": null
+  },
+  {
+    "id": "f2441de6-1937-45b4-be1b-a8878589d371",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1025.7874,
+      "y": -1622.4987,
+      "z": -341.7254
+    },
+    "projectileVelocity": {
+      "x": -470.1109,
+      "y": -216.18036,
+      "z": 433.45908
+    },
+    "landingPosition": {
+      "x": 261.85962,
+      "y": -1973.8033,
+      "z": -59.85414
+    },
+    "description": null
+  },
+  {
+    "id": "7383fdf8-f69d-4cdd-86df-bcb7b3034f47",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 653.9637,
+      "y": -1806.6124,
+      "z": -337.93292
+    },
+    "projectileVelocity": {
+      "x": -615.32477,
+      "y": -107.1773,
+      "z": 255.95596
+    },
+    "landingPosition": {
+      "x": -291.28665,
+      "y": -1955.9846,
+      "z": -334.99405
+    },
+    "description": null
+  },
+  {
+    "id": "121ef05f-6700-4c0b-8971-968d842df408",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 444.654,
+      "y": -1824.71,
+      "z": -329.23373
+    },
+    "projectileVelocity": {
+      "x": -378.9508,
+      "y": -82.672485,
+      "z": 284.22415
+    },
+    "landingPosition": {
+      "x": -171.14055,
+      "y": -1959.0518,
+      "z": -289.86966
+    },
+    "description": null
+  },
+  {
+    "id": "1e20530e-5991-4584-af8f-33dccef9273a",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 223.53027,
+      "y": -769.20544,
+      "z": -55.374565
+    },
+    "projectileVelocity": {
+      "x": -295.26584,
+      "y": -488.79398,
+      "z": -359.89377
+    },
+    "landingPosition": {
+      "x": -87.67422,
+      "y": -1284.3812,
+      "z": -352.77426
+    },
+    "description": null
+  },
+  {
+    "id": "7c71bc65-3d02-4fcc-829d-7d4c4c952f09",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 230.04266,
+      "y": -697.6788,
+      "z": -32.565952
+    },
+    "projectileVelocity": {
+      "x": -49.839497,
+      "y": -172.24947,
+      "z": 94.08719
+    },
+    "landingPosition": {
+      "x": 183.98862,
+      "y": -857.9186,
+      "z": -190.09653
+    },
+    "description": null
+  },
+  {
+    "id": "3ffd57f8-ae97-433b-a86a-49cda0709ccd",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 140.20886,
+      "y": -696.9126,
+      "z": -45.30667
+    },
+    "projectileVelocity": {
+      "x": -378.24243,
+      "y": -543.4318,
+      "z": 131.29942
+    },
+    "landingPosition": {
+      "x": -474.43475,
+      "y": -1579.9938,
+      "z": -254.44533
+    },
+    "description": null
+  },
+  {
+    "id": "8fb6d704-0d95-409d-98f6-5041be94cc37",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 203.78827,
+      "y": -854.4573,
+      "z": -174.19624
+    },
+    "projectileVelocity": {
+      "x": -489.1136,
+      "y": -452.03806,
+      "z": -109.79297
+    },
+    "landingPosition": {
+      "x": 42.977127,
+      "y": -1271.9926,
+      "z": -388.26114
+    },
+    "description": null
+  },
+  {
+    "id": "86b7bd9b-9b2b-4ee8-b821-4af13e45297f",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 200.8202,
+      "y": -666.7139,
+      "z": 74.29204
+    },
+    "projectileVelocity": {
+      "x": 636.0397,
+      "y": 7.083944,
+      "z": 273.79648
+    },
+    "landingPosition": {
+      "x": 726.05225,
+      "y": -660.5042,
+      "z": -177.20068
+    },
+    "description": null
+  },
+  {
+    "id": "a71012c4-ee65-4308-a8b0-e751ab93421b",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 200.46162,
+      "y": -663.75635,
+      "z": 75.28569
+    },
+    "projectileVelocity": {
+      "x": 620.9119,
+      "y": 131.85422,
+      "z": 235.00323
+    },
+    "landingPosition": {
+      "x": 722.6661,
+      "y": -538.5033,
+      "z": -310.21204
+    },
+    "description": null
+  },
+  {
+    "id": "f0855975-f554-4084-97f6-aa6c5b7499c5",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 65.534134,
+      "y": -785.44543,
+      "z": -24.70345
+    },
+    "projectileVelocity": {
+      "x": 221.60397,
+      "y": -562.9954,
+      "z": 299.25385
+    },
+    "landingPosition": {
+      "x": 425.64133,
+      "y": -1700.3171,
+      "z": 39.084145
+    },
+    "description": null
+  },
+  {
+    "id": "227efc5c-39a2-4740-af10-bb6258b791b8",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -159.4081,
+      "y": -502.5621,
+      "z": -14.3058405
+    },
+    "projectileVelocity": {
+      "x": 852.4169,
+      "y": -114.89432,
+      "z": 349.55746
+    },
+    "landingPosition": {
+      "x": 493.17325,
+      "y": -615.05115,
+      "z": -52.133644
+    },
+    "description": null
+  },
+  {
+    "id": "46d927f0-5cb2-4358-83d0-09aea0c75391",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1172.7091,
+      "y": -1844.3041,
+      "z": -576.137
+    },
+    "projectileVelocity": {
+      "x": -107.10302,
+      "y": 393.9317,
+      "z": 160.774
+    },
+    "landingPosition": {
+      "x": 1031.4713,
+      "y": -1359.2157,
+      "z": -596.7042
+    },
+    "description": null
+  },
+  {
+    "id": "5a2f293f-d40c-446a-912e-652b19d0e242",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 676.99207,
+      "y": -1652.1906,
+      "z": -594.73413
+    },
+    "projectileVelocity": {
+      "x": -44.28851,
+      "y": 156.81262,
+      "z": 142.18805
+    },
+    "landingPosition": {
+      "x": 623.12317,
+      "y": -1461.4604,
+      "z": -604.3548
+    },
+    "description": null
+  },
+  {
+    "id": "8d7aa762-0c2f-4c0e-b40f-753393f17ad4",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1129.8203,
+      "y": -1331.9606,
+      "z": -567.0079
+    },
+    "projectileVelocity": {
+      "x": -646.4505,
+      "y": -128.09679,
+      "z": 146.0066
+    },
+    "landingPosition": {
+      "x": 442.38177,
+      "y": -1454.1101,
+      "z": -605.96875
+    },
+    "description": null
+  },
+  {
+    "id": "248686d4-7101-47aa-a0cd-60ded7c6b7dc",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 639.35944,
+      "y": -1478.3394,
+      "z": -548.82
+    },
+    "projectileVelocity": {
+      "x": -378.04166,
+      "y": 220.31558,
+      "z": 32.358276
+    },
+    "landingPosition": {
+      "x": 427.66287,
+      "y": -1463.604,
+      "z": -605.96875
+    },
+    "description": null
+  },
+  {
+    "id": "7c7b6cb9-88f1-434f-8afb-705113d516f8",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 460.40756,
+      "y": -1447.7098,
+      "z": -534.5665
+    },
+    "projectileVelocity": {
+      "x": 2.3767068,
+      "y": 115.695114,
+      "z": 423.2145
+    },
+    "landingPosition": {
+      "x": 464.26694,
+      "y": -1259.7177,
+      "z": -269.3426
+    },
+    "description": null
+  },
+  {
+    "id": "b12b0759-6a9f-422a-87a4-7ff6de6ed314",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 477.68536,
+      "y": -1448.6531,
+      "z": -547.01276
+    },
+    "projectileVelocity": {
+      "x": -191.58005,
+      "y": 138.39279,
+      "z": 632.2733
+    },
+    "landingPosition": {
+      "x": 531.2999,
+      "y": -1323.747,
+      "z": -326.6313
+    },
+    "description": null
+  },
+  {
+    "id": "629447ab-47ff-4fdc-8b16-16140d158b2c",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 475.9101,
+      "y": -1447.4425,
+      "z": -527.9844
+    },
+    "projectileVelocity": {
+      "x": -173.20767,
+      "y": 123.15249,
+      "z": 569.3054
+    },
+    "landingPosition": {
+      "x": 518.6616,
+      "y": -1334.7478,
+      "z": -353.22977
+    },
+    "description": null
+  },
+  {
+    "id": "0a4fbbc5-5d39-4871-a1a1-4aeaf2ab6b87",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 478.839,
+      "y": -1449.2266,
+      "z": -546.5988
+    },
+    "projectileVelocity": {
+      "x": -142.90965,
+      "y": 114.20451,
+      "z": 649.7378
+    },
+    "landingPosition": {
+      "x": 382.90256,
+      "y": -1372.561,
+      "z": -410.18106
+    },
+    "description": null
+  },
+  {
+    "id": "fb5c72eb-68d0-4ae4-9404-dcbbaab56704",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 468.06052,
+      "y": -1445.463,
+      "z": -532.21545
+    },
+    "projectileVelocity": {
+      "x": 4.5303626,
+      "y": 71.63484,
+      "z": 389.09155
+    },
+    "landingPosition": {
+      "x": 475.4238,
+      "y": -1329.047,
+      "z": -322.44427
+    },
+    "description": null
+  },
+  {
+    "id": "fa1648af-cb6b-44f6-a4aa-3e7dc277d21f",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 469.64066,
+      "y": -1448.9523,
+      "z": -552.2836
+    },
+    "projectileVelocity": {
+      "x": 7.2900414,
+      "y": 81.926125,
+      "z": 430.9716
+    },
+    "landingPosition": {
+      "x": 481.48538,
+      "y": -1315.8292,
+      "z": -274.45343
+    },
+    "description": null
+  },
+  {
+    "id": "5f82d282-78ec-49c7-9bf2-b73e599e8cfa",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 480.07645,
+      "y": -1448.0979,
+      "z": -548.8258
+    },
+    "projectileVelocity": {
+      "x": -359.72717,
+      "y": 131.61586,
+      "z": 555.7865
+    },
+    "landingPosition": {
+      "x": 426.04977,
+      "y": -1384.4729,
+      "z": -413.96875
+    },
+    "description": null
+  },
+  {
+    "id": "d8d8aa70-03a5-4c2a-8ead-dcddae2b5b4c",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 495.2931,
+      "y": -1449.3478,
+      "z": -549.68567
+    },
+    "projectileVelocity": {
+      "x": -416.94623,
+      "y": 109.02845,
+      "z": 519.5129
+    },
+    "landingPosition": {
+      "x": 435.55222,
+      "y": -1402.3829,
+      "z": -413.96875
+    },
+    "description": null
+  },
+  {
+    "id": "a77b6afb-9448-4398-b795-2967220a3ad0",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 492.75592,
+      "y": -1448.2506,
+      "z": -549.17194
+    },
+    "projectileVelocity": {
+      "x": -379.30923,
+      "y": 137.37091,
+      "z": 541.18274
+    },
+    "landingPosition": {
+      "x": 637.0775,
+      "y": -1341.8706,
+      "z": -405.85513
+    },
+    "description": null
+  },
+  {
+    "id": "146eb674-d955-4cdc-8a57-3d89a9b4e475",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 452.26367,
+      "y": -1418.9136,
+      "z": -534.4555
+    },
+    "projectileVelocity": {
+      "x": -99.013794,
+      "y": 31.63821,
+      "z": 426.2591
+    },
+    "landingPosition": {
+      "x": 466.86243,
+      "y": -1392.3789,
+      "z": -406.9517
+    },
+    "description": null
+  },
+  {
+    "id": "7b79ee39-df7a-4643-89b1-2ee458cc1ef8",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 441.9369,
+      "y": -1425.2913,
+      "z": -528.8759
+    },
+    "projectileVelocity": {
+      "x": -1.9023364,
+      "y": -220.27022,
+      "z": 638.0458
+    },
+    "landingPosition": {
+      "x": 440.9457,
+      "y": -1391.8491,
+      "z": -400.9257
+    },
+    "description": null
+  },
+  {
+    "id": "4b5b6a4b-82ed-458f-bfe2-34cd932ee4c6",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 446.02875,
+      "y": -1444.9379,
+      "z": -480.11868
+    },
+    "projectileVelocity": {
+      "x": -5.8847623,
+      "y": 173.52983,
+      "z": 443.99808
+    },
+    "landingPosition": {
+      "x": 436.46918,
+      "y": -1162.9496,
+      "z": -181.12057
+    },
+    "description": null
+  },
+  {
+    "id": "ce874637-aef9-4ceb-8cba-17ca9aa92387",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 484.50717,
+      "y": -1448.2886,
+      "z": -547.4034
+    },
+    "projectileVelocity": {
+      "x": -229.64638,
+      "y": 153.89447,
+      "z": 615.7955
+    },
+    "landingPosition": {
+      "x": 556.0636,
+      "y": -1311.2561,
+      "z": -351.78772
+    },
+    "description": null
+  },
+  {
+    "id": "7c31771d-d853-4f7c-aeef-be8069d03419",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 444.13303,
+      "y": -1432.5599,
+      "z": -507.33337
+    },
+    "projectileVelocity": {
+      "x": 17.13446,
+      "y": -498.7986,
+      "z": 728.067
+    },
+    "landingPosition": {
+      "x": 455.673,
+      "y": -1240.6443,
+      "z": -338.736
+    },
+    "description": null
+  },
+  {
+    "id": "f6786cca-f681-471d-84fb-b63a04e63759",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 457.74673,
+      "y": -1434.1582,
+      "z": -509.88446
+    },
+    "projectileVelocity": {
+      "x": -161.23161,
+      "y": 120.04626,
+      "z": 663.6033
+    },
+    "landingPosition": {
+      "x": 518.0769,
+      "y": -1330.1176,
+      "z": -296.56348
+    },
+    "description": null
+  },
+  {
+    "id": "3068075c-b9dd-47ff-af6a-35b67657f809",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 447.82077,
+      "y": -1441.239,
+      "z": -534.9117
+    },
+    "projectileVelocity": {
+      "x": 122.83799,
+      "y": 78.88497,
+      "z": 413.75058
+    },
+    "landingPosition": {
+      "x": 435.43942,
+      "y": -1394.5734,
+      "z": -413.96875
+    },
+    "description": null
+  },
+  {
+    "id": "10bdd4f6-1613-468d-af52-977af6fb2556",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 493.03958,
+      "y": -1428.1982,
+      "z": -549.40643
+    },
+    "projectileVelocity": {
+      "x": -409.68674,
+      "y": 74.23911,
+      "z": 531.2912
+    },
+    "landingPosition": {
+      "x": 429.19763,
+      "y": -1394.9116,
+      "z": -413.96875
+    },
+    "description": null
+  },
+  {
+    "id": "a221e653-17a0-4b29-85e9-e6836833c521",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -77.30542,
+      "y": -1139.3972,
+      "z": -349.0623
+    },
+    "projectileVelocity": {
+      "x": 709.555,
+      "y": -653.44727,
+      "z": 123.93399
+    },
+    "landingPosition": {
+      "x": 430.72925,
+      "y": -1263.4004,
+      "z": -407.20987
+    },
+    "description": null
+  },
+  {
+    "id": "c62ff089-85c7-47ba-a2ac-0915042032a8",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 116.741486,
+      "y": -1197.8833,
+      "z": -348.37183
+    },
+    "projectileVelocity": {
+      "x": 566.7418,
+      "y": -333.16708,
+      "z": 153.06349
+    },
+    "landingPosition": {
+      "x": 921.1925,
+      "y": -1675.5933,
+      "z": -378.11005
+    },
+    "description": null
+  },
+  {
+    "id": "06417ad2-8917-4448-8e77-9a99364c6f37",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -178.79924,
+      "y": -1890.3761,
+      "z": -348.91257
+    },
+    "projectileVelocity": {
+      "x": -210.33485,
+      "y": 293.5349,
+      "z": 249.1948
+    },
+    "landingPosition": {
+      "x": -520.5944,
+      "y": -1413.3878,
+      "z": -366.47018
+    },
+    "description": null
+  },
+  {
+    "id": "463c73b9-06ed-4774-8385-c39b491e8513",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 122.54169,
+      "y": -2069.8018,
+      "z": -347.76328
+    },
+    "projectileVelocity": {
+      "x": -462.2931,
+      "y": 458.21756,
+      "z": 178.73665
+    },
+    "landingPosition": {
+      "x": -574.13776,
+      "y": -1379.2612,
+      "z": -394.65625
+    },
+    "description": null
+  },
+  {
+    "id": "e5b86ace-c543-4762-881b-52e977354f53",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 434.8102,
+      "y": -928.3694,
+      "z": -323.11887
+    },
+    "projectileVelocity": {
+      "x": -555.126,
+      "y": 324.12332,
+      "z": 205.92288
+    },
+    "landingPosition": {
+      "x": 361.95105,
+      "y": -667.6346,
+      "z": -389.77097
+    },
+    "description": null
+  },
+  {
+    "id": "dc57d0bd-5c71-4b5e-bc5a-654dad09e928",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 168.97362,
+      "y": -908.3383,
+      "z": -348.10965
+    },
+    "projectileVelocity": {
+      "x": 279.29846,
+      "y": -592.1831,
+      "z": 164.12355
+    },
+    "landingPosition": {
+      "x": 395.96094,
+      "y": -858.31226,
+      "z": -376.82507
+    },
+    "description": null
+  },
+  {
+    "id": "f859b762-7309-4be1-9e49-aad45cf22fb2",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 406.49094,
+      "y": -1121.26,
+      "z": -346.95117
+    },
+    "projectileVelocity": {
+      "x": -15.883926,
+      "y": 316.82666,
+      "z": 138.44814
+    },
+    "landingPosition": {
+      "x": 385.1974,
+      "y": -696.5124,
+      "z": -382.11673
+    },
+    "description": null
+  },
+  {
+    "id": "fcbd4841-3c13-4697-bb8e-1d46c88f0693",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 402.48553,
+      "y": -1159.4779,
+      "z": -346.81046
+    },
+    "projectileVelocity": {
+      "x": 1.0328803,
+      "y": 415.02908,
+      "z": 142.30716
+    },
+    "landingPosition": {
+      "x": 403.9379,
+      "y": -575.0977,
+      "z": -393.5203
+    },
+    "description": null
+  },
+  {
+    "id": "5316e436-c544-49b7-a390-c68a32058333",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 275.2553,
+      "y": -1038.1484,
+      "z": -342.72644
+    },
+    "projectileVelocity": {
+      "x": 245.74931,
+      "y": 327.22787,
+      "z": 158.21104
+    },
+    "landingPosition": {
+      "x": 625.57806,
+      "y": -571.6785,
+      "z": -378.35004
+    },
+    "description": null
+  },
+  {
+    "id": "61c688f4-24fc-4a05-a99b-85535d6f3dfc",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 805.76355,
+      "y": -442.214,
+      "z": -338.0495
+    },
+    "projectileVelocity": {
+      "x": 329.76382,
+      "y": 22.462574,
+      "z": 588.53735
+    },
+    "landingPosition": {
+      "x": 1181.1768,
+      "y": -416.64197,
+      "z": -254.48827
+    },
+    "description": null
+  },
+  {
+    "id": "e3abd181-c67d-47ee-886e-c234285275c0",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 958.9723,
+      "y": -658.70886,
+      "z": -341.71213
+    },
+    "projectileVelocity": {
+      "x": -26.305798,
+      "y": 129.53789,
+      "z": 418.36523
+    },
+    "landingPosition": {
+      "x": 916.2272,
+      "y": -448.2079,
+      "z": -84.368225
+    },
+    "description": null
+  },
+  {
+    "id": "ab4f7d6f-0778-40e6-b3e8-7d2cb74f12eb",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 555.6327,
+      "y": -1428.69,
+      "z": -543.2271
+    },
+    "projectileVelocity": {
+      "x": 567.63416,
+      "y": -363.80402,
+      "z": 32.604687
+    },
+    "landingPosition": {
+      "x": 383.37228,
+      "y": -1685.6466,
+      "z": -653.11053
+    },
+    "description": null
+  },
+  {
+    "id": "1eb234f1-502e-428d-85e1-8d0120f4c410",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 645.7193,
+      "y": 681.0896,
+      "z": -409.37488
+    },
+    "projectileVelocity": {
+      "x": -299.34003,
+      "y": -536.5647,
+      "z": 279.49747
+    },
+    "landingPosition": {
+      "x": 159.29031,
+      "y": -190.82799,
+      "z": -377.69373
+    },
+    "description": null
+  },
+  {
+    "id": "1cf27cb4-2c3d-4141-90dd-9617e4db2738",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1620.1956,
+      "y": -1685.347,
+      "z": -365.82678
+    },
+    "projectileVelocity": {
+      "x": -422.02213,
+      "y": -496.51382,
+      "z": 176.05783
+    },
+    "landingPosition": {
+      "x": 1102.1226,
+      "y": -1957.3904,
+      "z": -397.2211
+    },
+    "description": null
+  },
+  {
+    "id": "72b276cf-66f3-405e-96a2-97be3682cc9b",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 317.07364,
+      "y": -2098.2212,
+      "z": -347.85773
+    },
+    "projectileVelocity": {
+      "x": -316.12402,
+      "y": 194.54478,
+      "z": 278.12027
+    },
+    "landingPosition": {
+      "x": -196.6287,
+      "y": -1782.0865,
+      "z": -318.41095
+    },
+    "description": null
+  },
+  {
+    "id": "3be9ea4a-a303-4884-b986-e2d6e1fb9a10",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1783.1544,
+      "y": -1569.8552,
+      "z": -347.8357
+    },
+    "projectileVelocity": {
+      "x": -458.93286,
+      "y": -462.75427,
+      "z": 175.68173
+    },
+    "landingPosition": {
+      "x": 1157.8793,
+      "y": -1994.785,
+      "z": -406.12494
+    },
+    "description": null
+  },
+  {
+    "id": "711e60be-5cda-4afc-9715-75a20ce0df9f",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1826.2352,
+      "y": -1487.2157,
+      "z": -371.8492
+    },
+    "projectileVelocity": {
+      "x": -208.72322,
+      "y": -289.5489,
+      "z": 133.72404
+    },
+    "landingPosition": {
+      "x": 1549.6779,
+      "y": -1870.8738,
+      "z": -407.98697
+    },
+    "description": null
+  },
+  {
+    "id": "4c2c9af8-c0da-4b04-a0c1-02c1dc2aca39",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 896.2007,
+      "y": -1628.6422,
+      "z": -350.25958
+    },
+    "projectileVelocity": {
+      "x": -69.05676,
+      "y": -520.3042,
+      "z": 212.2567
+    },
+    "landingPosition": {
+      "x": 785.7409,
+      "y": -2460.9192,
+      "z": -408.07565
+    },
+    "description": null
+  },
+  {
+    "id": "df50fbf6-4390-4018-8b78-5b99cfcf44c1",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 895.0438,
+      "y": -1641.1858,
+      "z": -348.80774
+    },
+    "projectileVelocity": {
+      "x": -70.08563,
+      "y": -485.48785,
+      "z": 252.06932
+    },
+    "landingPosition": {
+      "x": 781.1542,
+      "y": -2430.11,
+      "z": -361.69427
+    },
+    "description": null
+  },
+  {
+    "id": "f46b66fa-5b1e-4b22-90f3-feeb96829db9",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 884.2821,
+      "y": -1709.7809,
+      "z": -349.12958
+    },
+    "projectileVelocity": {
+      "x": -55.13669,
+      "y": -381.62155,
+      "z": 243.24358
+    },
+    "landingPosition": {
+      "x": 794.6913,
+      "y": -2329.9214,
+      "z": -376.36102
+    },
+    "description": null
+  },
+  {
+    "id": "e3c2f445-3d31-4a5c-9d19-f3bf84f3c597",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1330.0529,
+      "y": -432.63605,
+      "z": -339.6763
+    },
+    "projectileVelocity": {
+      "x": -430.42618,
+      "y": -7.472284,
+      "z": 519.9062
+    },
+    "landingPosition": {
+      "x": 799.84546,
+      "y": -441.84143,
+      "z": -153.06549
+    },
+    "description": null
+  },
+  {
+    "id": "037b2f35-528f-4b3f-8bae-b00db9a02b68",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 823.573,
+      "y": 44.09277,
+      "z": -577.15
+    },
+    "projectileVelocity": {
+      "x": -37.777996,
+      "y": -457.24118,
+      "z": 132.99565
+    },
+    "landingPosition": {
+      "x": 771.8599,
+      "y": -581.7643,
+      "z": -621.7465
+    },
+    "description": null
+  },
+  {
+    "id": "10f7c18b-b841-45da-96b8-f857b7b1d1a7",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 824.9294,
+      "y": 60.14044,
+      "z": -571.15
+    },
+    "projectileVelocity": {
+      "x": -70.856804,
+      "y": -854.69507,
+      "z": 204.6087
+    },
+    "landingPosition": {
+      "x": 712.76483,
+      "y": -1292.7731,
+      "z": -628.67535
+    },
+    "description": null
+  },
+  {
+    "id": "532ba492-0308-405d-909e-ecc8da5061b0",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 825.61774,
+      "y": -39.67781,
+      "z": -572.8934
+    },
+    "projectileVelocity": {
+      "x": -67.255775,
+      "y": -748.8921,
+      "z": 131.06123
+    },
+    "landingPosition": {
+      "x": 717.81805,
+      "y": -1239.9879,
+      "z": -760.3697
+    },
+    "description": null
+  },
+  {
+    "id": "b0513382-6fbb-4ed7-b1aa-9e74dd4176bd",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1176.4192,
+      "y": -1686.69,
+      "z": -320.5162
+    },
+    "projectileVelocity": {
+      "x": -913.6201,
+      "y": 23.088219,
+      "z": 510.35352
+    },
+    "landingPosition": {
+      "x": -308.21326,
+      "y": -1649.1626,
+      "z": 86.308044
+    },
+    "description": null
+  },
+  {
+    "id": "1700d7e3-abfd-45ee-b718-e40ff5a2439d",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1208.7482,
+      "y": -1512.2102,
+      "z": -321.64325
+    },
+    "projectileVelocity": {
+      "x": -825.59204,
+      "y": -158.20009,
+      "z": 460.48096
+    },
+    "landingPosition": {
+      "x": -132.84077,
+      "y": -1769.2903,
+      "z": 4.1379356
+    },
+    "description": null
+  },
+  {
+    "id": "1cc711db-8ce4-4338-9c90-ac9bcd1b71b4",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 836.035,
+      "y": -1628.1302,
+      "z": -348.02667
+    },
+    "projectileVelocity": {
+      "x": -568.8084,
+      "y": 327.7325,
+      "z": 157.07755
+    },
+    "landingPosition": {
+      "x": 707.2997,
+      "y": -1275.072,
+      "z": -356.40292
+    },
+    "description": null
+  },
+  {
+    "id": "5800deda-8719-405f-b25b-d5d847c36204",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 836.02704,
+      "y": -1628.1139,
+      "z": -348.0899
+    },
+    "projectileVelocity": {
+      "x": -569.1422,
+      "y": 328.42004,
+      "z": 154.40999
+    },
+    "landingPosition": {
+      "x": 708.78394,
+      "y": -1274.5452,
+      "z": -358.90106
+    },
+    "description": null
+  },
+  {
+    "id": "19224250-08df-49db-aa19-1fe7579c24fd",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 173.94727,
+      "y": -1045.1605,
+      "z": -348.5617
+    },
+    "projectileVelocity": {
+      "x": 585.4316,
+      "y": 303.07495,
+      "z": 145.05339
+    },
+    "landingPosition": {
+      "x": -48.507458,
+      "y": -847.1509,
+      "z": -408.73474
+    },
+    "description": null
+  },
+  {
+    "id": "68bcd8cc-4c14-4740-b44e-c2fa9f352d85",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 353.75375,
+      "y": -1050.4619,
+      "z": -345.73972
+    },
+    "projectileVelocity": {
+      "x": -187.61273,
+      "y": -23.036161,
+      "z": -72.64336
+    },
+    "landingPosition": {
+      "x": 204.37924,
+      "y": -1068.7981,
+      "z": -412.93185
+    },
+    "description": null
+  },
+  {
+    "id": "30034ed2-8ad8-4282-b9c2-c00473697792",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 362.50815,
+      "y": -1454.1445,
+      "z": -325.3622
+    },
+    "projectileVelocity": {
+      "x": 184.4306,
+      "y": 593.1,
+      "z": 300.706
+    },
+    "landingPosition": {
+      "x": 631.8898,
+      "y": -587.85266,
+      "z": -205.34935
+    },
+    "description": null
+  },
+  {
+    "id": "45b68e40-1807-42b2-ba8b-4f2a617967a7",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 779.08936,
+      "y": -1566.3213,
+      "z": -365.32288
+    },
+    "projectileVelocity": {
+      "x": -581.3544,
+      "y": 280.56805,
+      "z": 197.31616
+    },
+    "landingPosition": {
+      "x": 716.5366,
+      "y": -1280.8141,
+      "z": -338.8298
+    },
+    "description": null
+  },
+  {
+    "id": "a655d91b-3bb0-4cef-942e-1b50fafd81dc",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 439.1877,
+      "y": -1432.7177,
+      "z": -531.58
+    },
+    "projectileVelocity": {
+      "x": 2.8366344,
+      "y": -339.64694,
+      "z": 554.879
+    },
+    "landingPosition": {
+      "x": 441.10025,
+      "y": -1270.2906,
+      "z": -412.84506
+    },
+    "description": null
+  },
+  {
+    "id": "d6f8ee59-0a15-4c5c-b9cd-4929c6f3fca3",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 972.5794,
+      "y": -342.42383,
+      "z": -65.19251
+    },
+    "projectileVelocity": {
+      "x": -492.83365,
+      "y": -458.4855,
+      "z": -50.309338
+    },
+    "landingPosition": {
+      "x": 271.27094,
+      "y": -994.8511,
+      "z": -341.2715
+    },
+    "description": null
+  },
+  {
+    "id": "871d59d3-6ce8-4145-83d2-cb0873e09b72",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1261.0325,
+      "y": -2358.3967,
+      "z": -357.1326
+    },
+    "projectileVelocity": {
+      "x": 506.31317,
+      "y": -383.15152,
+      "z": -229.05643
+    },
+    "landingPosition": {
+      "x": 1594.2999,
+      "y": -2307.7769,
+      "z": -540.4073
+    },
+    "description": null
+  },
+  {
+    "id": "4eb24066-3f0d-435b-a532-979f7f3a4222",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -15.256639,
+      "y": -980.1221,
+      "z": 46.52922
+    },
+    "projectileVelocity": {
+      "x": 598.3535,
+      "y": -189.4275,
+      "z": 248.42558
+    },
+    "landingPosition": {
+      "x": 651.4917,
+      "y": -1199.5216,
+      "z": -77.333275
+    },
+    "description": null
+  },
+  {
+    "id": "4a08d728-fb6c-4aa5-ae61-33eb80ebe19c",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -16.945587,
+      "y": -967.3201,
+      "z": 46.191097
+    },
+    "projectileVelocity": {
+      "x": 527.10114,
+      "y": 350.65378,
+      "z": 234.16084
+    },
+    "landingPosition": {
+      "x": 502.6999,
+      "y": -602.6232,
+      "z": 57.46422
+    },
+    "description": null
+  },
+  {
+    "id": "9966405c-ec55-41eb-b447-663dc2cdbd49",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -17.988834,
+      "y": -965.5915,
+      "z": 45.546276
+    },
+    "projectileVelocity": {
+      "x": 483.08908,
+      "y": 423.57828,
+      "z": 206.95747
+    },
+    "landingPosition": {
+      "x": 583.395,
+      "y": -701.7809,
+      "z": -5.284477
+    },
+    "description": null
+  },
+  {
+    "id": "947c1110-6385-45ad-b9fc-286c4f8b8450",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": -75.75813,
+      "y": -1913.7446,
+      "z": -346.65903
+    },
+    "projectileVelocity": {
+      "x": 625.5552,
+      "y": -116.34186,
+      "z": 225.32263
+    },
+    "landingPosition": {
+      "x": 940.7684,
+      "y": -2102.8032,
+      "z": -403.00717
+    },
+    "description": null
+  },
+  {
+    "id": "d45aadcb-1f29-43b8-ad14-8dd65c8c6f58",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 153.14964,
+      "y": -1965.5833,
+      "z": -349.49377
+    },
+    "projectileVelocity": {
+      "x": 153.5214,
+      "y": 2.125851,
+      "z": 183.59467
+    },
+    "landingPosition": {
+      "x": 386.10312,
+      "y": -1962.3594,
+      "z": -395.95804
+    },
+    "description": null
+  },
+  {
+    "id": "739a9a23-5612-487e-82f5-5414c26332fa",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 414.24652,
+      "y": -2307.0896,
+      "z": -360.12195
+    },
+    "projectileVelocity": {
+      "x": 571.41223,
+      "y": -108.202965,
+      "z": -342.6444
+    },
+    "landingPosition": {
+      "x": 797.8539,
+      "y": -2379.7227,
+      "z": -411.49094
+    },
+    "description": null
+  },
+  {
+    "id": "3ab4ca21-0806-4873-976a-72e4d4045c13",
+    "mapName": "de_nuke",
+    "grenadeType": "flash",
+    "projectilePosition": {
+      "x": 1198.5457,
+      "y": -1739.2816,
+      "z": -353.17786
+    },
+    "projectileVelocity": {
+      "x": -634.2642,
+      "y": 225.53223,
+      "z": -49.690804
+    },
+    "landingPosition": {
+      "x": 680.9633,
+      "y": -1555.2434,
+      "z": -413.96875
+    },
+    "description": null
+  }
+]

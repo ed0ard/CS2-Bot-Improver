@@ -1,0 +1,1283 @@
+[
+  {
+    "id": "1167dd3a-d141-4263-a157-6414ecac7993",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1977.7305,
+      "y": 112.53195,
+      "z": 202.23196
+    },
+    "projectileVelocity": {
+      "x": 208.14212,
+      "y": -585.81555,
+      "z": 262.91052
+    },
+    "landingPosition": {
+      "x": -1639.502,
+      "y": -839.4171,
+      "z": 206.96097
+    },
+    "description": null
+  },
+  {
+    "id": "d5007e31-e55c-400c-8088-81d78758e87f",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -2006.2123,
+      "y": -415.3185,
+      "z": 205.63678
+    },
+    "projectileVelocity": {
+      "x": 537.9138,
+      "y": 31.45753,
+      "z": 406.55157
+    },
+    "landingPosition": {
+      "x": -1486.3062,
+      "y": -389.1229,
+      "z": 33.125454
+    },
+    "description": null
+  },
+  {
+    "id": "92db511a-4345-4182-a8f4-8e6eec6a3912",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -2004.7004,
+      "y": -418.15216,
+      "z": 202.97601
+    },
+    "projectileVelocity": {
+      "x": 600.8876,
+      "y": -89.14397,
+      "z": 294.30008
+    },
+    "landingPosition": {
+      "x": -1028.2532,
+      "y": -563.00977,
+      "z": 258.71478
+    },
+    "description": null
+  },
+  {
+    "id": "4a3c2af4-4ca1-4218-87c5-bb2e25ba4ad5",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1743.841,
+      "y": -24.999168,
+      "z": 202.09897
+    },
+    "projectileVelocity": {
+      "x": -0.44488502,
+      "y": -624.0362,
+      "z": 257.30066
+    },
+    "landingPosition": {
+      "x": -1744.494,
+      "y": -815.625,
+      "z": 222.85854
+    },
+    "description": null
+  },
+  {
+    "id": "9c855b08-0710-4a88-9e22-9430608d958c",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -2336.6401,
+      "y": -357.09692,
+      "z": 507.037
+    },
+    "projectileVelocity": {
+      "x": 645.6082,
+      "y": 149.66547,
+      "z": 128.12228
+    },
+    "landingPosition": {
+      "x": -1287.5319,
+      "y": -113.89106,
+      "z": 292.73654
+    },
+    "description": null
+  },
+  {
+    "id": "51503af0-f290-44d9-801c-17666c456b80",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1988.5306,
+      "y": 151.27214,
+      "z": 216.67284
+    },
+    "projectileVelocity": {
+      "x": 430.74506,
+      "y": -80.69461,
+      "z": 294.76733
+    },
+    "landingPosition": {
+      "x": -1288.5619,
+      "y": 20.14334,
+      "z": 273.16727
+    },
+    "description": null
+  },
+  {
+    "id": "6ab2804e-0fca-4b2e-814a-4e222373f57e",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -611.49945,
+      "y": -99.47093,
+      "z": 82.84051
+    },
+    "projectileVelocity": {
+      "x": -778.173,
+      "y": 167.32599,
+      "z": 218.23271
+    },
+    "landingPosition": {
+      "x": -1581.3989,
+      "y": 182.95602,
+      "z": 69.0734
+    },
+    "description": null
+  },
+  {
+    "id": "a88a8c57-0b32-4d6f-9f1f-b8d1a937bebc",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1146.4755,
+      "y": 484.14493,
+      "z": 120.827286
+    },
+    "projectileVelocity": {
+      "x": 434.48657,
+      "y": -497.48676,
+      "z": 139.11629
+    },
+    "landingPosition": {
+      "x": -498.14426,
+      "y": -249.78983,
+      "z": 18.364521
+    },
+    "description": null
+  },
+  {
+    "id": "d49a1501-b777-47f1-82d2-cdaf4d2fed1a",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1992.8027,
+      "y": 151.40294,
+      "z": 216.69193
+    },
+    "projectileVelocity": {
+      "x": 432.0615,
+      "y": -73.37662,
+      "z": 294.47028
+    },
+    "landingPosition": {
+      "x": -1290.7012,
+      "y": 32.165604,
+      "z": 272.70392
+    },
+    "description": null
+  },
+  {
+    "id": "39e5c78a-f9a4-4297-ac45-5cffd026fe60",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -2068.547,
+      "y": 738.5047,
+      "z": 327.52063
+    },
+    "projectileVelocity": {
+      "x": 519.8588,
+      "y": -404.1187,
+      "z": 148.52579
+    },
+    "landingPosition": {
+      "x": -1223.7762,
+      "y": 81.813416,
+      "z": 146.37688
+    },
+    "description": null
+  },
+  {
+    "id": "74f830b1-5c8c-4b58-9666-6eefe93235b8",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -799.39874,
+      "y": -1.2163426,
+      "z": 147.90361
+    },
+    "projectileVelocity": {
+      "x": -624.0842,
+      "y": -125.97036,
+      "z": 224.2217
+    },
+    "landingPosition": {
+      "x": -1757.1508,
+      "y": -194.53845,
+      "z": 147.70888
+    },
+    "description": null
+  },
+  {
+    "id": "933345f2-be80-4f2b-a4b7-5c1f1689ab29",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -625.04285,
+      "y": -41.903896,
+      "z": 83.79428
+    },
+    "projectileVelocity": {
+      "x": -607.4802,
+      "y": -73.36523,
+      "z": 284.97424
+    },
+    "landingPosition": {
+      "x": -1598.0659,
+      "y": -159.41547,
+      "z": 138.0236
+    },
+    "description": null
+  },
+  {
+    "id": "57d499d0-54ed-405b-90b7-adfbe48f77b8",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1492.5172,
+      "y": 535.4124,
+      "z": 93.45661
+    },
+    "projectileVelocity": {
+      "x": 375.49097,
+      "y": -651.6906,
+      "z": 242.76357
+    },
+    "landingPosition": {
+      "x": -912.07526,
+      "y": -471.99997,
+      "z": 113.909904
+    },
+    "description": null
+  },
+  {
+    "id": "14744b9a-1db7-4a05-b19d-10fd0d3e99de",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1035.5386,
+      "y": 80.74525,
+      "z": 193.01219
+    },
+    "projectileVelocity": {
+      "x": -378.13293,
+      "y": -558.8802,
+      "z": 256.3589
+    },
+    "landingPosition": {
+      "x": -1650.0171,
+      "y": -827.4361,
+      "z": 187.09616
+    },
+    "description": null
+  },
+  {
+    "id": "1c0154bc-e56d-46be-81ef-5cc4316c731c",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1030.8904,
+      "y": 78.65661,
+      "z": 191.94904
+    },
+    "projectileVelocity": {
+      "x": -182.03543,
+      "y": -646.9944,
+      "z": 211.14679
+    },
+    "landingPosition": {
+      "x": -1326.6912,
+      "y": -972.70825,
+      "z": 112.562805
+    },
+    "description": null
+  },
+  {
+    "id": "f54887a8-dfb7-44b0-83ba-280cc4eeb142",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -866.09216,
+      "y": 481.37927,
+      "z": 165.88722
+    },
+    "projectileVelocity": {
+      "x": 268.46072,
+      "y": -614.17834,
+      "z": 79.61714
+    },
+    "landingPosition": {
+      "x": -492.20258,
+      "y": -384.09116,
+      "z": 60.921425
+    },
+    "description": null
+  },
+  {
+    "id": "97c21ad1-c67f-496f-af7e-e58bc46b0a19",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1736.3643,
+      "y": 69.35817,
+      "z": 218.73596
+    },
+    "projectileVelocity": {
+      "x": 651.7218,
+      "y": -113.24425,
+      "z": 139.10266
+    },
+    "landingPosition": {
+      "x": -690.1934,
+      "y": -111.93202,
+      "z": 34.173775
+    },
+    "description": null
+  },
+  {
+    "id": "7c24cd48-6b60-48ba-95fe-c2edac0fc7aa",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1779.0732,
+      "y": -175.54822,
+      "z": 198.19257
+    },
+    "projectileVelocity": {
+      "x": 621.4584,
+      "y": 246.69504,
+      "z": 92.49885
+    },
+    "landingPosition": {
+      "x": -945.631,
+      "y": 155.29887,
+      "z": 122.47018
+    },
+    "description": null
+  },
+  {
+    "id": "4e96961c-4971-4ce8-a189-c84c6c4cc795",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1750.5961,
+      "y": -161.23854,
+      "z": 199.15627
+    },
+    "projectileVelocity": {
+      "x": 803.1157,
+      "y": 386.39008,
+      "z": 133.15483
+    },
+    "landingPosition": {
+      "x": -612.646,
+      "y": 254.68352,
+      "z": 48.55139
+    },
+    "description": null
+  },
+  {
+    "id": "5ec5b6a9-2306-4c90-af9e-3a7c095940cb",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -468.60043,
+      "y": -288.98883,
+      "z": 90.23232
+    },
+    "projectileVelocity": {
+      "x": -294.45532,
+      "y": 560.4322,
+      "z": 234.17271
+    },
+    "landingPosition": {
+      "x": -860.9415,
+      "y": 457.74884,
+      "z": 137.60881
+    },
+    "description": null
+  },
+  {
+    "id": "9aec965d-88ba-4c9e-8208-81978dfb8542",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -645.09204,
+      "y": 77.66537,
+      "z": 89.14469
+    },
+    "projectileVelocity": {
+      "x": -669.0417,
+      "y": 274.4743,
+      "z": 367.96542
+    },
+    "landingPosition": {
+      "x": -1732.2888,
+      "y": 523.6849,
+      "z": 264.58768
+    },
+    "description": null
+  },
+  {
+    "id": "14b157e8-25fb-44b6-b75e-fafd0d473dfc",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -729.5878,
+      "y": -116.243065,
+      "z": 109.278496
+    },
+    "projectileVelocity": {
+      "x": -783.4295,
+      "y": 263.2705,
+      "z": 158.33441
+    },
+    "landingPosition": {
+      "x": -1045.0386,
+      "y": 139.72482,
+      "z": 106.636566
+    },
+    "description": null
+  },
+  {
+    "id": "cadb9f39-2a72-4d96-9eaa-2f926aafcba1",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -714.3368,
+      "y": -120.804535,
+      "z": 105.42085
+    },
+    "projectileVelocity": {
+      "x": -751.23035,
+      "y": 255.3121,
+      "z": 214.09447
+    },
+    "landingPosition": {
+      "x": -1678.7754,
+      "y": 183.51422,
+      "z": 158.0525
+    },
+    "description": null
+  },
+  {
+    "id": "dac2df77-2bc6-4932-ad6f-63dfa9c6fd77",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -394.30658,
+      "y": 302.65967,
+      "z": 62.95967
+    },
+    "projectileVelocity": {
+      "x": -790.72485,
+      "y": -173.53568,
+      "z": 291.56177
+    },
+    "landingPosition": {
+      "x": -1656.3553,
+      "y": 32.262543,
+      "z": 121.392914
+    },
+    "description": null
+  },
+  {
+    "id": "dec741da-43e6-4243-9b39-5a92e1bd79ba",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -2427.1335,
+      "y": 572.36084,
+      "z": 551.40906
+    },
+    "projectileVelocity": {
+      "x": 486.7238,
+      "y": 445.01794,
+      "z": 143.81935
+    },
+    "landingPosition": {
+      "x": -1772.2528,
+      "y": 1248.3353,
+      "z": 396.12964
+    },
+    "description": null
+  },
+  {
+    "id": "c553b2f2-cbb7-46cc-8437-06cd9e709314",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -2372.396,
+      "y": 841.88043,
+      "z": 543.70764
+    },
+    "projectileVelocity": {
+      "x": -206.40067,
+      "y": -765.57764,
+      "z": 156.41583
+    },
+    "landingPosition": {
+      "x": -2676.2798,
+      "y": -214.17513,
+      "z": 444.5363
+    },
+    "description": null
+  },
+  {
+    "id": "92bcbc86-1e98-4070-a307-1b30e05e7475",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -783.39325,
+      "y": 93.78772,
+      "z": 144.3213
+    },
+    "projectileVelocity": {
+      "x": -669.1357,
+      "y": 303.98016,
+      "z": 349.77908
+    },
+    "landingPosition": {
+      "x": -1870.7439,
+      "y": 587.755,
+      "z": 290.21024
+    },
+    "description": null
+  },
+  {
+    "id": "af9ac7db-e4a4-40b6-a881-69d13460e322",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -886.36145,
+      "y": -27.051493,
+      "z": 169.84966
+    },
+    "projectileVelocity": {
+      "x": -619.02545,
+      "y": -107.38247,
+      "z": 246.78235
+    },
+    "landingPosition": {
+      "x": -1892.2855,
+      "y": -201.5484,
+      "z": 148.37144
+    },
+    "description": null
+  },
+  {
+    "id": "d5e25b81-509d-4cfe-add7-3f62561f27a0",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1297.4856,
+      "y": -213.5706,
+      "z": 176.37953
+    },
+    "projectileVelocity": {
+      "x": -797.26917,
+      "y": 304.8466,
+      "z": 240.16492
+    },
+    "landingPosition": {
+      "x": -1821.6096,
+      "y": 136.6707,
+      "z": 181.93614
+    },
+    "description": null
+  },
+  {
+    "id": "4c3b4de0-0a2e-4883-a32f-ba272dd977dc",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -3742.359,
+      "y": -494.3825,
+      "z": 570.3914
+    },
+    "projectileVelocity": {
+      "x": 502.57816,
+      "y": 696.65283,
+      "z": 154.88045
+    },
+    "landingPosition": {
+      "x": -2998.3462,
+      "y": 536.90784,
+      "z": 507.3474
+    },
+    "description": null
+  },
+  {
+    "id": "1348f216-6e8c-479a-882a-4b939363060b",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -3257.751,
+      "y": 218.92618,
+      "z": 583.18396
+    },
+    "projectileVelocity": {
+      "x": 563.17737,
+      "y": 610.84265,
+      "z": 200.15727
+    },
+    "landingPosition": {
+      "x": -2342.662,
+      "y": 1211.4486,
+      "z": 486.07346
+    },
+    "description": null
+  },
+  {
+    "id": "f309deaa-755a-4f28-82d7-cdd1e3b16cfd",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -3087.5818,
+      "y": 742.8142,
+      "z": 553.4335
+    },
+    "projectileVelocity": {
+      "x": 510.79233,
+      "y": 377.05612,
+      "z": 229.22664
+    },
+    "landingPosition": {
+      "x": -2327.7607,
+      "y": 1264.0625,
+      "z": 522.26587
+    },
+    "description": null
+  },
+  {
+    "id": "d7ed7ba2-11b4-4f12-8647-f50b87f39304",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -2647.313,
+      "y": 504.0816,
+      "z": 563.8199
+    },
+    "projectileVelocity": {
+      "x": 506.12506,
+      "y": 403.50708,
+      "z": 191.42744
+    },
+    "landingPosition": {
+      "x": -1824.8599,
+      "y": 1159.7792,
+      "z": 452.39233
+    },
+    "description": null
+  },
+  {
+    "id": "a7ee180d-1ecd-4cb1-b271-de5fbff53f9e",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -501.0017,
+      "y": 351.47696,
+      "z": 67.05123
+    },
+    "projectileVelocity": {
+      "x": -531.50275,
+      "y": -517.345,
+      "z": 284.0478
+    },
+    "landingPosition": {
+      "x": -1246.3658,
+      "y": -211.97748,
+      "z": 130.01097
+    },
+    "description": null
+  },
+  {
+    "id": "34a53b32-9806-43c9-a96e-5e6f275543a2",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -189.72928,
+      "y": 233.06027,
+      "z": 84.34347
+    },
+    "projectileVelocity": {
+      "x": -606.65796,
+      "y": -49.19274,
+      "z": 291.84094
+    },
+    "landingPosition": {
+      "x": -1175.5459,
+      "y": 153.12106,
+      "z": 136.08623
+    },
+    "description": null
+  },
+  {
+    "id": "8aa15a02-da7f-44b3-af1b-6d8b94c97733",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -293.39078,
+      "y": 267.96115,
+      "z": 63.052547
+    },
+    "projectileVelocity": {
+      "x": -619.0549,
+      "y": 29.94208,
+      "z": 267.39395
+    },
+    "landingPosition": {
+      "x": -1299.3582,
+      "y": 316.61594,
+      "z": 75.06813
+    },
+    "description": null
+  },
+  {
+    "id": "9aaefe94-393b-4227-a317-ba3d9eccd218",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -473.21243,
+      "y": 344.2591,
+      "z": 65.00144
+    },
+    "projectileVelocity": {
+      "x": -726.7387,
+      "y": -276.4684,
+      "z": 282.89795
+    },
+    "landingPosition": {
+      "x": -1594.5112,
+      "y": -82.3099,
+      "z": 143.24109
+    },
+    "description": null
+  },
+  {
+    "id": "a04ed2f6-13e4-47be-8984-1d99b7d72f50",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1413.4241,
+      "y": 526.12225,
+      "z": 97.7735
+    },
+    "projectileVelocity": {
+      "x": -253.74243,
+      "y": -548.8303,
+      "z": 300.04184
+    },
+    "landingPosition": {
+      "x": -1825.7678,
+      "y": -365.7279,
+      "z": 162.84026
+    },
+    "description": null
+  },
+  {
+    "id": "d9fd5c5f-3081-46e8-94a5-17381fc0dcc9",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1726.1409,
+      "y": -2389.583,
+      "z": 417.48233
+    },
+    "projectileVelocity": {
+      "x": -614.52484,
+      "y": 472.24835,
+      "z": 265.33606
+    },
+    "landingPosition": {
+      "x": -2643.6582,
+      "y": -1684.4834,
+      "z": 488.57007
+    },
+    "description": "T"
+  },
+  {
+    "id": "1ce97ef9-adb4-4f8c-a45a-50babebce36d",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -2126.6494,
+      "y": -2168.4026,
+      "z": 546.1772
+    },
+    "projectileVelocity": {
+      "x": -775.3551,
+      "y": 227.4935,
+      "z": 218.41296
+    },
+    "landingPosition": {
+      "x": -3103.7144,
+      "y": -1770.3384,
+      "z": 523.8234
+    },
+    "description": null
+  },
+  {
+    "id": "6233b6c4-835c-4d03-9b77-f89133998b31",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -2765.324,
+      "y": -1521.9169,
+      "z": 507.69595
+    },
+    "projectileVelocity": {
+      "x": 595.96405,
+      "y": -557.18054,
+      "z": 220.32791
+    },
+    "landingPosition": {
+      "x": -1796.8748,
+      "y": -2427.3464,
+      "z": 443.22913
+    },
+    "description": null
+  },
+  {
+    "id": "9050129c-56c5-4dbf-866f-be7a6f699227",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -2685.398,
+      "y": -1617.1208,
+      "z": 519.0295
+    },
+    "projectileVelocity": {
+      "x": 493.10474,
+      "y": -417.66248,
+      "z": 195.0148
+    },
+    "landingPosition": {
+      "x": -1899.7308,
+      "y": -2279.7737,
+      "z": 441.35294
+    },
+    "description": null
+  },
+  {
+    "id": "6f6f5eb3-b358-40d9-ab7c-fef23812f0f3",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -2386.7134,
+      "y": 745.7835,
+      "z": 542.8302
+    },
+    "projectileVelocity": {
+      "x": 571.2965,
+      "y": 339.10056,
+      "z": 119.39891
+    },
+    "landingPosition": {
+      "x": -1852.2859,
+      "y": 1208.1318,
+      "z": 379.8868
+    },
+    "description": null
+  },
+  {
+    "id": "d568b1f7-c016-4643-ae11-c36d6d13b373",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -2350.292,
+      "y": 862.80066,
+      "z": 543.0782
+    },
+    "projectileVelocity": {
+      "x": -269.03812,
+      "y": 605.2933,
+      "z": 129.8595
+    },
+    "landingPosition": {
+      "x": -2621.4202,
+      "y": 1331.1509,
+      "z": 480.18112
+    },
+    "description": null
+  },
+  {
+    "id": "5799ee47-cec3-410d-81d6-d32fec6997e5",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -2747.707,
+      "y": 343.44305,
+      "z": 511.10077
+    },
+    "projectileVelocity": {
+      "x": 502.22437,
+      "y": 397.29587,
+      "z": 213.4285
+    },
+    "landingPosition": {
+      "x": -1981.9996,
+      "y": 949.1807,
+      "z": 501.31827
+    },
+    "description": null
+  },
+  {
+    "id": "b6846ce0-bfa3-46d5-a394-7fc7441cd897",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1990.9652,
+      "y": 625.9734,
+      "z": 541.33435
+    },
+    "projectileVelocity": {
+      "x": 151.92862,
+      "y": 655.266,
+      "z": 56.295147
+    },
+    "landingPosition": {
+      "x": -1798.9507,
+      "y": 1197.778,
+      "z": 373.9705
+    },
+    "description": null
+  },
+  {
+    "id": "1744589a-4d0d-4c66-a2f7-481d497340b8",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1994.5571,
+      "y": 626.2601,
+      "z": 542.40063
+    },
+    "projectileVelocity": {
+      "x": 0.39862296,
+      "y": 667.359,
+      "z": 101.275826
+    },
+    "landingPosition": {
+      "x": -1994.0321,
+      "y": 1152.8217,
+      "z": 359.36862
+    },
+    "description": null
+  },
+  {
+    "id": "6e73893a-8be0-4c5b-a2ed-a2cbdf590909",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -2235.8672,
+      "y": 938.5835,
+      "z": 551.31506
+    },
+    "projectileVelocity": {
+      "x": 656.8033,
+      "y": 68.37395,
+      "z": 139.85524
+    },
+    "landingPosition": {
+      "x": -2000.3025,
+      "y": 1241.2712,
+      "z": 385.85114
+    },
+    "description": null
+  },
+  {
+    "id": "4bfdaeee-0dd9-4fa6-b458-781d69f7ca00",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1876.6686,
+      "y": -1878.1367,
+      "z": 167.31952
+    },
+    "projectileVelocity": {
+      "x": 115.64483,
+      "y": 650.10724,
+      "z": 140.04227
+    },
+    "landingPosition": {
+      "x": -1715.0199,
+      "y": -969.3994,
+      "z": 122.09089
+    },
+    "description": null
+  },
+  {
+    "id": "daf1dc16-0c5b-41e3-bd46-2cc72212dbc8",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1806.6062,
+      "y": -1200.793,
+      "z": 171.5857
+    },
+    "projectileVelocity": {
+      "x": 539.49585,
+      "y": 535.7374,
+      "z": 320.02158
+    },
+    "landingPosition": {
+      "x": -929.9201,
+      "y": -330.22327,
+      "z": 269.12317
+    },
+    "description": null
+  },
+  {
+    "id": "d1a4b6e0-fd20-47c4-9f3e-ddbafc7b9c2d",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1754.1257,
+      "y": -1369.9242,
+      "z": 168.19524
+    },
+    "projectileVelocity": {
+      "x": -165.42728,
+      "y": 814.5818,
+      "z": 176.98651
+    },
+    "landingPosition": {
+      "x": -1897.4337,
+      "y": -1056.1007,
+      "z": 159.32164
+    },
+    "description": null
+  },
+  {
+    "id": "1481d6b9-386e-4e5c-ba27-c6cf5cd4a131",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1588.2085,
+      "y": -789.6611,
+      "z": 189.1539
+    },
+    "projectileVelocity": {
+      "x": 389.89813,
+      "y": 550.1229,
+      "z": 242.47772
+    },
+    "landingPosition": {
+      "x": -1022.9128,
+      "y": 62.537865,
+      "z": 172.07625
+    },
+    "description": null
+  },
+  {
+    "id": "2a63f291-20df-4f38-a91f-24ae5dbbfeba",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1593.0426,
+      "y": -787.3202,
+      "z": 183.88504
+    },
+    "projectileVelocity": {
+      "x": 120.87087,
+      "y": 421.7721,
+      "z": 273.33963
+    },
+    "landingPosition": {
+      "x": -1396.6207,
+      "y": -101.93901,
+      "z": 205.56229
+    },
+    "description": null
+  },
+  {
+    "id": "ea79dbe8-7d5e-4f09-a5f8-b78019a64b63",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1112.8274,
+      "y": 353.2913,
+      "z": 119.48631
+    },
+    "projectileVelocity": {
+      "x": 517.01184,
+      "y": -464.81702,
+      "z": 148.463
+    },
+    "landingPosition": {
+      "x": -401.75357,
+      "y": -299.12228,
+      "z": 62.55123
+    },
+    "description": null
+  },
+  {
+    "id": "9fe0b538-b0a2-45d0-b1b5-2bb672cb0067",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -1227.1554,
+      "y": 1.7760081,
+      "z": 170.12878
+    },
+    "projectileVelocity": {
+      "x": 777.273,
+      "y": -139.02463,
+      "z": 110.90167
+    },
+    "landingPosition": {
+      "x": -410.2292,
+      "y": -61.334938,
+      "z": 122.048164
+    },
+    "description": null
+  },
+  {
+    "id": "7f80790b-c071-434e-b2c9-2f68cbc940b7",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -967.1193,
+      "y": -333.586,
+      "z": 169.83148
+    },
+    "projectileVelocity": {
+      "x": -588.52783,
+      "y": 220.763,
+      "z": 246.01569
+    },
+    "landingPosition": {
+      "x": -1923.4825,
+      "y": 25.153757,
+      "z": 147.10687
+    },
+    "description": null
+  },
+  {
+    "id": "5dcf9465-73e2-417c-8b7c-3a50649a2446",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -2742.805,
+      "y": -154.34102,
+      "z": 505.8259
+    },
+    "projectileVelocity": {
+      "x": 380.60104,
+      "y": 500.35983,
+      "z": 245.78018
+    },
+    "landingPosition": {
+      "x": -2157.2344,
+      "y": 584.6416,
+      "z": 523.7739
+    },
+    "description": null
+  },
+  {
+    "id": "0282fa62-2cc0-4eeb-8125-fdb2e9af72e7",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -2250.389,
+      "y": 841.1376,
+      "z": 542.3857
+    },
+    "projectileVelocity": {
+      "x": 588.9716,
+      "y": 314.01828,
+      "z": 100.647545
+    },
+    "landingPosition": {
+      "x": -1926.5619,
+      "y": 1223.3546,
+      "z": 358.6139
+    },
+    "description": null
+  },
+  {
+    "id": "2a0ec7fa-781e-4e00-8b40-918fe522c569",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -2272.2913,
+      "y": 847.2633,
+      "z": 542.9675
+    },
+    "projectileVelocity": {
+      "x": -335.04214,
+      "y": 572.4495,
+      "z": 125.193115
+    },
+    "landingPosition": {
+      "x": -2667.7268,
+      "y": 1680.9424,
+      "z": 374.0535
+    },
+    "description": null
+  },
+  {
+    "id": "dfe8a2f1-6f63-4144-9a53-5ff5e7fcbb40",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -2302.812,
+      "y": 630.17194,
+      "z": 543.4201
+    },
+    "projectileVelocity": {
+      "x": -129.1741,
+      "y": 649.61127,
+      "z": 130.1702
+    },
+    "landingPosition": {
+      "x": -2498.5452,
+      "y": 1334.847,
+      "z": 486.24753
+    },
+    "description": null
+  },
+  {
+    "id": "94ef4495-128b-45e1-ae71-6ceabe40f87c",
+    "mapName": "de_overpass",
+    "grenadeType": "he",
+    "projectilePosition": {
+      "x": -2288.5803,
+      "y": 625.6753,
+      "z": 543.85504
+    },
+    "projectileVelocity": {
+      "x": 471.2231,
+      "y": 459.90866,
+      "z": 148.5188
+    },
+    "landingPosition": {
+      "x": -1823.269,
+      "y": 1261.8066,
+      "z": 418.6679
+    },
+    "description": null
+  }
+]

@@ -1,0 +1,1199 @@
+[
+  {
+    "id": "66800024-1548-48db-86f3-98fe291a70a2",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 470.71048,
+      "y": 2029.4976,
+      "z": 231.3281
+    },
+    "projectileVelocity": {
+      "x": -350.55435,
+      "y": 529.31287,
+      "z": 502.84894
+    },
+    "landingPosition": {
+      "x": 93.99721,
+      "y": 2532.6326,
+      "z": 163.03125
+    },
+    "description": null
+  },
+  {
+    "id": "15adb5e8-29f1-441e-9dda-e0747e4f493a",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 452.08752,
+      "y": 1848.3632,
+      "z": 222.63748
+    },
+    "projectileVelocity": {
+      "x": -139.2719,
+      "y": 409.1601,
+      "z": 349.06116
+    },
+    "landingPosition": {
+      "x": 171.36569,
+      "y": 2673.0688,
+      "z": 276.17734
+    },
+    "description": null
+  },
+  {
+    "id": "4affccc0-c520-4d5f-9f20-85df569a434d",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1576.5178,
+      "y": -371.8022,
+      "z": 323.16226
+    },
+    "projectileVelocity": {
+      "x": 608.39777,
+      "y": 260.15244,
+      "z": 133.4085
+    },
+    "landingPosition": {
+      "x": 2559.0623,
+      "y": -52.404602,
+      "z": 97.73359
+    },
+    "description": null
+  },
+  {
+    "id": "e21c6a42-e16c-4b59-887a-6688600487ec",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1179.6116,
+      "y": 576.9211,
+      "z": 186.00375
+    },
+    "projectileVelocity": {
+      "x": 370.62607,
+      "y": -465.75116,
+      "z": 318.335
+    },
+    "landingPosition": {
+      "x": 1374.6484,
+      "y": 11.843124,
+      "z": 263.05487
+    },
+    "description": null
+  },
+  {
+    "id": "25ec2ba5-db61-4e59-a623-c023b61fc23c",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1946.202,
+      "y": 1220.0476,
+      "z": 258.4965
+    },
+    "projectileVelocity": {
+      "x": 4.5675144,
+      "y": -436.58527,
+      "z": 316.89905
+    },
+    "landingPosition": {
+      "x": 1955.3983,
+      "y": 340.05756,
+      "z": 247.20584
+    },
+    "description": null
+  },
+  {
+    "id": "e1534756-dc42-4254-a998-5b1e4df112ca",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1924.5275,
+      "y": 1212.5153,
+      "z": 308.1438
+    },
+    "projectileVelocity": {
+      "x": 285.56015,
+      "y": -704.3003,
+      "z": 241.55229
+    },
+    "landingPosition": {
+      "x": 2500.1143,
+      "y": -207.08704,
+      "z": 144.98116
+    },
+    "description": null
+  },
+  {
+    "id": "73573e88-6ecc-4782-8e35-dd0e6ae469f0",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1919.1554,
+      "y": 1215.8177,
+      "z": 307.80197
+    },
+    "projectileVelocity": {
+      "x": 125.29741,
+      "y": -709.4868,
+      "z": 227.17801
+    },
+    "landingPosition": {
+      "x": 2157.7864,
+      "y": -135.33673,
+      "z": 160.15706
+    },
+    "description": null
+  },
+  {
+    "id": "2cd2618e-348a-42ab-a1ab-3a4690b78bd0",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1917.805,
+      "y": 1221.2952,
+      "z": 288.96777
+    },
+    "projectileVelocity": {
+      "x": 116.28538,
+      "y": -615.5718,
+      "z": 251.34465
+    },
+    "landingPosition": {
+      "x": 2105.6677,
+      "y": 226.78438,
+      "z": 277.41412
+    },
+    "description": null
+  },
+  {
+    "id": "27a9b90a-4589-4c92-858a-d8c70b870061",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 739.2421,
+      "y": 3488.8408,
+      "z": 199.09201
+    },
+    "projectileVelocity": {
+      "x": -655.0408,
+      "y": -551.33746,
+      "z": 239.20755
+    },
+    "landingPosition": {
+      "x": 40.477516,
+      "y": 3105.4187,
+      "z": 162.70554
+    },
+    "description": null
+  },
+  {
+    "id": "e8bdccb8-b83e-492b-b985-e314f6d958f8",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 811.93787,
+      "y": 3254.8577,
+      "z": 235.25801
+    },
+    "projectileVelocity": {
+      "x": -260.80533,
+      "y": -303.66287,
+      "z": 543.50195
+    },
+    "landingPosition": {
+      "x": 509.842,
+      "y": 2903.1104,
+      "z": 163.53123
+    },
+    "description": null
+  },
+  {
+    "id": "dbf31850-77ff-43f5-b903-8fa313f9a9f2",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 929.29706,
+      "y": 3248.3186,
+      "z": 229.4663
+    },
+    "projectileVelocity": {
+      "x": -753.38995,
+      "y": -156.00723,
+      "z": 761.61
+    },
+    "landingPosition": {
+      "x": 94.86256,
+      "y": 2737.4553,
+      "z": 163.03125
+    },
+    "description": null
+  },
+  {
+    "id": "11a33064-23dd-40e1-9b34-5259d6243c50",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 467.59863,
+      "y": 2027.0358,
+      "z": 230.8083
+    },
+    "projectileVelocity": {
+      "x": -481.9755,
+      "y": 424.90402,
+      "z": 480.32397
+    },
+    "landingPosition": {
+      "x": 531.313,
+      "y": 2537.3433,
+      "z": 298.13837
+    },
+    "description": null
+  },
+  {
+    "id": "0491225c-21b0-464a-a815-39cc566f77a8",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 193.85692,
+      "y": 1653.8353,
+      "z": 199.7264
+    },
+    "projectileVelocity": {
+      "x": 164.97131,
+      "y": 414.85858,
+      "z": 419.68146
+    },
+    "landingPosition": {
+      "x": 526.37885,
+      "y": 2490.0195,
+      "z": 395.6045
+    },
+    "description": null
+  },
+  {
+    "id": "81381935-c3a8-4af4-8731-3935c68081fd",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 706.6568,
+      "y": 3417.5735,
+      "z": 230.05452
+    },
+    "projectileVelocity": {
+      "x": -609.9167,
+      "y": 394.86334,
+      "z": 597.4778
+    },
+    "landingPosition": {
+      "x": 79.79735,
+      "y": 3238.5305,
+      "z": 330.03125
+    },
+    "description": null
+  },
+  {
+    "id": "608822ed-5a5e-4bac-8c2b-1cae1869cf5c",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 203.45354,
+      "y": 450.97116,
+      "z": 152.94424
+    },
+    "projectileVelocity": {
+      "x": -106.12174,
+      "y": 598.77997,
+      "z": 292.96027
+    },
+    "landingPosition": {
+      "x": 46.94292,
+      "y": 1470.1223,
+      "z": 181.35683
+    },
+    "description": null
+  },
+  {
+    "id": "d5044f79-4165-40db-9c91-5db4d321cb7f",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1419.3102,
+      "y": 2968.779,
+      "z": 199.0334
+    },
+    "projectileVelocity": {
+      "x": -654.1573,
+      "y": -438.04187,
+      "z": 296.6904
+    },
+    "landingPosition": {
+      "x": 582.2858,
+      "y": 2843.781,
+      "z": 162.2743
+    },
+    "description": null
+  },
+  {
+    "id": "2196fced-334f-4ba4-b422-942851bc87f9",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1306.9592,
+      "y": 2856.5554,
+      "z": 197.96027
+    },
+    "projectileVelocity": {
+      "x": -827.1386,
+      "y": -387.8565,
+      "z": 294.61862
+    },
+    "landingPosition": {
+      "x": 47.037086,
+      "y": 2578.3115,
+      "z": 173.94824
+    },
+    "description": null
+  },
+  {
+    "id": "656310a8-995a-465a-a826-c8d092dbc4f1",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1955.7096,
+      "y": 1223.234,
+      "z": 262.49884
+    },
+    "projectileVelocity": {
+      "x": 408.43753,
+      "y": -537.2459,
+      "z": 260.54703
+    },
+    "landingPosition": {
+      "x": 1932.7242,
+      "y": 649.0155,
+      "z": 246.25706
+    },
+    "description": null
+  },
+  {
+    "id": "27cf13f4-6989-4d89-815d-75bcfc7638f0",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1952.6252,
+      "y": 1221.3931,
+      "z": 263.004
+    },
+    "projectileVelocity": {
+      "x": 278.3126,
+      "y": -614.9153,
+      "z": 280.41666
+    },
+    "landingPosition": {
+      "x": 2432.794,
+      "y": 207.33208,
+      "z": 217.08658
+    },
+    "description": null
+  },
+  {
+    "id": "6d2ec52d-8b95-4a5b-be5b-eb1355d3914f",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 719.3991,
+      "y": -256.9214,
+      "z": 180.48366
+    },
+    "projectileVelocity": {
+      "x": 579.5954,
+      "y": 339.49786,
+      "z": 340.0862
+    },
+    "landingPosition": {
+      "x": 1242.3246,
+      "y": 180.50705,
+      "z": 242.42783
+    },
+    "description": null
+  },
+  {
+    "id": "948b744d-027e-4e16-a20b-1dd7f8b1a171",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 156.0401,
+      "y": 1630.6725,
+      "z": 177.70537
+    },
+    "projectileVelocity": {
+      "x": 620.58154,
+      "y": 643.8229,
+      "z": 211.63211
+    },
+    "landingPosition": {
+      "x": 858.2895,
+      "y": 1916.7026,
+      "z": 138.03127
+    },
+    "description": null
+  },
+  {
+    "id": "bcbaddc2-05e2-40bf-9c4c-ab2f3929f060",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 458.6685,
+      "y": 1849.1013,
+      "z": 228.2862
+    },
+    "projectileVelocity": {
+      "x": 58.24523,
+      "y": 664.93854,
+      "z": 373.9331
+    },
+    "landingPosition": {
+      "x": 567.4155,
+      "y": 3159.516,
+      "z": 341.20142
+    },
+    "description": null
+  },
+  {
+    "id": "c91dd7fe-ddfd-433e-a124-c4c157436e76",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 656.1432,
+      "y": 1894.4293,
+      "z": 261.37204
+    },
+    "projectileVelocity": {
+      "x": -287.82404,
+      "y": 607.4175,
+      "z": 335.34576
+    },
+    "landingPosition": {
+      "x": 75.99945,
+      "y": 3118.7366,
+      "z": 287.2681
+    },
+    "description": null
+  },
+  {
+    "id": "4559a567-1b1a-4ed0-b3ba-03d293cde459",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 470.70267,
+      "y": 2025.3485,
+      "z": 210.79399
+    },
+    "projectileVelocity": {
+      "x": -351.05902,
+      "y": 353.57764,
+      "z": 455.37396
+    },
+    "landingPosition": {
+      "x": 411.16968,
+      "y": 2490.4614,
+      "z": 327.80356
+    },
+    "description": null
+  },
+  {
+    "id": "6fc82e77-57cc-4b08-a41f-909087d39cea",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 855.16675,
+      "y": 2471.5474,
+      "z": 230.1778
+    },
+    "projectileVelocity": {
+      "x": -371.33487,
+      "y": -562.60144,
+      "z": 308.3449
+    },
+    "landingPosition": {
+      "x": 106.69348,
+      "y": 1337.5693,
+      "z": 201.64464
+    },
+    "description": null
+  },
+  {
+    "id": "5d57a2c9-eada-4466-9dd6-af7d1bacd6f3",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 506.23825,
+      "y": 2557.069,
+      "z": 350.01572
+    },
+    "projectileVelocity": {
+      "x": -423.0891,
+      "y": -434.7631,
+      "z": 295.9757
+    },
+    "landingPosition": {
+      "x": 460.50983,
+      "y": 1995.3131,
+      "z": 245.194
+    },
+    "description": null
+  },
+  {
+    "id": "fab7258b-0225-4e51-826b-5b63bc478786",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -304.20825,
+      "y": -90.65983,
+      "z": 114.47364
+    },
+    "projectileVelocity": {
+      "x": 847.9115,
+      "y": 70.47459,
+      "z": 382.7459
+    },
+    "landingPosition": {
+      "x": 1139.185,
+      "y": 28.768915,
+      "z": 267.40607
+    },
+    "description": null
+  },
+  {
+    "id": "59a5463b-b994-4621-a410-67cfb8ac33e9",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1303.1031,
+      "y": 299.23132,
+      "z": 202.92851
+    },
+    "projectileVelocity": {
+      "x": 427.41953,
+      "y": -330.80658,
+      "z": 404.35696
+    },
+    "landingPosition": {
+      "x": 2057.8184,
+      "y": -248.14005,
+      "z": 361.1869
+    },
+    "description": null
+  },
+  {
+    "id": "642555dd-c472-4772-966a-8d2725a5e389",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 114.448204,
+      "y": 972.87134,
+      "z": 150.10883
+    },
+    "projectileVelocity": {
+      "x": 88.77602,
+      "y": 913.48364,
+      "z": 200.98383
+    },
+    "landingPosition": {
+      "x": 363.95544,
+      "y": 1924.0358,
+      "z": 138.03122
+    },
+    "description": null
+  },
+  {
+    "id": "305cf213-194b-44de-9266-4586155f1585",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1153.3402,
+      "y": 2813.202,
+      "z": 194.79106
+    },
+    "projectileVelocity": {
+      "x": -619.6166,
+      "y": -549.59314,
+      "z": 103.56907
+    },
+    "landingPosition": {
+      "x": 760.147,
+      "y": 2787.8826,
+      "z": 138.03096
+    },
+    "description": null
+  },
+  {
+    "id": "d8c8f617-42fe-4162-a47e-0148176d5af5",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1556.3456,
+      "y": 2.7448492,
+      "z": 200.30139
+    },
+    "projectileVelocity": {
+      "x": 602.048,
+      "y": 245.4439,
+      "z": 181.44017
+    },
+    "landingPosition": {
+      "x": 1930.3752,
+      "y": 319.67252,
+      "z": 162.03125
+    },
+    "description": null
+  },
+  {
+    "id": "9251ea68-c6a4-439e-bbeb-cf928c768e12",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 2620.1384,
+      "y": -300.87164,
+      "z": 169.28987
+    },
+    "projectileVelocity": {
+      "x": -276.87463,
+      "y": 235.0255,
+      "z": 246.1808
+    },
+    "landingPosition": {
+      "x": 2152.8342,
+      "y": 95.79989,
+      "z": 129.0129
+    },
+    "description": null
+  },
+  {
+    "id": "dbef4e6a-229e-47cc-9c1d-bb16b0e7432a",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1594.0984,
+      "y": -371.36197,
+      "z": 320.65576
+    },
+    "projectileVelocity": {
+      "x": 614.4104,
+      "y": 278.13586,
+      "z": 27.665348
+    },
+    "landingPosition": {
+      "x": 2035.2501,
+      "y": -171.65619,
+      "z": 258.03125
+    },
+    "description": null
+  },
+  {
+    "id": "60e3ed4d-e89f-44b0-8547-86d03aa62264",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 798.8166,
+      "y": 2208.7222,
+      "z": 203.55981
+    },
+    "projectileVelocity": {
+      "x": -765.28864,
+      "y": -525.416,
+      "z": 150.17804
+    },
+    "landingPosition": {
+      "x": 189.3606,
+      "y": 1492.4545,
+      "z": 105.60393
+    },
+    "description": null
+  },
+  {
+    "id": "af7c1fb7-cd57-41f4-8882-947cd581f729",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1241.5665,
+      "y": 350.95117,
+      "z": 197.64456
+    },
+    "projectileVelocity": {
+      "x": -15.695043,
+      "y": -631.40533,
+      "z": 238.13022
+    },
+    "landingPosition": {
+      "x": 1223.7897,
+      "y": -364.54987,
+      "z": 262.03125
+    },
+    "description": null
+  },
+  {
+    "id": "6cbae7e3-d9c9-41d9-9f4f-b1b9bbb15333",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1262.1157,
+      "y": 351.825,
+      "z": 198.6617
+    },
+    "projectileVelocity": {
+      "x": -162.55148,
+      "y": -595.98395,
+      "z": 272.03885
+    },
+    "landingPosition": {
+      "x": 1047.6323,
+      "y": -108.94638,
+      "z": 258.03125
+    },
+    "description": null
+  },
+  {
+    "id": "cf87402c-33f0-4696-95d6-089c2b0c8a5b",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1457.1774,
+      "y": 676.8964,
+      "z": 190.7695
+    },
+    "projectileVelocity": {
+      "x": -758.3714,
+      "y": -562.5752,
+      "z": 109.83083
+    },
+    "landingPosition": {
+      "x": 844.553,
+      "y": 617.66125,
+      "z": 98.03125
+    },
+    "description": null
+  },
+  {
+    "id": "22ce77a2-7f62-4d30-9def-43a04902de84",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 749.71106,
+      "y": 684.9746,
+      "z": 164.643
+    },
+    "projectileVelocity": {
+      "x": 844.2621,
+      "y": -339.6803,
+      "z": 188.08768
+    },
+    "landingPosition": {
+      "x": 1289.6082,
+      "y": 296.87677,
+      "z": 131.53125
+    },
+    "description": null
+  },
+  {
+    "id": "e7af3868-f0a6-46d9-adfe-5d3d465eb74f",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 454.96954,
+      "y": 1848.8999,
+      "z": 222.68974
+    },
+    "projectileVelocity": {
+      "x": -63.05312,
+      "y": 427.5245,
+      "z": 349.30762
+    },
+    "landingPosition": {
+      "x": 327.87494,
+      "y": 2710.6426,
+      "z": 276.7258
+    },
+    "description": null
+  },
+  {
+    "id": "c5463667-1860-4541-b163-9d5fc5da011b",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 537.81555,
+      "y": 3078.044,
+      "z": 302.95273
+    },
+    "projectileVelocity": {
+      "x": 26.501228,
+      "y": -674.469,
+      "z": 277.50525
+    },
+    "landingPosition": {
+      "x": 588.17365,
+      "y": 1923.6941,
+      "z": 247.14471
+    },
+    "description": null
+  },
+  {
+    "id": "3adeeecd-da74-456d-ab66-c9f9f689c91b",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 250.49402,
+      "y": 3125.332,
+      "z": 366.53293
+    },
+    "projectileVelocity": {
+      "x": 514.6075,
+      "y": -714.90704,
+      "z": 106.858696
+    },
+    "landingPosition": {
+      "x": 760.5694,
+      "y": 2068.3127,
+      "z": 138.0313
+    },
+    "description": null
+  },
+  {
+    "id": "73156131-cbaf-4119-8291-5d8803082243",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1233.6101,
+      "y": 517.4578,
+      "z": 185.60152
+    },
+    "projectileVelocity": {
+      "x": 608.2712,
+      "y": 669.2612,
+      "z": 300.6167
+    },
+    "landingPosition": {
+      "x": 1438.0784,
+      "y": 1120.7682,
+      "z": 165.57913
+    },
+    "description": null
+  },
+  {
+    "id": "8126e8dd-0cc9-46c0-ae2f-c1f6a33bfbf4",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1239.661,
+      "y": 231.82426,
+      "z": 231.81203
+    },
+    "projectileVelocity": {
+      "x": 308.3432,
+      "y": 842.39764,
+      "z": 37.156807
+    },
+    "landingPosition": {
+      "x": 1392.8293,
+      "y": 61.670765,
+      "z": 134.03125
+    },
+    "description": null
+  },
+  {
+    "id": "e83abd31-2701-4aff-ab6e-2a584141e635",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1498.9167,
+      "y": 710.32135,
+      "z": 219.77464
+    },
+    "projectileVelocity": {
+      "x": -592.32947,
+      "y": -322.62326,
+      "z": 247.40613
+    },
+    "landingPosition": {
+      "x": 865.99493,
+      "y": 195.69312,
+      "z": 164.04375
+    },
+    "description": null
+  },
+  {
+    "id": "ed7f4192-fe1c-43b7-9dbf-76f821731f90",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1087.7817,
+      "y": -671.91705,
+      "z": 192.82544
+    },
+    "projectileVelocity": {
+      "x": 431.2701,
+      "y": 411.3058,
+      "z": 316.95212
+    },
+    "landingPosition": {
+      "x": 1125.2965,
+      "y": -337.30472,
+      "z": 262.03125
+    },
+    "description": null
+  },
+  {
+    "id": "a258dcb7-07ed-49ba-89cf-214afd5d4023",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 2400.486,
+      "y": 1221.8298,
+      "z": 270.05652
+    },
+    "projectileVelocity": {
+      "x": -315.74585,
+      "y": -596.5715,
+      "z": 279.14703
+    },
+    "landingPosition": {
+      "x": 1809.3656,
+      "y": 245.08493,
+      "z": 223.33691
+    },
+    "description": "忍者位火"
+  },
+  {
+    "id": "e7f4521c-f3b3-4d71-8078-f8685b9cb712",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -71.84277,
+      "y": 1342.6263,
+      "z": 174.46829
+    },
+    "projectileVelocity": {
+      "x": 425.85843,
+      "y": 446.9952,
+      "z": 272.88254
+    },
+    "landingPosition": {
+      "x": 707.46136,
+      "y": 2160.6174,
+      "z": 138.03131
+    },
+    "description": null
+  },
+  {
+    "id": "c0d33946-f227-46dd-bde9-48dac4e47a9d",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 412.52652,
+      "y": 1826.2888,
+      "z": 299.39908
+    },
+    "projectileVelocity": {
+      "x": -86.244446,
+      "y": 667.64374,
+      "z": 326.77768
+    },
+    "landingPosition": {
+      "x": 238.68713,
+      "y": 3172.0283,
+      "z": 308.0206
+    },
+    "description": null
+  },
+  {
+    "id": "8edd9c3a-31de-49ce-a6d2-f0c58823f175",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 411.03384,
+      "y": 1825.3738,
+      "z": 298.4401
+    },
+    "projectileVelocity": {
+      "x": -167.70297,
+      "y": 653.7759,
+      "z": 286.2167
+    },
+    "landingPosition": {
+      "x": 73.00723,
+      "y": 3143.1516,
+      "z": 225.30301
+    },
+    "description": null
+  },
+  {
+    "id": "d9374f76-4d7e-4abf-a60f-a293540891c6",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 536.594,
+      "y": 3078.0747,
+      "z": 303.02792
+    },
+    "projectileVelocity": {
+      "x": -25.774916,
+      "y": -674.5014,
+      "z": 276.1519
+    },
+    "landingPosition": {
+      "x": 439.26376,
+      "y": 1826.8411,
+      "z": 238.25075
+    },
+    "description": null
+  },
+  {
+    "id": "7df43087-fe8d-476d-8016-f4ebfbfe68d3",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 369.30563,
+      "y": 1677.1749,
+      "z": 205.57483
+    },
+    "projectileVelocity": {
+      "x": -8.5336275,
+      "y": 554.49646,
+      "z": 384.81924
+    },
+    "landingPosition": {
+      "x": 352.74396,
+      "y": 2753.1309,
+      "z": 349.85144
+    },
+    "description": null
+  },
+  {
+    "id": "01cdefa8-aec4-4ed6-9282-bf2d4f5d6db3",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 288.99927,
+      "y": 704.29584,
+      "z": 123.95185
+    },
+    "projectileVelocity": {
+      "x": 909.9146,
+      "y": -246.32898,
+      "z": 311.30505
+    },
+    "landingPosition": {
+      "x": 1222.4777,
+      "y": 300.26562,
+      "z": 145.00455
+    },
+    "description": null
+  },
+  {
+    "id": "95a799f4-6e8f-4834-8a69-51b7aaf3a43a",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1158.2133,
+      "y": 562.4609,
+      "z": 182.44095
+    },
+    "projectileVelocity": {
+      "x": 585.1677,
+      "y": -569.08325,
+      "z": 316.79868
+    },
+    "landingPosition": {
+      "x": 1433.3429,
+      "y": -23.940474,
+      "z": 134.03125
+    },
+    "description": null
+  },
+  {
+    "id": "e25bf814-9cb1-4adc-a022-2b4c67b40bd3",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1499.6774,
+      "y": 148.26743,
+      "z": 201.25233
+    },
+    "projectileVelocity": {
+      "x": 622.28656,
+      "y": -138.87251,
+      "z": 221.58257
+    },
+    "landingPosition": {
+      "x": 2596.9395,
+      "y": -96.60482,
+      "z": 94.49329
+    },
+    "description": null
+  },
+  {
+    "id": "f5edb697-23d0-4c8e-943b-11791cdb7be6",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 1409.7484,
+      "y": 2862.9475,
+      "z": 194.72897
+    },
+    "projectileVelocity": {
+      "x": -839.1834,
+      "y": -321.34265,
+      "z": 283.85037
+    },
+    "landingPosition": {
+      "x": 15.289085,
+      "y": 2515.1016,
+      "z": 172.09105
+    },
+    "description": null
+  },
+  {
+    "id": "10e7a661-ed72-458f-b13a-6be74ceae9a0",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": 369.76706,
+      "y": 1679.25,
+      "z": 222.84937
+    },
+    "projectileVelocity": {
+      "x": 7.1063514,
+      "y": 417.3268,
+      "z": 408.848
+    },
+    "landingPosition": {
+      "x": 384.08902,
+      "y": 2520.4094,
+      "z": 396.89386
+    },
+    "description": null
+  },
+  {
+    "id": "39509944-52c6-442f-a31b-dec23bd2eec7",
+    "mapName": "de_inferno",
+    "grenadeType": "molotov",
+    "projectilePosition": {
+      "x": -68.00351,
+      "y": 802.32886,
+      "z": 137.35916
+    },
+    "projectileVelocity": {
+      "x": 416.7392,
+      "y": 502.78323,
+      "z": 353.92212
+    },
+    "landingPosition": {
+      "x": 101.83502,
+      "y": 1356.3254,
+      "z": 145.86618
+    },
+    "description": null
+  }
+]

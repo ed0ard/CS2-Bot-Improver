@@ -1,0 +1,1808 @@
+[
+  {
+    "id": "d23f923e-dce1-45f7-bec2-6e28d3f16d17",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -329.3525,
+      "y": -2270.7878,
+      "z": -63.9292
+    },
+    "projectileVelocity": {
+      "x": -46.299103,
+      "y": 588.9333,
+      "z": 672.46155
+    },
+    "landingPosition": {
+      "x": -522.8805,
+      "y": 283.58533,
+      "z": 163.19214
+    },
+    "description": "T"
+  },
+  {
+    "id": "423ebd44-2d06-4f8d-8e0a-5f5db876fe6e",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -392.81995,
+      "y": -2208.9175,
+      "z": -62.92701
+    },
+    "projectileVelocity": {
+      "x": -29.707563,
+      "y": 547.1057,
+      "z": 715.28625
+    },
+    "landingPosition": {
+      "x": -530.6832,
+      "y": 330.06897,
+      "z": 162.03128
+    },
+    "description": "T"
+  },
+  {
+    "id": "4e3397b8-2f82-4359-b845-98d0ddab0936",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -583.64307,
+      "y": -2271.7354,
+      "z": -62.036274
+    },
+    "projectileVelocity": {
+      "x": 12.12423,
+      "y": 553.6997,
+      "z": 716.9155
+    },
+    "landingPosition": {
+      "x": -527.3643,
+      "y": 298.21854,
+      "z": 162.03128
+    },
+    "description": "T"
+  },
+  {
+    "id": "f1502327-6606-4b23-a9f6-4399671c5bd4",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -631.3756,
+      "y": -2079.7063,
+      "z": -54.64203
+    },
+    "projectileVelocity": {
+      "x": 27.709154,
+      "y": 563.73956,
+      "z": 643.81915
+    },
+    "landingPosition": {
+      "x": -518.2193,
+      "y": 210.4541,
+      "z": 162.10399
+    },
+    "description": null
+  },
+  {
+    "id": "049501d4-f990-409e-be4c-c588c043eca4",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -633.1688,
+      "y": -2023.0659,
+      "z": -55.11379
+    },
+    "projectileVelocity": {
+      "x": -47.884644,
+      "y": 571.78876,
+      "z": 629.12317
+    },
+    "landingPosition": {
+      "x": -773.4572,
+      "y": -216.15935,
+      "z": 71.35576
+    },
+    "description": null
+  },
+  {
+    "id": "b9674811-f155-4ce5-863e-127cb5b07295",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -684.1126,
+      "y": -2454.2808,
+      "z": -56.728054
+    },
+    "projectileVelocity": {
+      "x": 162.88788,
+      "y": 577.46185,
+      "z": 582.8515
+    },
+    "landingPosition": {
+      "x": -125.79692,
+      "y": -801.9076,
+      "z": 155.03125
+    },
+    "description": null
+  },
+  {
+    "id": "96096105-1e2b-4a1a-a422-02c1c59665bb",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -682.00507,
+      "y": -2456.306,
+      "z": -54.86514
+    },
+    "projectileVelocity": {
+      "x": 251.3594,
+      "y": 492.02505,
+      "z": 661.36597
+    },
+    "landingPosition": {
+      "x": 320.4804,
+      "y": -887.3158,
+      "z": 148.956
+    },
+    "description": null
+  },
+  {
+    "id": "2569a5a1-ce39-460e-a4db-a124284b3e15",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -2138.3394,
+      "y": -992.9735,
+      "z": 79.74544
+    },
+    "projectileVelocity": {
+      "x": 236.27214,
+      "y": 456.38098,
+      "z": 715.1426
+    },
+    "landingPosition": {
+      "x": -985.725,
+      "y": 1099.0166,
+      "z": 66.47303
+    },
+    "description": null
+  },
+  {
+    "id": "a3260acd-c950-4b58-9a69-7062b9996ba7",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -2140.1692,
+      "y": -992.8987,
+      "z": 80.47105
+    },
+    "projectileVelocity": {
+      "x": 159.64366,
+      "y": 458.8253,
+      "z": 746.15063
+    },
+    "landingPosition": {
+      "x": -1333.4701,
+      "y": 382.96143,
+      "z": 89.71215
+    },
+    "description": null
+  },
+  {
+    "id": "e5a275db-257a-4a06-9eed-b727267bc4d3",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -2141.521,
+      "y": -993.7393,
+      "z": 81.471985
+    },
+    "projectileVelocity": {
+      "x": 103.37238,
+      "y": 431.55307,
+      "z": 786.1428
+    },
+    "landingPosition": {
+      "x": -1596.8613,
+      "y": 1154.176,
+      "z": 53.83655
+    },
+    "description": null
+  },
+  {
+    "id": "1761fed1-7d4f-4157-b629-5abc9c48369d",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -2163.4524,
+      "y": 174.45705,
+      "z": 155.83861
+    },
+    "projectileVelocity": {
+      "x": 503.79315,
+      "y": 829.7214,
+      "z": 154.49889
+    },
+    "landingPosition": {
+      "x": -1493.5793,
+      "y": 1171.3042,
+      "z": 100.98808
+    },
+    "description": null
+  },
+  {
+    "id": "f6684626-1eb6-46fb-a280-2b728a27389e",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 1073.63,
+      "y": -906.7081,
+      "z": 94.005295
+    },
+    "projectileVelocity": {
+      "x": 280.22794,
+      "y": 592.1271,
+      "z": 436.2233
+    },
+    "landingPosition": {
+      "x": 1230.1067,
+      "y": 390.41577,
+      "z": 122.99867
+    },
+    "description": null
+  },
+  {
+    "id": "67e2e9a8-dd4a-4043-8dd8-d59ae555b64f",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 1054.2258,
+      "y": -925.32855,
+      "z": 77.89554
+    },
+    "projectileVelocity": {
+      "x": -167.63107,
+      "y": 485.44336,
+      "z": 438.02917
+    },
+    "landingPosition": {
+      "x": 660.56744,
+      "y": 413.05734,
+      "z": 123.82745
+    },
+    "description": null
+  },
+  {
+    "id": "57987fb5-a26d-4bd5-b72d-548c26a801f4",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 1256.7065,
+      "y": -1468.3749,
+      "z": 122.11319
+    },
+    "projectileVelocity": {
+      "x": 31.124456,
+      "y": 657.59045,
+      "z": 422.68005
+    },
+    "landingPosition": {
+      "x": 1278.1277,
+      "y": 365.2854,
+      "z": 124.840614
+    },
+    "description": null
+  },
+  {
+    "id": "6e6f0ac5-1de2-4998-9c49-22c358d04252",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 1251.0743,
+      "y": -1469.5903,
+      "z": 123.60721
+    },
+    "projectileVelocity": {
+      "x": -206.6047,
+      "y": 606.5927,
+      "z": 485.67548
+    },
+    "landingPosition": {
+      "x": 687.7754,
+      "y": 463.17468,
+      "z": 127.42192
+    },
+    "description": null
+  },
+  {
+    "id": "92cac2ec-538b-43ad-beba-6d3c6b056158",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 1250.6134,
+      "y": -1469.784,
+      "z": 123.83484
+    },
+    "projectileVelocity": {
+      "x": -224.60507,
+      "y": 596.1378,
+      "z": 496.7323
+    },
+    "landingPosition": {
+      "x": 546.32385,
+      "y": 157.54733,
+      "z": 154.65475
+    },
+    "description": null
+  },
+  {
+    "id": "5ca3f686-8379-45f6-b2c8-c8a15e244f0d",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 539.9847,
+      "y": 207.63786,
+      "z": 190.31897
+    },
+    "projectileVelocity": {
+      "x": -17.897736,
+      "y": -33.78197,
+      "z": -198.8585
+    },
+    "landingPosition": {
+      "x": 529.8687,
+      "y": 188.54663,
+      "z": 154.65475
+    },
+    "description": null
+  },
+  {
+    "id": "63340d4b-7404-45fe-8259-1913bde24d4c",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 755.785,
+      "y": 399.98624,
+      "z": 195.15593
+    },
+    "projectileVelocity": {
+      "x": 356.0987,
+      "y": -568.8516,
+      "z": 72.29469
+    },
+    "landingPosition": {
+      "x": 1244.7695,
+      "y": -402.2895,
+      "z": 61.78761
+    },
+    "description": null
+  },
+  {
+    "id": "913bc888-2c9c-4485-8752-2a0fff45a053",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -1030.0951,
+      "y": 1010.181,
+      "z": 138.26027
+    },
+    "projectileVelocity": {
+      "x": -508.5578,
+      "y": -331.3843,
+      "z": 295.2599
+    },
+    "landingPosition": {
+      "x": -2039.6146,
+      "y": 236.22296,
+      "z": 76.25973
+    },
+    "description": null
+  },
+  {
+    "id": "b6832c7b-2a9d-44c5-9cf1-b75cbb00506e",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -1240.1307,
+      "y": 511.827,
+      "z": 175.03937
+    },
+    "projectileVelocity": {
+      "x": -637.00977,
+      "y": -219.54745,
+      "z": -40.526993
+    },
+    "landingPosition": {
+      "x": -1315.5297,
+      "y": 379.23233,
+      "z": 89.992226
+    },
+    "description": null
+  },
+  {
+    "id": "a3f047c6-d97f-443e-8459-0e5be4d0861f",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -1557.0999,
+      "y": 1131.6511,
+      "z": 165.47252
+    },
+    "projectileVelocity": {
+      "x": -341.9841,
+      "y": -569.9199,
+      "z": 117.7419
+    },
+    "landingPosition": {
+      "x": -2108.6296,
+      "y": 204.17316,
+      "z": 75.83987
+    },
+    "description": null
+  },
+  {
+    "id": "639f60e3-5297-4db5-82ca-0edef7c115b9",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -212.43881,
+      "y": 1634.7878,
+      "z": 123.94421
+    },
+    "projectileVelocity": {
+      "x": -216.70271,
+      "y": -648.444,
+      "z": 693.433
+    },
+    "landingPosition": {
+      "x": -1142.7343,
+      "y": -906.9434,
+      "z": 35.492325
+    },
+    "description": "CT"
+  },
+  {
+    "id": "6eec24e6-afdb-46a7-95a5-b78e0cc5fc0e",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -271.53305,
+      "y": 1676.2284,
+      "z": 124.3149
+    },
+    "projectileVelocity": {
+      "x": -194.7555,
+      "y": -649.81805,
+      "z": 688.6318
+    },
+    "landingPosition": {
+      "x": -1130.0851,
+      "y": -928.429,
+      "z": 35.976566
+    },
+    "description": "CT"
+  },
+  {
+    "id": "79dceb2b-680a-461e-ace4-fc078021b7f7",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -368.40802,
+      "y": 1666.7513,
+      "z": 126.09314
+    },
+    "projectileVelocity": {
+      "x": -177.48172,
+      "y": -663.12866,
+      "z": 688.9154
+    },
+    "landingPosition": {
+      "x": -1164.7412,
+      "y": -968.63727,
+      "z": 35.092377
+    },
+    "description": "CT"
+  },
+  {
+    "id": "4ea869d7-6140-4a21-b0f9-85bfa3cb8b77",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -460.95483,
+      "y": 1672.8335,
+      "z": 127.76996
+    },
+    "projectileVelocity": {
+      "x": -155.45107,
+      "y": -661.39075,
+      "z": 690.754
+    },
+    "landingPosition": {
+      "x": -1134.4415,
+      "y": -904.3221,
+      "z": 35.76473
+    },
+    "description": "CT"
+  },
+  {
+    "id": "a491ff35-3475-4d0d-9a03-c9f8b3847049",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -520.2603,
+      "y": 1656.0372,
+      "z": 124.783676
+    },
+    "projectileVelocity": {
+      "x": -138.7555,
+      "y": -670.19885,
+      "z": 650.5239
+    },
+    "landingPosition": {
+      "x": -1135.6058,
+      "y": -914.4331,
+      "z": 35.91728
+    },
+    "description": "CT"
+  },
+  {
+    "id": "18952f3b-0eab-4d64-b24a-2c1015e9f5e0",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -1917.676,
+      "y": 527.5391,
+      "z": 115.839554
+    },
+    "projectileVelocity": {
+      "x": -283.32916,
+      "y": -611.11554,
+      "z": -43.444046
+    },
+    "landingPosition": {
+      "x": -2097.6995,
+      "y": 139.90396,
+      "z": 74.80434
+    },
+    "description": null
+  },
+  {
+    "id": "1c9f5b18-aebb-4dc3-9a3e-91e965737ebe",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -2148.5708,
+      "y": -41.443527,
+      "z": 146.90662
+    },
+    "projectileVelocity": {
+      "x": 247.4112,
+      "y": 628.0105,
+      "z": -3.9397502
+    },
+    "landingPosition": {
+      "x": -1882.3849,
+      "y": 640.24,
+      "z": 54.04354
+    },
+    "description": null
+  },
+  {
+    "id": "ccaac5ff-f39f-4ba9-86e2-da12f61ae8af",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -1792.4366,
+      "y": -419.83038,
+      "z": 149.76671
+    },
+    "projectileVelocity": {
+      "x": -10.721792,
+      "y": 344.30865,
+      "z": 580.4839
+    },
+    "landingPosition": {
+      "x": -1907.9805,
+      "y": 812.17413,
+      "z": 54.03032
+    },
+    "description": null
+  },
+  {
+    "id": "b129b14a-13ec-4280-8fe0-fd86bd2cd4dd",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -1409.918,
+      "y": 730.8182,
+      "z": 117.69886
+    },
+    "projectileVelocity": {
+      "x": 471.1544,
+      "y": 480.08224,
+      "z": -56.210346
+    },
+    "landingPosition": {
+      "x": -1084.6328,
+      "y": 1078.3206,
+      "z": 63.73996
+    },
+    "description": null
+  },
+  {
+    "id": "cda1c553-4e24-470f-8650-8419f737834d",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 940.9173,
+      "y": 44.56825,
+      "z": 192.81502
+    },
+    "projectileVelocity": {
+      "x": -310.67487,
+      "y": 595.726,
+      "z": -64.93583
+    },
+    "landingPosition": {
+      "x": 686.859,
+      "y": 523.8587,
+      "z": 126.19371
+    },
+    "description": null
+  },
+  {
+    "id": "ca8a7499-7e2b-4bb5-bf3b-336f5abb53fd",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 996.8353,
+      "y": 49.2226,
+      "z": 184.3556
+    },
+    "projectileVelocity": {
+      "x": 309.44757,
+      "y": 439.59857,
+      "z": -408.1915
+    },
+    "landingPosition": {
+      "x": 1204.7935,
+      "y": 352.35553,
+      "z": 122.68962
+    },
+    "description": null
+  },
+  {
+    "id": "d23f923e-dce1-45f7-bec2-6e28d3f16d17",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -329.3525,
+      "y": -2270.7878,
+      "z": -63.9292
+    },
+    "projectileVelocity": {
+      "x": -46.299103,
+      "y": 588.9333,
+      "z": 672.46155
+    },
+    "landingPosition": {
+      "x": -522.8805,
+      "y": 283.58533,
+      "z": 163.19214
+    },
+    "description": "T"
+  },
+  {
+    "id": "423ebd44-2d06-4f8d-8e0a-5f5db876fe6e",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -392.81995,
+      "y": -2208.9175,
+      "z": -62.92701
+    },
+    "projectileVelocity": {
+      "x": -29.707563,
+      "y": 547.1057,
+      "z": 715.28625
+    },
+    "landingPosition": {
+      "x": -530.6832,
+      "y": 330.06897,
+      "z": 162.03128
+    },
+    "description": "T"
+  },
+  {
+    "id": "4e3397b8-2f82-4359-b845-98d0ddab0936",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -583.64307,
+      "y": -2271.7354,
+      "z": -62.036274
+    },
+    "projectileVelocity": {
+      "x": 12.12423,
+      "y": 553.6997,
+      "z": 716.9155
+    },
+    "landingPosition": {
+      "x": -527.3643,
+      "y": 298.21854,
+      "z": 162.03128
+    },
+    "description": "T"
+  },
+  {
+    "id": "f1502327-6606-4b23-a9f6-4399671c5bd4",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -631.3756,
+      "y": -2079.7063,
+      "z": -54.64203
+    },
+    "projectileVelocity": {
+      "x": 27.709154,
+      "y": 563.73956,
+      "z": 643.81915
+    },
+    "landingPosition": {
+      "x": -518.2193,
+      "y": 210.4541,
+      "z": 162.10399
+    },
+    "description": null
+  },
+  {
+    "id": "049501d4-f990-409e-be4c-c588c043eca4",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -633.1688,
+      "y": -2023.0659,
+      "z": -55.11379
+    },
+    "projectileVelocity": {
+      "x": -47.884644,
+      "y": 571.78876,
+      "z": 629.12317
+    },
+    "landingPosition": {
+      "x": -773.4572,
+      "y": -216.15935,
+      "z": 71.35576
+    },
+    "description": null
+  },
+  {
+    "id": "b9674811-f155-4ce5-863e-127cb5b07295",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -684.1126,
+      "y": -2454.2808,
+      "z": -56.728054
+    },
+    "projectileVelocity": {
+      "x": 162.88788,
+      "y": 577.46185,
+      "z": 582.8515
+    },
+    "landingPosition": {
+      "x": -125.79692,
+      "y": -801.9076,
+      "z": 155.03125
+    },
+    "description": null
+  },
+  {
+    "id": "96096105-1e2b-4a1a-a422-02c1c59665bb",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -682.00507,
+      "y": -2456.306,
+      "z": -54.86514
+    },
+    "projectileVelocity": {
+      "x": 251.3594,
+      "y": 492.02505,
+      "z": 661.36597
+    },
+    "landingPosition": {
+      "x": 320.4804,
+      "y": -887.3158,
+      "z": 148.956
+    },
+    "description": null
+  },
+  {
+    "id": "2569a5a1-ce39-460e-a4db-a124284b3e15",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -2138.3394,
+      "y": -992.9735,
+      "z": 79.74544
+    },
+    "projectileVelocity": {
+      "x": 236.27214,
+      "y": 456.38098,
+      "z": 715.1426
+    },
+    "landingPosition": {
+      "x": -985.725,
+      "y": 1099.0166,
+      "z": 66.47303
+    },
+    "description": null
+  },
+  {
+    "id": "a3260acd-c950-4b58-9a69-7062b9996ba7",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -2140.1692,
+      "y": -992.8987,
+      "z": 80.47105
+    },
+    "projectileVelocity": {
+      "x": 159.64366,
+      "y": 458.8253,
+      "z": 746.15063
+    },
+    "landingPosition": {
+      "x": -1333.4701,
+      "y": 382.96143,
+      "z": 89.71215
+    },
+    "description": null
+  },
+  {
+    "id": "e5a275db-257a-4a06-9eed-b727267bc4d3",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -2141.521,
+      "y": -993.7393,
+      "z": 81.471985
+    },
+    "projectileVelocity": {
+      "x": 103.37238,
+      "y": 431.55307,
+      "z": 786.1428
+    },
+    "landingPosition": {
+      "x": -1596.8613,
+      "y": 1154.176,
+      "z": 53.83655
+    },
+    "description": null
+  },
+  {
+    "id": "1761fed1-7d4f-4157-b629-5abc9c48369d",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -2163.4524,
+      "y": 174.45705,
+      "z": 155.83861
+    },
+    "projectileVelocity": {
+      "x": 503.79315,
+      "y": 829.7214,
+      "z": 154.49889
+    },
+    "landingPosition": {
+      "x": -1493.5793,
+      "y": 1171.3042,
+      "z": 100.98808
+    },
+    "description": null
+  },
+  {
+    "id": "f6684626-1eb6-46fb-a280-2b728a27389e",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 1073.63,
+      "y": -906.7081,
+      "z": 94.005295
+    },
+    "projectileVelocity": {
+      "x": 280.22794,
+      "y": 592.1271,
+      "z": 436.2233
+    },
+    "landingPosition": {
+      "x": 1230.1067,
+      "y": 390.41577,
+      "z": 122.99867
+    },
+    "description": null
+  },
+  {
+    "id": "67e2e9a8-dd4a-4043-8dd8-d59ae555b64f",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 1054.2258,
+      "y": -925.32855,
+      "z": 77.89554
+    },
+    "projectileVelocity": {
+      "x": -167.63107,
+      "y": 485.44336,
+      "z": 438.02917
+    },
+    "landingPosition": {
+      "x": 660.56744,
+      "y": 413.05734,
+      "z": 123.82745
+    },
+    "description": null
+  },
+  {
+    "id": "57987fb5-a26d-4bd5-b72d-548c26a801f4",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 1256.7065,
+      "y": -1468.3749,
+      "z": 122.11319
+    },
+    "projectileVelocity": {
+      "x": 31.124456,
+      "y": 657.59045,
+      "z": 422.68005
+    },
+    "landingPosition": {
+      "x": 1278.1277,
+      "y": 365.2854,
+      "z": 124.840614
+    },
+    "description": null
+  },
+  {
+    "id": "6e6f0ac5-1de2-4998-9c49-22c358d04252",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 1251.0743,
+      "y": -1469.5903,
+      "z": 123.60721
+    },
+    "projectileVelocity": {
+      "x": -206.6047,
+      "y": 606.5927,
+      "z": 485.67548
+    },
+    "landingPosition": {
+      "x": 687.7754,
+      "y": 463.17468,
+      "z": 127.42192
+    },
+    "description": null
+  },
+  {
+    "id": "92cac2ec-538b-43ad-beba-6d3c6b056158",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 1250.6134,
+      "y": -1469.784,
+      "z": 123.83484
+    },
+    "projectileVelocity": {
+      "x": -224.60507,
+      "y": 596.1378,
+      "z": 496.7323
+    },
+    "landingPosition": {
+      "x": 546.32385,
+      "y": 157.54733,
+      "z": 154.65475
+    },
+    "description": null
+  },
+  {
+    "id": "5ca3f686-8379-45f6-b2c8-c8a15e244f0d",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 539.9847,
+      "y": 207.63786,
+      "z": 190.31897
+    },
+    "projectileVelocity": {
+      "x": -17.897736,
+      "y": -33.78197,
+      "z": -198.8585
+    },
+    "landingPosition": {
+      "x": 529.8687,
+      "y": 188.54663,
+      "z": 154.65475
+    },
+    "description": null
+  },
+  {
+    "id": "63340d4b-7404-45fe-8259-1913bde24d4c",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 755.785,
+      "y": 399.98624,
+      "z": 195.15593
+    },
+    "projectileVelocity": {
+      "x": 356.0987,
+      "y": -568.8516,
+      "z": 72.29469
+    },
+    "landingPosition": {
+      "x": 1244.7695,
+      "y": -402.2895,
+      "z": 61.78761
+    },
+    "description": null
+  },
+  {
+    "id": "913bc888-2c9c-4485-8752-2a0fff45a053",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -1030.0951,
+      "y": 1010.181,
+      "z": 138.26027
+    },
+    "projectileVelocity": {
+      "x": -508.5578,
+      "y": -331.3843,
+      "z": 295.2599
+    },
+    "landingPosition": {
+      "x": -2039.6146,
+      "y": 236.22296,
+      "z": 76.25973
+    },
+    "description": null
+  },
+  {
+    "id": "b6832c7b-2a9d-44c5-9cf1-b75cbb00506e",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -1240.1307,
+      "y": 511.827,
+      "z": 175.03937
+    },
+    "projectileVelocity": {
+      "x": -637.00977,
+      "y": -219.54745,
+      "z": -40.526993
+    },
+    "landingPosition": {
+      "x": -1315.5297,
+      "y": 379.23233,
+      "z": 89.992226
+    },
+    "description": null
+  },
+  {
+    "id": "a3f047c6-d97f-443e-8459-0e5be4d0861f",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -1557.0999,
+      "y": 1131.6511,
+      "z": 165.47252
+    },
+    "projectileVelocity": {
+      "x": -341.9841,
+      "y": -569.9199,
+      "z": 117.7419
+    },
+    "landingPosition": {
+      "x": -2108.6296,
+      "y": 204.17316,
+      "z": 75.83987
+    },
+    "description": null
+  },
+  {
+    "id": "639f60e3-5297-4db5-82ca-0edef7c115b9",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -212.43881,
+      "y": 1634.7878,
+      "z": 123.94421
+    },
+    "projectileVelocity": {
+      "x": -216.70271,
+      "y": -648.444,
+      "z": 693.433
+    },
+    "landingPosition": {
+      "x": -1142.7343,
+      "y": -906.9434,
+      "z": 35.492325
+    },
+    "description": "CT"
+  },
+  {
+    "id": "6eec24e6-afdb-46a7-95a5-b78e0cc5fc0e",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -271.53305,
+      "y": 1676.2284,
+      "z": 124.3149
+    },
+    "projectileVelocity": {
+      "x": -194.7555,
+      "y": -649.81805,
+      "z": 688.6318
+    },
+    "landingPosition": {
+      "x": -1130.0851,
+      "y": -928.429,
+      "z": 35.976566
+    },
+    "description": "CT"
+  },
+  {
+    "id": "79dceb2b-680a-461e-ace4-fc078021b7f7",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -368.40802,
+      "y": 1666.7513,
+      "z": 126.09314
+    },
+    "projectileVelocity": {
+      "x": -177.48172,
+      "y": -663.12866,
+      "z": 688.9154
+    },
+    "landingPosition": {
+      "x": -1164.7412,
+      "y": -968.63727,
+      "z": 35.092377
+    },
+    "description": "CT"
+  },
+  {
+    "id": "4ea869d7-6140-4a21-b0f9-85bfa3cb8b77",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -460.95483,
+      "y": 1672.8335,
+      "z": 127.76996
+    },
+    "projectileVelocity": {
+      "x": -155.45107,
+      "y": -661.39075,
+      "z": 690.754
+    },
+    "landingPosition": {
+      "x": -1134.4415,
+      "y": -904.3221,
+      "z": 35.76473
+    },
+    "description": "CT"
+  },
+  {
+    "id": "a491ff35-3475-4d0d-9a03-c9f8b3847049",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -520.2603,
+      "y": 1656.0372,
+      "z": 124.783676
+    },
+    "projectileVelocity": {
+      "x": -138.7555,
+      "y": -670.19885,
+      "z": 650.5239
+    },
+    "landingPosition": {
+      "x": -1135.6058,
+      "y": -914.4331,
+      "z": 35.91728
+    },
+    "description": "CT"
+  },
+  {
+    "id": "18952f3b-0eab-4d64-b24a-2c1015e9f5e0",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -1917.676,
+      "y": 527.5391,
+      "z": 115.839554
+    },
+    "projectileVelocity": {
+      "x": -283.32916,
+      "y": -611.11554,
+      "z": -43.444046
+    },
+    "landingPosition": {
+      "x": -2097.6995,
+      "y": 139.90396,
+      "z": 74.80434
+    },
+    "description": null
+  },
+  {
+    "id": "1c9f5b18-aebb-4dc3-9a3e-91e965737ebe",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -2148.5708,
+      "y": -41.443527,
+      "z": 146.90662
+    },
+    "projectileVelocity": {
+      "x": 247.4112,
+      "y": 628.0105,
+      "z": -3.9397502
+    },
+    "landingPosition": {
+      "x": -1882.3849,
+      "y": 640.24,
+      "z": 54.04354
+    },
+    "description": null
+  },
+  {
+    "id": "ccaac5ff-f39f-4ba9-86e2-da12f61ae8af",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -1792.4366,
+      "y": -419.83038,
+      "z": 149.76671
+    },
+    "projectileVelocity": {
+      "x": -10.721792,
+      "y": 344.30865,
+      "z": 580.4839
+    },
+    "landingPosition": {
+      "x": -1907.9805,
+      "y": 812.17413,
+      "z": 54.03032
+    },
+    "description": null
+  },
+  {
+    "id": "b129b14a-13ec-4280-8fe0-fd86bd2cd4dd",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -1409.918,
+      "y": 730.8182,
+      "z": 117.69886
+    },
+    "projectileVelocity": {
+      "x": 471.1544,
+      "y": 480.08224,
+      "z": -56.210346
+    },
+    "landingPosition": {
+      "x": -1084.6328,
+      "y": 1078.3206,
+      "z": 63.73996
+    },
+    "description": null
+  },
+  {
+    "id": "cda1c553-4e24-470f-8650-8419f737834d",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 940.9173,
+      "y": 44.56825,
+      "z": 192.81502
+    },
+    "projectileVelocity": {
+      "x": -310.67487,
+      "y": 595.726,
+      "z": -64.93583
+    },
+    "landingPosition": {
+      "x": 686.859,
+      "y": 523.8587,
+      "z": 126.19371
+    },
+    "description": null
+  },
+  {
+    "id": "ca8a7499-7e2b-4bb5-bf3b-336f5abb53fd",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 996.8353,
+      "y": 49.2226,
+      "z": 184.3556
+    },
+    "projectileVelocity": {
+      "x": 309.44757,
+      "y": 439.59857,
+      "z": -408.1915
+    },
+    "landingPosition": {
+      "x": 1204.7935,
+      "y": 352.35553,
+      "z": 122.68962
+    },
+    "description": null
+  },
+  {
+    "id": "75d4cb49-6785-4dcd-98e7-27e866194476",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -1113.3234,
+      "y": -1094.9956,
+      "z": 82.17765
+    },
+    "projectileVelocity": {
+      "x": 40.413177,
+      "y": 290.03464,
+      "z": 608.1708
+    },
+    "landingPosition": {
+      "x": -1057.3751,
+      "y": -167.80504,
+      "z": 106.03125
+    },
+    "description": null
+  },
+  {
+    "id": "f067c635-75f9-425b-b4d5-4419eadc4550",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -833.43964,
+      "y": -783.3569,
+      "z": 107.84391
+    },
+    "projectileVelocity": {
+      "x": 396.52228,
+      "y": 655.5546,
+      "z": 328.22998
+    },
+    "landingPosition": {
+      "x": -578.59485,
+      "y": 348.81076,
+      "z": 162.13066
+    },
+    "description": null
+  },
+  {
+    "id": "19ab92ec-042a-4df8-a913-ef17eac70108",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -1114.0009,
+      "y": -1419.3276,
+      "z": 79.794
+    },
+    "projectileVelocity": {
+      "x": 11.832569,
+      "y": 531.0895,
+      "z": 690.0274
+    },
+    "landingPosition": {
+      "x": -1046.1619,
+      "y": 1173.6582,
+      "z": 68.23026
+    },
+    "description": null
+  },
+  {
+    "id": "5e526a59-c176-4c27-9496-5dc9d26a7e43",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -1945.4674,
+      "y": 353.60275,
+      "z": 157.43666
+    },
+    "projectileVelocity": {
+      "x": 276.91046,
+      "y": 571.2618,
+      "z": 229.35898
+    },
+    "landingPosition": {
+      "x": -1472.7795,
+      "y": 1119.8314,
+      "z": 99.66095
+    },
+    "description": null
+  },
+  {
+    "id": "dbe40b28-e4c3-4af3-a97d-eaea9c6772b6",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -991.54346,
+      "y": -232.89809,
+      "z": 171.14738
+    },
+    "projectileVelocity": {
+      "x": -24.260399,
+      "y": 509.38232,
+      "z": 442.22858
+    },
+    "landingPosition": {
+      "x": -1045.9427,
+      "y": 1072.1906,
+      "z": 67.59663
+    },
+    "description": null
+  },
+  {
+    "id": "5d691858-e82e-4df8-bde2-4c2cb20d3616",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 1247.7794,
+      "y": -1478.064,
+      "z": 103.68221
+    },
+    "projectileVelocity": {
+      "x": -299.83228,
+      "y": 216.02963,
+      "z": 564.8512
+    },
+    "landingPosition": {
+      "x": 163.83386,
+      "y": -874.86273,
+      "z": 155.03122
+    },
+    "description": null
+  },
+  {
+    "id": "1f5e0c6e-b533-4029-b5e7-eb04ab87e978",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 625.0667,
+      "y": -655.58167,
+      "z": 194.10648
+    },
+    "projectileVelocity": {
+      "x": 28.064959,
+      "y": 429.36765,
+      "z": 359.26257
+    },
+    "landingPosition": {
+      "x": 651.3437,
+      "y": 677.8864,
+      "z": 118.42158
+    },
+    "description": null
+  },
+  {
+    "id": "dd5ffcb6-7c74-41ae-ac6b-a7114e5a5238",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 491.74808,
+      "y": -1910.8739,
+      "z": -66.749535
+    },
+    "projectileVelocity": {
+      "x": 155.47832,
+      "y": 505.67654,
+      "z": 692.7046
+    },
+    "landingPosition": {
+      "x": 1201.5776,
+      "y": 401.47418,
+      "z": 122.22645
+    },
+    "description": null
+  },
+  {
+    "id": "3d6cc712-4055-4946-bfad-3ad108e5f17e",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 489.1024,
+      "y": -1911.1301,
+      "z": -65.86213
+    },
+    "projectileVelocity": {
+      "x": 43.86155,
+      "y": 494.86914,
+      "z": 730.4404
+    },
+    "landingPosition": {
+      "x": 642.9408,
+      "y": 469.19803,
+      "z": 124.522255
+    },
+    "description": null
+  },
+  {
+    "id": "d609b6d7-8dac-4712-828e-fea1e2d23e8c",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 616.81714,
+      "y": -666.29663,
+      "z": 180.19798
+    },
+    "projectileVelocity": {
+      "x": 370.65598,
+      "y": 411.0605,
+      "z": 386.35272
+    },
+    "landingPosition": {
+      "x": 1267.5658,
+      "y": 335.36603,
+      "z": 124.404564
+    },
+    "description": null
+  },
+  {
+    "id": "539ebae1-4c6c-4974-aad8-16e0aabdcf1b",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": 413.2342,
+      "y": -221.25725,
+      "z": 212.35951
+    },
+    "projectileVelocity": {
+      "x": 472.62396,
+      "y": 425.59183,
+      "z": 226.10443
+    },
+    "landingPosition": {
+      "x": 1214.4457,
+      "y": 302.6927,
+      "z": 123.65772
+    },
+    "description": null
+  },
+  {
+    "id": "0d77a0d3-c764-4049-9b80-9b3816bd65ed",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -628.1113,
+      "y": -2080.1296,
+      "z": -54.827255
+    },
+    "projectileVelocity": {
+      "x": 165.42221,
+      "y": 545.87964,
+      "z": 634.42535
+    },
+    "landingPosition": {
+      "x": -57.814785,
+      "y": -704.4571,
+      "z": 155.80548
+    },
+    "description": null
+  },
+  {
+    "id": "4a94cc61-20b6-4d21-ada2-6dcbe1fa60d4",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -411.5313,
+      "y": -2115.6167,
+      "z": -54.43586
+    },
+    "projectileVelocity": {
+      "x": 162.63753,
+      "y": 523.73865,
+      "z": 667.02545
+    },
+    "landingPosition": {
+      "x": 193.11893,
+      "y": -769.9885,
+      "z": 155.03125
+    },
+    "description": null
+  },
+  {
+    "id": "661535eb-5607-4bfb-86ed-b90fd22457aa",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -730.34827,
+      "y": -2123.9363,
+      "z": -65.27151
+    },
+    "projectileVelocity": {
+      "x": 236.76321,
+      "y": 507.62296,
+      "z": 650.1669
+    },
+    "landingPosition": {
+      "x": 140.11124,
+      "y": -792.35474,
+      "z": 155.03125
+    },
+    "description": null
+  },
+  {
+    "id": "0ce4aea1-ce0f-4e1a-a0b7-6bb9bd26f5b6",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -930.885,
+      "y": -843.82904,
+      "z": 130.01553
+    },
+    "projectileVelocity": {
+      "x": 405.38275,
+      "y": 511.06366,
+      "z": 446.99237
+    },
+    "landingPosition": {
+      "x": 2.4273205,
+      "y": 694.8504,
+      "z": 69.75747
+    },
+    "description": null
+  },
+  {
+    "id": "b56480a7-01d9-475c-8976-612b9b6b30d7",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -1944.3885,
+      "y": 352.5169,
+      "z": 184.39206
+    },
+    "projectileVelocity": {
+      "x": 322.5212,
+      "y": 526.7419,
+      "z": 545.7893
+    },
+    "landingPosition": {
+      "x": -1450.8556,
+      "y": 346.93555,
+      "z": 95.17505
+    },
+    "description": null
+  },
+  {
+    "id": "eec677ff-dc8d-49e7-ba4c-0d4a36fe5979",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -288.4213,
+      "y": -796.44696,
+      "z": 140.07333
+    },
+    "projectileVelocity": {
+      "x": -185.20815,
+      "y": 404.84802,
+      "z": 780.8546
+    },
+    "landingPosition": {
+      "x": -1165.8429,
+      "y": 1101.2043,
+      "z": 54.302765
+    },
+    "description": null
+  },
+  {
+    "id": "56a3d1e3-0613-4f4c-aa86-54165d16dc53",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -1940.3364,
+      "y": 349.31485,
+      "z": 157.79735
+    },
+    "projectileVelocity": {
+      "x": 493.37585,
+      "y": 390.36768,
+      "z": 244.57796
+    },
+    "landingPosition": {
+      "x": -841.84705,
+      "y": 1100.5715,
+      "z": 68.1068
+    },
+    "description": null
+  },
+  {
+    "id": "dc8489d9-1070-4abc-a15b-8fc55361aac9",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -1676.7155,
+      "y": 1054.1824,
+      "z": 121.19621
+    },
+    "projectileVelocity": {
+      "x": -395.28552,
+      "y": -499.68976,
+      "z": 222.90016
+    },
+    "landingPosition": {
+      "x": -2026.0249,
+      "y": 258.79025,
+      "z": 88.14989
+    },
+    "description": null
+  },
+  {
+    "id": "daf66778-e0cf-42c3-b361-d29dd6071d10",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -945.3422,
+      "y": 1145.1718,
+      "z": 142.59067
+    },
+    "projectileVelocity": {
+      "x": -368.10834,
+      "y": -533.9672,
+      "z": 187.08371
+    },
+    "landingPosition": {
+      "x": -1373.0472,
+      "y": 343.22504,
+      "z": 89.88339
+    },
+    "description": null
+  },
+  {
+    "id": "3ec6bad4-77ca-46eb-b0ad-a817ac6045c1",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -968.21313,
+      "y": 1029.1337,
+      "z": 129.43161
+    },
+    "projectileVelocity": {
+      "x": -625.15295,
+      "y": -253.77782,
+      "z": -20.139822
+    },
+    "landingPosition": {
+      "x": -1571.8497,
+      "y": 784.0856,
+      "z": 58.03125
+    },
+    "description": null
+  },
+  {
+    "id": "b607bfcd-0f51-4909-b8ed-bb974349d6e1",
+    "mapName": "de_ancient",
+    "grenadeType": "smoke",
+    "projectilePosition": {
+      "x": -1128.0555,
+      "y": 1132.754,
+      "z": 124.28881
+    },
+    "projectileVelocity": {
+      "x": -122.701126,
+      "y": -602.4138,
+      "z": 278.68805
+    },
+    "landingPosition": {
+      "x": -1320.1931,
+      "y": 737.96027,
+      "z": 56.03125
+    },
+    "description": null
+  }
+]
