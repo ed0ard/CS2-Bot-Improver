@@ -251,7 +251,6 @@ Run `sv_standable_normal 0.7` in the game console.
 - [CounterStrikeSharp](https://github.com/roflmuffin/CounterStrikeSharp)
 - [CS2-Bullseye-Bot](https://github.com/ed0ard/CS2-Bullseye-Bot)
 - [CS2-Bot-NadeSystem](https://github.com/ed0ard/CS2-Bot-NadeSystem)
-- [CS2_ExecAfter_No_Admin](https://github.com/ed0ard/CS2_ExecAfter_No_Admin), forked from [kus](https://github.com/kus)
 - [CS2-Bot-Randomizer](https://github.com/ed0ard/CS2-Bot-Randomizer)
 - [CS2-Lib](https://github.com/ianlucas/cs2-lib) by [Lucas](https://github.com/ianlucas)
 - [CS2-Bot-Hider](https://github.com/XBribo/CS2-Bot-Hider) by [XBribo](https://github.com/XBribo)

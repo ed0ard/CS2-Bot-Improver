@@ -253,7 +253,6 @@ negev     m249
 - [CounterStrikeSharp](https://github.com/roflmuffin/CounterStrikeSharp)
 - [CS2-Bullseye-Bot](https://github.com/ed0ard/CS2-Bullseye-Bot)
 - [CS2-Bot-NadeSystem](https://github.com/ed0ard/CS2-Bot-NadeSystem)
-- [CS2_ExecAfter_No_Admin](https://github.com/ed0ard/CS2_ExecAfter_No_Admin), форк проекта [kus](https://github.com/kus)
 - [CS2-Bot-Randomizer](https://github.com/ed0ard/CS2-Bot-Randomizer)
 - [CS2-Lib](https://github.com/ianlucas/cs2-lib) от [Lucas](https://github.com/ianlucas)
 - [CS2-Bot-Hider](https://github.com/XBribo/CS2-Bot-Hider) от [XBribo](https://github.com/XBribo)
