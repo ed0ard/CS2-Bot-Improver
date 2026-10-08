@@ -1,0 +1,50 @@
+{
+  "vpkedit": {
+    "repository": "craftablescience/VPKEdit",
+    "tag": "v5.0.0.4",
+    "assets": {
+      "windows": "VPKEdit-Windows-Standalone-msvc-Release.zip",
+      "linux": "VPKEdit-Linux-Standalone-gcc-Release.zip"
+    }
+  },
+  "metamod": {
+    "repository": "alliedmodders/metamod-source",
+    "tag": "2.0.0.1473",
+    "assets": {
+      "windows": "mmsource-2.0.0-git1473-windows.zip",
+      "linux": "mmsource-2.0.0-git1473-linux.tar.gz"
+    }
+  },
+  "counterstrikesharp": {
+    "repository": "roflmuffin/CounterStrikeSharp",
+    "tag": "v1.0.376",
+    "assets": {
+      "windows": "counterstrikesharp-with-runtime-windows-1.0.376.zip",
+      "linux": "counterstrikesharp-with-runtime-linux-1.0.376.zip"
+    }
+  },
+  "BotController": {
+    "repository": "XBribo/CS2-Bot-Controller",
+    "tag": "v0.7.1",
+    "assets": {
+      "windows": "BotController-MM-windows-0.7.1.zip",
+      "linux": "BotController-MM-linux-0.7.1.zip"
+    }
+  },
+  "BotHider": {
+    "repository": "XBribo/CS2-Bot-Hider",
+    "tag": "v0.5.1",
+    "assets": {
+      "windows": "BotHider-Windows-0.5.1.zip",
+      "linux": "BotHider-Linux-0.5.1.zip"
+    }
+  },
+  "BotVision": {
+    "repository": "XBribo/CS2-Bot-Vision",
+    "tag": "v0.3.0",
+    "assets": {
+      "windows": "BotVision-Windows-0.3.0.zip",
+      "linux": "BotVision-Linux-0.3.0.zip"
+    }
+  }
+}

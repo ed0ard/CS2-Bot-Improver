@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      ref:
+        description: Git ref to build
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+          submodules: recursive
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - uses: actions/cache@v4
+        with:
+          path: .build-dependencies/downloads
+          key: build-dependencies-${{ runner.os }}-${{ hashFiles('build/dependencies.lock.json') }}
+      - name: Build all three release packages
+        run: python build/build.py --platform all
+      - name: Upload Windows package
+        uses: actions/upload-artifact@v4
+        with:
+          name: CS2BotImprover
+          path: artifacts/CS2BotImprover.zip
+          if-no-files-found: error
+          compression-level: 0
+      - name: Upload Windows rules-unchanged package
+        uses: actions/upload-artifact@v4
+        with:
+          name: CS2BotImprover_rules_unchanged
+          path: artifacts/CS2BotImprover_rules_unchanged.zip
+          if-no-files-found: error
+          compression-level: 0
+      - name: Upload Linux package
+        uses: actions/upload-artifact@v4
+        with:
+          name: CS2BotImprover_for_Linux
+          path: artifacts/CS2BotImprover_for_Linux.zip
+          if-no-files-found: error
+          compression-level: 0
