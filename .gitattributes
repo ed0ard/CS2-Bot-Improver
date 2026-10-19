@@ -1,0 +1,4 @@
+/build/templates/windows/gameinfo.gi text eol=crlf
+/build/templates/linux/gameinfo.gi text eol=lf
+/overrides/**/*.db text eol=lf
+/overrides/**/*.kv3 text eol=lf
