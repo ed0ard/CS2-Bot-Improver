@@ -21,7 +21,7 @@ CS2-Bot-Improver enhances Counter-Strike 2 bots for offline matches and private 
 
 | Field | Improvements |
 | --- | --- |
-| **Aim and combat** | More accurate, human-like aim; spraying, flicking, smoke spamming, and anti-flash |
+| **Aim and combat** | More accurate, human-like aim and FOV; spraying, flicking, smoke spamming, and anti-flash |
 | **Grenades** | Situational Smoke, Flashbang, HE grenade, and Molotov throwing |
 | **Movement** | Better movement and fixes for most bot-stuck situations |
 | **Strategy** | Smarter, more organized bots with improved awareness and decision-making |
@@ -40,7 +40,7 @@ Download the package for your operating system from the **[latest release](https
 > [!NOTE]
 > Running a dedicated server that is not only for bot matches?  
 On Windows, please download **CS2BotImprover_rules_unchanged.zip** to preserve the standard game rules.
-2. Move **Panel v1.4.4.exe** somewhere convenient.
+2. Move **Panel v1.4.7.exe** somewhere convenient.
 
    <img width="128" height="128" alt="CS2 Bot Improver Panel application icon" src="https://github.com/user-attachments/assets/7271dc7d-2436-484b-8359-6531f4abd710" />
 
@@ -52,7 +52,7 @@ On Windows, please download **CS2BotImprover_rules_unchanged.zip** to preserve t
 
    <img width="540" height="181" alt="Copying the Windows package files into game/csgo" src="https://github.com/user-attachments/assets/6a8645fc-78e7-4f3a-92d3-5d1b6d913918" />
 
-5. Open `Panel v1.4.4.exe`, select **Bot Mode**, then click **Launch CS2**.
+5. Open `Panel v1.4.7.exe`, select **Bot Mode**, then click **Launch CS2**.
 
    <img width="339" height="129" alt="Selecting Bot Mode and launching CS2 from the Panel" src="https://github.com/user-attachments/assets/dc806991-c940-43cf-a614-f49012fae4a7" />
 
@@ -157,6 +157,14 @@ Select your desired mode, then click **Launch CS2**.
 ### Settings
 
 Click the <img width="31" height="32" alt="Settings" src="https://github.com/user-attachments/assets/7f94176b-79f1-4e22-9495-4589c4dea9eb" /> icon in the top-right corner to open **Settings**.
+
+### Rules
+
+Open **Settings** and click **Rules** to adjust game rules.
+
+Click **Reset All** to restore default rules.
+
+<img width="360" height="385" alt="Rules" src="https://github.com/user-attachments/assets/ce7ce3b9-4f35-4921-b455-a42c816c30bd" />
 
 ### Command browser
 

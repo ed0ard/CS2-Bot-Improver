@@ -19,6 +19,7 @@ export const DEVS: string[] = [
   "WanderDream",
   "Gardevior",
   "droyer57",
+  "stevefan1999",
   "crombieman",
   "Win9x9xME",
   "T1mLuk0",

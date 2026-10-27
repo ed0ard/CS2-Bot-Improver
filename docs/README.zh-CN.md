@@ -21,7 +21,7 @@ CS2-Bot-Improver 面向喜欢与人机博弈，或想和朋友一起挑战人机
 
 | 方面 | 改进内容 |
 | --- | --- |
-| **瞄准与战斗** | 更精准、更接近真人的瞄准表现，并改进扫射、甩狙、混烟和背闪行为 |
+| **瞄准与战斗** | 更精准、更接近真人的瞄准和视角表现，并改进扫射、甩狙、混烟和背闪行为 |
 | **道具** | 根据战况使用烟雾弹、闪光弹、手雷和燃烧瓶 |
 | **移动** | 改进移动表现，并修复大多数人机卡在地图各处的问题 |
 | **战术** | 提升人机的局势感知与决策能力，使行动更聪明、更有组织性 |
@@ -41,7 +41,7 @@ CS2-Bot-Improver 面向喜欢与人机博弈，或想和朋友一起挑战人机
 > [!NOTE]
 > 如果你的Windows专用服务器并非只用于人机对局，请下载 **CS2BotImprover_rules_unchanged.zip**，以保留标准游戏规则。
 
-2. 将 **Panel v1.4.4.exe** 放在方便使用的位置。
+2. 将 **Panel v1.4.7.exe** 放在方便使用的位置。
 
    <img width="128" height="128" alt="CS2 Bot Improver Panel 应用图标" src="https://github.com/user-attachments/assets/7271dc7d-2436-484b-8359-6531f4abd710" />
 
@@ -53,7 +53,7 @@ CS2-Bot-Improver 面向喜欢与人机博弈，或想和朋友一起挑战人机
 
    <img width="540" height="181" alt="将 Windows 安装包中的文件复制到 game/csgo" src="https://github.com/user-attachments/assets/6a8645fc-78e7-4f3a-92d3-5d1b6d913918" />
 
-5. 打开 **Panel v1.4.4.exe**，选择**机器人模式**，然后点击**启动 CS2**。
+5. 打开 **Panel v1.4.7.exe**，选择**机器人模式**，然后点击**启动 CS2**。
 
    <img width="339" height="129" alt="在 Panel 中选择 Bot Mode 并启动 CS2" src="https://github.com/user-attachments/assets/dc806991-c940-43cf-a614-f49012fae4a7" />
 
@@ -163,6 +163,14 @@ negev     m249
 ### 设置
 
 点击右上角的 <img width="31" height="32" alt="设置" src="https://github.com/user-attachments/assets/7f94176b-79f1-4e22-9495-4589c4dea9eb" /> 绿色齿轮图标，打开**设置**。
+
+### 规则
+
+打开**设置**，点击**规则**，即可调节游戏规则。
+
+单击**全部重置** 即可恢复默认规则。
+
+<img width="360" height="385" alt="Rules" src="https://github.com/user-attachments/assets/ce7ce3b9-4f35-4921-b455-a42c816c30bd" />
 
 ### 指令库
 

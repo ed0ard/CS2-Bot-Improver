@@ -1,0 +1,218 @@
+// Copyright (c) 2026 ed0ard
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+{
+	config = "scripts/ai/rush/bt_config.kv3"
+	root =
+	{
+		type = "decorator_bot_service"
+		memory_to_expire =
+		[
+			{
+				key = "ShortTermAttackMemory"
+				time = 0.7
+				distance = 50
+			},
+			{
+				key = "LongTermMemory"
+				time = 60
+				distance = 3000
+			},
+			{
+				key = "ShortTermInvestigateMemory"
+				time = 6
+				distance = 500
+			}
+		]
+		child =
+		{
+			type = "decorator_buy_service"
+			output = "ShouldBuy"
+			child =
+			{
+				type = "parallel"
+				children =
+				[
+					{
+						type = "decorator_repeat"
+						child =
+						{
+							type = "parallel"
+							children =
+							[
+								// memorize enemies through vision
+								{
+									type = "subtree"
+									file = "scripts/ai/modules/bt_memorize_enemies_vision.kv3"
+									name = "MemorizeEnemiesVision"
+								},
+								// memorize noises happening right now
+								{
+									type = "subtree"
+									file = "scripts/ai/modules/bt_memorize_noises.kv3"
+									name = "MemorizeNoises"
+								},
+								// record the nearest memorized event to investigate
+								{
+									type = "subtree"
+									file = "scripts/ai/modules/bt_memorize_nearest_investigation.kv3"
+									name = "MemorizeNearestInvestigation"
+								}
+							]
+						}
+					},
+					{
+						type = "decorator_repeat"
+						child =
+						{
+							type = "selector"
+							children =
+							[
+								{
+									type = "condition_is_empty"
+									input = "ShouldBuy"
+									negated = 1
+									child =
+									{
+										// sequencer: evaluate first to last child, in order
+										type = "sequencer"
+										children =
+										[
+											{
+												type = "action_wait"
+												wait_time_min = 0.4
+												wait_time_max = 0.5
+											},
+											{
+												type = "action_buy"
+											},
+											{
+												type = "decorator_remove_key"
+												input = "ShouldBuy"
+											}
+										]
+									}
+								},
+								// Else: face the damage source if we're taking damage
+								{
+									type = "decorator_sensor"
+									entity_type_filter = "DAMAGE"
+									output = "Damage"
+									priority = 0
+									child =
+									{
+										type = "condition_is_empty"
+										input = "Damage"
+										negated = 1
+										child =
+										{
+											type = "action_aim"
+											input = "Damage"
+											acquire_only = 1
+										}
+									}
+								},
+								// Else: attack if we see an enemy
+								{
+									type = "subtree"
+									file = "scripts/ai/modules/bt_attack.kv3"
+									name = "Attack"
+								},
+								// Else: investigate the closest memorized event
+								{
+									type = "subtree"
+									file = "scripts/ai/modules/bt_investigate_closest_memorized_event.kv3"
+									name = "InvestigateClosestMemorizedEvent"
+								},
+								// Else: press the antenna button.
+								{
+									type = "decorator_try_lock"
+									domain = "'PressAntennaButton'"
+									child =
+									{
+										// sequencer: evaluate first to last child, in order
+										type = "sequencer"
+										children =
+										[
+											{
+												type = "action_move_to"
+												destination = "ant.button"
+												movement_type = "BT_ACTION_MOVETO_RUN"
+												route_type = "BT_ACTION_MOVETO_FASTEST_ROUTE"
+												threat = "NearestThreatMemory"
+												arrival_epsilon = 35
+											},
+											// Only press when the antenna is owned by the enemy team.
+											// BotState publishes the owner as an info_target whose team is the owning team;
+											// it does not exist while the antenna is neutral.
+											{
+												type = "decorator_sensor"
+												shape =
+												{
+													type = "sensor_shape_sphere"
+													radius = 10000
+												}
+												entity_type_filter = "CLASSNAME"
+												class_name = "info_target"
+												team_filter = "OPPOSITE"
+												output = "EnemyAntenna"
+												priority = 0
+												child =
+												{
+													type = "condition_is_empty"
+													input = "EnemyAntenna"
+													negated = 1
+													child =
+													{
+														// sequencer: evaluate first to last child, in order
+														type = "sequencer"
+														children =
+														[
+															{
+																type = "action_look_at"
+																input_location = "ant.button"
+															},
+															{
+																type = "action_wait"
+																wait_time_min = 0
+																wait_time_max = 0.1
+															},
+															{
+																type = "action_use"
+															}
+														]
+													}
+												}
+											}
+										]
+									}
+								},
+								// Else: hunt.
+								{
+									// sequencer: evaluate first to last child, in order
+									type = "sequencer"
+									children =
+									[
+									    {
+                                            type = "action_equip_weapon"
+                                            weapon = "BEST"
+                                        },
+										{
+											type = "decorator_random_approach_point"
+											output = "TargetHuntArea"
+										},
+										{
+											type = "action_move_to"
+											destination = "TargetHuntArea"
+											movement_type = "BT_ACTION_MOVETO_RUN"
+											route_type = "BT_ACTION_MOVETO_FASTEST_ROUTE"
+										}
+									]
+								}
+							]
+						}
+					}
+				]
+			}
+		}
+	}
+}

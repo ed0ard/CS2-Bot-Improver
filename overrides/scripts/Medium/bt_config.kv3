@@ -1,0 +1,54 @@
+// Copyright (c) 2026 ed0ard
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+{
+	default =
+	{
+		aim_target_acquisition_lerp_time = 0.05
+		aim_target_acquisition_lerp_time_deviation = 0.05
+		aim_target_acquisition_angle_penalty = 0.0
+		aim_target_acquisition_angle_penalty_deviation = 0.0
+		aim_target_acquisition_angle_penalty_reduction_ratio = 0.0
+		aim_target_acquisition_angle_tolerance = 0.0
+		aim_target_acquisition_angle_lerp_bias = 0.0
+		aim_target_tracking_lerp_time = 0.01
+		aim_target_tracking_lerp_time_deviation = 0.05
+		aim_target_tracking_focus_interval = 0.05
+		aim_target_tracking_focus_interval_deviation = 0.02
+		aim_target_tracking_angle_lerp_bias = 0.05
+		aim_ready_angle_tolerance = 0.1
+		aim_new_target_angle_tolerance = 30.0
+		aim_max_duration = 0.05
+		aim_max_duration_deviation = 0.0
+		aim_punch_angle_reaction_chance = 1.0
+
+		look_around_awareness_yaw_range = 50
+		look_around_awareness_pitch_range = 10
+		look_around_focus_interval = 0.2
+		look_around_focus_interval_deviation = 0.2
+		look_around_lerp_time = 0.3
+		look_around_lerp_time_deviation = 0.05
+		look_around_lerp_bias = 0.5
+
+		reaction_time = 0.05
+
+		combat_crouch_chance = 0.4
+		combat_dodge_command_duration = 1.2
+		combat_dodge_command_duration_deviation = 0.2
+
+		attack =
+		[
+			// duration, duration deviation, cadence, cooldown, cooldown deviation
+
+			// KNIFE									PISTOL									SUBMACHINEGUN
+			[ -1.0, -1.0, -1.0, -1.0, -1.0 ],			[ 0.75, 0.25, 0.05, 0.0, 0.0 ],			[ 0.75, 0.25, 0.05, 0.0, 0.0 ],
+			// RIFLE									SHOTGUN									SNIPER_RIFLE
+			[ 0.23, 0.11, 0.05, 0.15, 0.05 ],			[ 0.75, 0.25, 0.05, 0.0, 0.0 ],			[ 0.75, 0.25, 0.05, 0.1, 0.0 ],
+			// MACHINEGUN								C4										TASER
+			[ 0.23, 0.11, 0.05, 0.15, 0.05 ],			[ -1.0, -1.0, -1.0, -1.0, -1.0 ],		[ -1.0, -1.0, -1.0, -1.0, -1.0 ],
+			// GRENADE									EQUIPMENT								STACKABLEITEM
+			[ -1.0, -1.0, -1.0, -1.0, -1.0 ],			[ -1.0, -1.0, -1.0, -1.0, -1.0 ],		[ -1.0, -1.0, -1.0, -1.0, -1.0 ],
+			// UNKNOWN
+			[ -1.0, -1.0, -1.0, -1.0, -1.0 ]
+		]
+	}
+}

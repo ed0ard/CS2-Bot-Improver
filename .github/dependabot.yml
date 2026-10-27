@@ -2,6 +2,8 @@ version: 2
 updates:
   - package-ecosystem: "gitsubmodule"
     directory: "/"
+    cooldown:
+      default-days: 0
     schedule:
       interval: "cron"
       cronjob: "0 0 * * *"
