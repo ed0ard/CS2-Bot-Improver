@@ -15,6 +15,13 @@
 
 CS2-Bot-Improver 面向喜欢与人机博弈，或想和朋友一起挑战人机的CS2玩家。主要增强了人机的瞄准、移动、道具、个性与战术表现，可安装到游戏客户端或专用服务器，为离线人机对局和好友私人对局带来更好的体验。
 
+<details>
+<summary>签名状态</summary>
+
+[![签名状态](https://raw.githubusercontent.com/XBribo/cs2-bot-signatures/main/.github/docs/BotImprover.svg)](https://github.com/XBribo/cs2-bot-signatures)
+
+</details>
+
 ## **你们的 Stars ⭐ 是我持续更新的动力**
 
 ## 功能
