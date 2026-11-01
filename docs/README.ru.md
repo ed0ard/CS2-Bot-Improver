@@ -15,6 +15,13 @@
 
 CS2-Bot-Improver улучшает ботов Counter-Strike 2 для офлайн-матчей и закрытых игр с друзьями. Проект совершенствует их прицеливание, перемещение, использование гранат, индивидуальные особенности и тактику. Его можно установить как на игровой клиент, так и на выделенный сервер.
 
+<details>
+<summary>Статус сигнатуры</summary>
+
+[![Статус сигнатуры](https://raw.githubusercontent.com/XBribo/cs2-bot-signatures/main/.github/docs/BotImprover.svg)](https://github.com/XBribo/cs2-bot-signatures)
+
+</details>
+
 ## **Ваши звёзды ⭐ мотивируют меня продолжать обновлять проект**
 
 ## Возможности
