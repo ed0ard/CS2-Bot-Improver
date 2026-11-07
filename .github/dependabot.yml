@@ -6,5 +6,5 @@ updates:
       default-days: 0
     schedule:
       interval: "cron"
-      cronjob: "30 * * * *"
+      cronjob: "0 0 * * *"
       timezone: "Asia/Singapore"
