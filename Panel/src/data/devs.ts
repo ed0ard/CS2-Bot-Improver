@@ -5,9 +5,9 @@ export const PROJECT_URL = "https://github.com/ed0ard/CS2-Bot-Improver";
 export const DEVS: string[] = [
   "XBribo",
   "ed0ard",
+  "unicbm",
   "newbie046",
   "Misaka17032",
-  "unicbm",
   "YYBN",
   "AmagiReina",
   "htfy96",

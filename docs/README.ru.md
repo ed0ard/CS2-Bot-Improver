@@ -15,6 +15,13 @@
 
 CS2-Bot-Improver улучшает ботов Counter-Strike 2 для офлайн-матчей и закрытых игр с друзьями. Проект совершенствует их прицеливание, перемещение, использование гранат, индивидуальные особенности и тактику. Его можно установить как на игровой клиент, так и на выделенный сервер.
 
+<details>
+<summary>Статус сигнатуры</summary>
+
+[![Статус сигнатуры](https://raw.githubusercontent.com/XBribo/cs2-bot-signatures/main/.github/docs/BotImprover.svg)](https://github.com/XBribo/cs2-bot-signatures)
+
+</details>
+
 ## **Ваши звёзды ⭐ мотивируют меня продолжать обновлять проект**
 
 ## Возможности
@@ -41,7 +48,7 @@ CS2-Bot-Improver улучшает ботов Counter-Strike 2 для офлай�
 > [!NOTE]
 > Если выделенный сервер используется не только для матчей с ботами, скачайте для Windows архив **CS2BotImprover_rules_unchanged.zip**, чтобы сохранить стандартные правила игры.
 
-2. Поместите **Panel v1.4.6.exe** в любое удобное место.
+2. Поместите **Panel.exe** в любое удобное место.
 
    <img width="128" height="128" alt="Значок приложения CS2 Bot Improver Panel" src="https://github.com/user-attachments/assets/7271dc7d-2436-484b-8359-6531f4abd710" />
 
@@ -53,7 +60,7 @@ CS2-Bot-Improver улучшает ботов Counter-Strike 2 для офлай�
 
    <img width="540" height="181" alt="Копирование файлов пакета для Windows в game/csgo" src="https://github.com/user-attachments/assets/6a8645fc-78e7-4f3a-92d3-5d1b6d913918" />
 
-5. Откройте **Panel v1.4.6.exe**, выберите **Bot Mode**, затем нажмите **Launch CS2**.
+5. Откройте **Panel.exe**, выберите **Bot Mode**, затем нажмите **Launch CS2**.
 
    <img width="339" height="129" alt="Выбор Bot Mode и запуск CS2 из Panel" src="https://github.com/user-attachments/assets/dc806991-c940-43cf-a614-f49012fae4a7" />
 

@@ -17,4 +17,4 @@ Remove passwords, tokens, and other private information from attached logs or fi
 
 Please check the [latest release](https://github.com/ed0ard/CS2-Bot-Improver/releases/latest) when possible. If you found the issue in an older release or a source build, include the version or commit so we can identify the affected code. You can still report it if you cannot test the latest version.
 
-For installation problems, ordinary crashes, or unexpected bot behavior without a security impact, please use [Issues](https://github.com/ed0ard/CS2-Bot-Improver/issues).
+For other problems with no security impact, please use [Issues](https://github.com/ed0ard/CS2-Bot-Improver/issues).
