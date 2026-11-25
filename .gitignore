@@ -1,2 +1,5 @@
 **/bin/
 **/obj/
+artifacts/
+.build-dependencies/
+__pycache__/
