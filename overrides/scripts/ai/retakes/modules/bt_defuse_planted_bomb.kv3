@@ -1,0 +1,70 @@
+// Copyright (c) 2026 ed0ard
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+// Run to the planted bomb anywhere on the map and hold use on it. One bot at a time.
+{
+	type = "decorator_sensor"
+	entity_type_filter = "CLASSNAME"
+	class_name = "planted_c4"
+	output = "PlantedBomb"
+	priority = 1
+	child =
+	{
+		type = "condition_is_empty"
+		input = "PlantedBomb"
+		negated = 1
+		child =
+		{
+			type = "decorator_try_lock"
+			domain = "'DefusePlantedBomb'"
+			child =
+			{
+				type = "sequencer"
+				children =
+				[
+					{
+						type = "action_move_to"
+						destination = "PlantedBomb"
+						movement_type = "BT_ACTION_MOVETO_RUN"
+						route_type = "BT_ACTION_MOVETO_FASTEST_ROUTE"
+						threat = "NearestThreatMemory"
+						nearest_area_distance_threshold = 20
+						arrival_epsilon = 35
+					},
+					{
+						type = "action_look_at"
+						input_location = "PlantedBomb"
+					},
+					{
+						type = "action_wait"
+						wait_time_min = 0.01
+						wait_time_max = 0.10
+					},
+					// Keep pressing use and publish a short-lived defuse signal for bots.
+					{
+					    type = "parallel"
+					    children =
+					    [
+					    	{
+					    		type = "decorator_repeat"
+					    		child =
+					    		{
+					    			type = "action_set_global_flag"
+					    			name = "'DefuseInProgress'"
+					    			expiration_time_min = 0.75
+					    			expiration_time_max = 0.75
+					    		}
+					    	},
+					    	{
+								type = "decorator_repeat"
+								child =
+								{
+									type = "action_use"
+								}
+							}
+						]
+					}
+				]
+			}
+		}
+	}
+}

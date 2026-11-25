@@ -1,0 +1,41 @@
+// Copyright (c) 2026 ed0ard
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+// Move to a random spot near the planted bomb to defend it.
+{
+	type = "decorator_sensor"
+	entity_type_filter = "CLASSNAME"
+	class_name = "planted_c4"
+	output = "PlantedBomb"
+	priority = 1
+	child =
+	{
+		type = "condition_is_empty"
+		input = "PlantedBomb"
+		negated = 1
+		child =
+		{
+			type = "sequencer"
+			children =
+			[
+				{
+					type = "action_choose_random_waypoint_within_radius"
+					origin = "PlantedBomb"
+					radius = 100
+					output = "BombHoldSpot"
+				},
+				{
+					type = "action_move_to"
+					destination = "BombHoldSpot"
+					movement_type = "BT_ACTION_MOVETO_RUN"
+					route_type = "BT_ACTION_MOVETO_FASTEST_ROUTE"
+					threat = "NearestThreatMemory"
+				},
+				{
+					type = "action_wait"
+					wait_time_min = 3
+					wait_time_max = 6
+				}
+			]
+		}
+	}
+}
