@@ -28,7 +28,7 @@ jobs:
           git submodule add https://github.com/ed0ard/Apple-Style-GUI.git Panel
           git config -f .gitmodules submodule.Panel.branch main
           git add .gitmodules Panel
-          git commit -m "Convert Panel into the Apple-Style-GUI submodule
+          git commit -m "Convert Panel into the Apple-Style-GUI submodule"
 
       - name: Push branch and open a pull request
         env:
@@ -38,4 +38,5 @@ jobs:
           if [ -z "$(gh pr list --head panel-submodule --state open --json number --jq '.[0].number')" ]; then
             gh pr create --base main --head panel-submodule \
               --title "Convert Panel to the Apple-Style-GUI submodule" \
-              --body "Replaces the vendored Panel/ folder with a git submodule that points at https://github.com/ed0ard/Apple-Style-GUI (branch main).
+              --body "Replaces the vendored Panel/ folder with a git submodule that points at https://github.com/ed0ard/Apple-Style-GUI (branch main)."
+          fi
