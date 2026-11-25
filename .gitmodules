@@ -34,3 +34,7 @@
 	path = addons/counterstrikesharp/plugins/BotBuy
 	url = https://github.com/ed0ard/CS2-Bot-Buy.git
 	branch = main
+[submodule "Panel"]
+	path = Panel
+	url = https://github.com/ed0ard/Apple-Style-GUI.git
+	branch = main
