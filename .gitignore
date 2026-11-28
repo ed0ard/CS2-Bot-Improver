@@ -1,2 +1,4 @@
 **/bin/
 **/obj/
+Panel/node_modules/
+Panel/dist/

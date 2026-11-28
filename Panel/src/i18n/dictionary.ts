@@ -9,6 +9,11 @@ export const DICTS: Record<string, Partial18n> = {
 
   schinese: {
     "tb.settings": "设置", "tb.minimize": "最小化", "tb.close": "关闭",
+    "tb.update": "更新", "tb.updating": "更新中…",
+    "up.title": "自动更新", "up.confirm": "该功能将调用外部脚本自动更新，是否继续？",
+    "up.success": "更新成功 — 已安装 {version}",
+    "up.failed": "更新失败", "up.noDir": "未检测到 game/csgo 目录",
+    "up.fallback": "由于当前 Panel 版本权限限制，请手动下载最新版。我们将为您打开下载页面。",
     "st.directory": "目录", "st.files": "文件", "st.allPresent": "全部就绪",
     "st.missing": "缺失 {n} 项", "st.checking": "检查中…",
     "st.steamNotFound": "未找到 Steam", "st.notLocated": "未定位到 game/csgo",
@@ -43,6 +48,11 @@ export const DICTS: Record<string, Partial18n> = {
 
   tchinese: {
     "tb.settings": "設定", "tb.minimize": "最小化", "tb.close": "關閉",
+    "tb.update": "更新", "tb.updating": "更新中…",
+    "up.title": "自動更新", "up.confirm": "該功能將呼叫外部腳本自動更新，是否繼續？",
+    "up.success": "更新成功 — 已安裝 {version}",
+    "up.failed": "更新失敗", "up.noDir": "未偵測到 game/csgo 目錄",
+    "up.fallback": "由於目前 Panel 版本權限限制，請手動下載最新版。我們將為您開啟下載頁面。",
     "st.directory": "目錄", "st.files": "檔案", "st.allPresent": "全部就緒",
     "st.missing": "缺少 {n} 項", "st.checking": "檢查中…",
     "st.steamNotFound": "找不到 Steam", "st.notLocated": "未定位到 game/csgo",

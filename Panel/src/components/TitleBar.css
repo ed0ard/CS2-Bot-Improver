@@ -23,6 +23,62 @@
   gap: 10px;
 }
 
+/* Auto-update button. Text label, not a traffic-light dot. */
+.tb-update {
+  height: 22px;
+  padding: 0 9px;
+  border: none;
+  border-radius: var(--r-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: radial-gradient(120% 120% at 30% 25%, #ff6b62, var(--c-red));
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.18);
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: filter var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.tb-update:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+.tb-update:active:not(:disabled) {
+  transform: scale(0.94);
+}
+.tb-update:disabled {
+  cursor: wait;
+  opacity: 0.75;
+}
+.tb-update__spinner {
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: tb-spin 0.7s linear infinite;
+}
+@keyframes tb-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.up-notice {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+.up-notice--ok {
+  color: var(--c-green);
+}
+.up-notice--err {
+  color: var(--c-red);
+}
+
 /* macOS-style traffic-light buttons, ordered green / yellow / red.
    Icons are always visible (white glyph), per spec. */
 .tl {

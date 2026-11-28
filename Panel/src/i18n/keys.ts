@@ -5,6 +5,15 @@ export const EN = {
   "tb.settings": "Settings",
   "tb.minimize": "Minimize",
   "tb.close": "Close",
+  "tb.update": "Update",
+  "tb.updating": "Updating…",
+
+  "up.title": "Auto update",
+  "up.confirm": "This will call an external script to update. Continue?",
+  "up.success": "Updated to {version}",
+  "up.failed": "Update failed",
+  "up.noDir": "No game/csgo directory detected",
+  "up.fallback": "Due to current Panel permission limits, please download the latest version manually. We will open the download page for you.",
 
   "st.directory": "Directory",
   "st.files": "Files",
